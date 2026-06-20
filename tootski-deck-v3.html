@@ -84,6 +84,16 @@
   .gallery .g{background-size:cover;background-position:center;border-radius:12px;background-color:#1a1a1c}
   .gallery .w2{grid-column:span 2}.gallery .h2{grid-row:span 2}
 
+  .brandgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;width:100%;margin-top:38px}
+  .brandcard .ph{height:148px;border-radius:12px;background-size:cover;background-position:center;background-color:#e6e6e9;margin-bottom:12px}
+  .brandcard .bn{font-size:15px;font-weight:600}
+  .brandcard .bd{font-size:12.5px;color:#56565b;line-height:1.42;margin-top:3px}
+  .refnote{margin-top:26px;font-size:15px;color:#56565b}
+  .refnote b{color:var(--ink);font-weight:600}
+  .moodwall{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:118px;gap:8px;width:100%;margin-top:22px}
+  .moodwall .m{background-size:cover;background-position:center;border-radius:8px;background-color:#1a1a1c}
+  .moodwall .w2{grid-column:span 2}.moodwall .h2{grid-row:span 2}
+
   .dd{display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;max-width:1000px;margin-top:40px}
   .dd .box{border:1px solid var(--line-d);border-radius:16px;padding:30px}
   .dd h4{font-size:13px;letter-spacing:.12em;margin-bottom:18px;color:var(--grey)}
@@ -276,6 +286,21 @@
     </div>
   </section>
 
+  <!-- 19b REFERENCE BRANDS -->
+  <section class="slide light">
+    <div class="ey">REFERENCE BRANDS — THE COMPANY WE KEEP</div>
+    <h2 style="max-width:20ch">Proof the look sells.</h2>
+    <div class="brandgrid" id="brandgrid"></div>
+    <div class="refnote">Further touchstones on the board: <b>Marvis</b>, <b>Nine Two</b>, <b>Clutch</b>, <b>Aesop</b> &amp; <b>Le Labo</b> — premium everyday products that win on object design.</div>
+  </section>
+
+  <!-- 19c MOODBOARD WALL -->
+  <section class="slide dark">
+    <div class="ey l">THE MOODBOARD · 135 SAVES</div>
+    <h2 style="max-width:18ch;margin-bottom:4px">The reference wall.</h2>
+    <div class="moodwall" id="moodwall"></div>
+  </section>
+
   <!-- 20 COLOUR -->
   <section class="slide white">
     <div class="ey">COLOUR</div>
@@ -408,6 +433,28 @@ document.querySelectorAll('[data-img]').forEach(el=>{
   const s=srcFor(el.dataset.img);
   if(s) el.style.backgroundImage=`url("${s}")`;
 });
+
+/* ---- REFERENCE BRANDS + MOODBOARD (real Pinterest pins via Drive) ---- */
+const D=id=>'https://drive.google.com/thumbnail?id='+id+'&sz=w1000';
+const BRANDS=[
+ ["16S6z2TlMQsmo1XBL5czIpyWs5RknP5Kr","Glossier","Drug-facts copy turned into desire — on silver foil."],
+ ["13oLX5N4CKTJ-7RyFt5iW5kMTBr2QLn92","Prada","Luxury reduced to a black-and-white capsule."],
+ ["15jeyGV1sCs7bJjioipYKVKUvbeBkN5Gb","PEZ","The collectible tin — embossed, iconic, pocketable."],
+ ["11Eqd3cS2_Ow7hzGklhhay78pHhg81qjI","Les Basics","Product sold inside a pull-tab sardine can."],
+ ["10-R2UugEbR5-6I9OZfAtMeZmSykCVoA5","MAKEheal","Embossed silver — 'first edition · 500 sets'."],
+ ["1Mmoe3ll_1uhEnAUiyAADBkb2t7RXa5j9","Neubau","German order: vacuum-sealed and numbered."],
+ ["10cnTiIyJSGA53PX_v9M2KuyNWdEPZIa1","Blloc","Tech delivered like a monochrome ration pack."],
+ ["1-Xa9zz70zSDi8vSd7ZTpFXF4rAGo52b7","NASA","Engineered gravitas; sample-return tins."]
+];
+const bg=document.getElementById('brandgrid');
+if(bg) BRANDS.forEach(([id,n,d])=>{
+  const c=document.createElement('div');c.className='brandcard';
+  c.innerHTML=`<div class="ph" style="background-image:url('${D(id)}')"></div><div class="bn">${n}</div><div class="bd">${d}</div>`;
+  bg.appendChild(c);
+});
+const MOOD=["10-R2UugEbR5-6I9OZfAtMeZmSykCVoA5","11Eqd3cS2_Ow7hzGklhhay78pHhg81qjI","11WAUnJxaff9dRjh_-df_vF1me3C3jlLT","12JTVmxdXvnlRbeOLdTlSSqdbTj3jyDVy","13oLX5N4CKTJ-7RyFt5iW5kMTBr2QLn92","15jeyGV1sCs7bJjioipYKVKUvbeBkN5Gb","16S6z2TlMQsmo1XBL5czIpyWs5RknP5Kr","18zlLulLzyoCMSnexG53RgDa4hkAs82sH","1-Xa9zz70zSDi8vSd7ZTpFXF4rAGo52b7","10cnTiIyJSGA53PX_v9M2KuyNWdEPZIa1","1FQ7cQA6P15ETR8VlvuAmzCaXWvv4pgDy","13JigcyCbIMk-BGkBKZWwzvFJ92imozdP","1pMWyZOzf7GGo1-jBOu1lnpmzdESMMD6g","1zEfLnE-MjVvV-VnjuygBOQkDEcEVST3v","10cv-Y0U_NhaWLSGojilI0EBvjvOjv1MG","1C-EdzOBrkZ32lm1I1WXu8GR7MJrwdQTs","1KLCYGhsrqOeNOxnHTx1dkjL7yGTkHGTQ","1d0OvXXRhV9RyCquGHRATB9epgVgNDGVv"];
+const mw=document.getElementById('moodwall');
+if(mw) MOOD.forEach((id,i)=>{const m=document.createElement('div');m.className='m'+(i%5===0?' w2':'')+(i%8===0?' h2':'');m.style.backgroundImage=`url('${D(id)}')`;mw.appendChild(m);});
 
 const slides=[...document.querySelectorAll('.slide')];
 const dotsEl=document.getElementById('dots'),count=document.getElementById('count'),prog=document.getElementById('progress');
