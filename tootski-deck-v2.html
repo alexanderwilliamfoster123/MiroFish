@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>tootski — Brand Direction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#000;--ink:#0a0a0b;--white:#fff;--paper:#f5f5f7;
+    --grey:#86868b;--grey-2:#b0b0b5;--line:rgba(255,255,255,.12);--line-d:rgba(0,0,0,.1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:#000;color:#fff;-webkit-font-smoothing:antialiased;overflow:hidden;letter-spacing:-.014em}
+
+  .deck{position:relative;height:100vh;width:100vw;overflow:hidden}
+  .slide{position:absolute;inset:0;opacity:0;visibility:hidden;
+    transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1);transform:scale(1.012);
+    display:flex;flex-direction:column;justify-content:center;padding:0 clamp(48px,9vw,160px)}
+  .slide.active{opacity:1;visibility:visible;transform:none}
+  .light{background:var(--paper);color:var(--ink)}
+  .white{background:#fff;color:var(--ink)}
+  .dark{background:#000;color:#fff}
+  .ink{background:var(--ink);color:#fff}
+
+  .center{align-items:center;text-align:center}
+  .ey{font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--grey);margin-bottom:22px}
+  .ey.gold{color:#fff}
+  h1{font-size:clamp(48px,9vw,118px);font-weight:600;line-height:.98;letter-spacing:-.04em}
+  h2{font-size:clamp(34px,5.6vw,68px);font-weight:600;line-height:1.04;letter-spacing:-.035em}
+  h3{font-size:clamp(24px,3vw,34px);font-weight:600;letter-spacing:-.02em}
+  .lead{font-size:clamp(18px,1.8vw,24px);line-height:1.5;font-weight:400;color:var(--grey);max-width:760px;margin-top:26px}
+  .light .lead,.white .lead{color:#56565b}
+  .big-stmt{font-size:clamp(40px,6.5vw,80px);font-weight:600;line-height:1.05;letter-spacing:-.035em;max-width:18ch}
+  .thin{font-weight:300}
+
+  /* section divider */
+  .divider{font-size:clamp(60px,13vw,180px);font-weight:700;letter-spacing:-.05em;line-height:.9}
+  .divider .no{display:block;font-size:14px;font-weight:600;letter-spacing:.2em;color:var(--grey);margin-bottom:30px}
+
+  /* full-bleed image slide */
+  .bleed{padding:0}
+  .bleed .img{position:absolute;inset:0;background-size:cover;background-position:center;background-color:#111}
+  .bleed .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.65))}
+  .bleed .cap{position:relative;z-index:2;margin-top:auto;padding:0 clamp(48px,9vw,160px) clamp(60px,9vh,110px)}
+
+  /* index */
+  .index{display:grid;grid-template-columns:repeat(2,1fr);gap:0 80px;max-width:900px;margin-top:20px}
+  .index .row{display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--line-d);font-size:17px}
+  .index .row .n{color:var(--grey)}
+
+  /* pillars */
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:60px;width:100%;max-width:1100px}
+  .pill .k{font-size:13px;color:var(--grey);font-weight:600;letter-spacing:.1em;margin-bottom:14px}
+  .pill h3{margin-bottom:10px}
+  .pill p{font-size:15.5px;line-height:1.55;color:var(--grey)}
+  .light .pill p,.white .pill p{color:#56565b}
+
+  /* category */
+  .cat{display:grid;grid-template-columns:0.85fr 1.15fr;gap:60px;align-items:center;width:100%}
+  .cat .meta .num{font-size:14px;font-weight:600;letter-spacing:.2em;color:var(--grey);margin-bottom:20px}
+  .cat .meta h2{margin-bottom:20px}
+  .cat .meta .def{font-size:19px;line-height:1.5;color:var(--ink);font-weight:500;margin-bottom:18px}
+  .white .cat .meta .def,.light .cat .meta .def{color:#1a1a1c}
+  .cat .meta p{font-size:15.5px;line-height:1.6;color:#56565b}
+  .cat .meta .cues{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px}
+  .cat .meta .cue{font-size:12px;border:1px solid var(--line-d);border-radius:100px;padding:6px 13px;color:#56565b}
+  .grid4{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:12px;height:64vh}
+  .grid4 .ph{background-size:cover;background-position:center;background-color:#e6e6e9;border-radius:14px;position:relative;overflow:hidden}
+  .grid4 .ph .tg{position:absolute;left:12px;bottom:12px;font-size:10px;letter-spacing:.1em;
+    background:rgba(0,0,0,.6);color:#fff;padding:4px 8px;border-radius:5px;backdrop-filter:blur(4px)}
+  .grid4 .ph.gen .tg{background:rgba(255,255,255,.9);color:#000}
+
+  /* swatches */
+  .swatches{display:grid;grid-template-columns:repeat(6,1fr);width:100%;max-width:1100px;margin-top:50px;border-radius:14px;overflow:hidden;border:1px solid var(--line-d)}
+  .sw{height:230px;display:flex;flex-direction:column;justify-content:flex-end;padding:18px;font-size:12px}
+  .sw .n{font-weight:600;font-size:13px}.sw .h{opacity:.7;margin-top:3px}
+
+  /* type specimen */
+  .specimen{width:100%;max-width:1100px;margin-top:30px}
+  .specimen .scale{font-weight:600;letter-spacing:-.04em;line-height:1.05}
+  .specimen .s1{font-size:clamp(40px,7vw,90px)}
+  .specimen .s2{font-size:34px;font-weight:300}
+  .specimen .s3{font-size:18px;font-weight:400;color:#56565b;max-width:60ch;margin-top:8px}
+  .typerow{display:flex;justify-content:space-between;border-top:1px solid var(--line-d);padding:13px 0;font-size:14px;color:#56565b}
+
+  /* gallery */
+  .gallery{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;gap:12px;width:100%;margin-top:30px}
+  .gallery .g{background-size:cover;background-position:center;border-radius:12px;background-color:#1a1a1c}
+  .gallery .w2{grid-column:span 2}.gallery .h2{grid-row:span 2}
+
+  /* do/dont */
+  .dd{display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;max-width:1000px;margin-top:44px}
+  .dd .box{border:1px solid var(--line-d);border-radius:16px;padding:30px}
+  .dd h4{font-size:13px;letter-spacing:.12em;margin-bottom:18px;color:var(--grey)}
+  .dd ul{list-style:none}
+  .dd li{font-size:16px;line-height:1.5;padding:11px 0;border-bottom:1px solid var(--line-d)}
+  .dd li:last-child{border:0}
+
+  /* chrome */
+  .foot{position:fixed;bottom:22px;left:clamp(48px,9vw,160px);z-index:40;font-size:12px;color:var(--grey);letter-spacing:.04em;mix-blend-mode:difference}
+  .count{position:fixed;bottom:22px;right:clamp(48px,9vw,160px);z-index:40;font-size:12px;color:var(--grey);letter-spacing:.1em;mix-blend-mode:difference}
+  .nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:14px;
+    background:rgba(20,20,22,.7);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:100px;padding:8px 14px}
+  .nav button{background:none;border:0;color:#ddd;font-size:17px;cursor:pointer;padding:2px 8px;border-radius:6px}
+  .nav button:hover{background:rgba(255,255,255,.12)}
+  .dots{display:flex;gap:6px;max-width:60vw;flex-wrap:wrap;justify-content:center}
+  .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer}
+  .dot.on{background:#fff}
+  .progress{position:fixed;top:0;left:0;height:2px;background:#fff;z-index:60;transition:width .4s ease}
+
+  @media(max-width:880px){
+    .cat{grid-template-columns:1fr;gap:24px}.grid4{height:40vh}
+    .pillars{grid-template-columns:1fr;gap:22px}.index{grid-template-columns:1fr}
+    .swatches{grid-template-columns:repeat(3,1fr)}.gallery{grid-template-columns:repeat(2,1fr)}
+    .dd{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="deck" id="deck">
+
+  <!-- 01 COVER -->
+  <section class="slide dark center active">
+    <div class="ey">BRAND DIRECTION — VOLUME ONE</div>
+    <h1>tootski</h1>
+    <p class="lead" style="text-align:center">Utilitarian luxury, issued as standard.<br/>A visual identity system.</p>
+  </section>
+
+  <!-- 02 INDEX -->
+  <section class="slide light">
+    <div class="ey">CONTENTS</div>
+    <h2 style="max-width:14ch">What's inside.</h2>
+    <div class="index">
+      <div><div class="row"><span>The Idea</span><span class="n">01</span></div>
+      <div class="row"><span>The References, categorised</span><span class="n">02</span></div>
+      <div class="row"><span>The System</span><span class="n">03</span></div></div>
+      <div><div class="row"><span>In the World</span><span class="n">04</span></div>
+      <div class="row"><span>Principles</span><span class="n">05</span></div>
+      <div class="row"><span>Concept Imagery</span><span class="n">06</span></div></div>
+    </div>
+  </section>
+
+  <!-- 03 DIVIDER 01 -->
+  <section class="slide dark">
+    <div class="divider"><span class="no">SECTION 01</span>the idea.</div>
+  </section>
+
+  <!-- 04 BIG STATEMENT (bleed) -->
+  <section class="slide dark bleed center">
+    <div class="img" data-img="hero"></div>
+    <div class="scrim"></div>
+    <div class="cap" style="text-align:left">
+      <h1 style="font-size:clamp(44px,8vw,104px)">Standard issue.</h1>
+      <p class="lead" style="color:#d5d5d8">Everyday objects, engineered and sealed like field equipment.</p>
+    </div>
+  </section>
+
+  <!-- 05 POSITIONING -->
+  <section class="slide light">
+    <div class="ey">POSITIONING</div>
+    <p class="big-stmt">tootski treats consumer products as standard‑issue gear — documented, serialised, and built to spec rather than to trend.</p>
+    <p class="lead">Desire is earned through restraint. Industrial materials, surgical typography, and the quiet confidence of something made to last.</p>
+  </section>
+
+  <!-- 06 MANIFESTO line -->
+  <section class="slide ink center">
+    <h2 class="thin" style="max-width:20ch">“We don't decorate the product.<br/>The product <span style="font-weight:600">is</span> the decoration.”</h2>
+  </section>
+
+  <!-- 07 PILLARS -->
+  <section class="slide white">
+    <div class="ey">THE SYSTEM IN THREE WORDS</div>
+    <h2 style="max-width:16ch">Sealed. Technical. Monochrome.</h2>
+    <div class="pillars">
+      <div class="pill"><div class="k">01 — SEALED</div><h3>Protected</h3><p>Vacuum packs, foil, machined housings. Everything looks preserved and purposeful.</p></div>
+      <div class="pill"><div class="k">02 — TECHNICAL</div><h3>Documented</h3><p>Barcodes, serials, specs and ™ marks. Function reads as ornament.</p></div>
+      <div class="pill"><div class="k">03 — MONOCHROME</div><h3>Disciplined</h3><p>Silver, steel, graphite, black. No colour — only material and light.</p></div>
+    </div>
+  </section>
+
+  <!-- 08 DIVIDER 02 -->
+  <section class="slide dark">
+    <div class="divider"><span class="no">SECTION 02</span>the references.</div>
+    <p class="lead" style="margin-top:34px">135 saves from the board “tootski”. Six recurring patterns.</p>
+  </section>
+
+  <!-- CATEGORY SLIDES 09–14 -->
+  <section class="slide white">
+    <div class="cat">
+      <div class="meta"><div class="num">CATEGORY 01</div><h2>Sealed &amp; Foil</h2>
+        <div class="def">Vacuum‑sealed mylar and crinkled silver film.</div>
+        <p>The signature look: contents preserved under tension, big lowercase type stamped on reflective foil. It says limited, protected, slightly clandestine — equal parts ration pack and luxury sachet.</p>
+        <div class="cues"><span class="cue">mylar</span><span class="cue">vacuum seal</span><span class="cue">crinkle</span><span class="cue">lowercase type</span></div>
+      </div>
+      <div class="grid4">
+        <div class="ph" data-img="ref_foil_a"></div>
+        <div class="ph" data-img="ref_foil_b"></div>
+        <div class="ph" data-img="ref_foil_c"></div>
+        <div class="ph gen" data-img="foilFlat"><span class="tg">tootski concept</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide white">
+    <div class="cat">
+      <div class="meta"><div class="num">CATEGORY 02</div><h2>Machined Metal</h2>
+        <div class="def">Brushed aluminium, stainless steel, knurled grips.</div>
+        <p>Objects that feel CNC‑milled and lab‑grade. Cold, precise, weighty. NASA sample tins and machined canisters give the brand its engineered backbone.</p>
+        <div class="cues"><span class="cue">brushed alloy</span><span class="cue">knurling</span><span class="cue">CNC</span><span class="cue">cold light</span></div>
+      </div>
+      <div class="grid4">
+        <div class="ph" data-img="ref_metal_a"></div>
+        <div class="ph gen" data-img="canister"><span class="tg">tootski concept</span></div>
+        <div class="ph" data-img="ref_metal_b"></div>
+        <div class="ph gen" data-img="capsule"><span class="tg">tootski concept</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide white">
+    <div class="cat">
+      <div class="meta"><div class="num">CATEGORY 03</div><h2>Technical Labeling</h2>
+        <div class="def">Barcodes, serials, QR codes, metric specs.</div>
+        <p>Bureaucratic ornament. The product is catalogued like equipment — edition numbers, batch codes, monospaced data. Detail signals authenticity and control.</p>
+        <div class="cues"><span class="cue">barcode</span><span class="cue">serial №</span><span class="cue">monospace</span><span class="cue">™ marks</span></div>
+      </div>
+      <div class="grid4">
+        <div class="ph gen" data-img="label"><span class="tg">tootski concept</span></div>
+        <div class="ph" data-img="ref_label_a"></div>
+        <div class="ph" data-img="ref_label_b"></div>
+        <div class="ph gen" data-img="antistatic"><span class="tg">tootski concept</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide white">
+    <div class="cat">
+      <div class="meta"><div class="num">CATEGORY 04</div><h2>Wellness Systems</h2>
+        <div class="def">Numbered supplement &amp; care ranges.</div>
+        <p>Modern DTC discipline — matte black and silver bottles, pouches numbered 1‑4, science‑not‑stimulants tone. A system you collect, not a product you buy once.</p>
+        <div class="cues"><span class="cue">numbered range</span><span class="cue">matte + silver</span><span class="cue">regimen</span><span class="cue">apothecary</span></div>
+      </div>
+      <div class="grid4">
+        <div class="ph" data-img="ref_well_a"></div>
+        <div class="ph gen" data-img="supplements"><span class="tg">tootski concept</span></div>
+        <div class="ph gen" data-img="dropper"><span class="tg">tootski concept</span></div>
+        <div class="ph" data-img="ref_well_b"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide white">
+    <div class="cat">
+      <div class="meta"><div class="num">CATEGORY 05</div><h2>Studio Light</h2>
+        <div class="def">Clinical grey sweeps and clean white voids.</div>
+        <p>Neutral, even, surgical lighting. The object floats with room to breathe — Apple‑grade product photography stripped of warmth and props.</p>
+        <div class="cues"><span class="cue">grey sweep</span><span class="cue">soft shadow</span><span class="cue">negative space</span><span class="cue">clinical</span></div>
+      </div>
+      <div class="grid4">
+        <div class="ph gen" data-img="hero2"><span class="tg">tootski concept</span></div>
+        <div class="ph" data-img="ref_studio_a"></div>
+        <div class="ph" data-img="ref_studio_b"></div>
+        <div class="ph gen" data-img="jar"><span class="tg">tootski concept</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide white">
+    <div class="cat">
+      <div class="meta"><div class="num">CATEGORY 06</div><h2>Editioned &amp; Numbered</h2>
+        <div class="def">Limited runs, stamped 001 / 100.</div>
+        <p>Scarcity as identity. Hand‑stamped serials, wax dots, “ltd edition 100”. Each unit is one of a known few — ownership feels issued, not transacted.</p>
+        <div class="cues"><span class="cue">001 / 100</span><span class="cue">wax seal</span><span class="cue">stamped</span><span class="cue">numbered</span></div>
+      </div>
+      <div class="grid4">
+        <div class="ph gen" data-img="edition"><span class="tg">tootski concept</span></div>
+        <div class="ph" data-img="ref_ed_a"></div>
+        <div class="ph gen" data-img="case"><span class="tg">tootski concept</span></div>
+        <div class="ph" data-img="ref_ed_b"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 DIVIDER 03 -->
+  <section class="slide dark">
+    <div class="divider"><span class="no">SECTION 03</span>the system.</div>
+  </section>
+
+  <!-- 16 LOGO -->
+  <section class="slide light center">
+    <div class="ey">WORDMARK</div>
+    <div style="display:flex;align-items:center;gap:22px;margin:10px 0 6px">
+      <div style="width:58px;height:58px;border:3px solid #0a0a0b;border-radius:50%;display:flex;align-items:center;justify-content:center">
+        <div style="width:16px;height:16px;background:#0a0a0b;border-radius:50%"></div></div>
+      <div style="font-size:clamp(46px,9vw,108px);font-weight:700;letter-spacing:-.05em">tootski<span style="font-size:.28em;vertical-align:super;font-weight:500">™</span></div>
+    </div>
+    <p class="lead" style="text-align:center">A sealed aperture — a ring with a solid core. Set lowercase, always with a functional descriptor beneath.</p>
+  </section>
+
+  <!-- 17 COLOUR -->
+  <section class="slide white">
+    <div class="ey">COLOUR</div>
+    <h2 style="max-width:16ch">No colour. Only material.</h2>
+    <div class="swatches">
+      <div class="sw" style="background:#eef0f1;color:#111"><span class="n">Foil Hi</span><span class="h">#EEF0F1</span></div>
+      <div class="sw" style="background:#c7cbce;color:#111"><span class="n">Mylar</span><span class="h">#C7CBCE</span></div>
+      <div class="sw" style="background:#8a9094;color:#fff"><span class="n">Steel</span><span class="h">#8A9094</span></div>
+      <div class="sw" style="background:#3a3d40;color:#fff"><span class="n">Graphite</span><span class="h">#3A3D40</span></div>
+      <div class="sw" style="background:#121315;color:#eee"><span class="n">Carbon</span><span class="h">#121315</span></div>
+      <div class="sw" style="background:#f5f5f7;color:#111"><span class="n">Paper</span><span class="h">#F5F5F7</span></div>
+    </div>
+  </section>
+
+  <!-- 18 TYPOGRAPHY -->
+  <section class="slide white">
+    <div class="ey">TYPOGRAPHY — INTER</div>
+    <div class="specimen">
+      <div class="scale s1">heart. human. issue.</div>
+      <div class="scale s2" style="margin-top:6px">Set lowercase, tight, and heavy.</div>
+      <div class="s3">Inter is the single typeface — clean, neutral, engineered. Display weights 600–800 lowercase for impact; 400 for body; a monospaced cut for serials and specs.</div>
+      <div style="margin-top:26px">
+        <div class="typerow"><span>Display</span><span>Inter · 600–800 · lowercase · −4% tracking</span></div>
+        <div class="typerow"><span>Body</span><span>Inter · 400 · sentence case</span></div>
+        <div class="typerow"><span>Data / specs</span><span>Inter / mono · UPPERCASE · +10% tracking</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 PHOTOGRAPHY (bleed) -->
+  <section class="slide dark bleed">
+    <div class="img" data-img="family"></div>
+    <div class="scrim"></div>
+    <div class="cap">
+      <div class="ey gold">PHOTOGRAPHY DIRECTION</div>
+      <h2 style="max-width:18ch">Shot like lab equipment, not lifestyle.</h2>
+      <p class="lead" style="color:#d5d5d8">Material is the hero. Neutral light, hard enough to reveal surface. Barcodes and serials in frame. Never warm, never propped.</p>
+    </div>
+  </section>
+
+  <!-- 20 VOICE -->
+  <section class="slide light">
+    <div class="ey">VOICE</div>
+    <h2 style="max-width:18ch">Say less. Spec everything.</h2>
+    <div class="pillars" style="margin-top:46px">
+      <div class="pill"><div class="k">TONE</div><p>Blunt, precise, confident. One word where others use ten.</p></div>
+      <div class="pill"><div class="k">FORMAT</div><p>Lowercase headlines, uppercase data. Labels read like manifests.</p></div>
+      <div class="pill"><div class="k">EXAMPLE</div><p>“tootski™ — standard issue · net wt 500g · no.001/100”.</p></div>
+    </div>
+  </section>
+
+  <!-- 21 DIVIDER 04 -->
+  <section class="slide dark">
+    <div class="divider"><span class="no">SECTION 04</span>in the world.</div>
+  </section>
+
+  <!-- 22 PACKAGING bleed -->
+  <section class="slide dark bleed">
+    <div class="img" data-img="case"></div>
+    <div class="scrim"></div>
+    <div class="cap">
+      <div class="ey gold">APPLICATIONS — PACKAGING</div>
+      <h2 style="max-width:16ch">Foil. Tins. Cases. Serial‑stamped.</h2>
+    </div>
+  </section>
+
+  <!-- 23 APPLICATIONS grid -->
+  <section class="slide white">
+    <div class="ey">APPLICATIONS</div>
+    <h2 style="max-width:14ch">Where it lives.</h2>
+    <div class="pillars" style="margin-top:50px">
+      <div class="pill"><div class="k">PACKAGING</div><p>Foil sachets, machined tins, Pelican‑style cases. One bold word, a spec line, a serial.</p></div>
+      <div class="pill"><div class="k">DIGITAL</div><p>White or graphite canvas, oversized lowercase type, monospaced captions, slow rotations.</p></div>
+      <div class="pill"><div class="k">COLLATERAL</div><p>Hang‑tags, instruction cards, embossed ™ stickers, numbered, anti‑static bags.</p></div>
+    </div>
+  </section>
+
+  <!-- 24 DIVIDER 06 -->
+  <section class="slide dark">
+    <div class="divider"><span class="no">SECTION 05</span>principles.</div>
+  </section>
+
+  <!-- 25 DO/DONT -->
+  <section class="slide white">
+    <div class="ey">PRINCIPLES</div>
+    <h2 style="max-width:18ch">Keep it issued, not styled.</h2>
+    <div class="dd">
+      <div class="box"><h4>DO</h4><ul>
+        <li>Lead with material — foil, metal, frost.</li>
+        <li>One blunt lowercase word per object.</li>
+        <li>Document everything: serials, specs, codes.</li>
+        <li>Stay monochrome and neutral‑lit.</li>
+      </ul></div>
+      <div class="box"><h4>DON'T</h4><ul>
+        <li>Add brand colour or gradients for flair.</li>
+        <li>Use soft, rounded, friendly type.</li>
+        <li>Over‑style lighting or add props.</li>
+        <li>Decorate — let function be the ornament.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <!-- 26 GALLERY -->
+  <section class="slide dark">
+    <div class="ey">SECTION 06 — CONCEPT IMAGERY (AI‑GENERATED)</div>
+    <h2 style="max-width:18ch;margin-bottom:6px">Direction, visualised.</h2>
+    <div class="gallery">
+      <div class="g w2 h2" data-img="hero"></div>
+      <div class="g" data-img="pouch"></div>
+      <div class="g" data-img="canister"></div>
+      <div class="g" data-img="supplements"></div>
+      <div class="g" data-img="edition"></div>
+      <div class="g w2" data-img="family"></div>
+      <div class="g" data-img="capsule"></div>
+      <div class="g" data-img="texture"></div>
+      <div class="g" data-img="jar"></div>
+      <div class="g" data-img="dropper"></div>
+    </div>
+  </section>
+
+  <!-- 27 CLOSE -->
+  <section class="slide dark center">
+    <div class="ey">tootski™ · BRAND DIRECTION v1</div>
+    <h1 style="font-size:clamp(44px,8vw,100px)">standard issue.</h1>
+    <p class="lead" style="text-align:center">Built like equipment. Finished like luxury.</p>
+  </section>
+
+</div>
+
+<div class="foot" id="foot">tootski — brand direction</div>
+<div class="count" id="count">01 / 27</div>
+<div class="nav"><button id="prev">‹</button><div class="dots" id="dots"></div><button id="next">›</button></div>
+
+<script>
+/* ---- IMAGE SOURCES ---- */
+// Generated concept imagery (Higgsfield) — filled in after render.
+const B = "https://d8j0ntlcm91z4.cloudfront.net/user_37CJAETJ6HBiRbz97go2lFOfI47/";
+const G = {
+  hero:      B+"hf_20260620_221441_b248d850-ff4b-4b97-a3a7-199d562e6607.png",
+  hero2:     B+"hf_20260620_221441_b248d850-ff4b-4b97-a3a7-199d562e6607.png",
+  pouch:     B+"hf_20260620_221352_bc58ff44-8b7b-426f-b92a-6a58f2c782f9.png",
+  foilFlat:  B+"hf_20260620_221432_4fd0e16f-063c-4d74-a0a6-4ebeca7fbe73.png",
+  canister:  B+"hf_20260620_221434_1f6679bb-4415-42b9-8560-930d21ce919e.png",
+  capsule:   B+"hf_20260620_221435_41e005e9-4c20-43ee-abfa-9f2448e5d3ed.png",
+  label:     B+"hf_20260620_221436_6dc0f73f-b074-4883-b91c-8fe8797be7de.png",
+  antistatic:B+"hf_20260620_221438_691926fc-68ab-4287-bac0-0351370477eb.png",
+  supplements:B+"hf_20260620_221439_a429786d-dca5-4198-9f5a-c2658b5d9c7a.png",
+  dropper:   B+"hf_20260620_221440_d4614d72-1f61-4996-849f-1fbeacf56ab9.png",
+  edition:   B+"hf_20260620_221443_706bc8dd-c985-4bd2-b2cd-6d9ee33c5635.png",
+  case:      B+"hf_20260620_221444_b152be1a-a779-45dc-abd3-8f23144ca024.png",
+  family:    B+"hf_20260620_221446_107318c3-361a-481b-b16d-9f5ce083105f.png",
+  texture:   B+"hf_20260620_221447_6dd9c53a-f197-49d3-b6df-0291071faf4c.png",
+  jar:       B+"hf_20260620_221449_22d5d344-1ac4-406f-bd59-f0998e6e6a76.png"
+};
+// Reference pins (from the Pinterest board, via Google Drive)
+const D = id => 'https://drive.google.com/thumbnail?id='+id+'&sz=w1000';
+const REF = {
+  ref_foil_a:D("13JigcyCbIMk-BGkBKZWwzvFJ92imozdP"),
+  ref_foil_b:D("1Mmoe3ll_1uhEnAUiyAADBkb2t7RXa5j9"),
+  ref_foil_c:D("116IgqJUG4oNidyMTsH_AzOvubqFyJP7m"),
+  ref_metal_a:D("1-Xa9zz70zSDi8vSd7ZTpFXF4rAGo52b7"),
+  ref_metal_b:D("16Cx7fYA8mW_PPYrkyVWd3wV2OhMrEPE5"),
+  ref_label_a:D("1KLCYGhsrqOeNOxnHTx1dkjL7yGTkHGTQ"),
+  ref_label_b:D("1WAzWpLlLxltmFxDRB-I28Rv1xyTZ_CqL"),
+  ref_well_a:D("1FQ7cQA6P15ETR8VlvuAmzCaXWvv4pgDy"),
+  ref_well_b:D("1C-EdzOBrkZ32lm1I1WXu8GR7MJrwdQTs"),
+  ref_studio_a:D("10cnTiIyJSGA53PX_v9M2KuyNWdEPZIa1"),
+  ref_studio_b:D("1ZS0zCF3N0v8xDGmRDui4tYczd3Hqg1HI"),
+  ref_ed_a:D("1AIDTbFxsXLokc9ex3jn_mqFaI0iHtxDJ"),
+  ref_ed_b:D("1d0OvXXRhV9RyCquGHRATB9epgVgNDGVv")
+};
+function srcFor(key){ return G[key] || REF[key] || ''; }
+document.querySelectorAll('[data-img]').forEach(el=>{
+  const s=srcFor(el.dataset.img);
+  if(s){ el.style.backgroundImage=`url("${s}")`; }
+});
+
+/* ---- DECK NAV ---- */
+const slides=[...document.querySelectorAll('.slide')];
+const dotsEl=document.getElementById('dots'), count=document.getElementById('count'), prog=document.getElementById('progress');
+let idx=0;
+slides.forEach((s,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);dotsEl.appendChild(d);});
+const dots=[...dotsEl.children];
+function go(n){
+  idx=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===idx));
+  dots.forEach((d,i)=>d.classList.toggle('on',i===idx));
+  count.textContent=String(idx+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  prog.style.width=((idx+1)/slides.length*100)+'%';
+}
+document.getElementById('next').onclick=()=>go(idx+1);
+document.getElementById('prev').onclick=()=>go(idx-1);
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(idx+1);}
+  if(e.key==='ArrowLeft')go(idx-1);
+});
+let sx=0;addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)go(idx+(dx<0?1:-1));},{passive:true});
+go(0);
+</script>
+</body>
+</html>
