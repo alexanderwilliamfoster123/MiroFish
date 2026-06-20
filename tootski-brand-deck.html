@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TOOTSKI — Brand Direction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --carbon:#121315;
+    --carbon-2:#1b1d1f;
+    --graphite:#3a3d40;
+    --steel:#8a9094;
+    --foil:#c7cbce;
+    --foil-hi:#eef0f1;
+    --paper:#f3f2ee;
+    --line:rgba(255,255,255,.14);
+    --line-dk:rgba(0,0,0,.14);
+    --signal:#d8d8d8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    background:#0a0b0c;color:var(--foil);
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;overflow:hidden;
+  }
+  .mono{font-family:"Space Mono",ui-monospace,monospace}
+  .deck{position:relative;height:100vh;width:100vw;overflow:hidden}
+
+  .slide{
+    position:absolute;inset:0;opacity:0;visibility:hidden;
+    transition:opacity .55s ease, transform .55s cubic-bezier(.2,.8,.2,1);
+    transform:translateY(14px);
+    display:flex;flex-direction:column;justify-content:center;
+    padding:64px clamp(40px,7vw,120px);
+  }
+  .slide.active{opacity:1;visibility:visible;transform:none}
+  .slide.dark{background:
+    radial-gradient(120% 90% at 70% 10%,#202326,#0c0d0e 60%)}
+  .slide.steel{background:linear-gradient(135deg,#d6d9db,#a7adb1 55%,#cdd1d3);color:var(--carbon)}
+  .slide.paper{background:var(--paper);color:var(--carbon)}
+  .slide.foil{background:
+    linear-gradient(115deg,#e7e9ea 0%,#b9bec1 18%,#eceef0 30%,#aab0b4 46%,#dfe2e3 62%,#b3b9bd 80%,#e9ebec 100%);
+    color:var(--carbon)}
+
+  /* technical chrome */
+  .chrome{position:absolute;inset:24px;pointer-events:none;border:1px solid currentColor;opacity:.12}
+  .crop{position:absolute;width:14px;height:14px;border:1px solid currentColor;opacity:.35}
+  .crop.tl{top:16px;left:16px;border-right:0;border-bottom:0}
+  .crop.tr{top:16px;right:16px;border-left:0;border-bottom:0}
+  .crop.bl{bottom:16px;left:16px;border-right:0;border-top:0}
+  .crop.br{bottom:16px;right:16px;border-left:0;border-top:0}
+
+  .topbar{position:absolute;top:30px;left:clamp(40px,7vw,120px);right:clamp(40px,7vw,120px);
+    display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.18em;opacity:.7}
+  .barcode{height:22px;width:130px;
+    background:repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 3px,currentColor 3px 5px,transparent 5px 6px,currentColor 6px 9px,transparent 9px 11px)}
+  .tag{display:inline-block;border:1px solid currentColor;padding:4px 10px;font-size:10px;letter-spacing:.22em}
+
+  .kicker{font-size:12px;letter-spacing:.4em;text-transform:uppercase;opacity:.65;margin-bottom:22px}
+  h1.title{font-size:clamp(54px,11vw,150px);font-weight:800;line-height:.9;letter-spacing:-.04em;text-transform:lowercase}
+  h2{font-size:clamp(30px,5vw,60px);font-weight:700;letter-spacing:-.03em;line-height:1.02;text-transform:lowercase}
+  .lead{font-size:clamp(17px,1.7vw,22px);line-height:1.55;max-width:720px;opacity:.85;margin-top:24px;font-weight:400}
+  .sec-no{font-size:12px;letter-spacing:.3em;opacity:.55;margin-bottom:30px}
+
+  /* COVER */
+  .cover-meta{position:absolute;bottom:54px;left:clamp(40px,7vw,120px);right:clamp(40px,7vw,120px);
+    display:flex;justify-content:space-between;font-size:11px;letter-spacing:.2em;opacity:.7}
+  .serial{font-size:13px;letter-spacing:.3em}
+
+  /* MOODBOARD */
+  .mood{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:1fr;gap:8px;height:72vh;margin-top:8px}
+  .mood .cell{overflow:hidden;background:#222;position:relative;border:1px solid rgba(0,0,0,.2)}
+  .mood .cell img{width:100%;height:100%;object-fit:cover;filter:grayscale(.15) contrast(1.03);display:block}
+  .mood .cell.w2{grid-column:span 2}
+  .mood .cell.h2{grid-row:span 2}
+
+  /* PALETTE */
+  .swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:0;height:54vh;margin-top:30px;border:1px solid var(--line-dk)}
+  .sw{display:flex;flex-direction:column;justify-content:flex-end;padding:18px}
+  .sw .n{font-size:13px;font-weight:600;letter-spacing:-.01em}
+  .sw .h{font-size:11px;letter-spacing:.12em;opacity:.7;margin-top:4px}
+
+  /* TYPE */
+  .type-spec{display:grid;grid-template-columns:1fr 1fr;gap:50px;margin-top:30px;align-items:start}
+  .type-spec .big{font-size:clamp(40px,7vw,96px);font-weight:800;line-height:.92;letter-spacing:-.04em;text-transform:lowercase}
+  .type-row{border-top:1px solid var(--line-dk);padding:14px 0;display:flex;justify-content:space-between;font-size:14px}
+  .glyphs{font-size:clamp(28px,4vw,46px);font-weight:700;letter-spacing:.04em;margin-top:8px}
+
+  /* COLUMNS */
+  .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;margin-top:40px}
+  .col .num{font-size:12px;letter-spacing:.2em;opacity:.6;margin-bottom:14px}
+  .col h3{font-size:21px;font-weight:700;letter-spacing:-.01em;margin-bottom:10px;text-transform:lowercase}
+  .col p{font-size:15px;line-height:1.6;opacity:.82}
+
+  /* DODONT */
+  .dd{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:36px}
+  .dd .box{border:1px solid var(--line-dk);padding:28px}
+  .dd h4{font-size:13px;letter-spacing:.2em;margin-bottom:18px}
+  .dd ul{list-style:none}
+  .dd li{font-size:15px;line-height:1.5;padding:9px 0 9px 22px;position:relative;border-bottom:1px dashed rgba(0,0,0,.12)}
+  .dd li:before{position:absolute;left:0;top:8px;font-family:"Space Mono",monospace;font-size:13px}
+  .dd .do li:before{content:"+"}
+  .dd .dont li:before{content:"–"}
+
+  /* NAV */
+  .nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:50;
+    display:flex;align-items:center;gap:18px;background:rgba(10,11,12,.7);backdrop-filter:blur(10px);
+    border:1px solid var(--line);border-radius:100px;padding:9px 16px}
+  .nav button{background:none;border:0;color:#cfd2d4;cursor:pointer;font-size:16px;padding:4px 8px;border-radius:6px}
+  .nav button:hover{background:rgba(255,255,255,.1)}
+  .dots{display:flex;gap:7px}
+  .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:.2s}
+  .dot.on{background:#fff;transform:scale(1.3)}
+  .counter{position:fixed;top:26px;right:30px;z-index:50;font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.2em;color:#9aa0a4;mix-blend-mode:difference}
+  .hint{position:fixed;bottom:26px;right:30px;z-index:50;font-size:11px;letter-spacing:.15em;color:#80868a}
+
+  @media(max-width:820px){
+    .mood{grid-template-columns:repeat(3,1fr)}
+    .swatches{grid-template-columns:repeat(3,1fr);height:auto}
+    .sw{height:120px}
+    .type-spec,.dd{grid-template-columns:1fr}
+    .cols{grid-template-columns:1fr;gap:20px}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <!-- 01 COVER -->
+  <section class="slide dark active">
+    <div class="crop tl"></div><div class="crop tr"></div><div class="crop bl"></div><div class="crop br"></div>
+    <div class="topbar"><span class="mono">BRAND DIRECTION</span><span class="mono">VOL. 01 / FOIL</span></div>
+    <div class="kicker mono">Visual Identity System · Derived from board “tootski”</div>
+    <h1 class="title">tootski</h1>
+    <p class="lead">A utilitarian luxury system. Sealed, technical, monochrome — built like field equipment, finished like a fragrance.</p>
+    <div class="cover-meta mono">
+      <span>SERIAL — 001 / 100</span>
+      <span class="barcode" style="color:var(--foil)"></span>
+      <span>EST. 2026 · MONOCHROME</span>
+    </div>
+  </section>
+
+  <!-- 02 ESSENCE -->
+  <section class="slide paper">
+    <div class="crop tl"></div><div class="crop tr"></div><div class="crop bl"></div><div class="crop br"></div>
+    <div class="sec-no mono">02 — ESSENCE</div>
+    <h2>everyday objects,<br/>issued like equipment.</h2>
+    <p class="lead">Tootski treats consumer products as standard‑issue gear. Every item looks vacuum‑sealed, serialised, and engineered for a purpose. The brand earns desire through restraint: industrial materials, surgical typography, and the quiet confidence of something built to spec — not to trend.</p>
+    <div style="margin-top:34px;display:flex;gap:14px;flex-wrap:wrap" class="mono">
+      <span class="tag">UTILITARIAN</span><span class="tag">MONOCHROME</span><span class="tag">TECHNICAL</span><span class="tag">SEALED</span><span class="tag">LTD EDITION</span>
+    </div>
+  </section>
+
+  <!-- 03 MOODBOARD -->
+  <section class="slide dark">
+    <div class="topbar"><span class="mono">03 — MOOD / REFERENCE</span><span class="mono">SOURCE: PINTEREST “tootski” · 135 PINS</span></div>
+    <div class="mood" id="mood"></div>
+  </section>
+
+  <!-- 04 PALETTE -->
+  <section class="slide paper">
+    <div class="crop tl"></div><div class="crop tr"></div><div class="crop bl"></div><div class="crop br"></div>
+    <div class="sec-no mono">04 — COLOUR</div>
+    <h2>strictly monochrome.</h2>
+    <p class="lead" style="margin-top:14px">No colour. The system lives entirely in metal and paper — silver foil to carbon black, with one off‑white for substrate. Colour, if ever used, is borrowed from materials, never pigment.</p>
+    <div class="swatches mono">
+      <div class="sw" style="background:#eef0f1;color:#121315"><span class="n">Foil Highlight</span><span class="h">#EEF0F1</span></div>
+      <div class="sw" style="background:#c7cbce;color:#121315"><span class="n">Mylar Silver</span><span class="h">#C7CBCE</span></div>
+      <div class="sw" style="background:#8a9094;color:#fff"><span class="n">Brushed Steel</span><span class="h">#8A9094</span></div>
+      <div class="sw" style="background:#3a3d40;color:#fff"><span class="n">Graphite</span><span class="h">#3A3D40</span></div>
+      <div class="sw" style="background:#121315;color:#eef0f1"><span class="n">Carbon</span><span class="h">#121315</span></div>
+      <div class="sw" style="background:#f3f2ee;color:#121315"><span class="n">Paper</span><span class="h">#F3F2EE</span></div>
+    </div>
+  </section>
+
+  <!-- 05 TYPOGRAPHY -->
+  <section class="slide paper">
+    <div class="crop tl"></div><div class="crop tr"></div><div class="crop bl"></div><div class="crop br"></div>
+    <div class="sec-no mono">05 — TYPOGRAPHY</div>
+    <h2>grotesk, lowercase, heavy.</h2>
+    <div class="type-spec">
+      <div>
+        <div class="big">heart</div>
+        <div class="big" style="opacity:.5">human</div>
+        <div class="glyphs">AaBbCc — 0123456789</div>
+        <p style="margin-top:18px;font-size:15px;opacity:.8;line-height:1.6">Display: a neo‑grotesque (Helvetica Now / Inter / Neue Haas). Set bold to black, lowercase, tight tracking. Words are objects — large, blunt, centred on the product.</p>
+      </div>
+      <div>
+        <div class="mono" style="font-size:13px;opacity:.6;letter-spacing:.2em">SPECIMEN / FUNCTIONAL</div>
+        <div class="mono" style="font-size:15px;line-height:1.9;margin-top:10px">
+          BLLOC MICRO SD<br/>
+          LTD EDITION 100 — 001<br/>
+          NET WT 500g · THERMO No.3<br/>
+          GRUPPENÜBUNG / GROUP EXERCISE
+        </div>
+        <div class="barcode" style="color:#121315;margin-top:22px;width:200px;height:34px"></div>
+        <div class="type-row"><span>Display</span><span class="mono">Inter / Helvetica · 800</span></div>
+        <div class="type-row"><span>Functional</span><span class="mono">Space Mono · 400/700</span></div>
+        <div class="type-row"><span>Case</span><span class="mono">lowercase · UPPER specs</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 ART DIRECTION -->
+  <section class="slide dark">
+    <div class="crop tl"></div><div class="crop tr"></div><div class="crop bl"></div><div class="crop br"></div>
+    <div class="sec-no mono">06 — ART DIRECTION</div>
+    <h2>shot like lab equipment.</h2>
+    <div class="cols">
+      <div class="col"><div class="num mono">001</div><h3>materials</h3><p>Vacuum‑sealed mylar, brushed aluminium, stainless, frosted plastics. Texture and crinkle are the hero — let the foil catch light.</p></div>
+      <div class="col"><div class="num mono">002</div><h3>lighting</h3><p>Soft studio grey or clean white sweep. Neutral, even, clinical. Hard enough to reveal surface; never moody for its own sake.</p></div>
+      <div class="col"><div class="num mono">003</div><h3>detailing</h3><p>Barcodes, QR codes, serial numbers, metric specs, ™ marks. Bureaucratic ornament — the product is documented, not decorated.</p></div>
+    </div>
+  </section>
+
+  <!-- 07 LOGO / MARK -->
+  <section class="slide foil">
+    <div class="crop tl"></div><div class="crop tr"></div><div class="crop bl"></div><div class="crop br"></div>
+    <div class="sec-no mono">07 — WORDMARK</div>
+    <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+      <div style="width:64px;height:64px;border:3px solid #121315;border-radius:50%;display:flex;align-items:center;justify-content:center">
+        <div style="width:18px;height:18px;background:#121315;border-radius:50%"></div>
+      </div>
+      <div style="font-size:clamp(48px,9vw,120px);font-weight:900;letter-spacing:-.05em;line-height:.85">tootski<span style="font-size:.3em;vertical-align:super">™</span></div>
+    </div>
+    <p class="lead" style="margin-top:26px">Mark = a sealed aperture: a ring with a solid core, echoing a vacuum valve / lens / port. Always paired with the lowercase wordmark and a functional descriptor line beneath.</p>
+    <div class="mono" style="margin-top:18px;font-size:13px;letter-spacing:.2em;opacity:.7">tootski™ — standard issue · no.001</div>
+  </section>
+
+  <!-- 08 APPLICATIONS -->
+  <section class="slide dark">
+    <div class="crop tl"></div><div class="crop tr"></div><div class="crop bl"></div><div class="crop br"></div>
+    <div class="sec-no mono">08 — APPLICATIONS</div>
+    <h2>where it lives.</h2>
+    <div class="cols">
+      <div class="col"><div class="num mono">PKG</div><h3>packaging</h3><p>Foil sachets, sealed pouches, machined tins, Pelican‑style cases. Single bold word + spec label + serial.</p></div>
+      <div class="col"><div class="num mono">WEB</div><h3>digital</h3><p>White or graphite canvas, oversized lowercase type, monospaced captions, slow product rotations.</p></div>
+      <div class="col"><div class="num mono">OBJ</div><h3>collateral</h3><p>Hang‑tags, instruction cards, embossed ™ stickers, numbered editions, anti‑static bags.</p></div>
+    </div>
+  </section>
+
+  <!-- 09 DO / DONT -->
+  <section class="slide paper">
+    <div class="crop tl"></div><div class="crop tr"></div><div class="crop bl"></div><div class="crop br"></div>
+    <div class="sec-no mono">09 — PRINCIPLES</div>
+    <h2>keep it issued, not styled.</h2>
+    <div class="dd">
+      <div class="box do"><h4 class="mono">DO</h4><ul>
+        <li>Lead with material — foil, metal, frost.</li>
+        <li>One blunt lowercase word per object.</li>
+        <li>Document everything: serials, specs, codes.</li>
+        <li>Stay monochrome and neutral‑lit.</li>
+      </ul></div>
+      <div class="box dont"><h4 class="mono">DON'T</h4><ul>
+        <li>Add brand colour or gradients for flair.</li>
+        <li>Use soft, rounded, friendly type.</li>
+        <li>Over‑style lighting or add props.</li>
+        <li>Decorate — let function be the ornament.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <!-- 10 CLOSE -->
+  <section class="slide dark">
+    <div class="crop tl"></div><div class="crop tr"></div><div class="crop bl"></div><div class="crop br"></div>
+    <div class="topbar"><span class="mono">10 — END</span><span class="mono">tootski™ · brand direction v1</span></div>
+    <h1 class="title" style="font-size:clamp(40px,8vw,110px)">standard issue.</h1>
+    <p class="lead">Built like equipment. Finished like luxury.</p>
+    <div class="cover-meta mono"><span>SERIAL — 001 / 100</span><span class="barcode" style="color:var(--foil)"></span><span>END OF DOCUMENT</span></div>
+  </section>
+
+</div>
+
+<div class="counter mono" id="counter">01 / 10</div>
+<div class="nav">
+  <button id="prev">‹</button>
+  <div class="dots" id="dots"></div>
+  <button id="next">›</button>
+</div>
+<div class="hint mono">← → / SPACE</div>
+
+<script>
+const driveIds = [
+  "1-Xa9zz70zSDi8vSd7ZTpFXF4rAGo52b7","10cnTiIyJSGA53PX_v9M2KuyNWdEPZIa1","116IgqJUG4oNidyMTsH_AzOvubqFyJP7m",
+  "13JigcyCbIMk-BGkBKZWwzvFJ92imozdP","16Cx7fYA8mW_PPYrkyVWd3wV2OhMrEPE5","1AIDTbFxsXLokc9ex3jn_mqFaI0iHtxDJ",
+  "1C-EdzOBrkZ32lm1I1WXu8GR7MJrwdQTs","1FQ7cQA6P15ETR8VlvuAmzCaXWvv4pgDy","1KLCYGhsrqOeNOxnHTx1dkjL7yGTkHGTQ",
+  "1Mmoe3ll_1uhEnAUiyAADBkb2t7RXa5j9","1WAzWpLlLxltmFxDRB-I28Rv1xyTZ_CqL","1g26kLWvTWQWuGI_ftDMc6lXux4NDXBU4",
+  "1pMWyZOzf7GGo1-jBOu1lnpmzdESMMD6g","1zEfLnE-MjVvV-VnjuygBOQkDEcEVST3v","1ZS0zCF3N0v8xDGmRDui4tYczd3Hqg1HI",
+  "1d0OvXXRhV9RyCquGHRATB9epgVgNDGVv"
+];
+const spans = [["w2","h2"],[],[],["h2"],[],["w2"],[],[],["w2"],[],[],["h2"],[],["w2"],[],[]];
+const mood = document.getElementById('mood');
+driveIds.forEach((id,i)=>{
+  const c=document.createElement('div');
+  c.className='cell '+(spans[i]||[]).join(' ');
+  const img=document.createElement('img');
+  img.loading='lazy';
+  img.src='https://drive.google.com/thumbnail?id='+id+'&sz=w1000';
+  img.referrerPolicy='no-referrer';
+  c.appendChild(img); mood.appendChild(c);
+});
+
+const slides=[...document.querySelectorAll('.slide')];
+const dotsEl=document.getElementById('dots');
+const counter=document.getElementById('counter');
+let idx=0;
+slides.forEach((s,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);dotsEl.appendChild(d);});
+const dots=[...dotsEl.children];
+function go(n){
+  idx=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===idx));
+  dots.forEach((d,i)=>d.classList.toggle('on',i===idx));
+  counter.textContent=String(idx+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+}
+document.getElementById('next').onclick=()=>go(idx+1);
+document.getElementById('prev').onclick=()=>go(idx-1);
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(idx+1);}
+  if(e.key==='ArrowLeft'){go(idx-1);}
+});
+let sx=0;
+addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)go(idx+(dx<0?1:-1));},{passive:true});
+</script>
+</body>
+</html>
