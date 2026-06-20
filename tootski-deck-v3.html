@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>tootski — Brand & Product</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#000;--ink:#0a0a0b;--white:#fff;--paper:#f5f5f7;
+    --grey:#86868b;--grey-2:#b0b0b5;--line:rgba(255,255,255,.12);--line-d:rgba(0,0,0,.1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:#000;color:#fff;-webkit-font-smoothing:antialiased;overflow:hidden;letter-spacing:-.014em}
+  .deck{position:relative;height:100vh;width:100vw;overflow:hidden}
+  .slide{position:absolute;inset:0;opacity:0;visibility:hidden;
+    transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1);transform:scale(1.012);
+    display:flex;flex-direction:column;justify-content:center;padding:0 clamp(48px,9vw,160px)}
+  .slide.active{opacity:1;visibility:visible;transform:none}
+  .light{background:var(--paper);color:var(--ink)}
+  .white{background:#fff;color:var(--ink)}
+  .dark{background:#000;color:#fff}
+  .ink{background:var(--ink);color:#fff}
+  .center{align-items:center;text-align:center}
+
+  .ey{font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--grey);margin-bottom:22px}
+  .ey.l{color:#cfd0d2}
+  h1{font-size:clamp(48px,9vw,120px);font-weight:600;line-height:.97;letter-spacing:-.04em}
+  h2{font-size:clamp(34px,5.6vw,70px);font-weight:600;line-height:1.03;letter-spacing:-.035em}
+  h3{font-size:clamp(22px,3vw,32px);font-weight:600;letter-spacing:-.02em}
+  .lead{font-size:clamp(18px,1.8vw,24px);line-height:1.5;font-weight:400;color:var(--grey);max-width:760px;margin-top:26px}
+  .light .lead,.white .lead{color:#56565b}
+  .thin{font-weight:300}
+  .stmt{font-size:clamp(40px,7vw,92px);font-weight:600;line-height:1.02;letter-spacing:-.04em;max-width:16ch}
+  .quote{font-size:clamp(32px,5vw,60px);font-weight:300;line-height:1.18;letter-spacing:-.02em;max-width:20ch}
+  .quote b{font-weight:600}
+
+  .divider{font-size:clamp(56px,12vw,168px);font-weight:700;letter-spacing:-.05em;line-height:.9}
+  .divider .no{display:block;font-size:14px;font-weight:600;letter-spacing:.2em;color:var(--grey);margin-bottom:28px}
+
+  .bleed{padding:0}
+  .bleed .img{position:absolute;inset:0;background-size:cover;background-position:center;background-color:#0e0e10}
+  .bleed .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.7))}
+  .bleed .cap{position:relative;z-index:2;margin-top:auto;padding:0 clamp(48px,9vw,160px) clamp(56px,9vh,104px)}
+
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;width:100%;margin-top:50px}
+  .step{}
+  .step .ph{height:260px;border-radius:16px;background-size:cover;background-position:center;background-color:#e6e6e9;margin-bottom:20px}
+  .step .n{font-size:13px;font-weight:600;letter-spacing:.16em;color:var(--grey);margin-bottom:8px}
+  .step h3{margin-bottom:8px}
+  .step p{font-size:15px;line-height:1.55;color:#56565b}
+  .dark .step p,.ink .step p{color:var(--grey)}
+
+  .loop{display:flex;flex-wrap:wrap;gap:14px;width:100%;max-width:1100px;margin-top:44px}
+  .loop .node{flex:1;min-width:150px;border:1px solid var(--line-d);border-radius:14px;padding:22px 20px}
+  .loop .node .i{font-size:12px;color:var(--grey);font-weight:600;letter-spacing:.14em;margin-bottom:10px}
+  .loop .node h3{font-size:19px}
+  .dark .loop .node,.ink .loop .node{border-color:var(--line)}
+
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:54px;width:100%;max-width:1100px}
+  .pill .k{font-size:13px;color:var(--grey);font-weight:600;letter-spacing:.1em;margin-bottom:14px}
+  .pill h3{margin-bottom:10px}
+  .pill p{font-size:15.5px;line-height:1.55;color:var(--grey)}
+  .light .pill p,.white .pill p{color:#56565b}
+
+  .grid4{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:12px;height:64vh;width:100%}
+  .grid4 .ph{background-size:cover;background-position:center;background-color:#e6e6e9;border-radius:14px}
+  .two{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;width:100%}
+  .two .ph{height:66vh;border-radius:18px;background-size:cover;background-position:center;background-color:#e6e6e9}
+
+  .swatches{display:grid;grid-template-columns:repeat(6,1fr);width:100%;max-width:1100px;margin-top:48px;border-radius:14px;overflow:hidden;border:1px solid var(--line-d)}
+  .sw{height:210px;display:flex;flex-direction:column;justify-content:flex-end;padding:18px;font-size:12px}
+  .sw .n{font-weight:600;font-size:13px}.sw .h{opacity:.7;margin-top:3px}
+
+  .specimen{width:100%;max-width:1100px;margin-top:28px}
+  .specimen .s1{font-size:clamp(40px,7vw,92px);font-weight:600;letter-spacing:-.04em;line-height:1.04}
+  .typerow{display:flex;justify-content:space-between;border-top:1px solid var(--line-d);padding:13px 0;font-size:14px;color:#56565b}
+
+  .gallery{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;gap:12px;width:100%;margin-top:28px}
+  .gallery .g{background-size:cover;background-position:center;border-radius:12px;background-color:#1a1a1c}
+  .gallery .w2{grid-column:span 2}.gallery .h2{grid-row:span 2}
+
+  .dd{display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;max-width:1000px;margin-top:40px}
+  .dd .box{border:1px solid var(--line-d);border-radius:16px;padding:30px}
+  .dd h4{font-size:13px;letter-spacing:.12em;margin-bottom:18px;color:var(--grey)}
+  .dd ul{list-style:none}
+  .dd li{font-size:16px;line-height:1.5;padding:11px 0;border-bottom:1px solid var(--line-d)}
+  .dd li:last-child{border:0}
+
+  .compliance{border:1px solid var(--line);border-radius:16px;padding:34px;max-width:760px;margin-top:36px;font-size:15px;line-height:1.6;color:var(--grey)}
+  .compliance .mg{font-size:13px;letter-spacing:.14em;color:#fff;margin-bottom:14px;font-weight:600}
+
+  .foot{position:fixed;bottom:22px;left:clamp(48px,9vw,160px);z-index:40;font-size:12px;color:var(--grey);letter-spacing:.04em;mix-blend-mode:difference}
+  .count{position:fixed;bottom:22px;right:clamp(48px,9vw,160px);z-index:40;font-size:12px;color:var(--grey);letter-spacing:.1em;mix-blend-mode:difference}
+  .nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:14px;
+    background:rgba(20,20,22,.7);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:100px;padding:8px 14px}
+  .nav button{background:none;border:0;color:#ddd;font-size:17px;cursor:pointer;padding:2px 8px;border-radius:6px}
+  .nav button:hover{background:rgba(255,255,255,.12)}
+  .dots{display:flex;gap:6px;max-width:60vw;flex-wrap:wrap;justify-content:center}
+  .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer}
+  .dot.on{background:#fff}
+  .progress{position:fixed;top:0;left:0;height:2px;background:#fff;z-index:60;transition:width .4s ease}
+
+  @media(max-width:880px){
+    .steps,.pillars{grid-template-columns:1fr;gap:22px}.grid4{height:42vh}
+    .two{grid-template-columns:1fr;gap:22px}.two .ph{height:38vh}
+    .swatches{grid-template-columns:repeat(3,1fr)}.gallery{grid-template-columns:repeat(2,1fr)}.dd{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="deck" id="deck">
+
+  <!-- 01 COVER -->
+  <section class="slide dark bleed center">
+    <div class="img" data-img="tinHero"></div>
+    <div class="scrim"></div>
+    <div class="cap" style="text-align:center;margin:auto 0">
+      <div class="ey l">BRAND &amp; PRODUCT DIRECTION — 2026</div>
+      <h1>tootski</h1>
+      <p class="lead" style="color:#d5d5d8;margin-left:auto;margin-right:auto">Nicotine, redesigned as an object of desire.</p>
+    </div>
+  </section>
+
+  <!-- 02 THESIS -->
+  <section class="slide dark center">
+    <div class="ey">THE THESIS</div>
+    <h1 style="font-size:clamp(46px,9vw,118px)">Aesthetic is<br/>everything.</h1>
+    <p class="lead" style="text-align:center;margin-left:auto;margin-right:auto">In a category sold on clinical white plastic, beauty is the entire moat.</p>
+  </section>
+
+  <!-- 03 INSIGHT -->
+  <section class="slide light">
+    <div class="ey">THE INSIGHT</div>
+    <p class="stmt">Nobody posts the nicotine. They post the object it comes in.</p>
+    <p class="lead">So we don't sell a pouch. We sell a <strong>tin worth photographing</strong> — a small, weighty, beautiful thing you want to take out, set down, and be seen with.</p>
+  </section>
+
+  <!-- 04 PRODUCT IS MARKETING -->
+  <section class="slide ink center">
+    <p class="quote">“The packaging isn't the wrapper.<br/>The packaging <b>is the marketing.</b>”</p>
+  </section>
+
+  <!-- 05 THE POST TEST -->
+  <section class="slide white">
+    <div class="ey">THE ONE RULE</div>
+    <h2 style="max-width:20ch">Would someone post a photo of the tin — with nothing else in frame?</h2>
+    <p class="lead">If the answer is no, it isn't finished. Every decision — material, weight, finish, type, the click of the lid — is judged against that single test.</p>
+  </section>
+
+  <!-- 06 CATEGORY CONTRAST (bleed) -->
+  <section class="slide dark bleed">
+    <div class="img" data-img="plinth"></div>
+    <div class="scrim"></div>
+    <div class="cap">
+      <div class="ey l">THE OPPORTUNITY</div>
+      <h2 style="max-width:18ch">Everyone else made a medical device. We're making a desirable object.</h2>
+    </div>
+  </section>
+
+  <!-- 07 DIVIDER PRODUCT -->
+  <section class="slide dark"><div class="divider"><span class="no">SECTION 01</span>the product.</div></section>
+
+  <!-- 08 WHAT IT IS — 3 steps -->
+  <section class="slide white">
+    <div class="ey">HOW IT WORKS</div>
+    <h2 style="max-width:16ch">A tin. A packet. A tab.</h2>
+    <div class="steps">
+      <div class="step"><div class="ph" data-img="tinOpen"></div><div class="n">01 — THE TIN</div><h3>Carry it</h3><p>A machined metal tin that holds the packets — and earns a place in your pocket.</p></div>
+      <div class="step"><div class="ph" data-img="packet"></div><div class="n">02 — THE PACKET</div><h3>Open it</h3><p>Inside, individually sealed foil packets. Precise, hygienic, single-dose.</p></div>
+      <div class="step"><div class="ph" data-img="tab"></div><div class="n">03 — THE TAB</div><h3>Place it</h3><p>A small nicotine jelly tab you rest on your tongue. Discreet. No spit, no smoke.</p></div>
+    </div>
+  </section>
+
+  <!-- 09 THE TIN hero -->
+  <section class="slide light">
+    <div class="two">
+      <div class="ph" data-img="tinHero"></div>
+      <div>
+        <div class="ey">THE HERO OBJECT</div>
+        <h2>The tin.</h2>
+        <p class="lead">Brushed metal. Satisfying weight. A lid that clicks. Embossed wordmark, stamped serial. This is the thing customers photograph — so this is where the budget goes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 THE PACKET -->
+  <section class="slide light">
+    <div class="two">
+      <div><div class="ey">INSIDE</div><h2>The packet.</h2>
+        <p class="lead">Sealed foil, lowercase type, a barcode, the strength in milligrams. The technical detailing makes it feel engineered and trustworthy — and looks incredible in macro.</p>
+      </div>
+      <div class="ph" data-img="packetLabel"></div>
+    </div>
+  </section>
+
+  <!-- 11 THE TAB -->
+  <section class="slide dark bleed">
+    <div class="img" data-img="tab"></div>
+    <div class="scrim"></div>
+    <div class="cap"><div class="ey l">THE FORMAT</div><h2 style="max-width:18ch">A jelly tab for the tongue. Modern, clean, quietly futuristic.</h2></div>
+  </section>
+
+  <!-- 12 THE RANGE -->
+  <section class="slide white">
+    <div class="two">
+      <div class="ph" data-img="tinStack"></div>
+      <div><div class="ey">THE RANGE</div><h2>Numbered, not flavoured-up.</h2>
+        <p class="lead">Strengths and blends as a numbered system — 01 to 04. Collectible, calm, and easy to stack on a shelf or a feed.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 DIVIDER SHARE -->
+  <section class="slide dark"><div class="divider"><span class="no">SECTION 02</span>made to be posted.</div></section>
+
+  <!-- 14 DESIGNED TO BE PHOTOGRAPHED -->
+  <section class="slide white">
+    <div class="ey">SHAREABILITY BY DESIGN</div>
+    <h2 style="max-width:18ch">Every surface is a shot.</h2>
+    <div class="grid4" style="margin-top:40px">
+      <div class="ph" data-img="cafe"></div>
+      <div class="ph" data-img="ugcHand"></div>
+      <div class="ph" data-img="lidMacro"></div>
+      <div class="ph" data-img="flatlay"></div>
+    </div>
+  </section>
+
+  <!-- 15 THE LOOP -->
+  <section class="slide ink">
+    <div class="ey l">THE GROWTH ENGINE</div>
+    <h2 style="max-width:16ch">The object sells the next one.</h2>
+    <div class="loop">
+      <div class="node"><div class="i">01</div><h3>Carry</h3></div>
+      <div class="node"><div class="i">02</div><h3>Set it down</h3></div>
+      <div class="node"><div class="i">03</div><h3>Photograph</h3></div>
+      <div class="node"><div class="i">04</div><h3>Post</h3></div>
+      <div class="node"><div class="i">05</div><h3>Others want it</h3></div>
+    </div>
+    <p class="lead" style="margin-top:30px">Every customer becomes a billboard. Earned attention beats paid — and the design does the work for free.</p>
+  </section>
+
+  <!-- 16 EARNED MEDIA bleed -->
+  <section class="slide dark bleed">
+    <div class="img" data-img="group"></div>
+    <div class="scrim"></div>
+    <div class="cap"><div class="ey l">DISTRIBUTION</div><h2 style="max-width:18ch">If it's beautiful enough to display, it's free media.</h2></div>
+  </section>
+
+  <!-- 17 DIVIDER SYSTEM -->
+  <section class="slide dark"><div class="divider"><span class="no">SECTION 03</span>the aesthetic.</div></section>
+
+  <!-- 18 ESSENCE -->
+  <section class="slide light">
+    <div class="ey">ESSENCE</div>
+    <h2 style="max-width:18ch">Utilitarian luxury. Standard issue.</h2>
+    <p class="lead">Built like field equipment, finished like fragrance. Vacuum-sealed, serialised, monochrome — desire earned through restraint, not noise.</p>
+  </section>
+
+  <!-- 19 REFERENCE CATEGORIES -->
+  <section class="slide white">
+    <div class="ey">DERIVED FROM REFERENCE · 6 PATTERNS</div>
+    <h2 style="max-width:18ch">Where the look comes from.</h2>
+    <div class="pillars" style="margin-top:44px">
+      <div class="pill"><div class="k">01 SEALED &amp; FOIL</div><p>Vacuum mylar, crinkled silver, big lowercase type.</p></div>
+      <div class="pill"><div class="k">02 MACHINED METAL</div><p>Brushed alloy, knurling, CNC precision.</p></div>
+      <div class="pill"><div class="k">03 TECHNICAL LABELS</div><p>Barcodes, serials, mg, ™ — function as ornament.</p></div>
+      <div class="pill"><div class="k">04 NUMBERED SYSTEMS</div><p>Ranges you collect: 01–04, not loud flavours.</p></div>
+      <div class="pill"><div class="k">05 STUDIO LIGHT</div><p>Clinical grey sweeps, clean voids, negative space.</p></div>
+      <div class="pill"><div class="k">06 EDITIONED</div><p>Stamped 001/100. Scarcity as identity.</p></div>
+    </div>
+  </section>
+
+  <!-- 20 COLOUR -->
+  <section class="slide white">
+    <div class="ey">COLOUR</div>
+    <h2 style="max-width:16ch">No colour. Only material.</h2>
+    <div class="swatches">
+      <div class="sw" style="background:#eef0f1;color:#111"><span class="n">Foil Hi</span><span class="h">#EEF0F1</span></div>
+      <div class="sw" style="background:#c7cbce;color:#111"><span class="n">Mylar</span><span class="h">#C7CBCE</span></div>
+      <div class="sw" style="background:#8a9094;color:#fff"><span class="n">Steel</span><span class="h">#8A9094</span></div>
+      <div class="sw" style="background:#3a3d40;color:#fff"><span class="n">Graphite</span><span class="h">#3A3D40</span></div>
+      <div class="sw" style="background:#121315;color:#eee"><span class="n">Carbon</span><span class="h">#121315</span></div>
+      <div class="sw" style="background:#f5f5f7;color:#111"><span class="n">Paper</span><span class="h">#F5F5F7</span></div>
+    </div>
+  </section>
+
+  <!-- 21 TYPOGRAPHY -->
+  <section class="slide white">
+    <div class="ey">TYPOGRAPHY — INTER</div>
+    <div class="specimen">
+      <div class="s1">tootski. 6mg. no.001.</div>
+      <p class="lead" style="margin-top:10px">One typeface. Lowercase and heavy for the name, uppercase and spaced for the data. Clean, neutral, engineered.</p>
+      <div style="margin-top:22px">
+        <div class="typerow"><span>Wordmark</span><span>Inter · 700 · lowercase · −5% tracking</span></div>
+        <div class="typerow"><span>Body</span><span>Inter · 400 · sentence case</span></div>
+        <div class="typerow"><span>Data / specs</span><span>Inter · 600 · UPPERCASE · +12%</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 22 PHOTOGRAPHY bleed -->
+  <section class="slide dark bleed">
+    <div class="img" data-img="flatlay"></div>
+    <div class="scrim"></div>
+    <div class="cap"><div class="ey l">PHOTOGRAPHY</div><h2 style="max-width:18ch">Shot like lab equipment, not lifestyle clutter.</h2>
+      <p class="lead" style="color:#d5d5d8">Material is the hero. Neutral light, hard enough to reveal the brushed surface. Specs in frame. Never warm, never busy.</p></div>
+  </section>
+
+  <!-- 23 WORDMARK -->
+  <section class="slide light center">
+    <div class="ey">WORDMARK</div>
+    <div style="display:flex;align-items:center;gap:22px;margin:6px 0">
+      <div style="width:56px;height:56px;border:3px solid #0a0a0b;border-radius:50%;display:flex;align-items:center;justify-content:center">
+        <div style="width:16px;height:16px;background:#0a0a0b;border-radius:50%"></div></div>
+      <div style="font-size:clamp(46px,9vw,108px);font-weight:700;letter-spacing:-.05em">tootski<span style="font-size:.28em;vertical-align:super;font-weight:500">™</span></div>
+    </div>
+    <p class="lead" style="text-align:center">A sealed aperture — a ring with a solid core. Embossed on every lid.</p>
+  </section>
+
+  <!-- 24 DIVIDER WORLD -->
+  <section class="slide dark"><div class="divider"><span class="no">SECTION 04</span>in the world.</div></section>
+
+  <!-- 25 GALLERY -->
+  <section class="slide dark">
+    <div class="ey">CONCEPT IMAGERY — AI-GENERATED DIRECTION</div>
+    <h2 style="max-width:18ch;margin-bottom:6px">The object, visualised.</h2>
+    <div class="gallery">
+      <div class="g w2 h2" data-img="tinHero"></div>
+      <div class="g" data-img="tinOpen"></div>
+      <div class="g" data-img="tinStack"></div>
+      <div class="g" data-img="lidMacro"></div>
+      <div class="g" data-img="packet"></div>
+      <div class="g w2" data-img="cafe"></div>
+      <div class="g" data-img="tab"></div>
+      <div class="g" data-img="group"></div>
+      <div class="g" data-img="ugcHand"></div>
+      <div class="g" data-img="flatlay"></div>
+    </div>
+  </section>
+
+  <!-- 26 PRINCIPLES -->
+  <section class="slide white">
+    <div class="ey">PRINCIPLES</div>
+    <h2 style="max-width:18ch">Would you post it?</h2>
+    <div class="dd">
+      <div class="box"><h4>DO</h4><ul>
+        <li>Make the tin the hero of every shot.</li>
+        <li>Lead with metal, foil, and weight.</li>
+        <li>Document it: serials, mg, batch, ™.</li>
+        <li>Stay monochrome and quiet.</li>
+      </ul></div>
+      <div class="box"><h4>DON'T</h4><ul>
+        <li>Look medical, clinical-cheap, or pharma.</li>
+        <li>Add colour, gradients, or cartoon flavour art.</li>
+        <li>Hide the product behind lifestyle clutter.</li>
+        <li>Ship anything you wouldn't photograph.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <!-- 27 COMPLIANCE -->
+  <section class="slide dark">
+    <div class="ey l">RESPONSIBILITY</div>
+    <h2 style="max-width:18ch">Adults only. By design.</h2>
+    <div class="compliance">
+      <div class="mg">CONTAINS NICOTINE · 21+ · NOT FOR SALE TO MINORS</div>
+      Nicotine is an addictive chemical. tootski is an adult product, marketed only to existing adult nicotine users. The technical, restrained identity does double duty — it reads as premium <em>and</em> as responsible, never playful or youth-facing. Strength, batch and warnings sit on every pack as part of the aesthetic, not buried.
+    </div>
+  </section>
+
+  <!-- 28 CLOSE -->
+  <section class="slide dark center">
+    <div class="ey">tootski™ · BRAND &amp; PRODUCT DIRECTION v1</div>
+    <h1 style="font-size:clamp(44px,8vw,104px)">make it worth<br/>posting.</h1>
+    <p class="lead" style="text-align:center;margin-left:auto;margin-right:auto">The tin is the ad. Everything else follows.</p>
+  </section>
+
+</div>
+
+<div class="foot">tootski — brand &amp; product</div>
+<div class="count" id="count">01 / 28</div>
+<div class="nav"><button id="prev">‹</button><div class="dots" id="dots"></div><button id="next">›</button></div>
+
+<script>
+const B = "https://d8j0ntlcm91z4.cloudfront.net/user_37CJAETJ6HBiRbz97go2lFOfI47/";
+const G = {
+  tinHero:    B+"hf_20260620_222703_81cade82-0f6c-4d9c-9d24-68fd3d4c9bf2.png",
+  tinOpen:    B+"hf_20260620_222704_62568c09-0087-436a-b8fc-c3a989eb9e2c.png",
+  packet:     B+"hf_20260620_222705_fcde2770-0f4c-41a6-bf32-0a12d704aab6.png",
+  tab:        B+"hf_20260620_222707_60215997-f202-4a3e-b1df-281554418225.png",
+  flatlay:    B+"hf_20260620_222708_e1f72e17-359f-4e5a-909f-500dbbe26ac7.png",
+  tinStack:   B+"hf_20260620_222709_2d41936e-161a-49f9-81fe-5c2169d41da9.png",
+  ugcHand:    B+"hf_20260620_222711_c213d6cb-0069-43b0-b027-4c584cf1a9a8.png",
+  cafe:       B+"hf_20260620_222712_b5084e52-3438-4f3e-bc10-30980bcfb0ce.png",
+  lidMacro:   B+"hf_20260620_222713_fa71db54-f5ea-40dd-aabd-a5846e8667db.png",
+  group:      B+"hf_20260620_222714_ee183797-535f-4872-9653-576be15fc88e.png",
+  packetLabel:B+"hf_20260620_222716_f04c4143-9a79-4bce-bf8e-12e952638f3b.png",
+  plinth:     B+"hf_20260620_222717_77737f6e-b72d-4371-b4e1-96d89cc8d48a.png"
+};
+function srcFor(k){ return G[k]||''; }
+document.querySelectorAll('[data-img]').forEach(el=>{
+  const s=srcFor(el.dataset.img);
+  if(s) el.style.backgroundImage=`url("${s}")`;
+});
+
+const slides=[...document.querySelectorAll('.slide')];
+const dotsEl=document.getElementById('dots'),count=document.getElementById('count'),prog=document.getElementById('progress');
+let idx=0;
+slides.forEach((s,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);dotsEl.appendChild(d);});
+const dots=[...dotsEl.children];
+function go(n){
+  idx=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===idx));
+  dots.forEach((d,i)=>d.classList.toggle('on',i===idx));
+  count.textContent=String(idx+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  prog.style.width=((idx+1)/slides.length*100)+'%';
+}
+document.getElementById('next').onclick=()=>go(idx+1);
+document.getElementById('prev').onclick=()=>go(idx-1);
+addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(idx+1);}if(e.key==='ArrowLeft')go(idx-1);});
+let sx=0;addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)go(idx+(dx<0?1:-1));},{passive:true});
+go(0);
+</script>
+</body>
+</html>
