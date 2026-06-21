@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>tootski — The Brand Bible</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --noir:#0c0a08;--ink:#16110c;--cream:#f1e9da;--cream-2:#e7ddca;
+    --muted:#9a9082;--muted-d:#6b6557;--brass:#c2a063;--brass-2:#d8bd86;
+    --line:rgba(241,233,218,.14);--line-d:rgba(22,17,12,.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:var(--cream);
+    -webkit-font-smoothing:antialiased;overflow:hidden;letter-spacing:-.012em}
+  .serif{font-family:"Newsreader",Georgia,serif;font-weight:400}
+  .deck{position:relative;height:100vh;width:100vw;overflow:hidden}
+  /* film grain */
+  .grain{position:fixed;inset:0;z-index:80;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  .slide{position:absolute;inset:0;opacity:0;visibility:hidden;
+    transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1);transform:scale(1.012);
+    display:flex;flex-direction:column;justify-content:center;padding:0 clamp(48px,9vw,168px)}
+  .slide.active{opacity:1;visibility:visible;transform:none}
+  .noir{background:radial-gradient(120% 130% at 70% 0%,#1c160e,#0a0807 60%);color:var(--cream)}
+  .cream{background:var(--cream);color:var(--ink)}
+  .cream2{background:linear-gradient(180deg,#efe7d6,#e6dcc7);color:var(--ink)}
+  .center{align-items:center;text-align:center}
+
+  .ch{font-size:13px;font-weight:600;letter-spacing:.26em;color:var(--brass);margin-bottom:22px;text-transform:uppercase}
+  .ch.d{color:var(--muted-d)}
+  h1{font-size:clamp(52px,10vw,128px);font-weight:600;line-height:.96;letter-spacing:-.045em}
+  h2{font-size:clamp(32px,5.2vw,64px);font-weight:600;line-height:1.04;letter-spacing:-.035em}
+  h3{font-size:clamp(21px,2.7vw,30px);font-weight:600;letter-spacing:-.02em}
+  .lead{font-size:clamp(17px,1.7vw,22px);line-height:1.6;font-weight:400;color:var(--muted);max-width:780px;margin-top:24px}
+  .cream .lead,.cream2 .lead{color:#4f4636}
+  .pull{font-family:"Newsreader",Georgia,serif;font-size:clamp(30px,5vw,58px);line-height:1.18;letter-spacing:-.01em;max-width:21ch}
+  .pull.sm{font-size:clamp(26px,3.6vw,42px);max-width:24ch}
+  .pull .b{color:var(--brass)}
+  .attr{margin-top:26px;font-size:14px;letter-spacing:.12em;color:var(--brass);text-transform:uppercase}
+
+  .sec{font-size:clamp(70px,15vw,210px);font-weight:600;letter-spacing:-.05em;line-height:.86}
+  .sec .no{display:block;font-size:13px;font-weight:600;letter-spacing:.28em;color:var(--brass);margin-bottom:26px}
+
+  .bleed{padding:0}
+  .bleed .img{position:absolute;inset:0;background-size:cover;background-position:center;background-color:#0e0b08}
+  .bleed .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,6,4,.2),rgba(8,6,4,.82))}
+  .bleed .scrim.l{background:linear-gradient(90deg,rgba(8,6,4,.8),rgba(8,6,4,.15) 70%)}
+  .bleed .cap{position:relative;z-index:2;margin-top:auto;padding:0 clamp(48px,9vw,168px) clamp(56px,9vh,108px);max-width:1100px}
+  .bleed .cap.mid{margin:auto 0}
+
+  .cols{display:grid;gap:36px;width:100%;margin-top:46px}
+  .cols.c3{grid-template-columns:repeat(3,1fr)}
+  .cols.c2{grid-template-columns:repeat(2,1fr)}
+  .col .k{font-size:12.5px;color:var(--brass);font-weight:600;letter-spacing:.14em;margin-bottom:12px;text-transform:uppercase}
+  .col h3{margin-bottom:8px}
+  .col p{font-size:15px;line-height:1.6;color:var(--muted)}
+  .cream .col p,.cream2 .col p{color:#4f4636}
+
+  .reflist{columns:2;column-gap:54px;width:100%;max-width:1100px;margin-top:36px}
+  .reflist .r{break-inside:avoid;margin-bottom:18px}
+  .reflist .r .n{font-weight:600;font-size:16px}
+  .reflist .r .n b{color:var(--brass);font-weight:600}
+  .reflist .r p{font-size:13.5px;line-height:1.5;color:var(--muted);margin-top:3px}
+  .cream .reflist .r p{color:#5b5140}
+
+  .rank{width:100%;max-width:1000px;margin-top:34px}
+  .rank .row{display:flex;gap:22px;align-items:baseline;padding:15px 0;border-top:1px solid var(--line-d)}
+  .rank .row .i{font-family:"Newsreader",serif;font-size:30px;color:var(--brass);width:46px;flex:none}
+  .rank .row .t{font-size:19px;font-weight:600}
+  .rank .row .d{font-size:14.5px;color:#5b5140;margin-top:2px}
+
+  .beats{width:100%;max-width:1000px;margin-top:30px}
+  .beat{display:flex;gap:24px;align-items:baseline;padding:14px 0;border-top:1px solid var(--line)}
+  .beat .n{font-family:"Newsreader",serif;font-size:26px;color:var(--brass);width:128px;flex:none;letter-spacing:.04em}
+  .beat .d{font-size:16px;color:var(--muted)}
+  .beat .d b{color:var(--cream);font-weight:600}
+
+  .feel{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);width:100%;max-width:1100px;margin-top:40px;border-radius:12px;overflow:hidden}
+  .feel .f{background:var(--noir);padding:24px 22px}
+  .feel .f .t{font-size:16px;font-weight:600;color:var(--brass);margin-bottom:8px}
+  .feel .f p{font-size:13.5px;line-height:1.5;color:var(--muted)}
+
+  .fence{width:100%;max-width:1000px;margin-top:30px;list-style:none}
+  .fence li{font-size:16px;line-height:1.45;padding:13px 0 13px 30px;position:relative;border-bottom:1px solid var(--line);color:var(--cream)}
+  .fence li:before{content:"✕";position:absolute;left:0;top:13px;color:var(--brass);font-size:14px}
+  .fence li b{color:var(--muted)}
+
+  .lines{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;max-width:1000px}
+  .lines .ln{font-family:"Newsreader",serif;font-size:19px;border:1px solid var(--line-d);border-radius:100px;padding:9px 18px}
+  .noir .lines .ln{border-color:var(--line)}
+
+  .test{width:100%;max-width:1000px;margin-top:30px;counter-reset:t}
+  .test .q{display:flex;gap:20px;padding:14px 0;border-top:1px solid var(--line-d);font-size:17px;line-height:1.4}
+  .test .q:before{counter-increment:t;content:counter(t);font-family:"Newsreader",serif;color:var(--brass);font-size:22px;flex:none;width:30px}
+
+  .foot{position:fixed;bottom:22px;left:clamp(48px,9vw,168px);z-index:40;font-size:12px;color:var(--muted-d);letter-spacing:.08em;mix-blend-mode:difference}
+  .count{position:fixed;bottom:22px;right:clamp(48px,9vw,168px);z-index:40;font-size:12px;color:var(--muted-d);letter-spacing:.1em;mix-blend-mode:difference}
+  .nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:14px;
+    background:rgba(20,16,11,.72);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:100px;padding:8px 14px}
+  .nav button{background:none;border:0;color:var(--cream);font-size:17px;cursor:pointer;padding:2px 8px;border-radius:6px}
+  .nav button:hover{background:rgba(241,233,218,.12)}
+  .dots{display:flex;gap:5px;max-width:62vw;flex-wrap:wrap;justify-content:center}
+  .dot{width:6px;height:6px;border-radius:50%;background:rgba(241,233,218,.28);cursor:pointer}
+  .dot.on{background:var(--brass)}
+  .progress{position:fixed;top:0;left:0;height:2px;background:var(--brass);z-index:60;transition:width .4s ease}
+
+  @media(max-width:880px){
+    .cols.c3,.cols.c2{grid-template-columns:1fr;gap:20px}.reflist{columns:1}
+    .feel{grid-template-columns:repeat(2,1fr)}.beat{flex-direction:column;gap:4px}.beat .n{width:auto}
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="progress" id="progress"></div>
+<div class="deck" id="deck">
+
+  <!-- 01 COVER -->
+  <section class="slide noir bleed center">
+    <div class="img" data-img="cover"></div>
+    <div class="scrim"></div>
+    <div class="cap mid" style="text-align:center;max-width:none">
+      <div class="ch">The Brand Bible · Volume One · Confidential</div>
+      <h1>tootski</h1>
+      <p class="lead serif" style="margin:18px auto 0;color:#d8cdb8;font-size:clamp(18px,2vw,26px)">References, not instructions. Feeling, not formula.</p>
+    </div>
+  </section>
+
+  <!-- 02 PROLOGUE -->
+  <section class="slide cream">
+    <div class="ch d">Prologue — a note to the designer</div>
+    <p class="pull">Everything between the <span class="b">references</span> and the <span class="b">fence</span> is yours to design.</p>
+    <p class="lead">No typefaces named. No hexes given. No layout drawn. What you'll find is the soul, the audience, the world, the references, the voice, the things we never do, and the feeling every piece should leave behind. If unsure, the references win over the brief.</p>
+  </section>
+
+  <!-- 03 SOUL -->
+  <section class="slide noir">
+    <div class="sec"><span class="no">One</span></div>
+    <p class="pull serif" style="margin-top:20px">“Tootski is the ritual of the sharp, the fast, and the slightly <span class="b">dangerous</span> — a small piece of theatre for people who treat their attention like money.”</p>
+  </section>
+
+  <!-- 04 WHAT WE SELL -->
+  <section class="slide cream">
+    <div class="ch d">What we actually sell</div>
+    <h2 style="max-width:18ch">We don't sell nicotine. We sell a ritual.</h2>
+    <p class="lead">Marlboro never sold tar; it sold freedom. Playboy never sold paper; it sold taste and permission. Red Bull never sold a drink; it sold a worldview. Tootski sells the most stylish moment of your day — and the quiet signal that you're the kind of person who has them. <b style="color:var(--ink)">The strip is the artifact. The feeling is the product.</b></p>
+  </section>
+
+  <!-- 05 FIVE WORDS -->
+  <section class="slide noir center">
+    <div class="ch">Five words</div>
+    <h1 style="font-size:clamp(34px,5.4vw,72px);line-height:1.08">Sharp. Fast. Secret.<br/>Stylish. <span style="color:var(--brass)">Dangerous‑adjacent.</span></h1>
+  </section>
+
+  <!-- 06 DANGEROUS ADJACENT -->
+  <section class="slide cream2">
+    <div class="ch d">The most important phrase in this document</div>
+    <p class="pull">The brand lives <span class="b">one step from the edge.</span> Flirting with it, never standing on it.</p>
+    <p class="lead">The edge is what makes us magnetic. Standing on it is what kills us.</p>
+  </section>
+
+  <!-- 07 WARM BRAND COLD AGE -->
+  <section class="slide noir">
+    <div class="sec"><span class="no">Two</span>warm.</div>
+    <p class="pull sm serif" style="margin-top:24px">“In an age obsessed with making everything frictionless and optimized, we sell <span class="b">friction, ritual, and a little danger</span> — on purpose.”</p>
+  </section>
+
+  <!-- 08 SMOKING QUOTE (bleed) -->
+  <section class="slide noir bleed">
+    <div class="img" data-img="newton"></div>
+    <div class="scrim l"></div>
+    <div class="cap" style="margin-top:auto">
+      <p class="pull sm serif">“Smoking's real product was never nicotine. It was looking like the most interesting, most dangerous, most desirable person in the room. <span class="b">That is what we sell.”</span></p>
+    </div>
+  </section>
+
+  <!-- 09 AUDIENCE -->
+  <section class="slide cream">
+    <div class="sec" style="color:var(--ink)"><span class="no">Three</span></div>
+    <h2 style="max-width:20ch">For adults who treat their attention like money.</h2>
+    <div class="cols c2">
+      <div class="col"><div class="k">The core</div><p>Understood by attitude, not age or income. Allergic to try‑hard. The brand must look like it doesn't need them — which is exactly why they'll chase it.</p></div>
+      <div class="col"><div class="k">The aspirational halo</div><p>Everyone who wants to feel like the core. We design for the core and let the halo reach up — never design down, or coveted becomes cheap.</p></div>
+    </div>
+  </section>
+
+  <!-- 10 WORLD: PLACE (bleed) -->
+  <section class="slide noir bleed">
+    <div class="img" data-img="office"></div>
+    <div class="scrim"></div>
+    <div class="cap">
+      <div class="ch"><span class="no" style="color:var(--brass)">Four ·</span> The world — place</div>
+      <h2 style="max-width:20ch">Always interior. Almost always after‑dark.</h2>
+      <p class="lead" style="color:#d8cdb8">The corner office at 8pm. The back of a town car. The hotel bar at midnight. The trading floor at 9:28am. Always the sense that something is about to happen — or just has.</p>
+    </div>
+  </section>
+
+  <!-- 11 WORLD: TIME -->
+  <section class="slide cream2">
+    <div class="ch d">The world — time</div>
+    <p class="pull sm">1980s financial‑district excess as a <span class="b">temperature</span>, not a costume.</p>
+    <p class="lead">The 9:28am adrenaline played completely straight. Money as texture; ambition with no apology and a great suit. As much a current Manhattan steakhouse, a Mayfair club, a Tokyo whisky bar, as any actual decade.</p>
+  </section>
+
+  <!-- 12 WORLD: OBJECTS -->
+  <section class="slide noir">
+    <div class="cols c2" style="align-items:center;gap:56px;margin-top:0">
+      <div>
+        <div class="ch">The world — objects & people</div>
+        <h2>Things with weight and history.</h2>
+        <p class="lead">A vintage Cartier tank. A heavy crystal tumbler. A brass key. A folded broadsheet. Polished shoes. Populated by Slim Aarons subjects in modern dress — attractive, successful, mid‑deal, mid‑night‑out, somewhere better to be in five minutes.</p>
+      </div>
+      <div style="height:62vh;border-radius:14px;background-size:cover;background-position:center" data-img="objects"></div>
+    </div>
+  </section>
+
+  <!-- 13 WORLD: LIGHT/TEMP (bleed) -->
+  <section class="slide noir bleed">
+    <div class="img" data-img="caseBar"></div>
+    <div class="scrim"></div>
+    <div class="cap">
+      <div class="ch">The world — light & temperature</div>
+      <h2 style="max-width:20ch">Warm and low. A single source.</h2>
+      <p class="lead" style="color:#d8cdb8">The light of the lamp, not the office ceiling. The rope is at the door, but the room behind it is warm, generous, human. This separates us from sterile luxury and cold tech.</p>
+    </div>
+  </section>
+
+  <!-- 14 REFERENCE SHELF: FILM/PHOTO -->
+  <section class="slide cream">
+    <div class="sec" style="color:var(--ink)"><span class="no">Five</span></div>
+    <h2>The reference shelf.</h2>
+    <div class="reflist">
+      <div class="r"><div class="n"><b>Wolf of Wall Street</b></div><p>Posture, velocity, appetite — the temperature, never the imagery.</p></div>
+      <div class="r"><div class="n"><b>American Psycho</b></div><p>Interiors, restraint, the menace of taste; one warm lamp on a face.</p></div>
+      <div class="r"><div class="n"><b>The Godfather I & II</b></div><p>The men's club as a country. The rooms, never the violence.</p></div>
+      <div class="r"><div class="n"><b>Lost in Translation</b></div><p>Late‑night drives, hotel bars, halos around lit objects in the dark.</p></div>
+      <div class="r"><div class="n"><b>Mad Men · Hopper</b></div><p>The office as theatre; a single warm light holding its breath.</p></div>
+      <div class="r"><div class="n"><b>Slim Aarons</b></div><p>The visual thesis of the entire brand. (See section seven.)</p></div>
+      <div class="r"><div class="n"><b>Helmut Newton</b></div><p>Manhattan glamour in black & white; the cool exhale at 2am.</p></div>
+      <div class="r"><div class="n"><b>Magnum portraiture</b></div><p>Bacall, Bardot, Sinatra, McQueen — the glamour we reclaim.</p></div>
+    </div>
+  </section>
+
+  <!-- 15 REFERENCE SHELF: BRANDS -->
+  <section class="slide cream2">
+    <div class="ch d">The reference shelf — brands &amp; worlds</div>
+    <div class="reflist" style="margin-top:18px">
+      <div class="r"><div class="n"><b>Red Bull</b></div><p>Our primary template: a culture company that happens to sell a product. Adopted wholesale.</p></div>
+      <div class="r"><div class="n"><b>Marlboro</b></div><p>One mark, one idea, repeated forever. We take the discipline.</p></div>
+      <div class="r"><div class="n"><b>Playboy (Hefner era)</b></div><p>Taste, permission, the hospitable rope. Warmth sold to an inner circle.</p></div>
+      <div class="r"><div class="n"><b>Rimowa</b></div><p>The case as camera bait — an object people compose photos around.</p></div>
+      <div class="r"><div class="n"><b>Supreme · Concorde</b></div><p>Perpetual scarcity; status as the actual product.</p></div>
+      <div class="r"><div class="n"><b>Soho House · Berghain</b></div><p>The door, the rope, the temperature inside. Membership, modernized.</p></div>
+      <div class="r"><div class="n"><b>Liquid Death</b></div><p>An edgy name big competitors can't copy; stunts as the media budget.</p></div>
+      <div class="r"><div class="n"><b>Aimé Leon Dore · Sporty &amp; Rich</b></div><p>Aspirational casting &amp; engineered omnipresence, done modernly.</p></div>
+    </div>
+  </section>
+
+  <!-- 16 HIERARCHY -->
+  <section class="slide noir">
+    <div class="ch"><span class="no" style="color:var(--brass)">Six ·</span> The hierarchy of inspirations</div>
+    <h2 style="max-width:16ch">When references conflict, this is the order.</h2>
+    <div class="rank">
+      <div class="row"><div class="i">1</div><div><div class="t" style="color:var(--cream)">Slim Aarons</div><div class="d" style="color:var(--muted)">The visual thesis. The single most important reference.</div></div></div>
+      <div class="row"><div class="i">2</div><div><div class="t" style="color:var(--cream)">Red Bull</div><div class="d" style="color:var(--muted)">The operating model. Spend on culture, not product claims.</div></div></div>
+      <div class="row"><div class="i">3</div><div><div class="t" style="color:var(--cream)">Marlboro</div><div class="d" style="color:var(--muted)">The discipline of less. One mark until it owns a feeling.</div></div></div>
+      <div class="row"><div class="i">4</div><div><div class="t" style="color:var(--cream)">Playboy mid‑century</div><div class="d" style="color:var(--muted)">Warmth &amp; taste. Adult without being cold.</div></div></div>
+      <div class="row"><div class="i">5</div><div><div class="t" style="color:var(--cream)">Wolf of Wall Street</div><div class="d" style="color:var(--muted)">The temperature of the room. Never the literal imagery.</div></div></div>
+    </div>
+  </section>
+
+  <!-- 17 AARONS DOCTRINE (bleed) -->
+  <section class="slide noir bleed center">
+    <div class="img" data-img="aarons"></div>
+    <div class="scrim"></div>
+    <div class="cap mid" style="text-align:center;max-width:none">
+      <div class="ch">Seven · The Slim Aarons doctrine</div>
+      <p class="pull serif" style="margin:0 auto">“Attractive people doing attractive things in <span class="b">attractive places.”</span></p>
+      <div class="attr">— Slim Aarons</div>
+    </div>
+  </section>
+
+  <!-- 18 AARONS TEST -->
+  <section class="slide cream">
+    <div class="ch d">The Aarons test — every image, every post</div>
+    <div class="test">
+      <div class="q">Are the people attractive, successful, magnetic — who the audience wants to be?</div>
+      <div class="q">Are they doing something the audience wants to be doing — living, not posing?</div>
+      <div class="q">Are they somewhere the audience wants to be — real, specific, desirable?</div>
+      <div class="q">Does it make the viewer want to step into the frame?</div>
+    </div>
+    <p class="lead">Yes to all four — on‑brand. Built from attraction and aspiration; never from rejection.</p>
+  </section>
+
+  <!-- 19 THE FEELING -->
+  <section class="slide noir">
+    <div class="ch"><span class="no" style="color:var(--brass)">Eight ·</span> The feeling the work should leave</div>
+    <div class="feel">
+      <div class="f"><div class="t">Restraint</div><p>Where the category shouts, we whisper. White space is wealth.</p></div>
+      <div class="f"><div class="t">Weight</div><p>Heavy in the hand, even on a screen. Nothing flimsy.</p></div>
+      <div class="f"><div class="t">Warmth</div><p>Hospitable even at its most exclusive. The room is generous.</p></div>
+      <div class="f"><div class="t">Confidence</div><p>Never explains, never apologizes. Walks in like it lives there.</p></div>
+      <div class="f"><div class="t">Mystery</div><p>Always says less. A wrist, a mouth, the back of a head.</p></div>
+      <div class="f"><div class="t">Adult</div><p>Reads as twenty‑eight, not eighteen. Never candy‑coded.</p></div>
+      <div class="f"><div class="t">Cinematic</div><p>A still from a film you weren't invited to. Grain, not gloss.</p></div>
+      <div class="f"><div class="t">—</div><p>The specific way you achieve these is yours.</p></div>
+    </div>
+  </section>
+
+  <!-- 20 VOICE -->
+  <section class="slide cream">
+    <div class="sec" style="color:var(--ink)"><span class="no">Nine</span></div>
+    <h2 style="max-width:20ch">Short. Dry. Confident to the edge of arrogance.</h2>
+    <p class="lead">Tootski speaks like the most interesting person at the party, who is about to leave. Say less. Never explain. Command, don't request. Flirt with the edge; never name it.</p>
+    <div class="lines">
+      <span class="ln">“Take one. Run.”</span>
+      <span class="ln">“For people in a hurry to win.”</span>
+      <span class="ln">“Not for everyone. That's the point.”</span>
+      <span class="ln">“Welcome to the inside.”</span>
+      <span class="ln">“Gone. As predicted.”</span>
+      <span class="ln">“The quiet advantage.”</span>
+    </div>
+  </section>
+
+  <!-- 21 BRAND IS THE VERB -->
+  <section class="slide noir center">
+    <div class="ch">The brand is the verb</div>
+    <p class="pull serif">“Did a <span class="b">Tootski</span> before the meeting.” “Tootski up.”</p>
+    <p class="lead" style="margin-left:auto;margin-right:auto">The brand itself becomes the word for the act — the way Google did. Every line treats “Tootski” as a word the reader already uses.</p>
+  </section>
+
+  <!-- 22 THE RITUAL -->
+  <section class="slide noir bleed">
+    <div class="img" data-img="ritual"></div>
+    <div class="scrim l"></div>
+    <div class="cap" style="margin:auto 0;max-width:760px">
+      <div class="ch"><span class="no" style="color:var(--brass)">Ten ·</span> The ritual — five beats</div>
+      <div class="beats">
+        <div class="beat"><div class="n">The Draw</div><div class="d">The case appears. <b>Weight in the hand.</b></div></div>
+        <div class="beat"><div class="n">The Click</div><div class="d">The magnetic clasp opens. <b>The signature sound.</b></div></div>
+        <div class="beat"><div class="n">The Lift</div><div class="d">A single strip between thumb and forefinger. <b>Held.</b></div></div>
+        <div class="beat"><div class="n">The Place</div><div class="d">Strip to tongue. Eyes up. <b>The dissolve.</b></div></div>
+        <div class="beat"><div class="n">The Run</div><div class="d">The clasp closes. <b>Already moving.</b></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 23 SONIC -->
+  <section class="slide cream2 center">
+    <div class="ch d">Sonic identity</div>
+    <p class="pull">The magnetic <span class="b">click</span> is the sound of the brand.</p>
+    <p class="lead" style="margin-left:auto;margin-right:auto">Captured, mastered, used as the audio bookend on every moving piece — the way a studio sting closes a film. Over time, the click alone should mean Tootski.</p>
+  </section>
+
+  <!-- 24 EXCLUSIVITY -->
+  <section class="slide noir">
+    <div class="sec"><span class="no">Eleven</span>the rope.</div>
+    <div class="cols c2" style="margin-top:30px">
+      <div class="col"><div class="k">The rope</div><p>Belonging matters because others are outside. The brand carries itself like a door that might not open for you — and that posture creates obsession.</p></div>
+      <div class="col"><div class="k">Cast the world; never guard the door</div><p>We attract by association, never by rejection. Engineered omnipresence among the right people. The door is always open; the world on the other side does the selecting.</p></div>
+    </div>
+  </section>
+
+  <!-- 25 THE FENCE -->
+  <section class="slide noir">
+    <div class="ch"><span class="no" style="color:var(--brass)">Twelve ·</span> The fence at the edge of the cliff</div>
+    <h2 style="max-width:16ch;margin-bottom:6px">What Tootski never does.</h2>
+    <ul class="fence">
+      <li>No drug imitation. <b>The danger is in the attitude, never literal. A sommelier, never a dealer.</b></li>
+      <li>Never youth‑coded. <b>For grown‑ups. Nothing candy, cartoon, or school‑coded.</b></li>
+      <li>No medical or drug‑like claims. <b>It earns its reputation; we never assert it.</b></li>
+      <li>Never identity‑based exclusion. <b>We exclude on taste, never on body or appearance.</b></li>
+      <li>Never use others' IP. <b>Borrow the temperature of the film, not its property.</b></li>
+      <li>Never look like an energy drink. <b>No neon, no clinical white, no category clichés.</b></li>
+    </ul>
+  </section>
+
+  <!-- 26 PRODUCT: WHAT IT IS -->
+  <section class="slide cream">
+    <div class="sec" style="color:var(--ink)"><span class="no">Thirteen</span></div>
+    <h2 style="max-width:18ch">A fast‑dissolve strip. Placed on the tongue.</h2>
+    <p class="lead">Sublingual, water‑free, discreet, theatrical — the closest the legal world has to a designed, performable gesture. Two lines, one ritual.</p>
+    <div class="cols c2">
+      <div class="col"><div class="k">The Night Line — nicotine</div><p>The brand's heart and lead product. UK first. The members‑only top of the building.</p></div>
+      <div class="col"><div class="k">The Day Line — caffeine</div><p>The reach line, freely marketable. The lobby of the building whose top floors are the Night Line.</p></div>
+    </div>
+  </section>
+
+  <!-- 27 THE CASE (bleed) -->
+  <section class="slide noir bleed">
+    <div class="img" data-img="desk"></div>
+    <div class="scrim"></div>
+    <div class="cap">
+      <div class="ch">The object — the case is half the brand</div>
+      <h2 style="max-width:20ch">Designed to be set down before the photo is taken.</h2>
+      <p class="lead" style="color:#d8cdb8">A small, weighted, refillable case with a magnetic clasp — a luxury lighter, a heavy cardholder, a piece of jewelry. Camera bait like Rimowa. Make the case worth owning before anyone tastes the product.</p>
+    </div>
+  </section>
+
+  <!-- 28 NIGHT/DAY -->
+  <section class="slide noir">
+    <div class="cols c2" style="align-items:center;gap:56px;margin-top:0">
+      <div style="height:60vh;border-radius:14px;background-size:cover;background-position:center" data-img="nightday"></div>
+      <div>
+        <div class="ch">One case, day to night</div>
+        <h2>The durable status anchor.</h2>
+        <p class="lead">The same case takes either line's refills, carrying a customer from day to night seamlessly. The case is the anchor; the refills are the consumable inside.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 29 VARIANT CODING -->
+  <section class="slide cream">
+    <div class="cols c2" style="align-items:center;gap:56px;margin-top:0">
+      <div>
+        <div class="ch d">Variant coding — each flavour a coded specimen</div>
+        <h2 style="max-width:14ch">The trading‑floor route.</h2>
+        <p class="lead">Each variant as a ticker — TTSK.A, a stock‑chart line, an ISIN‑style serial, edition numbers, percentages, dates in monospace. The visual language of money applied to a consumable. Collecting them feels like collecting something.</p>
+      </div>
+      <div style="height:60vh;border-radius:14px;background-size:cover;background-position:center" data-img="ticker"></div>
+    </div>
+  </section>
+
+  <!-- 30 THE TEST -->
+  <section class="slide noir">
+    <div class="ch"><span class="no" style="color:var(--brass)">Fourteen ·</span> The test — five yeses, then it ships</div>
+    <div class="test">
+      <div class="q" style="border-color:var(--line);color:var(--cream)">Does it pass the Aarons test?</div>
+      <div class="q" style="border-color:var(--line);color:var(--cream)">Would Marlboro have made it with one mark and no clutter?</div>
+      <div class="q" style="border-color:var(--line);color:var(--cream)">Would Red Bull's culture team have made it instead of an ad team?</div>
+      <div class="q" style="border-color:var(--line);color:var(--cream)">Does it sound like the most interesting person at the party — about to leave?</div>
+      <div class="q" style="border-color:var(--line);color:var(--cream)">Does it stay inside the fence?</div>
+    </div>
+  </section>
+
+  <!-- 31 SUMMARY -->
+  <section class="slide cream2">
+    <div class="sec" style="color:var(--ink)"><span class="no">Fifteen</span></div>
+    <p class="pull sm">A culture brand in the lineage of <span class="b">Marlboro, Playboy &amp; Red Bull</span> — reclaiming the warm, dangerous‑adjacent glamour smoking once held.</p>
+    <p class="lead">1980s financial‑district excess as a temperature, populated by Slim Aarons subjects in modern dress. Restraint, weight, warmth, confidence, mystery, adultness, cinema. The voice is short and dry. The ritual ends on a click. The brand is the verb. We attract by association, never by rejection.</p>
+  </section>
+
+  <!-- 32 CLOSE -->
+  <section class="slide noir bleed center">
+    <div class="img" data-img="cover"></div>
+    <div class="scrim"></div>
+    <div class="cap mid" style="text-align:center;max-width:none">
+      <p class="pull serif" style="margin:0 auto">“Attractive people doing attractive things in attractive places.”</p>
+      <div class="attr">References, not instructions. Feeling, not formula.</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="foot">tootski — the brand bible</div>
+<div class="count" id="count">01 / 32</div>
+<div class="nav"><button id="prev">‹</button><div class="dots" id="dots"></div><button id="next">›</button></div>
+
+<script>
+const B="https://d8j0ntlcm91z4.cloudfront.net/user_37CJAETJ6HBiRbz97go2lFOfI47/";
+const G={
+  cover:      B+"hf_20260621_075239_b17fe516-fec1-43fd-a037-41988944d96b.png",
+  caseBar:    B+"hf_20260621_075242_5ab07e89-05e8-41c0-be22-965d5ca69c07.png",
+  aarons:     B+"hf_20260621_075243_73c2718d-8b97-4651-9c42-fb3d69a1f892.png",
+  ritual:     B+"hf_20260621_075245_0b6d286d-07aa-49c9-9380-006419837ada.png",
+  desk:       B+"hf_20260621_075246_856065a0-0595-4fff-a2c3-c5297619aa9f.png",
+  newton:     B+"hf_20260621_075248_22ddf91d-6a41-4ebf-96f8-e7e7a3b0702c.png",
+  office:     B+"hf_20260621_075249_20cce763-e010-47f7-9828-bfd09d248f39.png",
+  objects:    B+"hf_20260621_075251_4cbc30b2-0939-4ae8-a145-e9eb683d9016.png",
+  ticker:     B+"hf_20260621_075252_fbe926f9-4182-41cb-8070-45ff8d282f7c.png",
+  nightday:   B+"hf_20260621_075254_eb88435a-ac1c-4d8c-8203-39f341ac89e4.png",
+  barMidnight:B+"hf_20260621_075255_744922d1-5ccf-4800-afcc-8a7d026fb5ab.png",
+  clasp:      B+"hf_20260621_075256_c65f1aeb-3c0a-4298-baa4-c0a9d4f8e676.png",
+  group:      B+"hf_20260621_075257_05fabb69-63d5-4e79-8ac7-129e5dc6e8b0.png"
+};
+document.querySelectorAll('[data-img]').forEach(el=>{const s=G[el.dataset.img];if(s)el.style.backgroundImage=`url("${s}")`;});
+
+const slides=[...document.querySelectorAll('.slide')];
+const dotsEl=document.getElementById('dots'),count=document.getElementById('count'),prog=document.getElementById('progress');
+let idx=0;
+slides.forEach((s,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);dotsEl.appendChild(d);});
+const dots=[...dotsEl.children];
+function go(n){idx=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===idx));
+  dots.forEach((d,i)=>d.classList.toggle('on',i===idx));
+  count.textContent=String(idx+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  prog.style.width=((idx+1)/slides.length*100)+'%';}
+document.getElementById('next').onclick=()=>go(idx+1);
+document.getElementById('prev').onclick=()=>go(idx-1);
+addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(idx+1);}if(e.key==='ArrowLeft')go(idx-1);});
+let sx=0;addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)go(idx+(dx<0?1:-1));},{passive:true});
+go(0);
+</script>
+</body>
+</html>
