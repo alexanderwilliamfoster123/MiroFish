@@ -17,7 +17,13 @@ import trimesh
 import generate_frame as g
 
 BLUE = "#9ecae1"; ORANGE = "#fdae6b"; GREY = "#eeeeee"; RED = "#d62728"
+GREEN = "#74c476"
 DATE = "2026-06-21"
+
+
+def grams(mat):
+    v = g.build_full_frame().volume / 1000.0   # cm^3 solid
+    return v * (1.24 if mat == "PLA" else 1.27)
 
 xs, ys, nh, nv = g.edge_cut_positions()
 seg_h_len = (g.outer_w - 2 * g.corner_leg) / nh
@@ -52,26 +58,39 @@ def titleblock(fig, page, title):
 
 
 def section_axes(ax):
-    """Draw the channel cross-section (radial x, thickness z) on ax."""
-    fd, sz, lip, eng, wall, border = (g.frame_depth, g.slot_z, g.lip_z,
-                                      g.engage, g.wall, g.border)
-    ax.add_patch(Rectangle((eng, 0), wall, fd, fc=BLUE, ec="k"))
-    ax.add_patch(Rectangle((0, 0), eng, lip, fc=BLUE, ec="k"))
-    ax.add_patch(Rectangle((0, fd - lip), eng, lip, fc=BLUE, ec="k"))
-    pz0 = lip + g.clr_z
-    ax.add_patch(Rectangle((-7, pz0), eng + 7, g.panel_d, fc="#222",
+    """Draw the channel cross-section (radial x, thickness z) on ax,
+    including the compliant liner that lines the groove."""
+    fd, lip, eng, wall, border = (g.frame_depth, g.lip_z, g.engage,
+                                  g.wall, g.border)
+    ln = g.liner_thk
+    lb = eng + ln                      # radial width of the lip band
+    # rigid plastic: outer wall + front/back lips
+    ax.add_patch(Rectangle((lb, 0), wall, fd, fc=BLUE, ec="k"))
+    ax.add_patch(Rectangle((0, 0), lb, lip, fc=BLUE, ec="k"))
+    ax.add_patch(Rectangle((0, fd - lip), lb, lip, fc=BLUE, ec="k"))
+    # compliant liner lining the three groove faces
+    if ln > 0:
+        ax.add_patch(Rectangle((0, lip), lb, ln, fc=GREEN, ec="k", lw=.4))
+        ax.add_patch(Rectangle((0, fd - lip - ln), lb, ln, fc=GREEN, ec="k", lw=.4))
+        ax.add_patch(Rectangle((lb - ln, lip), ln, fd - 2 * lip,
+                               fc=GREEN, ec="k", lw=.4))
+    # panel seated inside the liner
+    pz0 = lip + ln + g.clr_z
+    ax.add_patch(Rectangle((-7, pz0), (lb - ln) + 7, g.panel_d, fc="#222",
                            ec="k", alpha=.85))
     ax.text(-3.5, fd / 2, "PANEL", color="w", ha="center", va="center",
             fontsize=7, fontweight="bold", rotation=90)
-    dimH(ax, 0, eng + wall, -4, f"border {border:.0f}", below=True)
+    dimH(ax, 0, lb + wall, -4, f"border {border:.0f}", below=True)
     dimH(ax, 0, eng, fd + 1.5, f"engage {eng:.0f}")
-    dimH(ax, eng, eng + wall, fd + 1.5, f"wall {wall:.0f}")
-    dimV(ax, eng + wall + 6, 0, fd, f"depth {fd:.1f}")
+    dimH(ax, lb, lb + wall, fd + 1.5, f"wall {wall:.0f}")
+    dimV(ax, lb + wall + 6, 0, fd, f"depth {fd:.1f}")
     dimV(ax, -8.5, pz0, pz0 + g.panel_d, f"panel {g.panel_d:.0f}", left=True)
-    ax.text(eng / 2, lip / 2, "lip", ha="center", va="center", fontsize=6)
-    ax.text(eng / 2, fd / 2, f"groove\n{sz:.1f}", ha="center", va="center",
-            fontsize=6, color="#333")
-    ax.set_xlim(-13, border + 16); ax.set_ylim(-8, fd + 6)
+    ax.text(lb / 2, lip / 2, "lip", ha="center", va="center", fontsize=6)
+    if ln > 0:
+        ax.annotate(f"liner {ln:.0f}", (lb / 2, lip + ln / 2),
+                    (lb / 2, fd + 6), fontsize=6.5, color="#2a7a2a",
+                    ha="center", arrowprops=dict(arrowstyle="->", color=GREEN))
+    ax.set_xlim(-13, border + 16); ax.set_ylim(-9, fd + 9)
     ax.set_aspect("equal"); ax.axis("off")
 
 
@@ -108,15 +127,17 @@ with PdfPages("Display_Frame_Design.pdf") as pdf:
         ("Target display", "Apple Studio Display 27\" (no stand / VESA)"),
         ("Panel W x H x D", f"{g.panel_w:.0f} x {g.panel_h:.0f} x {g.panel_d:.0f} mm"),
         ("Frame outer", f"{g.outer_w:.1f} x {g.outer_h:.1f} x {g.frame_depth:.1f} mm"),
-        ("Border width", f"{g.border:.0f} mm  (wall {g.wall:.0f} + engage {g.engage:.0f})"),
+        ("Border width", f"{g.border:.0f} mm  (wall {g.wall:.0f} + engage "
+                         f"{g.engage:.0f} + liner {g.liner_thk:.0f})"),
+        ("Compliant liner", f"{g.liner_thk:.0f} mm foam/flock/TPU bonded in groove"),
         ("Visible aperture", f"{g.opening_w:.1f} x {g.opening_h:.1f} mm"),
-        ("Fit clearance", f"{g.clr} mm in-plane / {g.clr_z} mm per face"),
+        ("Fit clearance", f"{g.clr} mm in-plane / {g.clr_z} mm per face + liner"),
         ("Print bed assumed", f"{g.bed:.0f} mm ({g.bed_usable:.0f} usable)"),
         ("Pieces", f"4 corners + {nh*2} top/bottom + {nv*2} side = "
                    f"{4+nh*2+nv*2} total"),
         ("Material (recommended)", "PETG / ASA, 4 walls, 30-40% infill"),
         ("Frame volume", f"{g.build_full_frame().volume/1000:.0f} cm3 "
-                         f"(~910 g PLA / ~880 g PETG)"),
+                         f"(~{grams('PLA'):.0f} g PLA / ~{grams('PETG'):.0f} g PETG)"),
     ]
     y = 0.46
     fig.text(0.06, 0.50, "KEY SPECIFICATION", fontsize=10, fontweight="bold")
@@ -126,9 +147,9 @@ with PdfPages("Display_Frame_Design.pdf") as pdf:
         y -= 0.027
     fig.text(0.06, y - 0.005,
              "C-channel 'picture frame': front + back lips clamp the bezel "
-             "faces; the outer wall\ntakes edge impacts. The panel edge sits in "
-             "a groove running the full perimeter.\nThe ring is split into "
-             "bed-sized pieces joined by Ø3 alignment pins + adhesive.",
+             "faces; the outer wall\ntakes edge impacts. The groove is lined "
+             "with compliant foam/flock for a glove-snug,\nnon-scratch grip. "
+             "The ring is split into bed-sized pieces joined by Ø3 pins + glue.",
              fontsize=8.5, color="#444", va="top")
     fig.text(0.06, 0.085, "FIRST: print corner_TR only and test-fit on a real "
              "screen corner before printing the full set.", fontsize=8.5,
@@ -143,7 +164,8 @@ with PdfPages("Display_Frame_Design.pdf") as pdf:
              "(mitred at corners).", ha="center", fontsize=9, color="#444")
     fig.text(0.1, 0.17, "Tuning:", fontsize=9, fontweight="bold")
     for i, t in enumerate([
-        "clr / clr_z  — grip tightness (raise if panel won't seat)",
+        "liner_thk    — foam/flock liner: the glove-snug, non-scratch grip",
+        "clr / clr_z  — hard clearance under the liner (raise if it won't seat)",
         "engage       — how far lips wrap the bezel (also groove depth)",
         "wall         — outer impact wall thickness",
         "lip_z        — front/back lip thickness"]):
@@ -259,6 +281,8 @@ with PdfPages("Display_Frame_Design.pdf") as pdf:
          f"{seg_v_len:.0f} x {g.border:.0f} x {g.frame_depth:.1f}"),
         ("~12", "Alignment pin", "pin.stl (or Ø3 rod)",
          f"Ø{g.pin_dia-0.2:.1f} x {2*g.pin_depth-1:.0f}"),
+        (f"~{2*(g.slot_w+g.slot_h)/1000:.1f} m", "Foam/flock liner",
+         "self-adhesive tape", f"{g.liner_thk:.0f} mm thick, ~{g.engage:.0f} mm wide"),
         ("1", "Whole-ring preview", "frame_full_REFERENCE.stl", "DO NOT print whole"),
     ]
     yt = 0.84
@@ -275,15 +299,18 @@ with PdfPages("Display_Frame_Design.pdf") as pdf:
         yt -= 0.032
     total = 4 + nh*2 + nv*2
     fig.text(0.10, yt - 0.01, f"Total printed body pieces: {total}    "
-             f"Joints: {total}    Est. filament: ~910 g PLA / ~880 g PETG",
+             f"Joints: {total}    Est. filament: ~{grams('PLA'):.0f} g PLA / "
+             f"~{grams('PETG'):.0f} g PETG",
              fontsize=9, fontweight="bold")
     # consumables
     fig.text(0.10, yt - 0.06, "CONSUMABLES / HARDWARE", fontsize=10,
              fontweight="bold")
     for i, t in enumerate([
-        "~1.0 kg PETG or ASA filament (structural; PLA OK for test fits only)",
+        "~1.1 kg PETG or ASA filament (structural; PLA OK for test fits only)",
         "Ø3 mm pins: printed pin.stl, or cut 3 mm rod / filament to 17 mm",
         "Epoxy or CA adhesive for the joints (frame is a permanent ring)",
+        f"~{2*(g.slot_w+g.slot_h)/1000:.1f} m self-adhesive {g.liner_thk:.0f} mm "
+        f"EVA foam / flock tape -> the glove-snug liner in the groove",
         "Closed-cell foam strip to bond the outer wall to the case shell",
         "Optional: M3/M4 L-brackets to bolt the frame to the case ribs"]):
         fig.text(0.12, yt - 0.09 - i*0.025, u"• " + t, fontsize=8.8)
@@ -300,22 +327,29 @@ with PdfPages("Display_Frame_Design.pdf") as pdf:
     y = 0.86
     y = block("PRINT SETTINGS", [
         "Material: PETG / ASA / ABS (impact + heat). PLA for test fits only.",
-        "Orientation: lay flat, 38.6 mm depth standing up -> pin holes "
-        "horizontal, no supports.",
+        f"Orientation: lay flat, {g.frame_depth:.1f} mm depth standing up -> "
+        "pin holes horizontal, no supports.",
         "Perimeters: 4   ·   Top/bottom layers: 5   ·   Infill: 30-40% gyroid.",
         "Layer height: 0.2-0.28 mm   ·   nozzle 0.4-0.6 mm.",
         "Print one corner first and test-fit before committing the full set."], y)
     y = block("ASSEMBLY", [
-        "1. Dry-fit all pieces around the display with pins in the Ø3.2 holes.",
-        "2. Check the ring closes square and the lips grip evenly all round.",
-        "3. Bond each joint with epoxy/CA; pins keep the faces aligned.",
-        "4. Seat the assembled frame in the Rimowa shell.",
-        "5. Bond closed-cell foam to the 8 mm outer wall, or bolt L-tabs "
-        "through it into the case ribs."], y - 0.02)
+        "1. Line the groove of every piece with the self-adhesive foam/flock "
+        "tape (both lips + back wall) BEFORE joining.",
+        "2. Dry-fit all pieces around the display, pins in the Ø3.2 holes; the "
+        "lined groove should grip with no rattle.",
+        "3. Check the ring closes square and grips evenly all round.",
+        "4. Bond each joint with epoxy/CA; pins keep the faces aligned.",
+        f"5. Seat the frame in the shell; bond foam to the {g.wall:.0f} mm outer "
+        "wall, or bolt L-tabs through it into the ribs."], y - 0.02)
+    y = block("DIAL THE FIT (glove-snug)", [
+        "Liner too tight to seat: drop liner_thk 0.5 mm, or use softer foam.",
+        "Still rattles: raise liner_thk, or add a second foam layer locally.",
+        "Re-print one corner each time and test on a real screen corner."], y - 0.02)
     y = block("MEASURE BEFORE FINAL PRINT", [
         "Exact panel edge thickness (bezels taper) -> set panel_d.",
-        "Rimowa internal depth must clear frame depth 38.6 mm + foam.",
-        "Case internal W x H must clear frame outer 640 x 379 mm."], y - 0.02)
+        f"Case internal depth must clear frame depth {g.frame_depth:.1f} mm.",
+        f"Case internal W x H must clear frame outer {g.outer_w:.0f} x "
+        f"{g.outer_h:.0f} mm."], y - 0.02)
     y = block("RETUNE (frame.scad / generate_frame.py)", [
         "Different screen: panel_w / panel_h / panel_d.",
         "Grip: clr, clr_z.   Protection: wall, engage.   Printer: bed.",

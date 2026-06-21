@@ -46,6 +46,13 @@ engage = 10.0  # how far the lips overlap the bezel = groove depth (mm)
 lip_z  = 3.0   # thickness of each front / back lip (mm)
 wall   = 8.0   # outer structural wall, beyond the panel edge (mm)
 
+# --- compliant liner --------------------------------------------------------
+# The groove is modelled oversize by this much on every face the panel touches,
+# so you bond self-adhesive EVA foam / flock / a TPU insert into it. The liner
+# compresses for a glove-snug, non-scratch grip and forgives the bezel taper.
+# Set to 0 for a bare rigid groove.
+liner_thk = 2.0   # thickness of the compliant liner (mm)
+
 # --- print / segmentation ---------------------------------------------------
 bed         = 220.0   # print bed size you have (mm, square assumed)
 bed_margin  = 10.0    # keep pieces this far inside the bed (mm)
@@ -58,15 +65,15 @@ pin_depth = 9.0   # pin hole depth into each face (mm)
 # ----------------------------------------------------------------------------
 # DERIVED
 # ----------------------------------------------------------------------------
-slot_z      = panel_d + 2 * clr_z          # groove width through thickness
+slot_z      = panel_d + 2 * clr_z + 2 * liner_thk  # groove width (Z), inc. liner
 frame_depth = slot_z + 2 * lip_z           # total frame thickness (Z)
-border      = wall + engage                # radial width of frame material
-outer_w     = panel_w + 2 * clr + 2 * wall
-outer_h     = panel_h + 2 * clr + 2 * wall
+border      = wall + engage + liner_thk    # radial width of frame material
+outer_w     = panel_w + 2 * clr + 2 * liner_thk + 2 * wall
+outer_h     = panel_h + 2 * clr + 2 * liner_thk + 2 * wall
 opening_w   = panel_w + 2 * clr - 2 * engage   # visible aperture
 opening_h   = panel_h + 2 * clr - 2 * engage
-slot_w      = panel_w + 2 * clr            # groove outer span
-slot_h      = panel_h + 2 * clr
+slot_w      = panel_w + 2 * clr + 2 * liner_thk    # groove outer span, inc. liner
+slot_h      = panel_h + 2 * clr + 2 * liner_thk
 bed_usable  = bed - bed_margin
 
 EPS = 1.0  # over-cut so subtractions punch cleanly through
@@ -226,7 +233,8 @@ def main():
     print(f"Frame outer        : {outer_w:.1f} x {outer_h:.1f} x "
           f"{frame_depth:.1f} mm")
     print(f"Frame border width  : {border:.1f} mm   "
-          f"(wall {wall} + engage {engage})")
+          f"(wall {wall} + engage {engage} + liner {liner_thk})")
+    print(f"Compliant liner    : {liner_thk} mm  (foam/flock/TPU bonded in groove)")
     print(f"Visible aperture   : {opening_w:.1f} x {opening_h:.1f} mm")
     print(f"Print bed (usable) : {bed_usable:.0f} mm")
     print("-" * 74)
@@ -269,6 +277,9 @@ def main():
     print(f"  ---> {total} printed body pieces total")
     print(f"  joints: {n_joints}  -> print ~{n_joints} alignment pins "
           f"(Ø{pin_dia-0.2:.1f} x {2*pin_depth-1:.0f} mm) or use Ø3 rod")
+    perim = 2 * (slot_w + slot_h) / 1000.0  # m, groove centre-line
+    print(f"  liner: ~{perim:.1f} m of {liner_thk:.0f} mm self-adhesive EVA "
+          f"foam / flock tape, ~{engage:.0f} mm wide")
     est_filament = frame.volume / 1000.0  # cm^3
     print(f"  frame solid volume : {est_filament:.0f} cm^3  "
           f"(~{est_filament*1.24:.0f} g PLA / ~{est_filament*1.20:.0f} g PETG)")

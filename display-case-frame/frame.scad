@@ -31,6 +31,12 @@ engage = 10;     // lip overlap / groove depth (mm)
 lip_z  = 3;      // front/back lip thickness (mm)
 wall   = 8;      // outer wall (mm)
 
+/* [Compliant liner] */
+// Groove is oversized by this on every panel-touching face so you bond
+// self-adhesive EVA foam / flock / a TPU insert in for a glove-snug,
+// non-scratch grip. Set 0 for a bare rigid groove.
+liner_thk = 2;   // compliant liner thickness (mm)
+
 /* [Print / segmentation] */
 bed        = 220;  // bed size (mm, square)
 bed_margin = 10;   // keep inside bed (mm)
@@ -41,15 +47,15 @@ pin_dia   = 3.2;   // alignment-pin hole dia (mm)
 pin_depth = 9;     // hole depth each face (mm)
 
 // ---- derived --------------------------------------------------------
-slot_z      = panel_d + 2*clr_z;
+slot_z      = panel_d + 2*clr_z + 2*liner_thk;
 frame_depth = slot_z + 2*lip_z;
-border      = wall + engage;
-outer_w     = panel_w + 2*clr + 2*wall;
-outer_h     = panel_h + 2*clr + 2*wall;
+border      = wall + engage + liner_thk;
+outer_w     = panel_w + 2*clr + 2*liner_thk + 2*wall;
+outer_h     = panel_h + 2*clr + 2*liner_thk + 2*wall;
 opening_w   = panel_w + 2*clr - 2*engage;
 opening_h   = panel_h + 2*clr - 2*engage;
-slot_w      = panel_w + 2*clr;
-slot_h      = panel_h + 2*clr;
+slot_w      = panel_w + 2*clr + 2*liner_thk;
+slot_h      = panel_h + 2*clr + 2*liner_thk;
 bed_usable  = bed - bed_margin;
 EPS         = 1;
 Zc          = frame_depth/2;
