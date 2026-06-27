@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bullo — Open account</title>
+<meta name="description" content="Open your Bullo account in under three minutes." />
+<link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="./assets/site.css" />
+<style>
+  body { background:
+    radial-gradient(60% 50% at 85% 0%, rgba(106,75,214,.14), transparent 60%),
+    radial-gradient(50% 40% at 0% 100%, rgba(47,107,255,.12), transparent 60%),
+    var(--bg-soft);
+    min-height: 100svh; }
+  .shell { min-height: 100svh; display: grid; place-items: center; padding: 110px 20px 60px; }
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html">Bullo</a>
+  <div class="nav-links">
+    <a href="trade.html">Trade</a>
+    <a href="technology.html">Technology</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="company.html">Company</a>
+  </div>
+  <div class="nav-right">
+    <a class="login" href="login.html">Log in</a>
+    <a class="btn btn-ghost" href="index.html">Back home</a>
+    <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</div></nav>
+<div class="mobile-menu">
+  <a href="trade.html">Trade</a><a href="technology.html">Technology</a><a href="pricing.html">Pricing</a><a href="company.html">Company</a><a href="login.html">Log in</a><a href="index.html">Home</a>
+</div>
+
+<div class="shell">
+  <div class="auth-card reveal in">
+    <div id="form-view">
+      <div class="eyebrow">Open account</div>
+      <h2 style="font-size:30px;margin:10px 0 6px;">Start trading fast</h2>
+      <p class="note" style="margin-bottom:24px;">It takes about three minutes. No paperwork.</p>
+      <form id="signup">
+        <div class="field"><label for="name">Full name</label><input id="name" name="name" required placeholder="Alex Foster" /></div>
+        <div class="field"><label for="email">Email</label><input id="email" type="email" name="email" required placeholder="you@email.com" /></div>
+        <div class="field"><label for="country">Country</label>
+          <select id="country" name="country"><option>United Kingdom</option><option>United States</option><option>Germany</option><option>Singapore</option><option>Other</option></select>
+        </div>
+        <div class="field"><label for="plan">Plan</label>
+          <select id="plan" name="plan"><option>Starter — Free</option><option selected>Pro — $19/mo</option><option>Quant — $99/mo</option></select>
+        </div>
+        <button class="btn btn-primary btn-lg" type="submit" style="width:100%;justify-content:center;">Create account <span class="arrow">→</span></button>
+      </form>
+      <p class="note" style="text-align:center;margin-top:18px;">Already have an account? <a href="login.html" style="color:var(--accent);font-weight:600;">Log in</a></p>
+    </div>
+    <div id="done-view" style="display:none;text-align:center;">
+      <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;margin:6px auto 18px;font-size:30px;color:#fff;">✓</div>
+      <h2 style="font-size:28px;margin-bottom:8px;">You're in, <span id="who">trader</span>!</h2>
+      <p class="muted" style="margin-bottom:24px;">Your demo account is ready. Jump into the trading surface to place your first order.</p>
+      <a class="btn btn-primary btn-lg" href="trade.html" style="width:100%;justify-content:center;">Go to trading <span class="arrow">→</span></a>
+      <a class="btn btn-ghost" href="index.html" style="width:100%;justify-content:center;margin-top:12px;">Back to home</a>
+    </div>
+  </div>
+</div>
+
+<script src="./assets/site.js"></script>
+<script>
+  const form = document.getElementById('signup');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = (document.getElementById('name').value || 'trader').trim().split(' ')[0];
+    document.getElementById('who').textContent = name;
+    document.getElementById('form-view').style.display = 'none';
+    document.getElementById('done-view').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>

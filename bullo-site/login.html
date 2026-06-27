@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bullo — Log in</title>
+<meta name="description" content="Log in to your Bullo account." />
+<link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="./assets/site.css" />
+<style>
+  body { background:
+    radial-gradient(60% 50% at 85% 0%, rgba(47,107,255,.14), transparent 60%),
+    radial-gradient(50% 40% at 0% 100%, rgba(231,179,160,.16), transparent 60%),
+    var(--bg-soft);
+    min-height: 100svh; }
+  .shell { min-height: 100svh; display: grid; place-items: center; padding: 110px 20px 60px; }
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html">Bullo</a>
+  <div class="nav-links">
+    <a href="trade.html">Trade</a>
+    <a href="technology.html">Technology</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="company.html">Company</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-primary" href="get-started.html">Open account <span class="arrow">→</span></a>
+    <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</div></nav>
+<div class="mobile-menu">
+  <a href="trade.html">Trade</a><a href="technology.html">Technology</a><a href="pricing.html">Pricing</a><a href="company.html">Company</a><a href="get-started.html">Open account</a>
+</div>
+
+<div class="shell">
+  <div class="auth-card reveal in">
+    <div class="eyebrow">Welcome back</div>
+    <h2 style="font-size:30px;margin:10px 0 24px;">Log in to Bullo</h2>
+    <form id="login">
+      <div class="field"><label for="email">Email</label><input id="email" type="email" required placeholder="you@email.com" /></div>
+      <div class="field"><label for="pw">Password</label><input id="pw" type="password" required placeholder="••••••••" /></div>
+      <button class="btn btn-primary btn-lg" type="submit" style="width:100%;justify-content:center;">Log in <span class="arrow">→</span></button>
+    </form>
+    <div class="divider">or</div>
+    <a class="btn btn-ghost btn-lg" href="get-started.html" style="width:100%;justify-content:center;">Create an account</a>
+    <p class="note" style="text-align:center;margin-top:18px;"><a href="#" style="color:var(--accent);font-weight:600;">Forgot password?</a></p>
+  </div>
+</div>
+
+<script src="./assets/site.js"></script>
+<script>
+  document.getElementById('login').addEventListener('submit', (e) => { e.preventDefault(); window.location.href = 'trade.html'; });
+</script>
+</body>
+</html>

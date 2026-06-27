@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bullo — Technology</title>
+<meta name="description" content="The crowd-intelligence engine: quantum-inspired aggregation, rendered live." />
+<link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="./assets/site.css" />
+<style>
+  body.dark { background: #0b0820; }
+  body.dark .loading { background: #0b0820; }
+  body.dark .band { background: radial-gradient(120% 160% at 0% 0%, #2a1f63 0%, #0b0820 60%); }
+  body.dark .footer { background: #0a0718; border-top-color: rgba(255,255,255,.07); }
+  body.dark .footer a { color: rgba(255,255,255,.72); }
+  body.dark .card { background: #140f33; }
+  body.dark .section.soft { background: #0e0a26; border-radius: 40px 40px 0 0; }
+  :root { --accent: #8b5cf6; }
+</style>
+</head>
+<body class="dark">
+<div class="loading" id="loading"><div class="dot"></div></div>
+
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html">Bullo</a>
+  <div class="nav-links">
+    <a href="trade.html">Trade</a>
+    <a href="technology.html" class="active">Technology</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="company.html">Company</a>
+  </div>
+  <div class="nav-right">
+    <a class="login" href="login.html" style="color:#fff;">Log in</a>
+    <a class="btn btn-primary" href="get-started.html">Open account <span class="arrow">→</span></a>
+    <button class="burger" aria-label="Menu"><span style="background:#fff;"></span><span style="background:#fff;"></span><span style="background:#fff;"></span></button>
+  </div>
+</div></nav>
+<div class="mobile-menu">
+  <a href="trade.html">Trade</a><a href="technology.html">Technology</a><a href="pricing.html">Pricing</a><a href="company.html">Company</a><a href="login.html">Log in</a><a href="get-started.html">Open account</a>
+</div>
+
+<canvas class="hero-canvas" data-scene="coins"></canvas>
+
+<header class="hero"><div class="wrap"><div class="hero-copy">
+  <div class="eyebrow reveal" style="color:#a98bff;">Technology</div>
+  <h1 class="display reveal d1" style="margin-top:18px;color:#fff;">Quantum<br>computing in<br><span class="gradient-text">FX trading</span></h1>
+  <p class="lead reveal d2">Combining AI and quantum-inspired aggregation to sharpen predictions, speed decisions, and manage risk in dynamic markets.</p>
+  <div class="hero-actions reveal d3">
+    <a class="btn btn-primary btn-lg" href="get-started.html">Build with us <span class="arrow">→</span></a>
+    <a class="btn btn-ghost btn-lg" href="trade.html" style="color:#fff;border-color:rgba(255,255,255,.22);">See it trade</a>
+  </div>
+</div></div></header>
+
+<main>
+  <section class="section soft"><div class="wrap">
+    <div class="center" style="max-width:720px;margin:0 auto 56px;">
+      <div class="eyebrow reveal" style="color:#a98bff;">Under the hood</div>
+      <h2 class="reveal d1" style="margin-top:14px;color:#fff;">Three layers, one signal</h2>
+    </div>
+    <div class="grid cols-3">
+      <div class="card reveal"><div class="ic">🪙</div><h3>Aggregate</h3><p class="muted">Thousands of live positions collapse into a single, denoised crowd vector.</p></div>
+      <div class="card reveal d1"><div class="ic">🔮</div><h3>Predict</h3><p class="muted">Quantum-inspired solvers explore many outcomes at once for sharper odds.</p></div>
+      <div class="card reveal d2"><div class="ic">🛰️</div><h3>Act</h3><p class="muted">Signals stream to your surface in milliseconds, fully explainable.</p></div>
+    </div>
+  </div></section>
+
+  <section class="section" style="background:#0e0a26;"><div class="wrap"><div class="grid cols-2" style="align-items:center;gap:48px;">
+    <div class="reveal">
+      <div class="eyebrow" style="color:#a98bff;">Why it's different</div>
+      <h2 style="margin:14px 0 18px;color:#fff;">Explainable by design</h2>
+      <p class="lead">Every signal ships with the factors behind it — so you're never trading a black box. Audit it, tune it, trust it.</p>
+    </div>
+    <div class="reveal d1">
+      <div class="stats" style="grid-template-columns:repeat(2,1fr);">
+        <div class="stat"><div class="n gradient-text">64×</div><div class="l">Faster scenario search</div></div>
+        <div class="stat"><div class="n gradient-text">12M</div><div class="l">Signals / hour</div></div>
+        <div class="stat"><div class="n gradient-text">0</div><div class="l">Black boxes</div></div>
+        <div class="stat"><div class="n gradient-text">100%</div><div class="l">Auditable</div></div>
+      </div>
+    </div>
+  </div></div></section>
+
+  <section class="section" style="padding-top:0;background:#0e0a26;"><div class="wrap"><div class="band reveal">
+    <div class="eyebrow" style="color:var(--rose);">Developers</div>
+    <h2 style="margin:14px 0 0;color:#fff;">Tap the engine<br>through one API.</h2>
+    <p class="lead">Stream the crowd signal into your own product in a few lines.</p>
+    <div class="hero-actions" style="margin-top:30px;"><a class="btn btn-primary btn-lg" href="get-started.html">Get API access <span class="arrow">→</span></a></div>
+  </div></div></section>
+</main>
+
+<footer class="footer"><div class="wrap">
+  <div class="cols">
+    <div>
+      <a class="brand" href="index.html" style="color:#fff;">Bullo</a>
+      <p class="muted" style="margin-top:14px;max-width:34ch;">Crowd-intelligence trading. Real-time 3D, real-time markets.</p>
+      <div class="hero-actions" style="margin-top:22px;"><a class="btn btn-primary" href="get-started.html">Open account</a></div>
+    </div>
+    <div><h4>Product</h4><ul><li><a href="trade.html">Trade</a></li><li><a href="technology.html">Technology</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="get-started.html">Get started</a></li></ul></div>
+    <div><h4>Company</h4><ul><li><a href="company.html">About</a></li><li><a href="company.html#careers">Careers</a></li><li><a href="company.html#press">Press</a></li><li><a href="login.html">Log in</a></li></ul></div>
+    <div><h4>Legal</h4><ul><li><a href="#">Terms</a></li><li><a href="#">Privacy</a></li><li><a href="#">Disclosures</a></li><li><a href="#">Cookies</a></li></ul></div>
+  </div>
+  <div class="bottom"><span>© <span data-year></span> Bullo Technologies · For demonstration only.</span><span>Built with Three.js — no video, all real-time.</span></div>
+</div></footer>
+
+<script type="importmap">{ "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/addons/" } }</script>
+<script type="module" src="./assets/hero3d.js"></script>
+<script src="./assets/site.js"></script>
+</body>
+</html>
