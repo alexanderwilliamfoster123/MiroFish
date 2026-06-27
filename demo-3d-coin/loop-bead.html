@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stay in the Loop (Bead) — 3D Scroll</title>
+<link rel="stylesheet" href="./shared.css" />
+<style>
+  body { background: linear-gradient(160deg, #e9eaee 0%, #dfe1e6 60%, #e7e8ec 100%); }
+  .loading { background: #e9eaee; }
+</style>
+</head>
+<body>
+<div class="loading" id="loading">LOADING 3D SCENE…</div>
+<canvas id="scene"></canvas>
+
+<nav>
+  <div class="brand">Bullo</div>
+  <div class="nav-links"><a href="#">TRADE</a><a href="#">COPY</a><a href="#">LEARN</a><a href="#">CONNECT</a><a href="#">PARTNER</a></div>
+  <div class="nav-cta"><a href="#">Login</a><a href="#" class="btn">Open account</a></div>
+</nav>
+
+<div class="page">
+  <section class="right">
+    <h1>STAY IN<br>THE LOOP</h1>
+    <p class="lead">Description here with two lines.<br>Description with two lines.</p>
+  </section>
+  <section class="right">
+    <h2>Metal meets glass</h2>
+    <p class="lead">A ribbed metallic bead orbits inside the glass ring, both reacting to the same scroll timeline.</p>
+    <div class="feature-grid">
+      <div class="card"><h3>Two materials</h3><p>Brushed metal bead inside a transmissive ring.</p></div>
+      <div class="card"><h3>Orbiting</h3><p>The bead circles the ring as you scroll.</p></div>
+    </div>
+  </section>
+  <footer><div><h2>Same engine, new object</h2><p class="lead">Compose any shapes — the scroll logic is reusable.</p></div></footer>
+</div>
+
+<div class="scroll-hint">SCROLL ↓</div>
+<a class="back" href="./gallery.html">← All scenes</a>
+
+<script type="importmap">
+{ "imports": {
+  "three": "./vendor/three/three.module.js",
+  "three/addons/": "./vendor/three/addons/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { createScene } from './scene-core.js';
+
+const roseGlass = new THREE.MeshPhysicalMaterial({
+  color: 0xf6dbd3, metalness: 0.2, roughness: 0.09,
+  transmission: 0.9, thickness: 1.6, ior: 1.45,
+  clearcoat: 1.0, clearcoatRoughness: 0.08,
+  attenuationColor: new THREE.Color(0xe5a98d), attenuationDistance: 2.2,
+});
+const metal = new THREE.MeshStandardMaterial({ color: 0xeec7b6, metalness: 1.0, roughness: 0.25 });
+
+const group = new THREE.Group();
+const torus = new THREE.Mesh(new THREE.TorusGeometry(1.7, 0.6, 64, 160), roseGlass);
+torus.castShadow = true; group.add(torus);
+
+// Ribbed metallic bead (a short fluted cylinder) that orbits inside the ring.
+const beadPivot = new THREE.Group();
+const bead = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.7, 12, 1), metal); // low radial segs = faceted/ribbed
+bead.position.set(1.7, 0, 0);
+bead.rotation.z = Math.PI / 2;
+bead.castShadow = true;
+beadPivot.add(bead);
+group.add(beadPivot);
+
+createScene({
+  cameraZ: 7.5,
+  update({ scene, camera, progress, t, mouseX, mouseY }) {
+    if (!group.parent) scene.add(group);
+    group.rotation.z = -progress * Math.PI * 2.6;
+    group.rotation.x = 0.5 + mouseY * 0.3 + Math.sin(t * 0.4) * 0.05;
+    group.rotation.y = t * 0.12 + mouseX * 0.4;
+    beadPivot.rotation.z = Math.PI * 1.18 + t * 0.22 + progress * Math.PI * 2.6;   // bead orbits, starts lower-left
+    bead.rotation.y = t * 2.0;                                 // and spins on itself
+    group.position.x = -1.2 - progress * 0.3;
+    group.position.y = 1.4 - progress * 5.2;
+    group.position.z = -progress * 1.0;
+    camera.position.z = 7.5 + progress * 1.0;
+    camera.lookAt(-0.6, -progress * 1.4, 0);
+  },
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stay in the Loop — 3D Scroll</title>
+<link rel="stylesheet" href="./shared.css" />
+<style>
+  body { background: radial-gradient(120% 120% at 30% 20%, #ffffff 0%, #f4f5f8 70%, #eceef3 100%); }
+  .loading { background: #fff; }
+</style>
+</head>
+<body>
+<div class="loading" id="loading">LOADING 3D SCENE…</div>
+<canvas id="scene"></canvas>
+
+<nav>
+  <div class="brand">Bullo</div>
+  <div class="nav-links"><a href="#">TRADE</a><a href="#">COPY</a><a href="#">LEARN</a><a href="#">CONNECT</a><a href="#">PARTNER</a></div>
+  <div class="nav-cta"><a href="#">Login</a><a href="#" class="btn">Open account</a></div>
+</nav>
+
+<div class="page">
+  <section class="right">
+    <h1>STAY IN<br>THE LOOP</h1>
+    <p class="lead">Description here with two lines.<br>Description with two lines.</p>
+  </section>
+  <section class="right">
+    <h2>Liquid metal</h2>
+    <p class="lead">A rose-gold glass ring, lit by the environment and refracting the light as it tumbles down the page.</p>
+    <div class="feature-grid">
+      <div class="card"><h3>Transmissive</h3><p>Real refraction through the ring, not a fake highlight.</p></div>
+      <div class="card"><h3>Scroll-driven</h3><p>Tumble and drift follow your scroll position.</p></div>
+    </div>
+  </section>
+  <footer><div><h2>One file, no video</h2><p class="lead">Everything you see is computed live in the browser.</p></div></footer>
+</div>
+
+<div class="scroll-hint">SCROLL ↓</div>
+<a class="back" href="./gallery.html">← All scenes</a>
+
+<script type="importmap">
+{ "imports": {
+  "three": "./vendor/three/three.module.js",
+  "three/addons/": "./vendor/three/addons/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { createScene } from './scene-core.js';
+
+// Rose-gold material: tinted, slightly metallic glass for that liquid look.
+const roseGlass = new THREE.MeshPhysicalMaterial({
+  color: 0xf6d9d2, metalness: 0.25, roughness: 0.08,
+  transmission: 0.92, thickness: 1.6, ior: 1.45,
+  clearcoat: 1.0, clearcoatRoughness: 0.08,
+  attenuationColor: new THREE.Color(0xe8a98f), attenuationDistance: 2.0,
+  sheen: 0.5, sheenColor: new THREE.Color(0xffd9c9),
+});
+
+const ring = new THREE.Group();
+const torus = new THREE.Mesh(new THREE.TorusGeometry(1.7, 0.62, 64, 160), roseGlass);
+torus.castShadow = true;
+ring.add(torus);
+// inner bevel ring to catch extra highlights
+const inner = new THREE.Mesh(new THREE.TorusGeometry(1.1, 0.12, 32, 120), roseGlass);
+ring.add(inner);
+
+createScene({
+  cameraZ: 7.5,
+  update({ scene, camera, progress, t, mouseX, mouseY }) {
+    if (!ring.parent) { scene.add(ring); }
+    // tumble: rotate on two axes as it rolls down + across
+    ring.rotation.z = -progress * Math.PI * 3.0;
+    ring.rotation.x = 0.5 + Math.sin(t * 0.4) * 0.05 + mouseY * 0.3 + progress * 0.8;
+    ring.rotation.y = t * 0.15 + mouseX * 0.4;
+    ring.position.x = -1.2 - progress * 0.4 + Math.sin(t * 0.4) * 0.1;
+    ring.position.y = 1.4 - progress * 5.2;
+    ring.position.z = -progress * 1.0;
+    camera.position.z = 7.5 + progress * 1.0;
+    camera.lookAt(-0.6, -progress * 1.4, 0);
+  },
+});
+</script>
+</body>
+</html>

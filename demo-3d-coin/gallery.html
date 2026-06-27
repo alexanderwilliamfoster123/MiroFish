@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>3D Scroll Demos — Gallery</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Segoe UI", system-ui, sans-serif; background: #0e0e14; color: #fff; padding: 64px 48px; }
+  h1 { font-size: clamp(32px, 5vw, 56px); font-weight: 800; letter-spacing: -1.5px; }
+  .sub { color: #9a9aa8; margin-top: 12px; font-size: 17px; max-width: 560px; line-height: 1.5; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; margin-top: 48px; }
+  a.tile { text-decoration: none; color: inherit; border-radius: 18px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,.1); transition: transform .2s ease, border-color .2s ease; display: block; }
+  a.tile:hover { transform: translateY(-4px); border-color: rgba(255,255,255,.3); }
+  .swatch { height: 150px; display: flex; align-items: center; justify-content: center; font-size: 13px; letter-spacing: 2px; font-weight: 700; }
+  .meta { padding: 18px 20px; background: #16161f; }
+  .meta h3 { font-size: 18px; }
+  .meta p { color: #9a9aa8; font-size: 13px; margin-top: 5px; line-height: 1.5; }
+  .t-coin { background: linear-gradient(135deg,#f7e9ee,#e7b9c8); color:#7a3b53; }
+  .t-quantum { background: linear-gradient(135deg,#efebfb,#b9a8f0); color:#3a2370; }
+  .t-loop { background: linear-gradient(135deg,#ffffff,#e7cabf); color:#8a4a35; }
+  .t-bead { background: linear-gradient(135deg,#e9eaee,#c9b4a8); color:#5a3a2a; }
+  footer { margin-top: 56px; color:#6a6a78; font-size: 13px; }
+  code { background:#16161f; padding:2px 7px; border-radius:5px; }
+</style>
+</head>
+<body>
+  <h1>3D Scroll-Animation Demos</h1>
+  <p class="sub">Each page renders a live 3D object with Three.js and drives its rotation, position and the camera entirely from scroll position. No video, no image sequences. Open one and scroll.</p>
+
+  <div class="grid">
+    <a class="tile" href="./index.html">
+      <div class="swatch t-coin">START TRADING FAST</div>
+      <div class="meta"><h3>Rolling coin</h3><p>Rose-gold metallic coin that rolls down the page.</p></div>
+    </a>
+    <a class="tile" href="./quantum.html">
+      <div class="swatch t-quantum">QUANTUM COMPUTING</div>
+      <div class="meta"><h3>Violet glass coins</h3><p>Three translucent glass coins tumbling independently.</p></div>
+    </a>
+    <a class="tile" href="./loop.html">
+      <div class="swatch t-loop">STAY IN THE LOOP</div>
+      <div class="meta"><h3>Rose-gold ring</h3><p>Transmissive glass torus tumbling down a white page.</p></div>
+    </a>
+    <a class="tile" href="./loop-bead.html">
+      <div class="swatch t-bead">STAY IN THE LOOP</div>
+      <div class="meta"><h3>Ring + metal bead</h3><p>A ribbed metallic bead orbiting inside the glass ring.</p></div>
+    </a>
+  </div>
+
+  <footer>
+    Run with <code>python3 -m http.server</code> from this folder, then open
+    <code>gallery.html</code>. Everything is offline — Three.js is vendored in <code>vendor/</code>.
+  </footer>
+</body>
+</html>

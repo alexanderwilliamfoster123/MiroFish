@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quantum Computing — 3D Scroll</title>
+<link rel="stylesheet" href="./shared.css" />
+<style>
+  body { background: linear-gradient(160deg, #efebfb 0%, #e6e0fa 50%, #f3eefc 100%); }
+  :root { --ink: #2a1a52; --accent: #6a4bd6; }
+  .loading { background: #efebfb; }
+</style>
+</head>
+<body>
+<div class="loading" id="loading">LOADING 3D SCENE…</div>
+<canvas id="scene"></canvas>
+
+<nav>
+  <div class="brand" style="font-style:normal;font-weight:800;">◆ EXITO</div>
+  <div class="nav-links"><a href="#">Home</a><a href="#">Service</a><a href="#">About</a><a href="#">Insights</a><a href="#">Contact</a></div>
+  <div class="nav-cta"><a href="#" class="btn" style="--accent:#6a4bd6;background:#6a4bd6;">Sign in</a></div>
+</nav>
+
+<div class="page">
+  <section>
+    <div class="eyebrow">AI · QUANTUM · FX</div>
+    <h1>Quantum<br>Computing<br>in FX Trading</h1>
+    <p class="lead">Combining AI and quantum computing to enhance predictions, speed up decision-making, and improve risk management — empowering traders in dynamic financial markets.</p>
+  </section>
+  <section>
+    <h2>Three coins, one engine</h2>
+    <p class="lead">Translucent glass rendered live with refraction and dispersion. Each coin tumbles independently as you scroll.</p>
+    <div class="feature-grid">
+      <div class="card"><h3>Real glass</h3><p>Physical transmission, IOR and thickness — not a texture.</p></div>
+      <div class="card"><h3>Scroll-scrubbed</h3><p>Rotation and drift mapped to scroll progress.</p></div>
+    </div>
+  </section>
+  <footer><div><h2>Built from primitives</h2><p class="lead">Swap in a designed .glb and the motion stays the same.</p></div></footer>
+</div>
+
+<div class="scroll-hint">SCROLL ↓</div>
+<a class="back" href="./gallery.html">← All scenes</a>
+
+<script type="importmap">
+{ "imports": {
+  "three": "./vendor/three/three.module.js",
+  "three/addons/": "./vendor/three/addons/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { createScene } from './scene-core.js';
+
+// Frosted violet glass.
+function glassMat(tint) {
+  return new THREE.MeshPhysicalMaterial({
+    color: tint, metalness: 0, roughness: 0.06,
+    transmission: 1.0, thickness: 1.4, ior: 1.5,
+    iridescence: 0.6, iridescenceIOR: 1.3,
+    clearcoat: 1.0, clearcoatRoughness: 0.1,
+    attenuationColor: new THREE.Color(0x7a4fe0), attenuationDistance: 3.0,
+  });
+}
+
+function makeCoin(tint, r = 1) {
+  const g = new THREE.Group();
+  const disc = new THREE.Mesh(new THREE.CylinderGeometry(r, r, r * 0.34, 96, 1, false), glassMat(tint));
+  disc.rotation.x = Math.PI / 2;
+  g.add(disc);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(r * 0.92, r * 0.07, 24, 96), glassMat(0x9a6cff));
+  ring.position.z = r * 0.17; g.add(ring);
+  const ringB = ring.clone(); ringB.position.z = -r * 0.17; g.add(ringB);
+  return g;
+}
+
+const coins = [
+  { mesh: makeCoin(0x8b5cf6, 1.15), base: new THREE.Vector3(-1.9, 0.9, 0.4), spin: 1.0, phase: 0 },
+  { mesh: makeCoin(0x7c5cf0, 0.95), base: new THREE.Vector3(0.5, -0.2, 1.2), spin: -1.4, phase: 1.7 },
+  { mesh: makeCoin(0x9d7bff, 1.05), base: new THREE.Vector3(2.4, 0.4, -0.6), spin: 0.8, phase: 3.1 },
+];
+
+createScene({
+  cameraZ: 8.5,
+  update({ scene, camera, progress, t, mouseX, mouseY }) {
+    if (!coins[0].added) coins.forEach(c => { scene.add(c.mesh); c.added = true; });
+    coins.forEach((c, i) => {
+      const m = c.mesh;
+      m.rotation.x = c.phase + t * 0.25 * c.spin + progress * Math.PI * 2 * c.spin;
+      m.rotation.y = c.phase * 0.7 + t * 0.2 * c.spin + progress * Math.PI * 1.5;
+      m.position.x = c.base.x + Math.sin(t * 0.4 + c.phase) * 0.18 + mouseX * 0.5;
+      m.position.y = c.base.y - progress * 5.5 + Math.cos(t * 0.5 + c.phase) * 0.18 - mouseY * 0.4;
+      m.position.z = c.base.z + Math.sin(progress * Math.PI) * 0.6;
+    });
+    camera.position.z = 8.5 + progress * 1.2;
+    camera.lookAt(0, -progress * 1.6, 0);
+  },
+});
+</script>
+</body>
+</html>
