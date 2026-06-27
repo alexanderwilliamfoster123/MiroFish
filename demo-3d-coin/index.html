@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>3D Rolling Coin — Scroll Demo</title>
+<style>
+  :root {
+    --ink: #0e0e12;
+    --muted: #6b6b76;
+    --accent: #2f6bff;
+    --bg-top: #ffffff;
+    --bg-bottom: #eef0f4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    background: var(--bg-top);
+    overflow-x: hidden;
+  }
+
+  /* The canvas is fixed and full-screen; the 3D coin lives here and is
+     driven entirely by scroll position. */
+  #scene {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Scrollable content sits on top of the fixed canvas. */
+  .page { position: relative; z-index: 1; }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 48px;
+    backdrop-filter: blur(6px);
+  }
+  .brand { font-size: 26px; font-weight: 800; font-style: italic; letter-spacing: -0.5px; }
+  .nav-links { display: flex; gap: 34px; }
+  .nav-links a {
+    text-decoration: none; color: var(--ink);
+    font-size: 13px; font-weight: 700; letter-spacing: 1px;
+  }
+  .nav-cta { display: flex; align-items: center; gap: 18px; }
+  .nav-cta a { text-decoration: none; color: var(--ink); font-size: 14px; font-weight: 600; }
+  .btn {
+    background: var(--accent); color: #fff !important;
+    padding: 10px 22px; border-radius: 24px; font-weight: 700;
+  }
+
+  section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 48px;
+    max-width: 760px;
+  }
+  .eyebrow { font-size: 13px; letter-spacing: 3px; color: var(--accent); font-weight: 700; margin-bottom: 18px; }
+  h1 { font-size: clamp(48px, 8vw, 104px); line-height: 0.95; font-weight: 800; letter-spacing: -2px; }
+  h2 { font-size: clamp(36px, 5vw, 64px); line-height: 1; font-weight: 800; letter-spacing: -1px; margin-bottom: 20px; }
+  p.lead { font-size: 20px; color: var(--muted); margin-top: 24px; max-width: 460px; line-height: 1.5; }
+  .scroll-hint {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+    z-index: 10; font-size: 12px; letter-spacing: 2px; color: var(--muted);
+    animation: bob 1.8s ease-in-out infinite;
+  }
+  @keyframes bob { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 36px; max-width: 520px; }
+  .card { background: rgba(255,255,255,0.7); border: 1px solid #e6e8ee; border-radius: 16px; padding: 22px; }
+  .card h3 { font-size: 17px; margin-bottom: 8px; }
+  .card p { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+  footer { min-height: 60vh; display: flex; align-items: center; padding: 0 48px; }
+  .loading {
+    position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center;
+    background: #fff; font-size: 13px; letter-spacing: 2px; color: var(--muted);
+    transition: opacity .6s ease;
+  }
+  .loading.hide { opacity: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+
+<div class="loading" id="loading">LOADING 3D SCENE…</div>
+
+<canvas id="scene"></canvas>
+
+<nav>
+  <div class="brand">Bullo</div>
+  <div class="nav-links">
+    <a href="#">TRADE</a><a href="#">COPY</a><a href="#">LEARN</a><a href="#">CONNECT</a>
+  </div>
+  <div class="nav-cta">
+    <a href="#">Login</a>
+    <a href="#" class="btn">Open account</a>
+  </div>
+</nav>
+
+<div class="page">
+  <section>
+    <div class="eyebrow">CROWD INTELLIGENCE</div>
+    <h1>START<br>TRADING FAST</h1>
+    <p class="lead">A real-time 3D coin, rendered in your browser and driven entirely by scroll. Keep scrolling — it rolls down the page.</p>
+  </section>
+
+  <section>
+    <h2>It reacts to you</h2>
+    <p class="lead">Every frame is computed live with Three.js. No video, no image sequence — real geometry, real lighting, real reflections.</p>
+    <div class="feature-grid">
+      <div class="card"><h3>Scroll-scrubbed</h3><p>Rotation, position and camera are mapped to scroll progress.</p></div>
+      <div class="card"><h3>Physically lit</h3><p>Metallic material with environment reflections and soft shadows.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Swap in your model</h2>
+    <p class="lead">This coin is built from primitives. Drop in a designed <code>.glb</code> from Blender and it works the same way.</p>
+  </section>
+
+  <footer>
+    <div>
+      <h2>Ready to build it for real?</h2>
+      <p class="lead">This whole page is one HTML file. We can move it into the Vue app next.</p>
+    </div>
+  </footer>
+</div>
+
+<div class="scroll-hint">SCROLL ↓</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/three.module.js",
+    "three/addons/": "./vendor/three/addons/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 0, 9);
+
+// --- Environment reflections (gives the metal its "real" look) ---
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+// --- Lights ---
+const key = new THREE.DirectionalLight(0xffffff, 2.4);
+key.position.set(4, 6, 6);
+key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024);
+key.shadow.camera.near = 1; key.shadow.camera.far = 30;
+scene.add(key);
+scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+const rim = new THREE.DirectionalLight(0xffd9e8, 1.2);
+rim.position.set(-5, 2, -4);
+scene.add(rim);
+
+// --- The coin (built from primitives so the demo is self-contained) ---
+const coin = new THREE.Group();
+
+const coinMat = new THREE.MeshStandardMaterial({
+  color: 0xf0c9d6,        // rose-gold tint like the reference
+  metalness: 1.0,
+  roughness: 0.18,
+});
+
+// Main disc
+const disc = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 0.42, 96, 1, false), coinMat);
+disc.rotation.x = Math.PI / 2;   // stand it up like a wheel so it can roll
+disc.castShadow = true;
+coin.add(disc);
+
+// Raised rim ring for a minted-coin feel
+const ring = new THREE.Mesh(new THREE.TorusGeometry(1.85, 0.12, 24, 96), coinMat);
+ring.position.z = 0.21;
+coin.add(ring);
+const ringBack = ring.clone(); ringBack.position.z = -0.21; coin.add(ringBack);
+
+// Emboss a "B" on each face using extruded shape
+const shape = new THREE.Shape();
+// simple stylised "B" path
+shape.moveTo(-0.4, -0.7);
+shape.lineTo(-0.4, 0.7);
+shape.lineTo(0.2, 0.7);
+shape.quadraticCurveTo(0.6, 0.7, 0.6, 0.35);
+shape.quadraticCurveTo(0.6, 0.05, 0.25, 0.0);
+shape.quadraticCurveTo(0.65, -0.05, 0.65, -0.4);
+shape.quadraticCurveTo(0.65, -0.7, 0.2, -0.7);
+shape.lineTo(-0.4, -0.7);
+const letterGeo = new THREE.ExtrudeGeometry(shape, { depth: 0.12, bevelEnabled: true, bevelSize: 0.03, bevelThickness: 0.03, bevelSegments: 2 });
+letterGeo.center();
+const letter = new THREE.Mesh(letterGeo, coinMat);
+letter.position.z = 0.27; letter.castShadow = true;
+coin.add(letter);
+const letterBack = letter.clone(); letterBack.position.z = -0.27; letterBack.rotation.y = Math.PI; coin.add(letterBack);
+
+scene.add(coin);
+
+// --- Ground shadow catcher ---
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(60, 60),
+  new THREE.ShadowMaterial({ opacity: 0.16 })
+);
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -3.2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// --- Scroll-driven animation ---
+// progress goes 0 -> 1 across the whole scrollable height.
+let targetProgress = 0;
+let progress = 0;
+
+function getScrollProgress() {
+  const max = document.body.scrollHeight - window.innerHeight;
+  return max > 0 ? window.scrollY / max : 0;
+}
+window.addEventListener('scroll', () => { targetProgress = getScrollProgress(); }, { passive: true });
+
+// A little idle spin + subtle mouse parallax for life.
+let mouseX = 0, mouseY = 0;
+window.addEventListener('mousemove', (e) => {
+  mouseX = (e.clientX / window.innerWidth - 0.5);
+  mouseY = (e.clientY / window.innerHeight - 0.5);
+});
+
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+
+  // Ease progress toward the scroll target for buttery scrubbing.
+  progress += (targetProgress - progress) * 0.08;
+
+  // ROLL: the coin spins like a wheel as it travels...
+  coin.rotation.z = -progress * Math.PI * 6;        // multiple full rolls
+  // ...and travels diagonally down + across the page as you scroll.
+  coin.position.x = 2.6 + Math.sin(progress * Math.PI) * 1.2 - progress * 1.0;
+  coin.position.y = 2.2 - progress * 6.0;
+  coin.position.z = -progress * 2.0;
+
+  // gentle wobble + mouse parallax on the perpendicular axes
+  coin.rotation.x = mouseY * 0.3 + Math.sin(t * 0.8) * 0.04;
+  coin.rotation.y = mouseX * 0.4;
+
+  // Camera drifts back slightly as you scroll for depth.
+  camera.position.z = 9 + progress * 1.5;
+  camera.lookAt(0, coin.position.y * 0.3, 0);
+
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// hide loader once first frame is ready
+requestAnimationFrame(() => {
+  setTimeout(() => document.getElementById('loading').classList.add('hide'), 300);
+});
+</script>
+</body>
+</html>
