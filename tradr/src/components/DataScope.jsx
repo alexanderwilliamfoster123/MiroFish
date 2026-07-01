@@ -1,0 +1,15 @@
+import React from 'react'
+import { useStore } from '../store.jsx'
+
+const SEL = '[data-href],[data-v],[data-go],[data-buyopen],[data-join],[data-rules],[data-toast],[data-tourenter],[data-tour],[data-lbpage],[data-tourtab],[data-trade-acc],[data-acc],[data-trader],[data-compinvite]'
+
+// Wraps ported HTML chunks and bridges prototype-style data-attribute clicks to the store.
+export default function DataScope({ children, tag = 'div', ...rest }) {
+  const { handleData } = useStore()
+  const Tag = tag
+  const onClick = (e) => {
+    const el = e.target.closest(SEL)
+    if (el) handleData(el)
+  }
+  return <Tag onClick={onClick} {...rest}>{children}</Tag>
+}
