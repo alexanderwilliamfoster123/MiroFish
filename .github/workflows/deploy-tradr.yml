@@ -1,0 +1,46 @@
+name: Deploy Tradr to GitHub Pages
+
+# Builds the /tradr React app and publishes the static output to the gh-pages
+# branch. Enable it once in the repo: Settings → Pages → Build and deployment →
+# Source: "Deploy from a branch" → Branch: gh-pages / (root).
+
+on:
+  push:
+    branches: [main, claude/end-to-end-coding-k7xuwk]
+    paths:
+      - 'tradr/**'
+      - '.github/workflows/deploy-tradr.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-tradr
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        working-directory: tradr
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+        run: npm ci
+
+      - name: Build
+        working-directory: tradr
+        run: npm run build
+
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: tradr/dist
