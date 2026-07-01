@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useRef, useState, useEffect, useCallback } from 'react'
 import { makeInstruments, makeTours, makeAffil, TOUR_ORDER, BOT_SEED, TITLES } from './engine/data.js'
 import * as sim from './engine/sim.js'
+import * as term from './engine/terminal.js'
 
 const StoreCtx = createContext(null)
 export const useStore = () => useContext(StoreCtx)
@@ -76,10 +77,10 @@ export function StoreProvider({ children }) {
 
   // ---- simulation loop ----
   useEffect(() => {
-    const t1 = setInterval(() => { sim.tick(S); force() }, 1100)
+    const t1 = setInterval(() => { sim.tick(S); if (S.view === 'terminal') term.terminalTick(S, toast); force() }, 1100)
     const t2 = setInterval(() => { force() }, 1000) // countdowns
     return () => { clearInterval(t1); clearInterval(t2) }
-  }, [S, force])
+  }, [S, force, toast])
 
   // ---- actions ----
   const navigate = useCallback((v) => {
@@ -147,6 +148,12 @@ export function StoreProvider({ children }) {
     if (d.tourenter) { tourSwitch(d.tourenter); openBuy(); return true }
     if (d.tour) { tourSwitch(d.tour); navigate('leaderboard'); return true }
     if (d.lbpage) { S.lbPage = Math.max(0, S.lbPage + parseInt(d.lbpage, 10)); force(); return true }
+    if ('perfMenu' in d) { S.perfMenu = !S.perfMenu; force(); return true }
+    if (d.perfAcc) { S.perfAcc = d.perfAcc; S.perfMenu = false; force(); return true }
+    if (d.perfView) { S.perfView = d.perfView; force(); return true }
+    if (d.perfUnit) { S.perfUnit = d.perfUnit; force(); return true }
+    if (d.perfRange) { S.perfRange = d.perfRange; force(); return true }
+    if (d.shareacct != null || 'shareprofile' in d) { toast('Share — coming soon'); return true }
     if (d.tourtab) { S.tourTab = d.tourtab; force(); try { window.scrollTo(0, 0) } catch (e) {} return true }
     if (d.tradeAcc) { setActive(d.tradeAcc); S.perfAcc = d.tradeAcc; navigate('performance'); toast('Viewing ' + d.tradeAcc); return true }
     if (d.acc) { setActive(d.acc); navigate('tournament'); return true }
@@ -157,11 +164,44 @@ export function StoreProvider({ children }) {
       S.traderId = th; if (S.view !== 'trader') S.traderFrom = S.view; navigate('trader'); return true
     }
     if ('compinvite' in d) { toast('Invites — open the Invites tab to send competition invites'); return true }
+    // feed
+    if (d.fdfilter) { S.feedFilter = d.fdfilter; force(); return true }
+    if (d.fdlike) { S.feedLikes = S.feedLikes || {}; S.feedLikes[d.fdlike] = !S.feedLikes[d.fdlike]; force(); return true }
+    if (d.fdrepost) { S.feedRT = S.feedRT || {}; S.feedRT[d.fdrepost] = !S.feedRT[d.fdrepost]; force(); return true }
+    if (d.fdreply) { toast('Replying to ' + d.fdreply); return true }
+    if ('fdshare' in d) { toast('Shared to your followers'); return true }
+    if (d.fdaccept) { toast('Battle accepted — the Arena is part of the deep surface, not wired in yet'); return true }
+    if (d.arwatch) { toast('Live battle viewer — coming soon'); return true }
+    if (d.like != null) { toast('Liked'); return true }
+    // affiliate
+    if (d.afftab) { S.affil.tab = d.afftab; force(); return true }
+    if (d.affchart) { S.affil.chartPeriod = d.affchart; force(); return true }
+    if ('affcopy' in d) { try { navigator.clipboard && navigator.clipboard.writeText('https://' + S.affil.link) } catch (e) {} toast('Referral link copied'); return true }
+    // invites
+    if (d.invseg) { S.invites && (S.invites.seg = d.invseg); force(); return true }
+    if (d.invtab) { S.invites && (S.invites.tab = d.invtab); force(); return true }
+    if (d.invctab) { S.invites && (S.invites.comptab = d.invctab); force(); return true }
+    if (d.invaccept) { const iv = S.invites.received.find((x) => x.id === d.invaccept); if (iv) iv.status = 'accepted'; toast('Battle accepted'); force(); return true }
+    if (d.invdecline) { const iv = S.invites.received.find((x) => x.id === d.invdecline); if (iv) iv.status = 'declined'; force(); return true }
+    if (d.invcancel) { const iv = S.invites.sent.find((x) => x.id === d.invcancel); if (iv) iv.status = 'cancelled'; force(); return true }
+    if (d.compjoin) { const iv = S.invites.compReceived.find((x) => x.id === d.compjoin); if (iv) iv.status = 'accepted'; toast('Joined ' + (iv ? iv.tour : 'the competition')); force(); return true }
+    if (d.compdecline) { const iv = S.invites.compReceived.find((x) => x.id === d.compdecline); if (iv) iv.status = 'declined'; force(); return true }
+    if (d.compcancel) { const iv = S.invites.compSent.find((x) => x.id === d.compcancel); if (iv) iv.status = 'cancelled'; force(); return true }
     return false
   }, [S, force, navigate, openBuy, toast, tourSwitch, setActive])
 
+  // ---- terminal actions ----
+  const termPlace = useCallback((dir) => { term.termPlace(S, dir, null, toast); force() }, [S, force, toast])
+  const termBE = useCallback((id) => { term.moveBreakeven(S, term.findPos(S, id), toast); force() }, [S, force, toast])
+  const termClose = useCallback((id) => { term.closePos(S, term.findPos(S, id), toast); force() }, [S, force, toast])
+  const termSwitchAcct = useCallback((id) => {
+    S.term.acct = id; S.activeId = id; S.term.acctMenu = false
+    const op = S.positions.filter((q) => q.acct === id); S.term.pos = op.length ? op[op.length - 1] : null; force()
+  }, [S, force])
+
   const value = {
-    S, force, toast, navigate, setTheme, toggleTheme, setMode, toggleNotif, clearNotif, set, sim,
+    S, force, toast, navigate, setTheme, toggleTheme, setMode, toggleNotif, clearNotif, set, sim, term,
+    termPlace, termBE, termClose, termSwitchAcct,
     setActive, tourSwitch, openBuy, closeBuy, setBuyQty, buyNext, buyBack, setPay, buyPay, buyDone, handleData
   }
   return <StoreCtx.Provider value={value}>{children}</StoreCtx.Provider>

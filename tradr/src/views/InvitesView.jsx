@@ -1,4 +1,13 @@
 import React from 'react'
-import Placeholder from './Placeholder.jsx'
-// Temporary: fleshed out in a follow-up step.
-export default function InvitesView() { return <Placeholder /> }
+import { useStore } from '../store.jsx'
+import { invitesHub } from '../engine/invites.js'
+import DataScope from '../components/DataScope.jsx'
+
+export default function InvitesView() {
+  const { S } = useStore()
+  return (
+    <DataScope>
+      <div dangerouslySetInnerHTML={{ __html: invitesHub(S) }} />
+    </DataScope>
+  )
+}
