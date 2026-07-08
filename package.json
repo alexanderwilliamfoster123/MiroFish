@@ -1,21 +1,34 @@
 {
-  "name": "mirofish",
+  "name": "synex",
+  "private": true,
+  "type": "module",
   "version": "0.1.0",
-  "description": "MiroFish - 简洁通用的群体智能引擎，预测万物",
   "scripts": {
-    "setup": "npm install && cd frontend && npm install",
-    "setup:backend": "cd backend && uv sync",
-    "setup:all": "npm run setup && npm run setup:backend",
-    "dev": "concurrently --kill-others -n \"backend,frontend\" -c \"green,cyan\" \"npm run backend\" \"npm run frontend\"",
-    "backend": "cd backend && uv run python run.py",
-    "frontend": "cd frontend && npm run dev",
-    "build": "cd frontend && npm run build"
+    "dev": "vite dev --port 3000",
+    "build": "vite build",
+    "start": "node .output/server/index.mjs",
+    "serve": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.66.0",
+    "@tanstack/react-router": "^1.121.0",
+    "@tanstack/react-start": "^1.121.0",
+    "framer-motion": "^11.18.2",
+    "lucide-react": "^0.469.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "license": "AGPL-3.0"
+    "@tailwindcss/vite": "^4.1.0",
+    "@types/node": "^22.13.1",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.1.0",
+    "tw-animate-css": "^1.2.9",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vite-tsconfig-paths": "^5.1.4"
+  }
 }

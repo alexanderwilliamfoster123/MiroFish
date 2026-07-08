@@ -30,6 +30,13 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# TanStack Start / Vite build output
+.output/
+.nitro/
+.tanstack/
+.vite/
+dist/
+
 # IDE
 .vscode/
 .idea/
