@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lafys — Enable the Internet Bond</title>
+    <link rel="stylesheet" href="./src/lafys.css" />
+
+    <!-- lafys.ai heading reveal: GSAP 3.13 + SplitText (та же связка, что в сниппете intro-heading-reveal) -->
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://esm.sh/three@0.169.0",
+        "three/": "https://esm.sh/three@0.169.0/",
+        "three/addons/": "https://esm.sh/three@0.169.0/examples/jsm/",
+        "postprocessing": "https://esm.sh/postprocessing@6.36.4?external=three",
+        "three-mesh-bvh": "https://esm.sh/three-mesh-bvh@0.7.6?external=three",
+        "gsap": "https://esm.sh/gsap@3.13.0"
+      }
+    }
+    </script>
+    <script src="https://unpkg.com/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.13.0/dist/SplitText.min.js"></script>
+
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      /* match the loader's background so there's no flash before JS mounts the loader */
+      html, body { width: 100%; height: 100%; overflow: hidden; background: #121212; }
+      #gl { position: fixed; inset: 0; z-index: 0; display: block; }
+
+      /* ── шрифт заголовка lafys: настоящий Helvetica (woff из бандла lafys.ai) ── */
+      @font-face { font-family: '__helvetica_827732'; src: url('https://qclay.design/lovable/lafys/fonts/ea1c365fb9dff4af-s.p.woff') format('woff'); font-display: swap; font-weight: 300; font-style: normal; }
+      @font-face { font-family: '__helvetica_827732'; src: url('https://qclay.design/lovable/lafys/fonts/677ca301d0114ba2-s.p.woff') format('woff'); font-display: swap; font-weight: 400; font-style: normal; }
+      @font-face { font-family: '__helvetica_827732'; src: url('https://qclay.design/lovable/lafys/fonts/0bdd41334b6152e0-s.p.woff') format('woff'); font-display: swap; font-weight: 700; font-style: normal; }
+      /* hero heading (Helvetica Neue из макета → настоящий Helvetica) */
+      .hero-title { font-family: '__helvetica_827732', ui-sans-serif, system-ui, sans-serif !important; font-weight: 300 !important; }
+      /* маска строки SplitText: буквы выезжают снизу (overflow-hidden + padding .1em) */
+      .hero-title .line { overflow: hidden; padding: .1em 0; margin-top: -.1em; }
+      /* прячем до запуска reveal, чтобы не мелькнул полный текст (loader'а нет) */
+      .hero-title[data-motion-title] { visibility: hidden; }
+      /* hero-контент 1-й секции скрыт, ПОКА грузится лоадер (виден только реальный хедер) —
+         иначе описание под "Our goal" и пр. мелькают до появления лоадера. swirlLoader
+         снимает .pl-loading при раскрытии → контент проявляется. Правило инлайновое, чтобы
+         действовать с ПЕРВОГО кадра (до выполнения JS). */
+      body.pl-loading .goal, body.pl-loading .side-nav, body.pl-loading .designby,
+      body.pl-loading .scroll-cta { opacity: 0 !important; pointer-events: none !important; }
+      .goal, .side-nav, .designby { transition: opacity .7s ease; }
+</style>
+  </head>
+  <body class="pl-loading">
+    <!-- статичный тёмный экран до монтирования swirl-лоадера (без текста — чтобы не было второго экрана) -->
+    <div id="boot" style="position:fixed;inset:0;z-index:5;background:#121212;"></div>
+    <canvas id="gl"></canvas>
+
+    <!-- LAFYS landing UI — обновлённый дизайн 1:1 из Figma "Landing" (node 9-2) -->
+    <div class="ui">
+      <div class="frame" id="frame">
+        <div class="accent-tick"></div>
+        <div class="top-divider"></div>
+
+        <!-- header -->
+        <a class="logo" href="#"><img src="https://qclay.design/lovable/lafys/figma/lafys-logo.svg" alt="lafys.com" /></a>
+
+        <nav class="nav" id="nav">
+          <div class="nav-col">
+            <a href="#"><span class="arr">→</span>Featured (01)</a>
+            <a href="#">Index (02)</a>
+          </div>
+          <a class="nav-col" href="#">About (03)</a>
+          <div class="nav-col">
+            <a href="mailto:info@lafys.com">info@lafys.com</a>
+            <a href="tel:+12012148640">+(1) 201-214-8640</a>
+          </div>
+          <a class="nav-col" href="#">the best prompts</a>
+        </nav>
+
+        <div class="learn-more" id="learn-more"></div>
+
+        <!-- бургер (только мобайл, ≤640) → открывает .mobile-menu -->
+        <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span><span></span></button>
+
+        <!-- hero heading (lafys SplitText reveal сохранён) -->
+        <h1 class="hero-title" data-motion-title>Making your business outstanding — is a Science</h1>
+
+        <!-- goal block (низ-слева) -->
+        <div class="goal">
+          <div class="goal-label">01 — Our goal</div>
+          <p class="goal-copy">We enable the world's most engaged investors and family offices to access professionally managed investment strategies.</p>
+        </div>
+
+        <!-- вертикальное меню справа -->
+        <nav class="side-nav">
+          <a class="active" href="#"><span class="lbl">Home</span><span class="dia"></span></a>
+          <a href="#"><span class="lbl">Our Services</span><span class="dia"></span></a>
+          <a href="#"><span class="lbl">About Us</span><span class="dia"></span></a>
+          <a href="#"><span class="lbl">Reviews</span><span class="dia"></span></a>
+          <a href="#"><span class="lbl">Contact Us</span><span class="dia"></span></a>
+        </nav>
+
+        <!-- footer: design by -->
+        <div class="designby">
+          <span class="db-dot"></span>
+          <span class="db-label">design by</span>
+          <img class="db-logos" src="https://qclay.design/lovable/lafys/figma/designby-logos.svg" alt="QCLAY · LAFYS · Claude" />
+        </div>
+      </div>
+
+      <!-- мобильное меню (открывается бургером) -->
+      <nav class="mobile-menu" id="mobile-menu" aria-hidden="true">
+        <a href="#">Home</a>
+        <a href="#">Our Services</a>
+        <a href="#">About Us</a>
+        <a href="#">Reviews</a>
+        <a href="#">Contact Us</a>
+        <div class="mm-sep"></div>
+        <a class="mm-small" href="mailto:info@lafys.com">info@lafys.com</a>
+        <a class="mm-small" href="tel:+12012148640">+(1) 201-214-8640</a>
+      </nav>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+
+    <!-- reveal заголовка/подзаголовка 1:1 из lafys.ai (scripts/333-*.js title component):
+         SplitText lines+chars -> буквы выезжают снизу из маски (yPercent 110->0, opacity 0->1),
+         on-load после fonts.ready, duration 1.5 / stagger .03 / ease power3.inOut. -->
+    <script>
+      (function () {
+        if (!window.gsap || !window.SplitText) return;
+        gsap.registerPlugin(SplitText);
+        const titleEl = document.querySelector('[data-motion-title]');
+        if (!titleEl) return;
+        let x, played = false;
+        function reveal() {
+          played = true;
+          if (x) x.revert();
+          titleEl.style.visibility = 'visible';
+          x = SplitText.create(titleEl, { type: 'lines,chars', linesClass: 'line' });
+          const tl = gsap.timeline({ paused: false, defaults: { duration: 1.5, ease: 'power3.inOut', stagger: 0.03 } });
+          tl.from(x.chars, { yPercent: 110, opacity: 0 });
+          return tl;
+        }
+        // reveal fires AFTER the loader clears (main.js → __revealHeading), so it
+        // plays on the visible hero — not hidden during load. Await fonts so
+        // SplitText measures the right line breaks.
+        window.__revealHeading = () => (document.fonts ? document.fonts.ready : Promise.resolve()).then(reveal);
+        // safety net ONLY: main.js calls __revealHeading right after the loader
+        // (~5s). This timer must be LONGER than the loader (main.js force-finishes
+        // it at 15s) — otherwise it fires first and finishLoader's replay reverts
+        // it mid-animation → the "title stands, disappears, re-animates" flash.
+        (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
+          setTimeout(() => { if (!played) reveal(); }, 16000);
+        });
+      })();
+    </script>
+  </body>
+</html>

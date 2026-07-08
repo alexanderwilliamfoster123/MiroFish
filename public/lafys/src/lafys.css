@@ -1,0 +1,184 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   LAFYS landing UI — обновлённый дизайн 1:1 из Figma "Landing" (node 9-2, 1440×850).
+   Точные текст / цвета / шрифты / координаты взяты из node-дерева Figma;
+   лого/картинка экспортированы из того же файла (https://qclay.design/lovable/lafys/figma/*.svg|png).
+   Оверлей над WebGL-сценой (сцена = фон вместо плоской картинки).
+   ────────────────────────────────────────────────────────────────────────── */
+
+@font-face { font-family: "Roboto Condensed"; src: url("https://qclay.design/lovable/lafys/fonts/RobotoCondensed-Light.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+@font-face { font-family: "Roboto Condensed"; src: url("https://qclay.design/lovable/lafys/fonts/RobotoCondensed-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Roboto Condensed"; src: url("https://qclay.design/lovable/lafys/fonts/RobotoCondensed-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+
+:root {
+  --fg: #ffffff;
+  --fg2: #fbfbfb;
+  --muted: #6c7e90;
+  --blue: #48a1f8;
+  --grey: #646c72;
+}
+
+.ui {
+  position: fixed; inset: 0; z-index: 10; pointer-events: none;
+  font-family: "Roboto Condensed", sans-serif; color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  text-shadow: 0 1px 12px rgba(8, 10, 22, 0.45);
+  opacity: 0; /* hidden until the loader's circle-reveal uncovers it */
+  transition: opacity 0.9s ease;
+}
+.ui a, .ui button, .ui input, .learn-more, .learn-more * { pointer-events: auto; }
+
+/* full-bleed: anchor to the viewport edges; horizontal inset = --px */
+.frame { position: absolute; inset: 0; --px: 3vw; }
+@media (min-width: 1700px) { .frame { --px: 56px; } }
+.frame > * { position: absolute; }
+
+/* ── top accent + divider ── */
+/* top padding уменьшен (обновлённый хедер из Figma 14-91) */
+.accent-tick { left: var(--px); top: 15px; width: 14px; height: 4px; background: var(--blue); }
+.top-divider { left: var(--px); right: var(--px); top: 17px; height: 1px; background: var(--muted); opacity: 0.7; }
+
+/* ── header ── */
+.logo { left: var(--px); top: 34px; height: 19px; line-height: 0; }
+.logo img { height: 19px; display: block; }
+
+/* nav: 4 колонки (часть в 2 строки), распределены по ширине */
+.nav { left: calc(var(--px) + 186px); top: 28px; width: 861px; max-width: calc(100% - var(--px) - 186px - 120px); display: flex; justify-content: space-between; align-items: flex-start; }
+.nav .nav-col { display: flex; flex-direction: column; text-decoration: none; }
+.nav a { position: relative; color: var(--fg); font-size: 10px; font-weight: 400; letter-spacing: 0; line-height: 14px; text-decoration: none; white-space: nowrap; text-transform: uppercase; }
+/* стрелка-индикатор при hover: у левой границы текста; текст сдвигается вправо */
+.nav .arr { position: absolute; left: 0; top: 50%; opacity: 0; pointer-events: none; transform: translate(-5px, -50%); transition: transform 0.3s ease, opacity 0.3s ease; }
+.nav .txt { display: inline-block; transition: transform 0.3s ease; }
+.nav a:hover .arr { opacity: 1; transform: translate(0, -50%); }
+.nav a:hover .txt { transform: translateX(15px); }
+
+/* host for the pixel-sweep button (canvas button injected by learnMoreButton.js) */
+.learn-more { right: var(--px); top: 26px; line-height: 0; text-shadow: none; }
+
+/* ── hero heading ── */
+.hero-title {
+  left: var(--px); top: 146px; max-width: 600px; white-space: normal;
+  font-weight: 300; font-size: 58px; line-height: 1.10; letter-spacing: -0.02em;
+  color: var(--fg); text-shadow: 0 2px 30px rgba(6, 10, 24, 0.35);
+}
+
+/* ── goal block (bottom-left) ── */
+.goal { left: var(--px); bottom: 113px; max-width: 380px; }
+.goal-label {
+  font-family: "__helvetica_827732", ui-sans-serif, sans-serif; font-weight: 500;
+  font-size: 18px; letter-spacing: -0.01em; color: var(--fg); margin-bottom: 20px;
+}
+.goal-copy { font-size: 18px; font-weight: 400; line-height: 1.33; color: rgba(255, 255, 255, 0.8); max-width: 367px; }
+
+/* ── right vertical nav ── */
+/* scroll-nav в духе exp-ion.lusion.co: ромбы (◆) на вертикальной полосе-треке +
+   короткая полоса-индикатор; неактивные приглушены, активный/hover — белый, плавно. */
+.side-nav {
+  right: var(--px); top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between;
+  gap: 44px; text-align: right;
+}
+/* полоса-трек = СЕГМЕНТЫ в промежутках между ромбами (за самими ромбами линии нет).
+   Тусклые по умолчанию; пройденные по скроллу → яркие (заливка к текущей секции). */
+.side-nav a::after {
+  content: ""; position: absolute; right: 4px; top: calc(100% + 6px); width: 1px; height: 32px;
+  /* заливка сегмента по скроллу: ярко сверху до --f, ниже — тускло (плавно из JS) */
+  background: linear-gradient(to bottom, #efefef var(--f, 0%), rgba(239, 239, 239, 0.18) var(--f, 0%));
+}
+.side-nav a:last-child::after { display: none; }
+.side-nav a {
+  position: relative; display: inline-flex; align-items: center; justify-content: flex-end; gap: 11px;
+  font-family: "Roboto Condensed", sans-serif; font-weight: 500;
+  font-size: 12px; line-height: 1; letter-spacing: 0.5px; text-transform: uppercase;
+  color: rgba(239, 239, 239, 0.16); text-decoration: none; text-shadow: none;
+  transition: color 0.5s ease-in-out;
+}
+.side-nav a .dia {   /* ромб */
+  flex: none; width: 8px; height: 8px; transform: rotate(45deg);
+  border: 1px solid rgba(239, 239, 239, 0.45); background: transparent;
+  transition: border-color 0.4s ease-in-out, background 0.4s ease-in-out;
+}
+.side-nav a:hover, .side-nav a.active, .side-nav a.passed { color: #efefef; }
+/* пройденные + активный ромбы залиты (перекрывают линию-заливку → её не видно за ромбами) */
+.side-nav a:hover .dia, .side-nav a.active .dia, .side-nav a.passed .dia { border-color: #efefef; background: #efefef; }
+
+/* ── footer: design by ── */
+.designby { left: var(--px); bottom: 36px; display: flex; align-items: center; gap: 12px; }
+.db-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--blue); animation: db-blink 1.2s steps(1) infinite; }
+@keyframes db-blink { 50% { opacity: 0; } }
+.db-label { font-size: 10px; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg); }
+.db-logos { height: 18px; margin-left: 46px; display: block; }
+
+/* ── бургер + мобильное меню (по умолчанию скрыты; бургер включается на ≤640) ── */
+.burger { display: none; }   /* показывается только в мобайл-медиа ниже */
+/* z-index 56 > .mobile-menu(55): при открытом меню крестик остаётся сверху и им же закрываем */
+.burger { right: var(--px); top: 24px; width: 28px; height: 26px; padding: 4px 3px; z-index: 56;
+  flex-direction: column; justify-content: center; gap: 5px; background: none; border: 0; cursor: pointer; }
+.burger span { display: block; height: 2px; width: 100%; background: var(--fg); border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.2s ease; }
+.burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-menu {
+  position: fixed; inset: 0; z-index: 55;
+  background: rgba(8, 10, 14, 0.95); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+.mobile-menu.open { opacity: 1; visibility: visible; pointer-events: auto; }
+.mobile-menu a { color: var(--fg); font-family: "Roboto Condensed", sans-serif; font-weight: 500;
+  font-size: 24px; letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none;
+  opacity: 0.85; transition: color 0.25s ease, opacity 0.25s ease; }
+.mobile-menu a:hover, .mobile-menu a:active { color: var(--blue); opacity: 1; }
+.mobile-menu .mm-sep { width: 44px; height: 1px; background: rgba(255, 255, 255, 0.16); margin: 8px 0; }
+.mobile-menu .mm-small { font-size: 13px; letter-spacing: 0.1em; color: var(--muted); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   АДАПТИВ (только UI; WebGL-сцена масштабируется рендерером сама).
+   Десктоп-раскладка выше = абсолютные координаты под 1440. Ниже — рефлоу:
+   планшет ≤1024 (убираем плотный верхний нав, ужимаем hero/правый рельс),
+   мобайл ≤640 (прячем правый вертикальный нав, hero/goal во всю ширину, крупный
+   тап-таргет у кнопки). Прятать проще и надёжнее, чем ломать плотный нав в столбик.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Планшет ── */
+@media (max-width: 1024px) {
+  .frame { --px: 4vw; }
+  .nav { display: none; }                    /* горизонтальный нав (861px) не влезает */
+  .hero-title { top: 118px; max-width: 74vw; font-size: clamp(34px, 6.2vw, 52px); }
+  .side-nav { gap: 30px; }
+  .side-nav a { font-size: 11px; }
+  .goal { bottom: 100px; max-width: 56vw; }
+  .goal-label { font-size: 16px; margin-bottom: 14px; }
+  .goal-copy { font-size: 16px; max-width: none; }
+}
+
+/* ── Мобайл ── */
+@media (max-width: 640px) {
+  .frame { --px: 20px; }
+  .accent-tick { top: 14px; }
+  .top-divider { top: 16px; }
+  .logo { top: 26px; height: 16px; }
+  .logo img { height: 16px; }
+  /* кнопку отпускаем от верхней линии вниз + освобождаем место справа под бургер */
+  .learn-more { top: 27px; right: calc(var(--px) + 46px); }
+  .burger { display: flex; top: 26px; }
+  .hero-title {
+    top: 80px; left: var(--px); right: var(--px); max-width: none;
+    font-size: clamp(28px, 8.4vw, 40px); line-height: 1.12;
+  }
+  .side-nav { display: none; }               /* правый вертикальный рельс скрыт */
+  .goal { left: var(--px); right: var(--px); bottom: 76px; max-width: none; }
+  .goal-label { font-size: 15px; margin-bottom: 10px; }
+  .goal-copy { font-size: 13.5px; line-height: 1.4; max-width: none; }
+  .designby { bottom: 24px; gap: 8px; }
+  .db-logos { height: 15px; margin-left: 18px; }
+}
+
+/* ── Очень узкие телефоны ── */
+@media (max-width: 380px) {
+  .hero-title { font-size: 25px; }
+  .goal-copy { font-size: 12.5px; }
+  .db-logos { margin-left: 12px; }
+}
