@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Synex — A New Standard in Wealth Management</title>
+<meta name="description" content="Take full control of your assets with a unified platform for investing, tracking, and growing your portfolio in real time." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&display=swap" />
+<style>
+  :root { --font: "Inter Tight", Inter, system-ui, sans-serif; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font); background: #f4f1ea; color: #05050c; overflow-x: hidden; }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+
+  /* ---------- word reveal ---------- */
+  .rw { display:inline-block; overflow:hidden; padding-bottom:.15em; }
+  .rw > span {
+    display:inline-block; opacity:0; filter:blur(12px); transform:translateY(.4em);
+    transition: opacity .7s cubic-bezier(.22,1,.36,1), filter .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1);
+  }
+  .rw.in > span { opacity:1; filter:blur(0); transform:none; }
+
+  .reveal { opacity:0; transform:translateY(30px); filter:blur(10px);
+    transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1), filter .7s cubic-bezier(.22,1,.36,1); }
+  .reveal.in { opacity:1; transform:none; filter:blur(0); }
+  .pop { opacity:0; transform:scale(0); transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1); }
+  .pop.in { opacity:1; transform:none; }
+
+  /* ---------- navbar ---------- */
+  nav.top {
+    position: fixed; inset: 0 0 auto 0; z-index: 50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 24px 48px; transition: background-color .25s ease;
+    font-family: HelveticaNeueCyr, Helvetica, Arial, sans-serif;
+  }
+  nav.top .links { display:flex; gap:32px; position:absolute; left:50%; transform:translateX(-50%); }
+  nav.top .links a { font-size:13px; font-weight:500; text-transform:uppercase; letter-spacing:-.01em; transition:opacity .2s; }
+  nav.top .links a:hover { opacity:.7; }
+  nav.top .right { display:flex; align-items:center; gap:12px; }
+  nav.top .lang { display:flex; align-items:center; gap:8px; font-size:14px; }
+  .btn-launch { display:flex; align-items:center; gap:12px; border-radius:9999px; padding:8px 20px 8px 8px; font-size:14px; transition:background-color .2s; }
+  .btn-req { display:none; align-items:center; border-radius:9999px; padding:8px 20px; font-size:14px; color:#fff; background:rgba(255,255,255,.1); }
+  nav.top.dark { background:#000; }
+  nav.top.dark .btn-req { display:flex; }
+  @media (max-width: 900px){ nav.top { padding:20px; } nav.top .links, nav.top .lang { display:none; } }
+
+  /* ---------- hero ---------- */
+  .hero { position:relative; height:100vh; overflow:hidden; background:#f4f1ea; }
+  .hero-text { position:relative; z-index:10; text-align:center; padding-top:200px; padding-left:24px; padding-right:24px; }
+  .eyebrow { text-transform:uppercase; font-size:14px; font-weight:500; color:rgba(0,0,0,.5);
+    font-family: HelveticaNeueCyr,"Helvetica Neue",Helvetica,Arial,sans-serif; }
+  .hero h2 { font-size:clamp(44px,7vw,68px); font-weight:500; line-height:1.02; letter-spacing:-.03em; margin-top:15px; }
+  .hero h2 .dim { color:rgba(0,0,0,.2); display:block; }
+  .hero h2 .solid { color:#000; display:block; }
+  .hero-sub { max-width:560px; margin:20px auto 0; font-size:18px; font-weight:500; line-height:1.5; color:rgba(0,0,0,.2); }
+  .stone { position:absolute; user-select:none; pointer-events:auto; }
+  .stone img { width:100%; height:auto; }
+  .stone .moss { position:absolute; inset:0; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; }
+  .stone-l { left:-3vw; bottom:0; z-index:2; width:48vw; max-width:580px; transform:scaleX(-1); }
+  .stone-r { right:-4vw; bottom:0; z-index:5; width:58vw; max-width:720px; transform:scaleX(-1); }
+  .dashboard { position:absolute; bottom:80px; left:0; right:0; z-index:4; display:flex; justify-content:center; pointer-events:none; }
+  .dashboard img { width:min(92vw,944px); border-top-left-radius:12px; border-top-right-radius:12px;
+    box-shadow:0 -8px 80px rgba(0,0,0,.12),0 40px 120px rgba(0,0,0,.10); }
+  .hero-fade { position:absolute; inset:auto 0 0 0; height:220px; z-index:6; pointer-events:none;
+    background:linear-gradient(to top, rgba(5,5,12,.85) 0%, rgba(5,5,12,.5) 40%, transparent 100%); }
+  .scroll-ind { position:absolute; bottom:10px; left:0; right:0; margin:auto; width:fit-content; z-index:20;
+    display:flex; align-items:center; gap:8px; color:#fff; font-size:14px; font-weight:500; letter-spacing:-.28px; }
+  .scroll-ind img { animation: spin 4s ease-in-out infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  section { position:relative; }
+  .wrap { max-width:1366px; margin:0 auto; padding-left:48px; padding-right:48px; }
+  @media(max-width:768px){ .wrap { padding-left:24px; padding-right:24px; } }
+
+  .eyebrow-chip { display:inline-block; border:1px solid rgba(0,0,0,.2); border-radius:6px; padding:6px 12px;
+    font-size:13px; font-weight:500; color:rgba(0,0,0,.5); }
+
+  /* ---------- wealth intelligence ---------- */
+  .wi { background:#fff; color:#000; padding:96px 50px 128px; }
+  .wi-top { border-top:1px solid rgba(0,0,0,.1); margin-top:20px; }
+  .wi-title { display:grid; grid-template-columns:2fr 1fr; gap:32px; margin-top:30px; margin-bottom:80px; }
+  .wi-title h2 { font-weight:500; font-size:clamp(36px,4.5vw,64px); line-height:1.05; letter-spacing:-.02em; }
+  .wi-title h2 .dim { color:rgba(0,0,0,.2); }
+  .wi-title p { font-size:15px; line-height:1.5; color:rgba(0,0,0,.2); margin-top:70px; padding-left:32px; }
+  .wi-cols { display:grid; grid-template-columns:repeat(3,1fr); gap:40px; margin-bottom:40px; }
+  .wi-cols .n { font-size:12px; color:rgba(0,0,0,.6); font-weight:500; margin-bottom:20px; }
+  .wi-cols h3 { font-size:16px; font-weight:500; margin-bottom:12px; }
+  .wi-cols p { font-size:14px; line-height:1.5; color:rgba(0,0,0,.2); }
+  .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; align-items:start; }
+  .card { position:relative; }
+  .card-bg { position:relative; width:100%; aspect-ratio:4/3; border-radius:16px; overflow:hidden; border:1px solid rgba(0,0,0,.1); }
+  .card-bg img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .card-ui { position:absolute; left:50%; transform:translateX(-50%); top:28%; width:90%; height:420px;
+    border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,.15); backdrop-filter:blur(16px);
+    box-shadow:0 20px 60px -20px rgba(0,0,0,.45); color:#fff; }
+  .card-spacer { height:28%; }
+  .card-head { display:flex; align-items:center; justify-content:space-between; padding:20px 20px 0; }
+  .card-head .l { display:flex; align-items:center; gap:8px; }
+  .card-head .l span { font-size:15px; font-weight:500; }
+  .card-head img.ic { width:18px; height:18px; opacity:.6; }
+  @media(max-width:1000px){ .wi-title,.wi-cols,.cards { grid-template-columns:1fr; } .cards{gap:300px;} .wi-title p{margin-top:16px;padding-left:0;} }
+
+  /* ---------- capital signals spacer + morph card ---------- */
+  .capital { background:#fff; height:115vh; overflow:hidden; }
+  .tree { position:absolute; inset:auto 0 0 0; width:100%; }
+  .tree img { width:100%; height:auto; }
+  .tree .grass { position:absolute; inset:0; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; }
+  #morphCard {
+    position:fixed; left:50%; top:50%; transform:translate(-50%,-50%) scale(.9);
+    width:423px; height:532px; border-radius:24px; overflow:hidden; z-index:40; pointer-events:none;
+    opacity:0; transition:opacity .4s ease; box-shadow:0 40px 120px rgba(0,0,0,.4);
+  }
+  #morphCard.show { opacity:1; }
+  #morphCard .green { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  #morphCard .fade { position:absolute; inset:0; background:linear-gradient(270deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.55) 60%, rgba(0,0,0,.85) 100%); }
+  #morphCard .content { position:absolute; inset:0; color:#fff; }
+  .msig { position:absolute; left:50%; transform:translateX(-50%); bottom:184px; width:85%; display:flex; flex-direction:column; gap:20px; }
+  .msig-row { display:flex; align-items:center; gap:10px; transform:translateY(45px); }
+  .msig-dot { width:10px; height:10px; border-radius:50%; background:#EAFF62; flex-shrink:0; }
+  .msig-row span.t { font-size:16px; font-weight:500; }
+  .mlist { position:absolute; left:22px; right:22px; bottom:24px; }
+  .mlist .item { display:flex; align-items:center; gap:12px; padding:2px 0; font-size:14px; font-weight:500; }
+  .mlist .divi { border-top:1px dashed rgba(255,255,255,.25); margin:6px 0; }
+  .mtip { position:absolute; border-radius:16px; overflow:hidden; z-index:20; }
+  .mtip.left { width:250px; left:-140px; top:-160px; background:rgba(255,255,255,.7); backdrop-filter:blur(20px);
+    outline:1px solid rgba(255,255,255,.4); box-shadow:0 20px 50px -20px rgba(0,0,0,.25); color:#000; }
+  .mtip.right { width:208px; right:-120px; bottom:-60px; background:rgba(161,161,170,.8); backdrop-filter:blur(16px);
+    outline:1px solid rgba(255,255,255,.2); box-shadow:0 20px 50px -20px rgba(0,0,0,.35); padding:8px 5px 5px; }
+  .co { padding:14px 14px 12px; }
+  .co .top { display:flex; align-items:flex-start; justify-content:space-between; }
+  .co .big { font-size:28px; font-weight:500; line-height:1; }
+  .co .sub { color:rgba(0,0,0,.5); font-size:14px; margin-top:8px; }
+  .co button { margin-top:12px; width:100%; height:40px; padding:0 16px; background:#000; border-radius:9999px;
+    display:flex; align-items:center; justify-content:space-between; color:#fff; font-size:13px; font-weight:500; }
+  @media(max-width:640px){ #morphCard{ transform:translate(-50%,-50%) scale(.58);} }
+
+  /* ---------- intelligence layers ---------- */
+  .layers { background:#fff; overflow:hidden; }
+  .layers .glow { position:absolute; top:-260px; left:-360px; width:1400px; height:900px; z-index:0; opacity:.4; filter:blur(20px);
+    background:radial-gradient(ellipse 50% 45% at 50% 50%, rgba(106,231,116,.55) 0%, rgba(106,231,116,.35) 35%, rgba(106,231,116,.15) 60%, rgba(106,231,116,0) 80%); }
+  .layers h2 { position:relative; z-index:10; font-size:clamp(32px,5vw,48px); line-height:1.15; font-weight:400; }
+  .layers h2 .dim { color:rgba(0,0,0,.2); }
+  #graph { position:relative; width:100%; height:min(70vw,620px); margin-top:48px; }
+  #graph svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+  .gnode { position:absolute; transform:translate(-50%,-50%); text-align:center; }
+  .gnode .lbl { margin-top:10px; font-size:13px; font-weight:500; text-transform:uppercase; color:rgba(0,0,0,.6); line-height:1.1; white-space:nowrap; }
+  .cap-grid { position:relative; z-index:10; margin-top:96px; display:grid; grid-template-columns:2fr 3fr; gap:80px; align-items:start; }
+  .cap-grid h3 { color:rgba(0,0,0,.75); font-size:clamp(28px,4vw,36px); font-weight:400; line-height:1.02; margin-top:16px; }
+  .cap-items { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; border-left:1px solid rgba(0,0,0,.1); }
+  .cap-items .it { padding-left:28px; }
+  .cap-items .it + .it { border-left:1px solid rgba(0,0,0,.1); }
+  .cap-items img { width:20px; height:20px; margin-bottom:16px; }
+  .cap-items .t { font-size:18px; font-weight:600; margin-bottom:12px; }
+  .cap-items p { font-size:16px; color:rgba(0,0,0,.3); font-weight:500; }
+  @media(max-width:900px){ .cap-grid{grid-template-columns:1fr;gap:40px;} .cap-items{grid-template-columns:1fr;border-left:none;} .cap-items .it{padding-left:0;} .cap-items .it+.it{border-left:none;} }
+
+  /* ---------- integrations ---------- */
+  .integ { background:#fff; overflow:hidden; }
+  .integ-head { text-align:center; display:flex; flex-direction:column; align-items:center; }
+  .integ h2 { margin-top:25px; font-size:clamp(30px,4vw,48px); font-weight:500; line-height:1.15; color:#000; }
+  .arc { position:relative; width:100%; max-width:1200px; margin:70px auto 0; height:260px; }
+  .arc img.bg { position:absolute; left:0; right:0; top:50%; width:100%; height:auto; transform:translateY(-10px); z-index:0; }
+  .node { position:absolute; left:50%; top:50%; display:flex; align-items:center; justify-content:center;
+    overflow:hidden; box-shadow:0 4px 6px rgba(0,0,0,.1); background:#fff; border-radius:9999px;
+    transition: transform .8s ease-in-out, width .8s, height .8s, opacity .8s, border-radius .8s; }
+  .node img.icon { position:absolute; inset:0; margin:auto; width:50%; height:50%; object-fit:contain; transition:opacity .5s; }
+  .node img.core { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .5s; }
+  .node.center { border-radius:40px; }
+  .node.center img.icon { opacity:0; }
+  .node.center img.core { opacity:1; }
+  .integ-foot { margin-top:60px; text-align:center; display:flex; flex-direction:column; align-items:center; }
+  .integ-foot .b1 { font-size:18px; font-weight:500; color:#000; }
+  .integ-foot .b2 { margin-top:15px; max-width:475px; font-size:18px; font-weight:500; color:rgba(0,0,0,.3); }
+
+  /* ---------- why synex ---------- */
+  .why { overflow:hidden; }
+  .why .bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; }
+  .why .topfade { position:absolute; inset:0 0 auto 0; height:160px; z-index:-1;
+    background:linear-gradient(to bottom, #C4C4C4 0%, rgba(196,196,196,.85) 15%, rgba(196,196,196,0) 100%); }
+  .why-inner { padding:144px 48px 128px; }
+  .why-head { text-align:center; display:flex; flex-direction:column; align-items:center; }
+  .why h2 { margin-top:24px; font-size:clamp(30px,4vw,48px); font-weight:500; line-height:1.15; color:#fff; }
+  .why-head .chip { border-color:rgba(255,255,255,.2); color:rgba(255,255,255,.6); }
+  .why-head p { margin-top:24px; max-width:475px; color:rgba(255,255,255,.75); font-size:18px; font-weight:500; }
+  .table { position:relative; width:100%; max-width:1000px; margin:80px auto 0; }
+  .th { display:grid; grid-template-columns:3fr 1fr 1fr; align-items:end; margin-bottom:12px; padding:0 4px; }
+  .th .a { color:rgba(255,255,255,.75); font-size:14px; font-weight:500; padding-left:28px; }
+  .th .c { color:rgba(255,255,255,.75); font-size:14px; font-weight:500; text-align:center; }
+  .plate { position:relative; }
+  .plate .grid { display:grid; grid-template-columns:3fr 1fr 1fr; background:rgba(0,0,0,.25); backdrop-filter:blur(20px);
+    border-radius:16px; border:1px solid rgba(255,255,255,.2); overflow:hidden; }
+  .col-l { display:flex; flex-direction:column; padding:28px 28px; }
+  .col-l .cell { display:flex; align-items:center; height:56px; color:#fff; font-size:16px; padding-right:8px; }
+  .col-l .cell + .cell { border-top:1px dashed rgba(255,255,255,.2); }
+  .col-m { padding:28px 0; }
+  .col-m .cell { height:56px; }
+  .col-r { display:flex; flex-direction:column; padding:28px 60px; }
+  .col-r .cell { display:flex; align-items:center; justify-content:center; height:56px; }
+  .col-r .cell .absent { color:rgba(255,255,255,.7); font-size:12px; text-transform:capitalize; }
+  .synex-col { position:absolute; left:0; top:0; width:100%; height:100%; display:grid; grid-template-columns:3fr 1fr 1fr; pointer-events:none; }
+  .synex-card { position:absolute; left:50%; transform:translateX(-50%); top:-31px; width:115%; background:#E9EAC8; border-radius:16px;
+    box-shadow:0 25px 50px -12px rgba(0,0,0,.3); display:flex; flex-direction:column; align-items:center;
+    padding:25px 55px 60px; }
+  .synex-card .logo { display:flex; align-items:center; justify-content:center; gap:8px; height:34px; }
+  .synex-card .logo span { color:#000; font-size:18px; font-weight:700; text-transform:lowercase; line-height:1; }
+  .synex-card .cell { display:flex; align-items:center; justify-content:center; height:56px; width:100%; }
+  .prices { display:grid; grid-template-columns:3fr 1fr 1fr; margin-top:40px; padding:0 4px; align-items:start; }
+  .prices .a { padding-left:28px; }
+  .prices .a .t { color:#fff; font-size:14px; font-weight:500; }
+  .prices .a .s { color:rgba(255,255,255,.6); font-size:12px; font-weight:500; margin-top:4px; }
+  .prices .p { text-align:center; color:#fff; font-size:14px; font-weight:500; }
+  svg.chk { color:#fff; }
+  @media(max-width:640px){ .col-l .cell{height:88px;font-size:13px;} .col-m .cell,.col-r .cell,.synex-card .cell{height:88px;} .synex-card{width:108%;padding:25px 18px 60px;} .why-inner{padding:120px 20px 100px;} }
+
+  /* ---------- take control ---------- */
+  .take { background:#fff; background-image:radial-gradient(ellipse at 50% 40%, rgba(0,0,0,.04) 0%, rgba(255,255,255,0) 60%); }
+  .take-inner { max-width:1432px; margin:0 auto; padding:96px 40px 48px; display:flex; flex-direction:column; align-items:center; }
+  .take .eye { color:rgba(0,0,0,.5); font-size:14px; font-weight:500; text-transform:uppercase; letter-spacing:.02em; text-align:center; }
+  .take h2 { margin-top:24px; text-align:center; font-weight:500; color:#000; font-size:clamp(40px,6vw,76px); line-height:1.05; letter-spacing:-.02em; }
+  .take h2 .dim { color:rgba(0,0,0,.3); }
+  .take h2 img { display:inline-block; height:.85em; width:1.85em; border-radius:9999px; object-fit:cover; vertical-align:middle; margin:0 16px .45em; box-shadow:inset 0 2px 4px rgba(0,0,0,.06); }
+  .take-desc { margin-top:32px; max-width:672px; text-align:center; color:rgba(0,0,0,.3); font-size:18px; font-weight:500; line-height:1.6; }
+  .take-cta { margin-top:40px; display:flex; justify-content:center; gap:12px; }
+  .take-cta .req { height:40px; padding:0 20px; border-radius:9999px; background:#f4f4f5; color:#000; font-size:14px; font-weight:500; }
+  .take-cta .launch { height:40px; padding:0 20px 0 8px; border-radius:9999px; background:#000; color:#fff; font-size:14px; font-weight:500; display:flex; align-items:center; gap:12px; }
+  .take-cta .launch .bar { width:1px; height:32px; background:rgba(255,255,255,.2); }
+  .activity { margin-top:128px; width:100%; }
+  .activity .h { display:flex; align-items:center; justify-content:space-between; }
+  .activity .h span { color:rgba(0,0,0,.75); font-size:16px; font-weight:500; }
+  .activity .divi { border-top:1px dashed rgba(0,0,0,.2); margin:24px 0; }
+  .acts { display:grid; grid-template-columns:repeat(4,1fr); gap:32px; }
+  .acts .it img { width:24px; height:24px; margin-bottom:12px; }
+  .acts .it h3 { color:#000; font-size:18px; font-weight:600; line-height:1.3; margin-bottom:12px; }
+  .acts .it p { color:rgba(0,0,0,.3); font-size:16px; font-weight:500; }
+  .activity .end { border-top:1px solid #d4d4d8; margin-top:120px; }
+  .dots { display:flex; align-items:center; gap:6px; }
+  .dots span { display:block; border-radius:9999px; background:#000; }
+  @media(max-width:768px){ .acts{grid-template-columns:1fr;} }
+
+  /* ---------- footer ---------- */
+  footer { background:#fff; overflow:hidden; }
+  .foot-inner { max-width:1432px; margin:0 auto; padding:40px 40px 0; }
+  .foot-grid { display:grid; grid-template-columns:2fr 1fr 1fr; gap:64px; padding-bottom:96px; }
+  .foot-grid h2 { color:#000; font-weight:500; font-size:clamp(36px,4vw,52px); line-height:1.05; letter-spacing:-.02em; }
+  .foot-grid .lead { margin-top:24px; color:rgba(0,0,0,.4); font-size:16px; font-weight:500; line-height:1.6; max-width:20rem; }
+  .foot-col { display:flex; flex-direction:column; justify-content:space-between; min-height:180px; border-left:1px solid rgba(0,0,0,.1); padding-left:20px; }
+  .foot-col h3 { color:#000; font-size:18px; font-weight:500; }
+  .foot-col p { margin-top:8px; color:rgba(0,0,0,.4); font-size:16px; font-weight:500; }
+  .foot-col a { margin-top:32px; display:inline-flex; align-items:center; gap:8px; font-size:16px; }
+  .foot-bg { position:relative; width:100%; overflow:hidden; }
+  .foot-bg img { width:100%; height:auto; transform:scale(1.05); }
+  @media(max-width:768px){ .foot-grid{grid-template-columns:1fr;gap:48px;} .foot-col{border-left:none;padding-left:0;} }
+</style>
+</head>
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="top" id="navbar">
+  <img src="https://qclay.design/lovable/synex/logo.svg" alt="Synex" style="height:24px;width:auto" id="navlogo" />
+  <div class="links">
+    <a href="#">Dashboard</a><a href="#">Assets</a><a href="#">Analytics</a><a href="#">Markets</a>
+  </div>
+  <div class="right">
+    <button class="lang" id="lang">
+      <img src="https://qclay.design/lovable/synex/global.svg" alt="" style="height:18px;width:18px" id="globe" />
+      <span>English</span>
+    </button>
+    <button class="btn-req">Request access</button>
+    <button class="btn-launch" id="launch" style="background:#000;color:#fff">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.6667" fill="#fff" id="lc"/><path d="M10.3534 8.68665L8.35337 10.6866C8.25337 10.7866 8.12671 10.8333 8 10.8333C7.87337 10.8333 7.74671 10.7866 7.64671 10.6866L5.64671 8.68665C5.45337 8.49331 5.45337 8.17331 5.64671 7.97998C5.84004 7.78665 6.16004 7.78665 6.35337 7.97998L7.5 9.12665V5.66665C7.5 5.39331 7.72671 5.16665 8 5.16665C8.27337 5.16665 8.5 5.39331 8.5 5.66665V9.12665L9.64671 7.97998C9.84004 7.78665 10.16 7.78665 10.3534 7.97998C10.5467 8.17331 10.5467 8.49331 10.3534 8.68665Z" fill="#000" id="lp"/></svg>
+      <span class="bar" style="width:1px;align-self:stretch;background:rgba(255,255,255,.4)"></span>
+      <span>Launch app</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-text">
+    <p class="eyebrow reveal in">Finance Reimagined</p>
+    <h2>
+      <span class="dim reveal in" style="transition-delay:.1s">A New Standard</span>
+      <span class="solid reveal in" style="transition-delay:.22s">in Wealth Management</span>
+    </h2>
+    <p class="hero-sub reveal in" style="transition-delay:.35s">Take full control of your assets with a unified platform for investing, tracking, and growing your portfolio in real time.</p>
+  </div>
+
+  <div class="stone stone-l" data-stone>
+    <img src="https://qclay.design/lovable/synex/stone-right.png" alt="" />
+    <img class="moss" src="https://qclay.design/lovable/synex/stone-g-right.png" alt="" />
+  </div>
+  <div class="stone stone-r" data-stone>
+    <img src="https://qclay.design/lovable/synex/stone-left.png" alt="" />
+    <img class="moss" src="https://qclay.design/lovable/synex/stone-g-left.png" alt="" />
+  </div>
+
+  <div class="dashboard">
+    <img src="https://qclay.design/lovable/synex/Dashboard.png" alt="Synex dashboard" />
+  </div>
+  <div class="hero-fade"></div>
+  <div class="scroll-ind">
+    <img src="https://qclay.design/lovable/synex/star.svg" alt="" width="14" height="14" />
+    <span>Scroll to explore</span>
+  </div>
+</section>
+
+<!-- ================= WEALTH INTELLIGENCE ================= -->
+<section class="wi">
+  <div style="max-width:1432px;margin:0 auto">
+    <div><span class="eyebrow-chip pop">Wealth Intelligence</span></div>
+    <div class="wi-top"></div>
+    <div class="wi-title">
+      <h2><span class="dim rw" data-rw>Clarity and control for</span> <span class="rw" data-rw data-delay="300">every part of your portfolio</span></h2>
+      <p class="rw" data-rw data-stagger="40">Get a clear, structured view of your capital — from asset allocation to performance insights and future opportunities.</p>
+    </div>
+    <div class="wi-cols">
+      <div class="reveal"><div class="n">[ 1 ]</div><h3>Total asset visibility</h3><p>Every position, every movement — clearly structured in one system. Get a unified view of your entire portfolio across all assets and accounts.</p></div>
+      <div class="reveal" style="transition-delay:.18s"><div class="n">[ 2 ]</div><h3>Precision performance tracking</h3><p>Advanced analytics to monitor growth, volatility, and efficiency. Analyze performance with deeper insights across timeframes.</p></div>
+      <div class="reveal" style="transition-delay:.36s"><div class="n">[ 3 ]</div><h3>Global allocation intelligence</h3><p>Real-time global capital distribution and opportunity mapping. Track flows, regional exposure, and emerging opportunities — all in one structured view.</p></div>
+    </div>
+    <div class="cards">
+      <!-- Card 1 -->
+      <div class="card">
+        <div class="card-bg"><img src="https://qclay.design/lovable/synex/blueCard.png" alt="" /></div>
+        <div class="card-ui" style="background:linear-gradient(180deg, rgba(134,151,189,.55) 0%, rgba(0,22,70,.65) 50%, rgba(134,151,189,.55) 100%)">
+          <div class="card-head"><div class="l"><img class="ic" src="https://qclay.design/lovable/synex/candle.svg" alt=""/><span>Portfolio Overview</span></div><img src="https://qclay.design/lovable/synex/groupDot.svg" style="height:8px;width:auto;opacity:.9" alt=""/></div>
+          <div style="margin:20px 20px 0;border-top:1px dashed rgba(255,255,255,.2)"></div>
+          <div style="padding:0 20px;margin-top:20px;display:flex;justify-content:space-between;color:#fff">
+            <div style="flex:1"><div style="font-size:10px;color:rgba(255,255,255,.6)">Total Value</div><div class="cu" data-cu="$35,200" style="font-size:14px;font-weight:500">$35,200</div></div>
+            <div style="flex:1;border-left:1px solid rgba(255,255,255,.2);padding-left:12px"><div style="font-size:10px;color:rgba(255,255,255,.6)">Portfolio Change</div><div class="cu" data-cu="+3,567.99" style="font-size:14px;font-weight:500">+3,567.99</div></div>
+            <div style="flex:1;border-left:1px solid rgba(255,255,255,.2);padding-left:12px"><div style="font-size:10px;color:rgba(255,255,255,.6)">Total Accounts</div><div class="cu" data-cu="28" style="font-size:14px;font-weight:500">28</div></div>
+          </div>
+          <div style="padding:0 20px;margin-top:16px;height:140px;display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="https://qclay.design/lovable/synex/FirstCardGroup.svg" style="width:100%;height:100%;object-fit:contain" alt=""/></div>
+          <div style="position:absolute;left:20px;right:20px;bottom:16px;color:#fff;font-size:12px">
+            <div style="display:flex;justify-content:space-between"><span style="color:rgba(255,255,255,.7)">Stock</span><span>$105.00 USD</span></div>
+            <div style="display:flex;justify-content:space-between;border-top:1px dashed rgba(255,255,255,.2);padding-top:10px;margin-top:10px"><span style="color:rgba(255,255,255,.7)">Crypto</span><span>$53.00 USD</span></div>
+            <div style="display:flex;justify-content:space-between;border-top:1px dashed rgba(255,255,255,.2);padding-top:10px;margin-top:10px"><span style="color:rgba(255,255,255,.7)">Cash</span><span>$23.00 USD</span></div>
+          </div>
+        </div>
+        <div class="card-spacer"></div>
+      </div>
+      <!-- Card 2 -->
+      <div class="card">
+        <div class="card-bg" style="border:none" id="wi-morph-anchor"><img src="https://qclay.design/lovable/synex/greenCard.png" alt="" /></div>
+        <div class="card-ui" style="background:linear-gradient(to top, rgb(0,0,0) 0%, rgb(0,0,0) 30%, rgba(0,0,0,.8) 55%, transparent 100%);height:410px;width:88%;border-top:none">
+          <div class="card-head">
+            <div class="l"><img class="ic" style="filter:invert(1)" src="https://qclay.design/lovable/synex/zap-1.svg" alt=""/><span>Performance</span></div>
+            <div style="display:flex;gap:8px">
+              <button style="display:flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.25);border-radius:9999px;color:#fff;font-size:11px;font-weight:500;padding:8px 10px">Last Wek<svg width="8" height="8" viewBox="0 0 8 8"><polygon points="0,1 8,1 4,7" fill="#fff"/></svg></button>
+              <button style="border:1px solid rgba(255,255,255,.25);border-radius:9999px;color:#fff;padding:8px" aria-label="More"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:20px">
+            <div style="padding:0 20px;display:flex;align-items:baseline;gap:8px;color:#fff"><span class="cu" data-cu="27.4%" style="font-size:54px;font-weight:500;letter-spacing:-.03em;line-height:1">27.4%</span><img src="https://qclay.design/lovable/synex/Stroke.svg" style="width:20px;height:12px" alt=""/></div>
+            <div style="padding:0 20px;margin-top:20px;color:#fff"><div style="font-size:14px;font-weight:500">Precision Data Insights</div><div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:4px;line-height:1.5">Evaluate market volatility and performance drivers with deep-dive analytics across any selected period.</div></div>
+            <div style="margin:20px 20px 0;border-top:1px dashed rgba(255,255,255,.3)"></div>
+            <div style="padding:0 20px;margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;color:#fff">
+              <div><div style="font-size:10px;color:rgba(255,255,255,.5)">Growth</div><div style="display:flex;align-items:center;gap:4px;margin-top:2px"><span class="cu" data-cu="+12%" style="font-size:14px;font-weight:500">+12%</span><img src="https://qclay.design/lovable/synex/Stroke.svg" style="width:14px;height:8px" alt=""/></div></div>
+              <div><div style="font-size:10px;color:rgba(255,255,255,.5)">Volatility Index</div><div style="display:flex;align-items:center;gap:4px;margin-top:2px"><span class="cu" data-cu="-3.1" style="font-size:14px;font-weight:500">-3.1</span><img src="https://qclay.design/lovable/synex/Stroke.svg" style="width:14px;height:8px;filter:brightness(0) saturate(100%) invert(45%) sepia(58%) saturate(900%) hue-rotate(5deg)" alt=""/></div></div>
+              <div><div style="font-size:10px;color:rgba(255,255,255,.5)">Efficiency Ratio</div><div style="display:flex;align-items:center;gap:4px;margin-top:2px"><span class="cu" data-cu="+8%" style="font-size:14px;font-weight:500">+8%</span><img src="https://qclay.design/lovable/synex/Stroke.svg" style="width:14px;height:8px" alt=""/></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card-spacer"></div>
+      </div>
+      <!-- Card 3 -->
+      <div class="card">
+        <div class="card-bg"><img src="https://qclay.design/lovable/synex/brownCard.png" alt="" /></div>
+        <div class="card-ui" style="background:linear-gradient(180deg, rgba(135,117,93,.55) 0%, rgba(69,52,30,.7) 50%, rgba(135,117,93,.55) 100%)">
+          <div class="card-head"><div class="l"><img class="ic" style="filter:brightness(0) invert(1)" src="https://qclay.design/lovable/synex/global.svg" alt=""/><span>Global capital flow</span></div><img src="https://qclay.design/lovable/synex/groupDot.svg" style="height:8px;width:auto;opacity:.9" alt=""/></div>
+          <div style="padding:0 20px;margin-top:20px;color:#fff">
+            <span class="cu" data-cu="$ 52,480,000" style="display:block;font-size:30px;font-weight:500;letter-spacing:-.02em">$ 52,480,000</span>
+            <div style="border-top:1px solid rgba(255,255,255,.25);margin-top:12px"></div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:10px"><span style="width:8px;height:8px;border-radius:50%;background:#FF8E3D"></span><span style="font-size:11px;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.05em">Total allocated capital</span></div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:40px;display:flex;justify-content:center;padding:0 20px"><img src="https://qclay.design/lovable/synex/Union.svg" style="width:100%;opacity:.9" alt=""/></div>
+        </div>
+        <div class="card-spacer"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CAPITAL SIGNALS (spacer + trees) ================= -->
+<section class="capital" id="capital">
+  <div class="tree" data-tree>
+    <img src="https://qclay.design/lovable/synex/boldTree.png" alt="" />
+    <img class="grass" src="https://qclay.design/lovable/synex/GrassTree.png" alt="" />
+  </div>
+</section>
+
+<!-- Morphing signal card (fixed, revealed during capital section) -->
+<div id="morphCard">
+  <img class="green" src="https://qclay.design/lovable/synex/greenCard.png" alt="" />
+  <div class="fade"></div>
+  <div class="content">
+    <div class="msig">
+      <div class="msig-row"><span class="msig-dot"></span><span class="t">Portfolio signal strength</span><img src="https://qclay.design/lovable/synex/info-circle.svg" style="width:20px;height:20px;opacity:.7;filter:brightness(0) invert(1);margin-left:auto" alt=""/></div>
+      <img src="https://qclay.design/lovable/synex/group87.svg" style="width:100%" alt=""/>
+    </div>
+    <div class="mlist">
+      <div class="item"><img src="https://qclay.design/lovable/synex/arrow-down.svg" style="width:14px;height:14px;transform:rotate(-90deg)" alt=""/>High volitatity</div>
+      <div class="divi"></div>
+      <div class="item"><img src="https://qclay.design/lovable/synex/arrow-down.svg" style="width:14px;height:14px;transform:rotate(-90deg)" alt=""/>Rebalance exposure</div>
+      <div class="divi"></div>
+      <div class="item"><img src="https://qclay.design/lovable/synex/arrow-down.svg" style="width:14px;height:14px;transform:rotate(-90deg)" alt=""/>Captured opportunity</div>
+      <div class="divi"></div>
+      <div class="item"><img src="https://qclay.design/lovable/synex/arrow-down.svg" style="width:14px;height:14px;transform:rotate(-90deg)" alt=""/>Increase position in high-growth assets</div>
+    </div>
+  </div>
+  <div class="mtip left">
+    <div class="co">
+      <div class="top"><span class="big">+$12,840</span><img src="https://qclay.design/lovable/synex/info-circle.svg" style="width:20px;height:20px" alt=""/></div>
+      <div class="sub">Captured opportunity</div>
+      <button>View insight<img src="https://qclay.design/lovable/synex/arrow-down.svg" style="width:14px;height:14px;transform:rotate(-90deg)" alt=""/></button>
+    </div>
+  </div>
+  <div class="mtip right">
+    <div style="padding:0 12px;margin-bottom:6px"><span style="color:#fff;font-size:14px;font-weight:500">Risk alert</span></div>
+    <div style="background:#fff;border-radius:16px;padding:8px 16px"><p style="color:rgba(0,0,0,.7);font-size:12px;line-height:1.3">High volitatity detected in emerging markets</p></div>
+  </div>
+</div>
+
+<!-- ================= INTELLIGENCE LAYERS ================= -->
+<section class="layers">
+  <div style="position:absolute;inset:0;background-image:url(https://qclay.design/lovable/synex/UnionNet.png);background-size:cover;background-position:center;-webkit-mask-image:radial-gradient(ellipse at center,black 20%,transparent 70%);mask-image:radial-gradient(ellipse at center,black 20%,transparent 70%)"></div>
+  <div class="wrap" style="padding-top:112px;padding-bottom:96px;position:relative">
+    <div style="position:relative"><div class="glow"></div>
+      <h2><span class="dim rw" data-rw>One platform.</span><br/><span class="rw" data-rw data-delay="160">Multiple intelligence layers.</span></h2>
+    </div>
+    <div id="graph">
+      <svg id="graphSvg"></svg>
+      <!-- nodes injected by JS -->
+    </div>
+    <div class="cap-grid">
+      <div>
+        <span class="eyebrow-chip pop">CORE CAPABILITIES</span>
+        <h3><span class="rw" data-rw>Powering every</span><br/><span class="rw" data-rw data-delay="160">layer of your capital</span></h3>
+      </div>
+      <div class="cap-items">
+        <div class="it reveal"><img src="https://qclay.design/lovable/synex/global.svg" alt=""/><div class="t">Unified infrastructure</div><p>All financial layers connected into one structured system</p></div>
+        <div class="it reveal" style="transition-delay:.18s"><img src="https://qclay.design/lovable/synex/chart-2.svg" alt=""/><div class="t">Cross-market intelligence</div><p>Analyze and operate across Web3, traditional finance, and data systems</p></div>
+        <div class="it reveal" style="transition-delay:.36s"><img src="https://qclay.design/lovable/synex/zap-1.svg" alt=""/><div class="t">Seamless execution</div><p>From insight to action — everything happens in one environment.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INTEGRATIONS ================= -->
+<section class="integ">
+  <div class="wrap" style="padding-top:112px;padding-bottom:96px">
+    <div class="integ-head">
+      <span class="eyebrow-chip pop">INTEGRATIONS</span>
+      <h2><span class="rw" data-rw>Seamlessly connected</span><br/><span class="rw" data-rw data-delay="160">to your financial ecosystem</span></h2>
+    </div>
+    <div class="arc" id="arc">
+      <img class="bg" src="https://qclay.design/lovable/synex/EllipseShadow.png" alt=""/>
+      <img class="bg" src="https://qclay.design/lovable/synex/EllipseBorder.png" alt=""/>
+      <!-- nodes injected by JS -->
+    </div>
+    <div class="integ-foot">
+      <p class="b1 rw" data-rw>30+ integrations. Real-time sync. Zero fragmentation.</p>
+      <p class="b2 rw" data-rw data-stagger="40">Connect exchanges, custodians, on-chain wallets, and data providers — all synchronized in one unified system for real-time visibility and control.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHY SYNEX ================= -->
+<section class="why">
+  <img class="bg" src="https://qclay.design/lovable/synex/StoneBG.png" alt=""/>
+  <div class="topfade"></div>
+  <div class="wrap why-inner">
+    <div class="why-head">
+      <span class="eyebrow-chip chip pop">WHY SYNEX</span>
+      <h2><span class="rw" data-rw>Built for modern capital.</span><br/><span class="rw" data-rw data-delay="160">Not legacy systems</span></h2>
+      <p class="rw" data-rw data-stagger="40">Connect exchanges, custodians, on-chain wallets, and data providers — all synchronized in one unified system for real-time visibility and control.</p>
+    </div>
+    <div class="table">
+      <div class="th"><div class="a">Core capabilities</div><div></div><div class="c">Other platform</div></div>
+      <div class="plate">
+        <div class="grid">
+          <div class="col-l">
+            <div class="cell">Multi-asset portfol</div>
+            <div class="cell">Real-time data &amp; synchronizatio</div>
+            <div class="cell">Al-driven insights &amp; optimizatio</div>
+            <div class="cell">Unified dashboard across all system</div>
+            <div class="cell">Unified dashboard across all system</div>
+          </div>
+          <div class="col-m"><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div></div>
+          <div class="col-r">
+            <div class="cell"><span class="absent">absent</span></div>
+            <div class="cell"><svg class="chk" width="18" height="14" viewBox="0 0 18 14" fill="none"><path d="M15.3604 0.542969C15.9414 -0.0477178 16.8829 -0.0479217 17.4639 0.542969C18.0458 1.13484 18.0457 2.09556 17.4639 2.6875L6.875 13.457C6.29392 14.0477 5.35245 14.0479 4.77148 13.457L0.536133 9.14941C-0.0457785 8.55756 -0.0456284 7.59684 0.536133 7.00488C1.11716 6.41393 2.05858 6.41401 2.63965 7.00488L5.75195 10.1699L5.82324 10.2432L5.89453 10.1699L15.3604 0.542969Z" fill="currentColor"/></svg></div>
+            <div class="cell"><span class="absent">absent</span></div>
+            <div class="cell"><svg class="chk" width="18" height="14" viewBox="0 0 18 14" fill="none"><path d="M15.3604 0.542969C15.9414 -0.0477178 16.8829 -0.0479217 17.4639 0.542969C18.0458 1.13484 18.0457 2.09556 17.4639 2.6875L6.875 13.457C6.29392 14.0477 5.35245 14.0479 4.77148 13.457L0.536133 9.14941C-0.0457785 8.55756 -0.0456284 7.59684 0.536133 7.00488C1.11716 6.41393 2.05858 6.41401 2.63965 7.00488L5.75195 10.1699L5.82324 10.2432L5.89453 10.1699L15.3604 0.542969Z" fill="currentColor"/></svg></div>
+            <div class="cell"><span class="absent">absent</span></div>
+          </div>
+        </div>
+        <div class="synex-col">
+          <div></div>
+          <div style="position:relative">
+            <div class="synex-card">
+              <div class="logo">
+                <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M4.40072 0V4.40072H0C0 1.97299 1.97299 0 4.40072 0Z" fill="#0A0A0A"/><path d="M4.40072 4.40137H0V8.80209H4.40072V4.40137Z" fill="#0A0A0A"/><path d="M4.40112 0.000642776V4.40137H8.80185V0.000642776H4.40112Z" fill="#0A0A0A"/><path d="M13.2031 8.80176H8.80237V13.2025C11.2301 13.2025 13.2031 11.2295 13.2031 8.80176Z" fill="#0A0A0A"/><path d="M4.40112 8.8024L4.40112 13.2031L8.80185 13.2031L8.80185 8.8024L4.40112 8.8024Z" fill="#0A0A0A"/><path d="M13.2031 4.40137H8.80237V8.80209H13.2031V4.40137Z" fill="#0A0A0A"/></svg>
+                <span>synex</span>
+              </div>
+              <div class="cell"><svg class="chk" width="18" height="14" viewBox="0 0 18 14" fill="none" style="color:#000"><path d="M15.3604 0.542969C15.9414 -0.0477178 16.8829 -0.0479217 17.4639 0.542969C18.0458 1.13484 18.0457 2.09556 17.4639 2.6875L6.875 13.457C6.29392 14.0477 5.35245 14.0479 4.77148 13.457L0.536133 9.14941C-0.0457785 8.55756 -0.0456284 7.59684 0.536133 7.00488C1.11716 6.41393 2.05858 6.41401 2.63965 7.00488L5.75195 10.1699L5.82324 10.2432L5.89453 10.1699L15.3604 0.542969Z" fill="currentColor"/></svg></div>
+              <div class="cell"><svg class="chk" width="18" height="14" viewBox="0 0 18 14" fill="none" style="color:#000"><path d="M15.3604 0.542969C15.9414 -0.0477178 16.8829 -0.0479217 17.4639 0.542969C18.0458 1.13484 18.0457 2.09556 17.4639 2.6875L6.875 13.457C6.29392 14.0477 5.35245 14.0479 4.77148 13.457L0.536133 9.14941C-0.0457785 8.55756 -0.0456284 7.59684 0.536133 7.00488C1.11716 6.41393 2.05858 6.41401 2.63965 7.00488L5.75195 10.1699L5.82324 10.2432L5.89453 10.1699L15.3604 0.542969Z" fill="currentColor"/></svg></div>
+              <div class="cell"><svg class="chk" width="18" height="14" viewBox="0 0 18 14" fill="none" style="color:#000"><path d="M15.3604 0.542969C15.9414 -0.0477178 16.8829 -0.0479217 17.4639 0.542969C18.0458 1.13484 18.0457 2.09556 17.4639 2.6875L6.875 13.457C6.29392 14.0477 5.35245 14.0479 4.77148 13.457L0.536133 9.14941C-0.0457785 8.55756 -0.0456284 7.59684 0.536133 7.00488C1.11716 6.41393 2.05858 6.41401 2.63965 7.00488L5.75195 10.1699L5.82324 10.2432L5.89453 10.1699L15.3604 0.542969Z" fill="currentColor"/></svg></div>
+              <div class="cell"><svg class="chk" width="18" height="14" viewBox="0 0 18 14" fill="none" style="color:#000"><path d="M15.3604 0.542969C15.9414 -0.0477178 16.8829 -0.0479217 17.4639 0.542969C18.0458 1.13484 18.0457 2.09556 17.4639 2.6875L6.875 13.457C6.29392 14.0477 5.35245 14.0479 4.77148 13.457L0.536133 9.14941C-0.0457785 8.55756 -0.0456284 7.59684 0.536133 7.00488C1.11716 6.41393 2.05858 6.41401 2.63965 7.00488L5.75195 10.1699L5.82324 10.2432L5.89453 10.1699L15.3604 0.542969Z" fill="currentColor"/></svg></div>
+              <div class="cell"><svg class="chk" width="18" height="14" viewBox="0 0 18 14" fill="none" style="color:#000"><path d="M15.3604 0.542969C15.9414 -0.0477178 16.8829 -0.0479217 17.4639 0.542969C18.0458 1.13484 18.0457 2.09556 17.4639 2.6875L6.875 13.457C6.29392 14.0477 5.35245 14.0479 4.77148 13.457L0.536133 9.14941C-0.0457785 8.55756 -0.0456284 7.59684 0.536133 7.00488C1.11716 6.41393 2.05858 6.41401 2.63965 7.00488L5.75195 10.1699L5.82324 10.2432L5.89453 10.1699L15.3604 0.542969Z" fill="currentColor"/></svg></div>
+            </div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+      <div class="prices">
+        <div class="a"><div class="t">Total operational cost:</div><div class="s">Based on typical multi-platform setups.</div></div>
+        <div class="p"><span>$499</span><span style="color:rgba(255,255,255,.9)"> / month</span></div>
+        <div class="p">$1,700 / month</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TAKE CONTROL ================= -->
+<section class="take">
+  <div class="take-inner">
+    <p class="eye pop">Finance reimagined</p>
+    <h2>
+      <span class="dim rw" data-rw>Take control</span>
+      <img src="https://qclay.design/lovable/synex/firstTree.png" alt=""/>
+      <span class="dim rw" data-rw>of your capital.</span><br/>
+      <span class="rw" data-rw data-delay="200">Operate at a new level</span>
+      <img src="https://qclay.design/lovable/synex/SecondTree.png" alt=""/>
+    </h2>
+    <p class="take-desc reveal">Synex brings together your assets, data, and execution into one intelligent system — giving you clarity, speed, and control across every layer of your portfolio.</p>
+    <div class="take-cta">
+      <button class="req pop">Request access</button>
+      <button class="launch pop"><img src="https://qclay.design/lovable/synex/arrow-down.svg" style="width:24px;height:24px" alt=""/><span class="bar"></span>Launch app</button>
+    </div>
+    <div class="activity">
+      <div class="h"><span class="rw" data-rw>Live system activity</span>
+        <div class="dots"><span style="width:3px;height:3px;opacity:.6"></span><span style="width:4px;height:4px;opacity:.7"></span><span style="width:5px;height:5px;opacity:.8"></span><span style="width:7px;height:7px"></span></div>
+      </div>
+      <div class="divi"></div>
+      <div class="acts">
+        <div class="it reveal"><img src="https://qclay.design/lovable/synex/refresh-square-2.svg" alt=""/><h3>Unified infrastructur</h3><p>+ 2.4% performance impact</p></div>
+        <div class="it reveal" style="transition-delay:.18s"><img src="https://qclay.design/lovable/synex/status-up.svg" alt=""/><h3>New marke signal detected</h3><p>Volatility decreasing across equities</p></div>
+        <div class="it reveal" style="transition-delay:.36s"><img src="https://qclay.design/lovable/synex/bitcoin-btc.svg" alt=""/><h3>Crypto allocation updated</h3><p>BTC exposure increased to 32%</p></div>
+        <div class="it reveal" style="transition-delay:.54s"><img src="https://qclay.design/lovable/synex/cpu.svg" alt=""/><h3>AI FATE recomnendation applied</h3><p>Risk reduced across portfolio</p></div>
+      </div>
+      <div class="end"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-grid">
+      <div>
+        <h2><span class="rw" data-rw>We’d love to</span><br/><span class="rw" data-rw data-delay="240">hear from you</span></h2>
+        <p class="lead rw" data-rw data-stagger="50">We’re always open to new ideas, partnerships, and opportunities.</p>
+      </div>
+      <div class="foot-col reveal" style="transition-delay:.9s">
+        <div><h3>Mail us</h3><p>Don't like the forms? Drop us a line via email</p></div>
+        <a href="mailto:info@synex.com">info@synex.com<img src="https://qclay.design/lovable/synex/RedArrow.svg" style="width:16px;height:16px" alt=""/></a>
+      </div>
+      <div class="foot-col reveal" style="transition-delay:1.15s">
+        <div><h3>Book a call</h3><p>Let's discuss your needs and KPI's in detail.<br/>Speak soon!</p></div>
+        <a href="#">Let's talk<img src="https://qclay.design/lovable/synex/RedArrow.svg" style="width:16px;height:16px" alt=""/></a>
+      </div>
+    </div>
+  </div>
+  <div class="foot-bg"><img src="https://qclay.design/lovable/synex/FooterBG.png" alt=""/></div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- word reveal ---------- */
+  function splitWords(el){
+    var stagger = parseFloat(el.dataset.stagger||"60")/1000;
+    var base = parseFloat(el.dataset.delay||"0")/1000;
+    var words = el.textContent.trim().split(/\s+/);
+    el.textContent = "";
+    words.forEach(function(w,i){
+      var s = document.createElement("span");
+      s.textContent = w + " ";
+      s.style.transitionDelay = (base + i*stagger) + "s";
+      el.appendChild(s);
+    });
+  }
+  document.querySelectorAll("[data-rw]").forEach(function(el){
+    el.classList.add("rw"); splitWords(el);
+  });
+
+  /* ---------- IntersectionObserver reveals ---------- */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, { threshold:.3 });
+  document.querySelectorAll(".rw,.reveal,.pop").forEach(function(el){ io.observe(el); });
+
+  /* ---------- count up ---------- */
+  function countUp(el){
+    var raw = el.dataset.cu;
+    var m = raw.match(/^(\D*)([\d,.\s]+)(.*)$/);
+    if(!m){ el.textContent = raw; return; }
+    var prefix=m[1], numRaw=m[2], suffix=m[3];
+    var target=parseFloat(numRaw.replace(/[\s,]/g,""));
+    var decimals=(numRaw.split(".")[1]||"").length;
+    var hasComma=/,/.test(numRaw);
+    function fmt(n){
+      var f=n.toFixed(decimals);
+      if(!hasComma) return f;
+      var p=f.split("."); p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,",");
+      return p[1]?p[0]+"."+p[1]:p[0];
+    }
+    var start=null, dur=1400;
+    function tick(t){
+      if(!start) start=t;
+      var k=Math.min(1,(t-start)/dur), e=1-Math.pow(1-k,3);
+      el.textContent = prefix+fmt(target*e)+suffix;
+      if(k<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  var cuIo = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ countUp(e.target); cuIo.unobserve(e.target); } });
+  }, { threshold:.4 });
+  document.querySelectorAll(".cu").forEach(function(el){ cuIo.observe(el); });
+
+  /* ---------- navbar dark toggle ---------- */
+  var nav=document.getElementById("navbar"), globe=document.getElementById("globe"),
+      lang=document.getElementById("lang"), launch=document.getElementById("launch"),
+      lc=document.getElementById("lc"), lp=document.getElementById("lp"),
+      navlogo=document.getElementById("navlogo");
+  function onScroll(){
+    var dark = window.scrollY >= (window.innerHeight - 80);
+    nav.classList.toggle("dark", dark);
+    var tc = dark ? "#fff" : "#000";
+    document.querySelectorAll("nav.top .links a").forEach(function(a){ a.style.color=tc; });
+    lang.style.color=tc;
+    globe.style.opacity = dark ? 0 : 1;
+    lang.querySelector("span").style.opacity = dark ? 0 : 1;
+    navlogo.style.filter = dark ? "brightness(0) invert(1)" : "none";
+    launch.style.background = dark ? "#fff" : "#000";
+    launch.style.color = dark ? "#000" : "#fff";
+    lc.setAttribute("fill", dark ? "#000" : "#fff");
+    lp.setAttribute("fill", dark ? "#fff" : "#000");
+    launch.querySelector(".bar").style.background = dark ? "rgba(0,0,0,.3)" : "rgba(255,255,255,.4)";
+  }
+  window.addEventListener("scroll", onScroll, {passive:true}); onScroll();
+
+  /* ---------- hover mask reveal (stones + tree) ---------- */
+  function maskReveal(el, r){
+    var x=0,y=0,rad=0,target=0,raf=0;
+    function loop(){ rad += (target-rad)*0.15;
+      var m="radial-gradient(circle "+rad+"px at "+x+"px "+y+"px, black 0%, black 40%, transparent 100%)";
+      var moss=el.querySelector(".moss")||el.querySelector(".grass");
+      if(moss){ moss.style.webkitMaskImage=m; moss.style.maskImage=m; }
+      if(Math.abs(target-rad)>0.3) raf=requestAnimationFrame(loop); else raf=0;
+    }
+    function kick(){ if(!raf) raf=requestAnimationFrame(loop); }
+    el.addEventListener("mouseenter", function(){ target=r; kick(); });
+    el.addEventListener("mouseleave", function(){ target=0; kick(); });
+    el.addEventListener("mousemove", function(e){
+      var b=el.getBoundingClientRect();
+      var lx=e.clientX-b.left;
+      // stones are flipped in CSS (scaleX -1); mirror x to match
+      if(el.classList.contains("stone")) lx = b.width - lx;
+      x=lx; y=e.clientY-b.top; kick();
+    });
+  }
+  document.querySelectorAll("[data-stone]").forEach(function(el){ maskReveal(el,120); });
+  document.querySelectorAll("[data-tree]").forEach(function(el){ maskReveal(el,180); });
+
+  /* ---------- morph card reveal across capital section ---------- */
+  var morph=document.getElementById("morphCard"), capital=document.getElementById("capital");
+  function onMorph(){
+    var r=capital.getBoundingClientRect(), vh=window.innerHeight;
+    // progress 0..1 as the section passes through viewport
+    var p = (vh - r.top) / (r.height + vh);
+    var show = p > 0.12 && p < 0.85;
+    morph.classList.toggle("show", show);
+    // subtle scale-in
+    var s = window.innerWidth < 640 ? 0.58 : 1;
+    var k = Math.max(0, Math.min(1, (p-0.1)/0.15));
+    morph.style.transform = "translate(-50%,-50%) scale("+(s*(0.9+0.1*k))+")";
+  }
+  window.addEventListener("scroll", onMorph, {passive:true}); onMorph();
+
+  /* ---------- integrations arc slider ---------- */
+  var ICONS=[
+    "pointpay.svg","binance.svg","fox.svg","shield.svg","coreBG.png",
+    "kukoin.svg","71.svg","S.svg","bitcoinshield.svg"
+  ].map(function(f){ return "https://qclay.design/lovable/synex/"+f; });
+  var SLOTS=[
+    {x:-531,y:100,w:50},{x:-451,y:55,w:50},{x:-361,y:30,w:58},{x:-252,y:10,w:74},
+    {x:0,y:-10,w:320,h:80},{x:252,y:10,w:74},{x:361,y:30,w:58},{x:451,y:55,w:50},{x:531,y:100,w:50}
+  ];
+  var CORE="https://qclay.design/lovable/synex/coreBG.png";
+  var arc=document.getElementById("arc");
+  var items=ICONS.map(function(ic,i){ return {id:i, icon:ic}; });
+  var nodes=[];
+  items.forEach(function(it){
+    var n=document.createElement("div"); n.className="node";
+    var img=document.createElement("img"); img.className="icon"; img.src=it.icon;
+    var core=document.createElement("img"); core.className="core"; core.src=CORE;
+    n.appendChild(img); n.appendChild(core); arc.appendChild(n); nodes.push(n);
+  });
+  function layout(){
+    items.forEach(function(it,i){
+      var s=SLOTS[i], n=nodes[i], isC=(i===4);
+      n.style.width=s.w+"px"; n.style.height=(s.h||s.w)+"px";
+      n.style.transform="translate(calc(-50% + "+s.x+"px), calc(-50% + "+s.y+"px))";
+      n.style.zIndex=isC?20:10;
+      n.classList.toggle("center", isC);
+    });
+  }
+  layout();
+  setInterval(function(){
+    // rotate array: move first icon to end
+    var first=items.shift(); items.push(first);
+    // reassign icons to fixed nodes (simple rotate visual)
+    items.forEach(function(it,i){ nodes[i].querySelector(".icon").src = it.icon; });
+    layout();
+  }, 3000);
+
+  /* ---------- intelligence graph (float + connecting lines) ---------- */
+  var NODES=[
+    {id:"core",x:50,y:50,ampX:12,ampY:12,ph:0,sp:.6,label:"",core:true},
+    {id:"ai",x:14,y:55,ampX:16,ampY:18,ph:1.2,sp:.5,label:"AI<br/>Intelligence",img:"AI.svg",w:23},
+    {id:"web3",x:82,y:18,ampX:18,ampY:16,ph:2.4,sp:.55,label:"Web3<br/>Layer",dot:true},
+    {id:"data",x:87,y:78,ampX:16,ampY:20,ph:3.1,sp:.45,label:"Data<br/>Infrastructure",img:"GreyWheel.svg",w:20},
+    {id:"trad",x:24,y:86,ampX:16,ampY:16,ph:4.0,sp:.5,label:"Traditional<br/>Markets",img:"cub.svg",w:26},
+    {id:"a1",x:19,y:32,ampX:14,ampY:14,ph:.8,sp:.7,img:"cub.svg",w:16,faint:true},
+    {id:"a2",x:65,y:10,ampX:14,ampY:14,ph:2.0,sp:.6,img:"cub.svg",w:16,faint:true},
+    {id:"a3",x:75,y:96,ampX:14,ampY:14,ph:3.5,sp:.65,img:"cub.svg",w:16,faint:true}
+  ];
+  var EDGES=[
+    ["core","ai"],["core","web3"],["core","data"],["web3","data"],["data","trad"],
+    ["core","trad",1],["ai","trad",1],["ai","a1",1],["web3","a2",1],["data","a3",1]
+  ];
+  var graph=document.getElementById("graph"), gsvg=document.getElementById("graphSvg");
+  var idx={}; NODES.forEach(function(n,i){ idx[n.id]=i; });
+  var lines=EDGES.map(function(e){
+    var ln=document.createElementNS("http://www.w3.org/2000/svg","line");
+    ln.setAttribute("stroke","rgba(0,0,0,0.2)"); ln.setAttribute("stroke-width","1");
+    if(e[2]) ln.setAttribute("stroke-dasharray","4 4");
+    gsvg.appendChild(ln); return ln;
+  });
+  var gnodes=NODES.map(function(n){
+    var d=document.createElement("div"); d.className="gnode";
+    var inner="";
+    if(n.core){
+      inner='<img src="https://qclay.design/lovable/synex/focus.png" style="position:absolute;left:-70px;top:-70px;width:140px;height:140px;opacity:.8;max-width:none"/>'+
+            '<div style="position:absolute;left:-18px;top:-18px;width:36px;height:36px"><img src="https://qclay.design/lovable/synex/Ellipse.svg" style="position:absolute;inset:0;width:100%;height:100%"/><img src="https://qclay.design/lovable/synex/EllipseLogo.svg" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:14px;height:14px"/></div>'+
+            '<span style="position:absolute;left:0;top:-64px;transform:translateX(-50%);white-space:nowrap;font-size:13px;font-weight:500;color:#000">SYNEX CORE</span>'+
+            '<div style="position:absolute;left:0;top:50px;transform:translateX(-50%);white-space:nowrap;text-align:center;font-size:12px;color:rgba(0,0,0,.3);font-weight:500;line-height:16px">Unified capital system<br/>AI-powered orchestration<br/>Central intelligence layer</div>';
+    } else if(n.dot){
+      inner='<div style="position:absolute;left:-11px;top:-11px;width:22px;height:22px;border-radius:50%;background:linear-gradient(to bottom,#A8B3A0,#6B7558)"></div>';
+    } else {
+      inner='<img src="https://qclay.design/lovable/synex/'+n.img+'" style="position:absolute;left:'+(-(n.w)/2)+'px;top:'+(-(n.w)/2)+'px;width:'+n.w+'px;height:'+n.w+'px;max-width:none;opacity:'+(n.faint?.6:1)+'"/>';
+    }
+    if(n.label) inner+='<div class="lbl" style="position:absolute;left:0;top:22px;transform:translateX(-50%)">'+n.label+'</div>';
+    d.innerHTML=inner; graph.appendChild(d); return d;
+  });
+  var started=null;
+  var gio=new IntersectionObserver(function(en){ if(en[0].isIntersecting && !started){ started=performance.now(); gio.disconnect(); } },{threshold:.25});
+  gio.observe(graph);
+  function frame(t){
+    var r=graph.getBoundingClientRect(), w=r.width, h=r.height;
+    if(w&&h){
+      var sec=t/1000, cx=w/2, cy=h/2, pos=[];
+      NODES.forEach(function(n,i){
+        var bx=(n.x/100)*w, by=(n.y/100)*h;
+        var fx=bx+Math.sin(sec*n.sp+n.ph)*n.ampX, fy=by+Math.cos(sec*n.sp+n.ph*.7)*n.ampY;
+        var p=0;
+        if(started!==null){ var el=(performance.now()-started)/1000 - i*.08; var raw=Math.max(0,Math.min(1,el/.9)); p=1-Math.pow(1-raw,3); }
+        var X=cx+(fx-cx)*p, Y=cy+(fy-cy)*p;
+        pos[i]=[X,Y];
+        gnodes[i].style.transform="translate("+X+"px,"+Y+"px)";
+        gnodes[i].style.opacity=p;
+      });
+      EDGES.forEach(function(e,i){
+        var a=pos[idx[e[0]]], b=pos[idx[e[1]]];
+        lines[i].setAttribute("x1",a[0]); lines[i].setAttribute("y1",a[1]);
+        lines[i].setAttribute("x2",b[0]); lines[i].setAttribute("y2",b[1]);
+      });
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
