@@ -1436,6 +1436,61 @@ tr.lb-me td:last-child { border-radius: 0 12px 12px 0; }
 .term-cell .k { font-size: 9.5px; color: var(--text-faint); letter-spacing: 0.1em; text-transform: uppercase; }
 .term-cell .v { font-size: 14px; font-weight: 700; margin-top: 3px; font-variant-numeric: tabular-nums; }
 
+/* Collapsed sidebar */
+
+body.side-collapsed .sidebar { width: 88px; flex-basis: 88px; padding: 28px 14px 24px; }
+body.side-collapsed .brand-name,
+body.side-collapsed .nav-label,
+body.side-collapsed .user-meta { display: none; }
+body.side-collapsed .nav-item { justify-content: center; padding: 10px 6px; }
+body.side-collapsed .sidebar-top { justify-content: center; }
+body.side-collapsed .brand { display: none; }
+
+/* Notifications panel */
+
+.topbar-right { position: relative; }
+.notif-panel {
+  position: absolute;
+  top: 54px; right: 0;
+  width: 340px;
+  background: var(--card);
+  border-radius: 20px;
+  box-shadow: var(--neu-out), 0 24px 50px rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--line);
+  padding: 8px;
+  z-index: 60;
+  display: none;
+  animation: viewfade 0.25s ease;
+}
+.notif-panel.show { display: block; }
+.np-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px 8px; font-size: 13.5px; font-weight: 700; }
+.np-row { display: flex; gap: 11px; padding: 11px 12px; border-radius: 13px; align-items: flex-start; }
+.np-row:hover { background: var(--surface); }
+.np-row.unread { background: var(--surface); box-shadow: var(--neu-in-sm); margin-bottom: 4px; }
+.np-ic {
+  width: 30px; height: 30px; border-radius: 10px; flex: 0 0 auto;
+  background: linear-gradient(135deg, #f9a8d4, #a855f7); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
+}
+.np-t { font-size: 12.5px; font-weight: 700; }
+.np-s { font-size: 11.5px; color: var(--text-faint); margin-top: 2px; line-height: 1.45; }
+.np-ago { margin-left: auto; font-size: 9.5px; color: var(--text-faint); white-space: nowrap; }
+.np-empty { padding: 26px; text-align: center; color: var(--text-faint); font-size: 12.5px; }
+
+/* Trade outcome stamps */
+
+.obadge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+  padding: 4px 9px; border-radius: 999px;
+}
+.obadge.target { color: #10b981; background: rgba(16, 185, 129, 0.11); }
+.obadge.stopped { color: #e5484d; background: rgba(229, 72, 77, 0.1); }
+.obadge.manual { color: #2f6bff; background: rgba(47, 107, 255, 0.1); }
+.obadge.breakeven { color: var(--text-faint); background: var(--surface); box-shadow: var(--neu-in-sm); }
+.tsrc { display: block; font-size: 9.5px; color: var(--text-faint); margin-top: 3px; }
+
 /* Arena battle builder + live battles */
 
 .builder {
@@ -2107,7 +2162,7 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
       </span>
       <span class="brand-name">Paktos</span>
     </div>
-    <button class="icon-btn ghost" aria-label="Collapse sidebar">
+    <button class="icon-btn ghost" aria-label="Collapse sidebar" data-collapse>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
         <rect x="3" y="4" width="18" height="16" rx="3" />
         <line x1="9.5" y1="4" x2="9.5" y2="20" />
@@ -2176,13 +2231,14 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
             <path d="M3.5 7l8.5 6 8.5-6" />
           </svg>
         </button>
-        <button class="icon-btn" aria-label="Notifications">
-          <span class="bell-dot"></span>
+        <button class="icon-btn" aria-label="Notifications" data-bell>
+          <span class="bell-dot" id="bellDot"></span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 9a6 6 0 1 0-12 0c0 5-2 6-2 6h16s-2-1-2-6" />
             <path d="M10.3 19a2 2 0 0 0 3.4 0" />
           </svg>
         </button>
+        <div class="notif-panel" id="notifPanel"></div>
       </div>
     </header>
 
@@ -2317,7 +2373,7 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
         </div>
         <div class="section-head-right">
           <input id="fame-search" class="neu-input" type="text" placeholder="Search player…" aria-label="Search Hall of Fame" />
-          <button class="link-btn">
+          <button class="link-btn" data-nav="leaderboard">
             See all
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 12h15M13 6l6 6-6 6" />
@@ -2464,7 +2520,7 @@ function renderLeaderboard(tickedName) {
 
 function renderTournaments() {
   document.getElementById('tournaments').innerHTML = tournaments.map((t, i) => `
-    <article class="tournament-card glow">
+    <article class="tournament-card glow" data-tour="${t.name}">
       <div class="tournament-card-top">
         <span class="trophy-tile">${TROPHY_SVG.replace('__S__', '#fff').replace('stroke-width="1.8"', 'stroke-width="2"')}</span>
         <span class="live-tag"><span class="pulse-dot tiny"></span><span class="mono">LIVE</span></span>
@@ -2475,7 +2531,7 @@ function renderTournaments() {
         <p>${t.entries.toLocaleString('en-GB')} in <span class="dot-sep">·</span> £25 entry</p>
         <p>Closes in <strong class="closes" id="countdown-${i}">--</strong></p>
       </div>
-      <button class="btn-neu enter"><span class="pulse-dot tiny purple"></span>Enter Now</button>
+      <button class="btn-neu enter" data-enter><span class="pulse-dot tiny purple"></span>Enter Now</button>
     </article>`).join('');
 }
 
@@ -2682,9 +2738,83 @@ Object.keys(INSTR).forEach(k => {
 
 const term = {
   asset: 'BTC', tf: '5m', mode: 'day', risk: 5, rr: 2,
-  bal: 100000, pos: null,
-  hist: [{ w: 1, a: 1240 }, { w: 1, a: 860 }, { w: 0, a: 512 }, { w: 1, a: 2120 }, { w: 0, a: 1035 }, { w: 1, a: 745 }]
+  bal: 100000, pos: null
 };
+
+/* Trade history — every fill stamped with time, source and how it closed */
+
+const _now = Date.now();
+const tradeLog = [
+  { sym: 'NAS100', dir: 'down', entry: 23901.4, exit: 23811.2, riskAmt: 1000, riskPct: 1, rr: 2, pnl: 1240, outcome: 'target', src: 'terminal', openedAt: _now - 64 * 60000, closedAt: _now - 31 * 60000 },
+  { sym: 'BTC', dir: 'up', entry: 118105, exit: 118441, riskAmt: 2000, riskPct: 2, rr: 3, pnl: 860, outcome: 'manual', src: 'flick', openedAt: _now - 3 * 3600000, closedAt: _now - 2.6 * 3600000 },
+  { sym: 'EURUSD', dir: 'up', entry: 1.17512, exit: 1.17041, riskAmt: 512, riskPct: 1, rr: 2, pnl: -512, outcome: 'stopped', src: 'terminal', openedAt: _now - 5 * 3600000, closedAt: _now - 4.4 * 3600000 },
+  { sym: 'XAUUSD', dir: 'up', entry: 3361.0, exit: 3390.6, riskAmt: 1000, riskPct: 1, rr: 2.5, pnl: 2120, outcome: 'target', src: 'flick', openedAt: _now - 8 * 3600000, closedAt: _now - 6.1 * 3600000 },
+  { sym: 'GBPJPY', dir: 'down', entry: 199.402, exit: 199.910, riskAmt: 1035, riskPct: 1, rr: 2, pnl: -1035, outcome: 'stopped', src: 'terminal', openedAt: _now - 22 * 3600000, closedAt: _now - 21 * 3600000 },
+  { sym: 'ETH', dir: 'up', entry: 4180.2, exit: 4205.1, riskAmt: 745, riskPct: 1, rr: 2, pnl: 745, outcome: 'manual', src: 'terminal', openedAt: _now - 26 * 3600000, closedAt: _now - 25 * 3600000 }
+];
+
+const OUTCOME_META = {
+  target: ['◆ Target hit', 'target'],
+  stopped: ['✕ Stopped out', 'stopped'],
+  manual: ['✂ Closed early', 'manual'],
+  breakeven: ['◎ Breakeven', 'breakeven']
+};
+
+function tstamp(ts) {
+  const d = new Date(ts);
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ' · ' +
+    d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+
+function winStreak() {
+  let s = 0;
+  for (const t of tradeLog) { if (t.pnl > 0) s++; else break; }
+  return s;
+}
+
+function tradeRow(t) {
+  const [label, cls] = OUTCOME_META[t.outcome] || OUTCOME_META.manual;
+  const dp = INSTR[t.sym] ? INSTR[t.sym].dp : 2;
+  const fx = n => n.toLocaleString('en-GB', { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  return `<tr>
+    <td><span style="white-space:nowrap">${tstamp(t.closedAt)}</span><span class="tsrc">opened ${tstamp(t.openedAt)}</span></td>
+    <td><b>${t.sym}</b></td>
+    <td class="${t.dir === 'up' ? 'up' : 'down'}">${t.dir === 'up' ? '▲ Buy' : '▼ Sell'}</td>
+    <td class="mono-num">${fx(t.entry)} → ${fx(t.exit)}</td>
+    <td>${t.riskPct}%<span class="tsrc">${gbp0(t.riskAmt)}</span></td>
+    <td>1:${t.rr}</td>
+    <td><span class="obadge ${cls}">${label}</span><span class="tsrc">via ${t.src}</span></td>
+    <td style="text-align:right" class="${t.pnl >= 0 ? 'up' : 'down'}"><b>${t.pnl >= 0 ? '+' : '−'}${gbp(t.pnl)}</b></td>
+  </tr>`;
+}
+
+/* Notifications */
+
+const notifs = [{ ic: '👋', t: 'Welcome to Paktos', s: 'Your £100k competition balance is live in TR-1001.', ago: '2h', read: true }];
+let notifOpen = false;
+
+function addNotif(ic, t, s) {
+  notifs.unshift({ ic, t, s, ago: 'now', read: false });
+  updateBell();
+  if (notifOpen) renderNotifPanel();
+}
+
+function updateBell() {
+  const dot = document.getElementById('bellDot');
+  if (dot) dot.style.display = notifs.some(n => !n.read) ? 'block' : 'none';
+}
+
+function renderNotifPanel() {
+  const p = document.getElementById('notifPanel');
+  if (!p) return;
+  p.innerHTML = `<div class="np-head"><span>Notifications</span></div>` +
+    (notifs.length ? notifs.slice(0, 8).map(n => `
+      <div class="np-row${n.read ? '' : ' unread'}">
+        <span class="np-ic">${n.ic}</span>
+        <div style="min-width:0"><div class="np-t">${n.t}</div><div class="np-s">${n.s}</div></div>
+        <span class="np-ago mono">${n.ago}</span>
+      </div>`).join('') : '<div class="np-empty">Nothing yet — go make some noise.</div>');
+}
 
 const TMODES = {
   scalp: { lbl: 'Scalp', sub: 'minutes', stop: 0.0015 },
@@ -2757,8 +2887,8 @@ function renderTerminal() {
       <div class="pos-act"><button class="btn-neu enter" data-tbe${pos.be ? ' disabled' : ''}>${pos.be ? 'At breakeven ✓' : 'Breakeven'}</button>
         <button class="btn-neu enter" data-tclose>Close now</button></div>
     </div>` : '';
-  const hist = term.hist.map(h =>
-    `<span class="hist-pill ${h.w ? 'up' : 'down'}">${h.w ? '+' : '−'}${gbp(h.a)}</span>`).join('');
+  const hist = tradeLog.slice(0, 6).map(h =>
+    `<span class="hist-pill ${h.pnl >= 0 ? 'up' : 'down'}">${h.pnl >= 0 ? '+' : '−'}${gbp(h.pnl)}</span>`).join('');
 
   viewEl('terminal').innerHTML = `
     <div class="tile-row">
@@ -2767,7 +2897,7 @@ function renderTerminal() {
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#ffc24b,#f59e0b)">★</span>
         <div class="tile-tx"><div class="tile-label mono">BEST&nbsp;RANK</div><div class="tile-value">#13</div></div></div>
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9a7cff,#7c5cff)">⚡</span>
-        <div class="tile-tx"><div class="tile-label mono">WIN&nbsp;STREAK</div><div class="tile-value" id="tileStreak">${term.hist.filter(h => h.w).length}</div></div></div>
+        <div class="tile-tx"><div class="tile-label mono">WIN&nbsp;STREAK</div><div class="tile-value" id="tileStreak">${winStreak()}</div></div></div>
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">▲</span>
         <div class="tile-tx"><div class="tile-label mono">TOTAL&nbsp;WINNINGS</div><div class="tile-value">£121,300</div></div></div>
     </div>
@@ -2797,6 +2927,14 @@ function renderTerminal() {
         </div>`}
         <div class="hist-row"><span class="hist-label mono">RECENT</span>${hist}</div>
       </div>
+    </div>
+    <div class="section" style="margin-top:30px">
+      <div class="section-head"><div><h3 class="section-title">Trade history</h3>
+        <p class="section-sub"><span class="mono">${tradeLog.length}&nbsp;FILLS</span><span class="dot-sep">·</span><span>every trade stamped with when, where and how it closed</span></p></div></div>
+      <div class="fame-card"><div class="fame-scroll"><table class="trades-table" style="min-width:860px">
+        <thead><tr class="mono"><th>CLOSED</th><th>MARKET</th><th>SIDE</th><th>ENTRY&nbsp;→&nbsp;EXIT</th><th>RISK</th><th>R:R</th><th>OUTCOME</th><th style="text-align:right">P&amp;L</th></tr></thead>
+        <tbody>${tradeLog.length ? tradeLog.map(tradeRow).join('') : '<tr><td colspan="8" style="text-align:center;color:var(--text-faint);padding:26px">No fills yet — take your first trade above.</td></tr>'}</tbody>
+      </table></div></div>
     </div>`;
   drawSeries(document.getElementById('termChart'), a.series);
 }
@@ -2835,8 +2973,8 @@ function updatePos() {
   const move = (a.px - pos.entry) / pos.entry * (pos.dir === 'up' ? 1 : -1);
   let pnl = pos.risk * (move / stop);
   const floor = pos.be ? 0 : -pos.risk;
-  if (pnl <= floor) return closePos(floor);
-  if (pnl >= pos.risk * pos.rr) return closePos(pos.risk * pos.rr);
+  if (pnl <= floor) return closePos(floor, pos.be ? 'breakeven' : 'stopped');
+  if (pnl >= pos.risk * pos.rr) return closePos(pos.risk * pos.rr, 'target');
   const el = document.getElementById('posPnl');
   if (el) {
     el.textContent = (pnl >= 0 ? '+' : '−') + gbp(pnl);
@@ -2844,12 +2982,26 @@ function updatePos() {
   }
 }
 
-function closePos(pnl) {
+function closePos(pnl, outcome = 'manual') {
+  const pos = term.pos;
+  if (!pos) return;
+  if (Math.abs(pnl) < 1) { pnl = 0; outcome = 'breakeven'; }
   term.bal += pnl;
-  term.hist.unshift({ w: pnl >= 0 ? 1 : 0, a: Math.abs(pnl) });
-  term.hist = term.hist.slice(0, 8);
+  tradeLog.unshift({
+    sym: pos.sym, dir: pos.dir, entry: pos.entry, exit: INSTR[pos.sym].px,
+    riskAmt: pos.risk, riskPct: pos.riskPct || term.risk, rr: pos.rr, pnl,
+    outcome, src: pos.src || 'terminal',
+    openedAt: pos.openedAt || Date.now(), closedAt: Date.now()
+  });
   term.pos = null;
-  toast((pnl >= 0 ? 'Trade won +' : 'Trade closed −') + gbp(pnl));
+  const msg = {
+    target: `◆ Target hit — +${gbp(pnl)} banked`,
+    stopped: `✕ Stopped out — −${gbp(pnl)}`,
+    breakeven: '◎ Flat — closed at breakeven',
+    manual: pnl >= 0 ? `✂ Closed early — +${gbp(pnl)}` : `✂ Closed early — −${gbp(pnl)}`
+  }[outcome];
+  toast(msg);
+  addNotif(pnl > 0 ? '🏆' : pnl < 0 ? '📉' : '➖', `${pos.sym} ${pos.dir === 'up' ? 'long' : 'short'} closed`, msg);
   renderTerminal();
 }
 
@@ -3158,8 +3310,9 @@ function flickHTML() {
 function executeIdea(c) {
   const modeMap = { scalp: 'scalp', intraday: 'day', swing: 'swing' };
   term.asset = c.sym;
-  term.pos = { sym: c.sym, dir: c.dir, entry: INSTR[c.sym].px, risk: term.bal * flick.risk / 100, rr: HZCFG[c.hz].rr, mode: modeMap[c.hz] || 'day', be: false };
+  term.pos = { sym: c.sym, dir: c.dir, entry: INSTR[c.sym].px, risk: term.bal * flick.risk / 100, riskPct: flick.risk, rr: HZCFG[c.hz].rr, mode: modeMap[c.hz] || 'day', be: false, src: 'flick', openedAt: Date.now() };
   toast(`${c.dir === 'up' ? 'Bought' : 'Sold'} ${c.sym} @ ${fmtPx(c.sym)} — ${flick.risk}% risk, 1:${HZCFG[c.hz].rr}`);
+  addNotif('⚡', `Flick signal taken — ${c.sym}`, `${c.dir === 'up' ? 'Long' : 'Short'} @ ${fmtPx(c.sym)}, ${flick.risk}% risk, 1:${HZCFG[c.hz].rr} target`);
 }
 
 function flickResolve(take) {
@@ -3349,7 +3502,7 @@ function fdEmbed(p) {
   if (p.tag) return `<div><span class="post-tag"><span class="asset-ic" style="background:${INSTR[p.tag].tint}">${INSTR[p.tag].ic}</span>${p.tag}&nbsp;·&nbsp;<span data-ptag="${p.tag}">${fmtPx(p.tag)}</span></span></div>`;
   if (p.media) {
     const col = p.media.win ? '#22c55e' : '#e5484d';
-    return `<div class="fd-media">${mediaChartSVG(p.media.win, p.media.seed)}
+    return `<div class="fd-media"${p.media.video ? ' data-tst="Video playback launches with live data" style="cursor:pointer"' : ''}>${mediaChartSVG(p.media.win, p.media.seed)}
       <span class="fd-media-ret" style="color:${col}">${p.media.ret}</span>
       ${p.media.video ? `<div class="fd-media-play"><svg viewBox="0 0 24 24"><path d="M8 5l12 7-12 7z" fill="#fff"/></svg></div><span class="fd-media-dur">${p.media.dur}</span>` : ''}
     </div>`;
@@ -3376,7 +3529,7 @@ function fdEmbed(p) {
         <span class="fd-bt-f"><span class="fd-bt-av-ghost">?</span><span class="fd-dim">open seat</span></span>
       </div>
       <div class="fd-bt-foot"><span class="fd-bt-meta">${p.open.window} · ${p.open.pot} pot</span>
-        <button class="fd-accept" data-accept="${p.name}">Accept battle →</button></div>
+        <button class="fd-accept" data-fdaccept="${p.name}">Accept battle →</button></div>
     </div>`;
   }
   if (p.result) {
@@ -3457,15 +3610,15 @@ const TRENDS = [
 ];
 
 function feedRail() {
-  const trends = TRENDS.map(([c, t, n]) =>
-    `<div class="fr-trend"><div class="fr-tcat">${c}</div><div class="fr-tt">${t}</div><div class="fr-tn">${n}</div></div>`).join('');
+  const trends = TRENDS.map(([c, t, n], i) =>
+    `<div class="fr-trend" data-trend="${i}"><div class="fr-tcat">${c}</div><div class="fr-tt">${t}</div><div class="fr-tn">${n}</div></div>`).join('');
   const wtf = WTF.map(([n, e, sub], i) => `
     <div class="fr-wtf"><span class="thread-av" style="background:${AV_TINTS[i % 6]}">${e}</span>
       <div class="fr-wm"><div class="fr-wn">${n}${BADGE}</div><div class="fr-wh">${sub}</div></div>
       <button class="fr-follow${following.has(n) ? ' on' : ''}" data-follow="${n}">${following.has(n) ? 'Following' : 'Follow'}</button>
     </div>`).join('');
   return `
-    <div class="fr-search"><input class="neu-input" type="text" placeholder="Search traders, markets…" data-toast="Search is a demo"></div>
+    <div class="fr-search"><input class="neu-input" id="railSearch" type="text" placeholder="Search traders, markets…"></div>
     <div class="fr-card"><div class="fr-h">What’s happening</div>${trends}<button class="fr-showmore" data-tst="More trends are a demo">Show more</button></div>
     <div class="fr-card"><div class="fr-h">Who to follow</div>${wtf}<button class="fr-showmore" data-tst="More traders are a demo">Show more</button></div>`;
 }
@@ -3660,11 +3813,9 @@ function renderPerformance() {
   const tabs = [['overview', 'Overview'], ['trades', 'Trades']].map(([k, l]) =>
     `<button class="pill-btn${k === perfTab ? ' on' : ''}" data-ptab="${k}">${l}</button>`).join('');
   const body = perfTab === 'trades' ? `
-    <div class="fame-card"><div class="fame-scroll"><table class="trades-table">
-      <thead><tr class="mono"><th>DATE</th><th>MARKET</th><th>SIDE</th><th style="text-align:right">P&amp;L</th></tr></thead>
-      <tbody>${perfTrades.map(t => `<tr><td>${t.when}</td><td><b>${t.sym}</b></td>
-        <td class="${t.dir === 'Buy' ? 'up' : 'down'}">${t.dir}</td>
-        <td style="text-align:right" class="${t.pnl >= 0 ? 'up' : 'down'}"><b>${t.pnl >= 0 ? '+' : '−'}${gbp(t.pnl)}</b></td></tr>`).join('')}</tbody>
+    <div class="fame-card"><div class="fame-scroll"><table class="trades-table" style="min-width:860px">
+      <thead><tr class="mono"><th>CLOSED</th><th>MARKET</th><th>SIDE</th><th>ENTRY&nbsp;→&nbsp;EXIT</th><th>RISK</th><th>R:R</th><th>OUTCOME</th><th style="text-align:right">P&amp;L</th></tr></thead>
+      <tbody>${tradeLog.map(tradeRow).join('')}</tbody>
     </table></div></div>` : `
     <div class="chart-card"><canvas class="chart" id="perfChart"></canvas></div>
     <div class="stats-grid">
@@ -4030,7 +4181,39 @@ const RENDER = {
 document.addEventListener('click', e => {
   const q = sel => e.target.closest(sel);
   let el;
+  /* dismiss notifications when clicking elsewhere */
+  if (notifOpen && !q('[data-bell]') && !q('#notifPanel')) {
+    notifOpen = false;
+    const p = document.getElementById('notifPanel');
+    if (p) p.classList.remove('show');
+  }
+  /* counter + enter handled by their own listener */
+  if (q('[data-cnt]') || q('[data-enter]')) return;
+  if ((el = q('[data-collapse]'))) return document.body.classList.toggle('side-collapsed');
+  if ((el = q('[data-bell]'))) {
+    notifOpen = !notifOpen;
+    const p = document.getElementById('notifPanel');
+    if (notifOpen) { renderNotifPanel(); notifs.forEach(n => n.read = true); updateBell(); }
+    if (p) p.classList.toggle('show', notifOpen);
+    return;
+  }
   if ((el = q('[data-nav]'))) return navigate(el.dataset.nav);
+  if ((el = q('[data-tour]'))) { lbTour = el.dataset.tour; lbPage = 0; return navigate('leaderboard'); }
+  if ((el = q('[data-trend]'))) {
+    const dest = [['terminal', 'XAUUSD'], ['ideas'], ['terminal', 'BTC'], ['arena'], ['terminal', 'NAS100']][+el.dataset.trend];
+    if (!dest) return;
+    if (dest[1]) term.asset = dest[1];
+    return navigate(dest[0]);
+  }
+  if ((el = q('[data-fdaccept]'))) {
+    const name = el.dataset.fdaccept;
+    const p = POSTS.find(x => x.name === name && x.open);
+    const side = p ? parseFloat(p.open.pot.replace(/[£,]/g, '')) * (p.open.pot.includes('K') ? 1000 : 1) : 4000;
+    myBattles.unshift({ id: battleSeq++, opp: name, av: p ? p.av : '⚔️', tint: p ? p.tint : AV_TINTS[0], market: 'Any market', window: p ? p.open.window : '1 week', pot: side * 2, my: 0, op: 0, watching: 12 + Math.floor(Math.random() * 240) });
+    addNotif('⚔️', 'Battle locked in', `You accepted ${name}’s open challenge — stakes escrowed.`);
+    navigate('arena');
+    return toast(`Battle vs ${name} locked in — live under Your battles`);
+  }
   /* terminal */
   if ((el = q('[data-tasset]'))) { term.asset = el.dataset.tasset; return renderTerminal(); }
   if ((el = q('[data-ttf]'))) { term.tf = el.dataset.ttf; return renderTerminal(); }
@@ -4038,7 +4221,7 @@ document.addEventListener('click', e => {
   if ((el = q('[data-trisk]'))) { term.risk = +el.dataset.trisk; return renderTerminal(); }
   if ((el = q('[data-tdir]'))) {
     const a = INSTR[term.asset];
-    term.pos = { sym: term.asset, dir: el.dataset.tdir, entry: a.px, risk: term.bal * term.risk / 100, rr: term.rr, mode: term.mode, be: false };
+    term.pos = { sym: term.asset, dir: el.dataset.tdir, entry: a.px, risk: term.bal * term.risk / 100, riskPct: term.risk, rr: term.rr, mode: term.mode, be: false, src: 'terminal', openedAt: Date.now() };
     toast(`${el.dataset.tdir === 'up' ? 'Bought' : 'Sold'} ${term.asset} · risking ${gbp0(term.pos.risk)}`);
     return renderTerminal();
   }
@@ -4048,7 +4231,7 @@ document.addEventListener('click', e => {
     const pos = term.pos, a = INSTR[pos.sym];
     const move = (a.px - pos.entry) / pos.entry * (pos.dir === 'up' ? 1 : -1);
     let pnl = Math.max(pos.be ? 0 : -pos.risk, Math.min(pos.risk * pos.rr, pos.risk * (move / TMODES[pos.mode].stop)));
-    return closePos(pnl);
+    return closePos(pnl, 'manual');
   }
   /* ideas */
   if ((el = q('[data-icat]'))) { ideaCat = el.dataset.icat; return renderIdeas(); }
@@ -4141,7 +4324,13 @@ document.addEventListener('click', e => {
     if (i >= 0) activeThread = i;
     return renderInbox();
   }
-  if ((el = q('[data-inv-acc]'))) { invites.splice(+el.dataset.invAcc, 1); toast('Invite accepted — see you on the board'); return renderInbox(); }
+  if ((el = q('[data-inv-acc]'))) {
+    const iv = invites[+el.dataset.invAcc];
+    invites.splice(+el.dataset.invAcc, 1);
+    toast('Invite accepted — see you on the board');
+    if (iv) addNotif('✅', 'Invite accepted', iv.t);
+    return renderInbox();
+  }
   if ((el = q('[data-inv-dec]'))) { invites.splice(+el.dataset.invDec, 1); toast('Invite declined'); return renderInbox(); }
   /* performance */
   if ((el = q('[data-prange]'))) { perfRange = el.dataset.prange; return renderPerformance(); }
@@ -4175,6 +4364,7 @@ document.addEventListener('click', e => {
     });
     arenaB.open = false;
     toast(`Challenge posted — £${arenaB.stake.toLocaleString('en-GB')} at ${oddsLabel()}, kick-off ${startLabel()}`);
+    addNotif('⚔️', 'Challenge posted to the open board', `£${arenaB.stake.toLocaleString('en-GB')} at ${oddsLabel()} · ${arenaB.market} · kick-off ${startLabel()}.`);
     return renderArena();
   }
   if ((el = q('[data-abcancel]'))) {
@@ -4193,9 +4383,13 @@ document.addEventListener('click', e => {
       my: 0, op: 0, watching: 12 + Math.floor(Math.random() * 240)
     });
     toast(`Battle vs ${c.name} locked in — stakes escrowed, higher return takes £${(c.pot * 2).toLocaleString('en-GB')}`);
+    addNotif('⚔️', `Battle vs ${c.name} is live`, `£${(c.pot * 2).toLocaleString('en-GB')} pot · ${c.window} window · higher return takes it.`);
     return renderArena();
   }
-  if ((el = q('[data-watch]'))) return toast('Spectator mode is a demo');
+  if ((el = q('[data-watch]'))) {
+    if (currentView !== 'arena') { navigate('arena'); return toast('The biggest battles are live here'); }
+    return toast('Spectator streams launch with live data — take the other side instead');
+  }
   /* partner */
   if ((el = q('[data-copyref]'))) {
     try { navigator.clipboard.writeText(partner.link); } catch (_e) {}
@@ -4229,6 +4423,15 @@ document.addEventListener('input', e => {
 document.addEventListener('keydown', e => {
   if (e.key !== 'Enter') return;
   if (e.target.id === 'dmInput') { e.preventDefault(); sendDM(); }
+  if (e.target.id === 'railSearch') {
+    e.preventDefault();
+    toast(e.target.value.trim() ? `Search launches with live data — no results for “${e.target.value.trim()}” in demo` : 'Type a trader or market to search');
+  }
+  if (e.target.id === 'composeIn') {
+    e.preventDefault();
+    const btn = document.querySelector('[data-postbtn]');
+    if (btn) btn.click();
+  }
 });
 
 /* Neumorphic entries counter + Enter Now */
@@ -4251,6 +4454,7 @@ document.addEventListener('click', e => {
     prizePool += entryCount * 25;
     activePlayers += 1;
     toast(`Entered with ${entryCount} ${entryCount === 1 ? 'entry' : 'entries'} — £${(entryCount * 25).toLocaleString('en-GB')} added to the pool`);
+    addNotif('🎟️', 'Tournament entry confirmed', `${entryCount} ${entryCount === 1 ? 'entry' : 'entries'} · £${(entryCount * 25).toLocaleString('en-GB')} added to the prize pool.`);
     return;
   }
 });
