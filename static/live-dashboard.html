@@ -1758,7 +1758,8 @@ tr.lb-me td:last-child { border-radius: 0 12px 12px 0; }
 .challenge-head { display: flex; align-items: center; gap: 11px; }
 .challenge-name { font-size: 14px; font-weight: 700; }
 .challenge-sub { font-size: 11px; color: var(--text-faint); margin-top: 2px; }
-.challenge-terms { display: flex; gap: 10px; }
+.challenge-terms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.ch-profit { color: var(--green); font-weight: 800; }
 .term-cell { flex: 1; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 12px; padding: 10px 12px; }
 .term-cell .k { font-size: 9.5px; color: var(--text-faint); letter-spacing: 0.1em; text-transform: uppercase; }
 .term-cell .v { font-size: 14px; font-weight: 700; margin-top: 3px; font-variant-numeric: tabular-nums; }
@@ -3925,7 +3926,7 @@ const POSTS = [
     text: 'Ran it back on zxgngl, won comfortably.',
     result: { opp: 'zxgngl', oppAv: 'Z', oppTint: AV_TINTS[2], ret: '+1.61%', pot: '£1.00M' },
     replies: 200, reposts: 109, likes: 1700, views: '51.1K', liked: false, reposted: false },
-  { name: '0xmaverick', handle: '@0xmaverick', av: '🃏', tint: AV_TINTS[0], time: '2h', type: 'idea',
+  { name: '0xmaverick', handle: '@0xmaverick', av: 'X', tint: AV_TINTS[0], time: '2h', type: 'idea',
     text: 'eyeing this setup',
     idea: { sym: 'XAU/USD', tag: 'Range', lean: 'Buy', pc: 50, title: 'Gold range compresses under $3,400',
       thesis: 'Gold has coiled into a tight range under resistance while real yields drift lower. Compression like this usually resolves with the macro wind — and the wind is at gold’s back.',
@@ -4858,12 +4859,12 @@ function payoffHTML() {
 }
 
 let challenges = [
-  { name: '0xmaverick', av: '🃏', market: 'Any market', window: '1 week', pot: 5000, mine: false },
-  { name: 'delta_dan', av: 'D', market: 'Crypto only', window: '48 hours', pot: 2500, mine: false },
-  { name: 'macro_mia', av: 'M', market: 'FX majors', window: '1 month', pot: 10000, mine: false },
-  { name: 'wickwizard', av: 'W', market: 'NAS100', window: '24 hours', pot: 1000, mine: false },
-  { name: 'quantqueen', av: 'Q', market: 'Any market', window: '15 minutes', pot: 500, mine: false },
-  { name: 'fadefather', av: 'F', market: 'Gold', window: '1 week', pot: 7500, mine: false }
+  { name: '0xmaverick', av: 'X', market: 'Any market', window: '1 week', pot: 5000, odds: 1, mine: false },
+  { name: 'delta_dan', av: 'D', market: 'Crypto only', window: '48 hours', pot: 2500, odds: 2, mine: false },
+  { name: 'macro_mia', av: 'M', market: 'FX majors', window: '1 month', pot: 10000, odds: 3, mine: false },
+  { name: 'wickwizard', av: 'W', market: 'NAS100', window: '24 hours', pot: 1000, odds: 1, mine: false },
+  { name: 'quantqueen', av: 'Q', market: 'Any market', window: '15 minutes', pot: 500, odds: 5, mine: false },
+  { name: 'fadefather', av: 'F', market: 'Gold', window: '1 week', pot: 7500, odds: 2, mine: false }
 ];
 let myBattles = [];
 let battleSeq = 0;
@@ -5252,15 +5253,17 @@ function renderArena() {
           <div class="challenge-sub">${c.mine ? 'waiting for an opponent' : 'set the terms · take the other side'}</div></div></div>
       ${p ? `<div class="ch-bio">${p.bio}</div>
       <div class="ch-stats mono">
+        <span class="ch-profit">+£${kfmt(p.winnings)}&nbsp;PROFIT</span>
         <span>${p.winRate}%&nbsp;WIN</span>
         <span>${p.wins}–${p.losses}&nbsp;RECORD</span>
         <span>${p.followers}&nbsp;FOLLOWERS</span>
-        <span>${p.podiums}&nbsp;PODIUMS</span>
       </div>` : ''}
       <div class="challenge-terms">
         <div class="term-cell"><div class="k">Market</div><div class="v" style="font-size:12.5px">${c.market}</div></div>
         <div class="term-cell"><div class="k">${c.mine ? 'Starts' : 'Window'}</div><div class="v" style="font-size:12.5px">${c.mine ? c.start : c.window}</div></div>
-        <div class="term-cell"><div class="k">Pot</div><div class="v">£${c.pot.toLocaleString('en-GB')}</div></div>
+        <div class="term-cell"><div class="k">Odds</div><div class="v">${c.odds || 1}:1</div></div>
+        <div class="term-cell"><div class="k">${c.mine ? 'They put up' : 'You put up'}</div><div class="v">£${Math.round((c.mine ? c.stake : c.pot) * (c.odds || 1)).toLocaleString('en-GB')}</div></div>
+        <div class="term-cell"><div class="k">Total pot</div><div class="v">£${Math.round(c.mine ? c.pot : c.pot * (1 + (c.odds || 1))).toLocaleString('en-GB')}</div></div>
       </div>
       ${c.mine
         ? `<button class="btn-neu enter" data-abcancel="${i}">Cancel challenge</button>`
@@ -5661,6 +5664,7 @@ document.addEventListener('click', e => {
   if ((el = q('[data-abpost]'))) {
     challenges.unshift({
       name: 'jstone', av: 'J', market: arenaB.market, start: startLabel(),
+      stake: arenaB.stake, odds: oddsMult(),
       pot: Math.round(arenaB.stake * (1 + oddsMult())), mine: true
     });
     arenaB.open = false;
@@ -5712,11 +5716,11 @@ document.addEventListener('click', e => {
     challenges.splice(i, 1);
     myBattles.unshift({
       id: battleSeq++, opp: c.name, av: c.av, tint: AV_TINTS[battleSeq % 6],
-      market: c.market, window: c.window, pot: c.pot * 2,
+      market: c.market, window: c.window, pot: c.pot * (1 + (c.odds || 1)),
       my: 0, op: 0, watching: 12 + Math.floor(Math.random() * 240)
     });
-    toast(`Battle vs ${c.name} locked in — stakes escrowed, higher return takes £${(c.pot * 2).toLocaleString('en-GB')}`);
-    addNotif('VS', `Battle vs ${c.name} is live`, `£${(c.pot * 2).toLocaleString('en-GB')} pot · ${c.window} window · higher return takes it.`);
+    toast(`Battle vs ${c.name} locked in — you put up £${(c.pot * (c.odds || 1)).toLocaleString('en-GB')}, higher return takes £${(c.pot * (1 + (c.odds || 1))).toLocaleString('en-GB')}`);
+    addNotif('VS', `Battle vs ${c.name} is live`, `£${(c.pot * (1 + (c.odds || 1))).toLocaleString('en-GB')} pot · ${c.window} window · higher return takes it.`);
     return renderArena();
   }
   if ((el = q('[data-watch]'))) {
