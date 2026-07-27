@@ -1451,6 +1451,81 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
 .pmc2-stats b { color: var(--text-soft); font-weight: 600; }
 .pmc2-stats .sep { opacity: 0.4; }
 
+/* Gamified stats scorecard with glow */
+
+.tp-grid { display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 22px; align-items: stretch; }
+@media (max-width: 1100px) { .tp-grid { grid-template-columns: 1fr; } }
+
+.glow-wrap { position: relative; border-radius: 28px; }
+.glow-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 30px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.45), rgba(217, 70, 239, 0.2) 45%, rgba(245, 158, 11, 0.35));
+  filter: blur(16px);
+  opacity: 0.3;
+  animation: glowShift 6s ease-in-out infinite alternate;
+}
+@keyframes glowShift {
+  from { opacity: 0.2; transform: scale(0.995); }
+  to { opacity: 0.45; transform: scale(1.004); }
+}
+
+.score-card {
+  position: relative;
+  height: 100%;
+  border-radius: 26px;
+  background: var(--card);
+  box-shadow: var(--neu-out-sm);
+  padding: 24px 26px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow: hidden;
+}
+.sc-head { display: flex; align-items: center; justify-content: space-between; }
+.sc-title { font-size: 15px; font-weight: 700; }
+.sc-earn-label { font-size: 9.5px; letter-spacing: 0.12em; color: var(--text-faint); margin-bottom: 6px; }
+.sc-earn { font-size: 33px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; line-height: 1; }
+.sc-change { font-size: 12px; font-weight: 600; color: var(--green); margin-top: 7px; }
+.sc-change span { color: var(--text-faint); font-weight: 500; }
+.sc-sub { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.sc-sub-cell { background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 14px; padding: 12px 15px; }
+.sc-sub-v { font-size: 21px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.sc-sub-l { font-size: 11.5px; color: var(--text-soft); margin-top: 2px; }
+.sc-sub-s { font-size: 10px; color: var(--text-faint); margin-top: 2px; }
+.sc-rank {
+  position: relative;
+  text-align: center;
+  padding: 16px 10px 14px;
+  border-radius: 16px;
+  background: linear-gradient(150deg, rgba(245, 158, 11, 0.09), rgba(217, 70, 239, 0.05));
+  border: 1px solid rgba(245, 158, 11, 0.18);
+}
+.sc-rank svg {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(1.9);
+  color: #b45309;
+  opacity: 0.18;
+  pointer-events: none;
+}
+.sc-rank-place { font-size: 21px; font-weight: 800; letter-spacing: -0.01em; }
+.sc-rank-cat { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); margin-top: 3px; }
+.sc-form { margin-top: auto; }
+.sc-form-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 9px; }
+.sc-form-label { font-size: 9.5px; letter-spacing: 0.12em; color: var(--text-faint); }
+.sc-form-sub { font-size: 10.5px; color: var(--text-soft); font-weight: 600; }
+.sc-bars { display: flex; align-items: flex-end; gap: 4px; height: 44px; }
+.sc-bars span {
+  flex: 1;
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--accent-b), var(--accent-a));
+  min-height: 4px;
+  opacity: 0.85;
+}
+
 /* Trader profile header */
 
 .tp-head {
@@ -4051,6 +4126,8 @@ function traderProfile(name) {
   const drift = 0.435 + rnd() * 0.035;
   for (let i = 1; i < 160; i++) series.push(Math.max(20000, series[i - 1] * (1 + (rnd() - drift) * 0.014)));
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const winnings = Math.round(3000 + rnd() * rnd() * 1400000);
+  const formBars = Array.from({ length: 24 }, () => 0.1 + rnd() * 0.9);
   return {
     name, av: TRADER_AV[name] || name.charAt(0).toUpperCase(),
     tint: AV_TINTS[hashName(name) % AV_TINTS.length],
@@ -4062,8 +4139,53 @@ function traderProfile(name) {
     trades: 40 + Math.floor(rnd() * 4200),
     joined: months[hashName(name + 'm') % 12] + ' ' + (2023 + hashName(name + 'y') % 3),
     rank: 1 + hashName(name + 'r') % 200,
+    winnings,
+    winningsChange: Math.round(winnings * (0.04 + rnd() * 0.18)),
+    tours: 4 + Math.floor(rnd() * 60), toursMonth: 1 + Math.floor(rnd() * 6),
+    battlesMonth: 1 + Math.floor(rnd() * 5),
+    formBars,
+    hours: 40 + Math.floor(rnd() * 140),
     series
   };
+}
+
+const LAUREL = `<svg width="80" height="36" viewBox="0 0 80 36" fill="none" aria-hidden="true">
+  <path d="M26.6667 35C20 35 15.3333 30.8333 12.6667 22.3333C10 13.8333 10 1 10 1M53.3333 35C60 35 64.6667 30.8333 67.3333 22.3333C70 13.8333 70 1 70 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M18 6.83331C19.1667 7.49998 22.3 9.7 20.5 13.5C18.7 17.3 14.8333 15.6666 14 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M21.3333 12.3333C22.5 13 25.6333 15.2 23.8333 19C22.0333 22.8 18.1667 21.1666 17.3333 20.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M24.6667 17.8333C25.8333 18.5 28.9667 20.7 27.1667 24.5C25.3667 28.3 21.5 26.6666 20.6667 26" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M62 6.83331C60.8333 7.49998 57.7 9.7 59.5 13.5C61.3 17.3 65.1667 15.6666 66 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M58.6667 12.3333C57.5 13 54.3667 15.2 56.1667 19C57.9667 22.8 61.8333 21.1666 62.6667 20.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M55.3333 17.8333C54.1667 18.5 51.0333 20.7 52.8333 24.5C54.6333 28.3 58.5 26.6666 59.3333 26" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+
+function ordinal(n) {
+  const s = ['th', 'st', 'nd', 'rd'], v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+function scoreCardHTML(d) {
+  const bars = d.formBars.map(l => `<span style="height:${Math.round(l * 100)}%"></span>`).join('');
+  return `<div class="glow-wrap"><div class="score-card">
+    <div class="sc-head"><span class="sc-title">Stats</span><span class="pmc2-chip mono">ALL&nbsp;TIME</span></div>
+    <div>
+      <div class="sc-earn-label mono">TOTAL WINNINGS</div>
+      <div class="sc-earn">£${d.winnings.toLocaleString('en-GB')}</div>
+      <div class="sc-change">▲ +£${d.winningsChange.toLocaleString('en-GB')} <span>since last month</span></div>
+    </div>
+    <div class="sc-sub">
+      <div class="sc-sub-cell"><div class="sc-sub-v">${d.tours}</div><div class="sc-sub-l">tournaments</div><div class="sc-sub-s">${d.toursMonth} this month</div></div>
+      <div class="sc-sub-cell"><div class="sc-sub-v">${d.wins}</div><div class="sc-sub-l">battle wins</div><div class="sc-sub-s">${d.battlesMonth} this month</div></div>
+    </div>
+    <div class="sc-rank">${LAUREL}
+      <div class="sc-rank-place">${ordinal(d.rank)} place</div>
+      <div class="sc-rank-cat">top ranked traders</div>
+    </div>
+    <div class="sc-form">
+      <div class="sc-form-head"><span class="sc-form-label mono">FORM · LAST 30 DAYS</span><span class="sc-form-sub">${d.winRate}% win rate · ${d.hours}h traded</span></div>
+      <div class="sc-bars">${bars}</div>
+    </div>
+  </div></div>`;
 }
 
 function renderTrader() {
@@ -4092,7 +4214,10 @@ function renderTrader() {
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">★</span>
         <div class="tile-tx"><div class="tile-label mono">GLOBAL&nbsp;RANK</div><div class="tile-value">#${d.rank}</div></div></div>
     </div>
-    ${metricCardHTML('traderEquity', 'Competition equity', `${d.trades.toLocaleString('en-GB')}&nbsp;TRADES&nbsp;·&nbsp;VERIFIED`)}`;
+    <div class="tp-grid">
+      ${scoreCardHTML(d)}
+      ${metricCardHTML('traderEquity', 'Competition equity', `${d.trades.toLocaleString('en-GB')}&nbsp;TRADES&nbsp;·&nbsp;VERIFIED`)}
+    </div>`;
   buildMetric('traderEquity', d.series);
 }
 
