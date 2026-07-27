@@ -1397,6 +1397,77 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
 .sg-l { font-size: 10.5px; color: var(--text-faint); margin-bottom: 5px; }
 .sg-v { font-size: 15.5px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
 
+/* Textured progress-metric card — dot-grid depth, right-region chart */
+
+.pmc2 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 360px;
+  border-radius: 26px;
+  background: var(--card);
+  box-shadow: var(--neu-out-sm);
+  overflow: hidden;
+}
+.pmc2-region { position: absolute; top: 0; right: 0; bottom: 52px; width: 62%; z-index: 0; }
+.pmc2-wash { position: absolute; inset: 0; }
+.pmc2-dots {
+  position: absolute; inset: 0;
+  color: var(--text);
+  opacity: 0.11;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 55%);
+  mask-image: linear-gradient(to right, transparent, black 55%);
+}
+.pmc2-dots svg { width: 100%; height: 100%; display: block; }
+.pmc2-chart { position: absolute; inset: 0; cursor: crosshair; touch-action: none; }
+.pmc2-chart svg { width: 100%; height: 100%; display: block; }
+.pmc2-main { position: relative; z-index: 2; flex: 1; padding: 26px 30px 18px; pointer-events: none; }
+.pmc2-head { display: flex; align-items: center; gap: 12px; }
+.pmc2-title { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+.pmc2-chip {
+  font-size: 9px; letter-spacing: 0.1em; color: var(--text-faint);
+  background: var(--surface); box-shadow: var(--neu-in-sm);
+  padding: 5px 11px; border-radius: 999px;
+}
+.pmc2-headline {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-top: 20px;
+  font-size: clamp(40px, 4vw, 60px);
+  font-weight: 600; letter-spacing: -0.03em; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.pmc2-trendchip { display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 700; letter-spacing: 0; }
+.pmc2-date { font-size: 10px; color: var(--text-faint); margin-top: 9px; }
+.pmc2-foot {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  border-top: 1px solid var(--line);
+  background: var(--card);
+  padding: 13px 30px;
+  font-size: 12.5px;
+  flex-wrap: wrap;
+}
+.pmc2-stats { display: flex; align-items: center; gap: 10px; font-size: 11.5px; color: var(--text-faint); font-variant-numeric: tabular-nums; }
+.pmc2-stats b { color: var(--text-soft); font-weight: 600; }
+.pmc2-stats .sep { opacity: 0.4; }
+
+/* Trader profile header */
+
+.tp-head {
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  background: var(--card); border-radius: 22px; box-shadow: var(--neu-out-sm);
+  padding: 22px 26px; margin-bottom: 22px;
+}
+.tp-av {
+  width: 64px; height: 64px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 30px;
+  box-shadow: var(--neu-out-sm);
+}
+.tp-name { font-size: 21px; font-weight: 800; letter-spacing: -0.02em; display: flex; align-items: center; gap: 7px; }
+.tp-sub { font-size: 12px; color: var(--text-faint); margin-top: 3px; }
+.tp-follows { display: flex; gap: 14px; font-size: 12px; color: var(--text-faint); margin-top: 6px; }
+.tp-follows b { color: var(--text); }
+
 /* Progress metric card (scrubbable) */
 
 .pmc {
@@ -2454,6 +2525,7 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
     <div class="view" data-view="social"></div>
     <div class="view" data-view="inbox"></div>
     <div class="view" data-view="performance"></div>
+    <div class="view" data-view="trader"></div>
     <div class="view" data-view="partner"></div>
     </div><!-- /views -->
 
@@ -2470,7 +2542,7 @@ const MARK_SVG = '<svg viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/
 const TROPHY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="__S__" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5"/></svg>';
 
 const navItems = [
-  { label: 'Tournaments', view: 'tournaments', match: ['tournaments', 'arena', 'leaderboard'], icon: TROPHY_SVG.replace('__S__', 'currentColor') },
+  { label: 'Tournaments', view: 'tournaments', match: ['tournaments', 'arena', 'leaderboard', 'trader'], icon: TROPHY_SVG.replace('__S__', 'currentColor') },
   { label: 'Social', view: 'social', match: ['social', 'inbox'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' },
   { label: 'Ideas', view: 'ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' },
   { label: 'Trades', view: 'terminal', match: ['terminal', 'performance'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 15v-4M12 15V8M17 15v-6"/></svg>' }
@@ -2533,7 +2605,7 @@ function renderNav() {
 
 function renderLeaderboard(tickedName) {
   document.getElementById('leaderboard').innerHTML = leaderboard.map((row, i) => `
-    <li class="leaderboard-row${row.you ? ' me' : ''}">
+    <li class="leaderboard-row${row.you ? ' me' : ''}" data-trader="${row.name}" style="cursor:pointer">
       <span class="row-rank mono">${String(i + 1).padStart(2, '0')}</span>
       <span class="row-avatar">${row.name.charAt(0).toUpperCase()}</span>
       <span class="row-name">${row.name}${row.you ? ' <span class="row-you">· you</span>' : ''}<span class="row-flag">${row.flag}</span></span>
@@ -2562,7 +2634,7 @@ function renderFame(query = '') {
   const q = query.trim().toLowerCase();
   const rows = hallOfFame.filter(r => !q || r.player.toLowerCase().includes(q) || r.tournament.toLowerCase().includes(q));
   const body = rows.map(row => `
-    <tr>
+    <tr data-trader="${row.player}" style="cursor:pointer">
       <td class="col-rank mono rank-num">${String(row.rank).padStart(2, '0')}</td>
       <td class="col-player">
         <span class="fame-player">
@@ -2705,7 +2777,8 @@ const TITLES = {
   social: ['Social', '<span class="mono">FEED</span><span class="dot-sep">·</span><span>what 177K traders are saying right now</span>'],
   performance: ['Performance', '<span class="mono">ALL&nbsp;ACCOUNTS</span><span class="dot-sep">·</span><span>verified live track record</span>'],
   partner: ['Partner', '<span class="mono">AFFILIATE</span><span class="dot-sep">·</span><span>earn 30% lifetime on every referral</span>'],
-  inbox: ['Messages', '<span class="mono">INBOX</span><span class="dot-sep">·</span><span>messages, contacts &amp; invites</span>']
+  inbox: ['Messages', '<span class="mono">INBOX</span><span class="dot-sep">·</span><span>messages, contacts &amp; invites</span>'],
+  trader: ['Trader', '<span class="mono">PROFILE</span><span class="dot-sep">·</span><span>verified live track record</span>']
 };
 
 function toast(msg) {
@@ -3591,7 +3664,7 @@ function postCard(p) {
   const tag = fdEmbed(p);
   return `
   <article class="post">
-    <span class="thread-av" style="background:${p.tint}">${p.av}</span>
+    <span class="thread-av" data-trader="${p.name}" style="background:${p.tint};cursor:pointer">${p.av}</span>
     <div class="post-body">
       <div class="post-head">
         <span class="post-name">${p.name}</span>${VERIFIED.has(p.name) ? BADGE : ''}
@@ -3636,7 +3709,7 @@ function feedRail() {
   const trends = TRENDS.map(([c, t, n], i) =>
     `<div class="fr-trend" data-trend="${i}"><div class="fr-tcat">${c}</div><div class="fr-tt">${t}</div><div class="fr-tn">${n}</div></div>`).join('');
   const wtf = WTF.map(([n, e, sub], i) => `
-    <div class="fr-wtf"><span class="thread-av" style="background:${AV_TINTS[i % 6]}">${e}</span>
+    <div class="fr-wtf" data-trader="${n}" style="cursor:pointer"><span class="thread-av" style="background:${AV_TINTS[i % 6]}">${e}</span>
       <div class="fr-wm"><div class="fr-wn">${n}${BADGE}</div><div class="fr-wh">${sub}</div></div>
       <button class="fr-follow${following.has(n) ? ' on' : ''}" data-follow="${n}">${following.has(n) ? 'Following' : 'Follow'}</button>
     </div>`).join('');
@@ -3840,12 +3913,7 @@ function renderPerformance() {
       <thead><tr class="mono"><th>CLOSED</th><th>MARKET</th><th>SIDE</th><th>ENTRY&nbsp;→&nbsp;EXIT</th><th>RISK</th><th>R:R</th><th>OUTCOME</th><th style="text-align:right">P&amp;L</th></tr></thead>
       <tbody>${tradeLog.map(tradeRow).join('')}</tbody>
     </table></div></div>` : `
-    <div class="pmc">
-      <div class="pmc-head"><span class="pmc-title">Account equity</span><span class="pmc-unit">GBP · LIVE</span></div>
-      <div class="pmc-val"><span id="pmcVal">—</span><span class="pmc-delta" id="pmcDelta"></span></div>
-      <div class="pmc-date mono" id="pmcDate"></div>
-      <div class="pmc-wrap" id="pmcWrap"><svg id="pmcSvg"></svg></div>
-    </div>
+    ${metricCardHTML('perfEquity', 'Account equity', 'GBP · LIVE')}
     <div class="stats-grid">
       <div class="sg-cell"><div class="sg-l mono">YTD&nbsp;RETURN</div><div class="sg-v ${ret >= 0 ? 'up' : 'down'}">${sPct(ret * 0.7)}</div></div>
       <div class="sg-cell"><div class="sg-l mono">AVG&nbsp;MONTHLY</div><div class="sg-v">${sPct(ret / 7)}</div></div>
@@ -3876,55 +3944,164 @@ function renderPerformance() {
         <div class="tile-tx"><div class="tile-label mono">SHARPE</div><div class="tile-value">2.14</div></div></div>
     </div>
     ${body}`;
-  buildPMC(s);
+  buildMetric('perfEquity', s);
 }
 
-/* Scrubbable progress-metric chart — pointer over the series reads value + date */
-function buildPMC(series) {
-  const svg = document.getElementById('pmcSvg');
-  const wrap = document.getElementById('pmcWrap');
-  if (!svg || !wrap || !series.length) return;
-  const W = Math.max(320, wrap.clientWidth || 760), H = 235, pad = 14;
+/* Textured progress-metric card — dot-grid depth, right-region chart, scrub readout */
+
+function metricCardHTML(id, title, chip) {
+  return `<div class="pmc2" id="${id}">
+    <div class="pmc2-region">
+      <div class="pmc2-wash" data-role="wash"></div>
+      <div class="pmc2-dots"><svg aria-hidden="true"><defs><pattern id="${id}-dg" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="currentColor"/></pattern></defs><rect width="100%" height="100%" fill="url(#${id}-dg)"/></svg></div>
+      <div class="pmc2-chart" data-role="chart"><svg data-role="svg"></svg></div>
+    </div>
+    <div class="pmc2-main">
+      <div class="pmc2-head"><span class="pmc2-title">${title}</span><span class="pmc2-chip mono">${chip}</span></div>
+      <div class="pmc2-headline"><span data-role="val">—</span><span class="pmc2-trendchip" data-role="trend"></span></div>
+      <div class="pmc2-date mono" data-role="date"></div>
+    </div>
+    <div class="pmc2-foot">
+      <div><b data-role="delta"></b> <span style="color:var(--text-faint)" data-role="dlabel">today</span></div>
+      <div class="pmc2-stats" data-role="stats"></div>
+    </div>
+  </div>`;
+}
+
+function buildMetric(id, series, opts = {}) {
+  const root = document.getElementById(id);
+  if (!root || !series || series.length < 2) return;
+  const fmt = opts.fmt || (n => '£' + Math.round(n).toLocaleString('en-GB'));
   const n = series.length;
+  const first = series[0], last = series[n - 1], prev = series[n - 2];
+  const pct = first ? (last - first) / first * 100 : 0;
+  const trend = Math.abs(pct) < 0.5 ? 'flat' : last >= first ? 'up' : 'down';
+  const stroke = trend === 'down' ? '#e5484d' : trend === 'flat' ? '#8b93a3' : '#10b981';
+  root.querySelector('[data-role="wash"]').style.background =
+    `linear-gradient(to left, ${stroke}1f, transparent 75%)`;
+  const chart = root.querySelector('[data-role="chart"]');
+  const svg = root.querySelector('[data-role="svg"]');
+  const W = Math.max(260, chart.clientWidth || 600), H = Math.max(180, chart.clientHeight || 300), pad = 12;
   const min = Math.min(...series), max = Math.max(...series), rng = (max - min) || 1;
   const X = i => pad + (i / (n - 1)) * (W - pad * 2);
-  const Y = v => pad + (1 - (v - min) / rng) * (H - pad * 2 - 6);
-  let line = `M${X(0)},${Y(series[0]).toFixed(1)}`;
+  const Y = v => 34 + (1 - (v - min) / rng) * (H - 34 - pad);
+  let line = `M${X(0)},${Y(first).toFixed(1)}`;
   for (let i = 1; i < n; i++) line += ` L${X(i).toFixed(1)},${Y(series[i]).toFixed(1)}`;
   const area = `${line} L${X(n - 1).toFixed(1)},${H} L${X(0)},${H} Z`;
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('preserveAspectRatio', 'none');
   svg.innerHTML = `
-    <defs><linearGradient id="pmcG" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#7c3aed" stop-opacity=".2"/><stop offset="1" stop-color="#d946ef" stop-opacity="0"/>
+    <defs><linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="${stroke}" stop-opacity=".18"/><stop offset="1" stop-color="${stroke}" stop-opacity="0"/>
     </linearGradient></defs>
-    <path d="${area}" fill="url(#pmcG)"/>
-    <path d="${line}" fill="none" stroke="#7c3aed" stroke-width="2.2" stroke-linejoin="round"/>
-    <line id="pmcLine" y1="6" y2="${H}" stroke="${cssVar('--text-faint')}" stroke-width="1" stroke-dasharray="3,4" opacity="0"/>
-    <circle id="pmcDot" r="5.5" fill="#7c3aed" stroke="#fff" stroke-width="2.5" opacity="0"/>`;
-  const val = document.getElementById('pmcVal');
-  const delta = document.getElementById('pmcDelta');
-  const dateEl = document.getElementById('pmcDate');
-  const dot = svg.querySelector('#pmcDot');
-  const vline = svg.querySelector('#pmcLine');
+    <path d="${area}" fill="url(#${id}-g)"/>
+    <path d="${line}" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+    <line data-role="vline" y1="8" y2="${H}" stroke="${cssVar('--text-faint')}" stroke-width="1" stroke-dasharray="3,4" opacity="0"/>
+    <circle data-role="dot" r="5" fill="${stroke}" stroke="#fff" stroke-width="2.5" opacity="0"/>`;
+  const el = r => root.querySelector(`[data-role="${r}"]`);
+  const dot = svg.querySelector('[data-role="dot"]'), vline = svg.querySelector('[data-role="vline"]');
+  const arrow = trend === 'down' ? '↓' : trend === 'flat' ? '→' : '↑';
+  const trendEl = el('trend');
+  trendEl.textContent = `${arrow} ${Math.abs(pct).toFixed(1)}%`;
+  trendEl.style.color = stroke;
+  const deltaEl = el('delta');
+  deltaEl.textContent = (last - prev >= 0 ? '+' : '−') + fmt(Math.abs(last - prev)).replace('£', '£');
+  deltaEl.style.color = stroke;
+  el('stats').innerHTML =
+    `<span><b>${fmt(max)}</b> peak</span><span class="sep">·</span>` +
+    `<span><b>${fmt(min)}</b> low</span><span class="sep">·</span>` +
+    `<span><b>${fmt(series.reduce((a, b) => a + b, 0) / n)}</b> avg</span>`;
   const dateFor = i => new Date(Date.now() - (n - 1 - i) * 86400000)
     .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
   const setIdx = (i, scrub) => {
     i = Math.max(0, Math.min(n - 1, i));
-    val.textContent = '£' + Math.round(series[i]).toLocaleString('en-GB');
-    const d = (series[i] - series[0]) / series[0] * 100;
-    delta.textContent = (d >= 0 ? '+' : '−') + Math.abs(d).toFixed(1) + '%';
-    delta.className = 'pmc-delta ' + (d >= 0 ? 'up' : 'down');
-    dateEl.textContent = dateFor(i) + (scrub ? '' : ' · latest');
+    el('val').textContent = fmt(series[i]);
+    el('date').textContent = dateFor(i) + (scrub ? '' : ' · latest');
     dot.setAttribute('cx', X(i)); dot.setAttribute('cy', Y(series[i]));
     vline.setAttribute('x1', X(i)); vline.setAttribute('x2', X(i));
     dot.setAttribute('opacity', 1); vline.setAttribute('opacity', scrub ? 1 : 0);
   };
-  wrap.onpointermove = e => {
-    const r = wrap.getBoundingClientRect();
+  chart.onpointermove = e => {
+    const r = chart.getBoundingClientRect();
     setIdx(Math.round((e.clientX - r.left) / r.width * (n - 1)), true);
   };
-  wrap.onpointerleave = () => setIdx(n - 1, false);
+  chart.onpointerleave = () => setIdx(n - 1, false);
   setIdx(n - 1, false);
+}
+
+/* ---------------- Trader profiles ---------------- */
+
+let traderId = 'Theo4', traderBack = 'tournaments';
+
+const TRADER_AV = { Theo4: '🦊', Fredi9999: '🐺', swisstony: '🐵', mintblade: '⚔️', kch123: '🎯', RN1: '🚀', fishalive: '🐹', frostrizz: '❄️', GRIMDRIP: '💀', nattyG: '🌿', quantqueen: '👸', '0xmaverick': '🃏', delta_dan: '📐', macro_mia: '🌍', wickwizard: '🧙', fadefather: '🎩', pip_titan: '🗿', vol_king: '👑', goldenboy: '👑', delta_dora: '🦎', Rudy: '🎺', 'Sander Schouten': '🌷', 'Dion Trades': '🍝' };
+const TRADER_BIOS = ['Swing trader. Process over outcome.', 'Momentum & breakouts. Risk first, always.', 'FX by day, crypto by night.', 'Mean reversion is my love language.', 'Macro-driven. Patient. Ruthless on entries.', 'Scalper — in and out before you blink.', 'Index futures specialist.', 'Here to win comps, not to gamble.'];
+
+function hashName(s) {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return h >>> 0;
+}
+
+function traderProfile(name) {
+  let s = hashName(name) || 1;
+  const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+  const winRate = Math.round(52 + rnd() * 24);
+  const wins = 9 + Math.floor(rnd() * 42), losses = 3 + Math.floor(rnd() * 23);
+  const series = [100000];
+  const drift = 0.435 + rnd() * 0.035;
+  for (let i = 1; i < 160; i++) series.push(Math.max(20000, series[i - 1] * (1 + (rnd() - drift) * 0.014)));
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return {
+    name, av: TRADER_AV[name] || name.charAt(0).toUpperCase(),
+    tint: AV_TINTS[hashName(name) % AV_TINTS.length],
+    bio: TRADER_BIOS[hashName(name + 'b') % TRADER_BIOS.length],
+    winRate, wins, losses,
+    followers: kfmt(1200 + Math.floor(rnd() * 80000)),
+    following: 40 + Math.floor(rnd() * 900),
+    big: Math.round(4000 + rnd() * rnd() * 900000),
+    trades: 40 + Math.floor(rnd() * 4200),
+    joined: months[hashName(name + 'm') % 12] + ' ' + (2023 + hashName(name + 'y') % 3),
+    rank: 1 + hashName(name + 'r') % 200,
+    series
+  };
+}
+
+function renderTrader() {
+  const d = traderProfile(traderId);
+  viewEl('trader').innerHTML = `
+    <button class="back-btn" data-nav="${traderBack}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back</button>
+    <div class="tp-head">
+      <span class="tp-av" style="background:${d.tint}">${d.av}</span>
+      <div style="flex:1;min-width:180px">
+        <div class="tp-name">${d.name}${BADGE}</div>
+        <div class="tp-sub">@${d.name.toLowerCase().replace(/\s+/g, '')} · ${d.bio}</div>
+        <div class="tp-follows"><span><b>${d.followers}</b> followers</span><span><b>${d.following}</b> following</span><span>Joined ${d.joined}</span></div>
+      </div>
+      <button class="fr-follow${following.has(d.name) ? ' on' : ''}" data-follow="${d.name}">${following.has(d.name) ? 'Following' : 'Follow'}</button>
+      <button class="btn-neu" style="padding:9px 18px;font-size:13px" data-dm="${d.name}">Message</button>
+    </div>
+    <div class="tile-row">
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#34d399,#10b981)">◎</span>
+        <div class="tile-tx"><div class="tile-label mono">WIN&nbsp;RATE</div><div class="tile-value">${d.winRate}%</div>
+          <div class="tile-bar"><span style="width:${d.winRate}%"></span></div></div></div>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9a7cff,#7c5cff)">⚔</span>
+        <div class="tile-tx"><div class="tile-label mono">ARENA&nbsp;W&nbsp;/&nbsp;L</div><div class="tile-value">${d.wins}–${d.losses}</div></div></div>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#ffc24b,#f59e0b)">🏆</span>
+        <div class="tile-tx"><div class="tile-label mono">BIGGEST&nbsp;WIN</div><div class="tile-value">£${d.big.toLocaleString('en-GB')}</div></div></div>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">★</span>
+        <div class="tile-tx"><div class="tile-label mono">GLOBAL&nbsp;RANK</div><div class="tile-value">#${d.rank}</div></div></div>
+    </div>
+    ${metricCardHTML('traderEquity', 'Competition equity', `${d.trades.toLocaleString('en-GB')}&nbsp;TRADES&nbsp;·&nbsp;VERIFIED`)}`;
+  buildMetric('traderEquity', d.series);
+}
+
+function openTrader(name) {
+  const clean = name.replace('· you', '').replace(/[\u{1F1E6}-\u{1F1FF}]/gu, '').trim();
+  if (clean === 'jstone') return navigate('performance');
+  traderId = clean;
+  traderBack = currentView;
+  navigate('trader');
 }
 
 /* ---------------- Leaderboard page ---------------- */
@@ -3946,7 +4123,7 @@ function renderLbPage() {
     `<button class="pill-btn${x.name === lbTour ? ' on' : ''}" data-lbtour="${x.name}">${x.name}</button>`).join('');
   const rows = lbField.slice(lbPage * per, lbPage * per + per).map((r, i) => {
     const rank = lbPage * per + i + 1;
-    return `<tr class="${r.you ? 'lb-me' : ''}">
+    return `<tr class="${r.you ? 'lb-me' : ''}" data-trader="${r.name}" style="cursor:pointer">
       <td class="col-rank mono rank-num">${String(rank).padStart(2, '0')}</td>
       <td><span class="fame-player"><span class="fame-avatar">${r.name.charAt(0).toUpperCase()}</span>
         <span class="fame-name">${r.name.replace('· you', '<span class="row-you">· you</span>')}</span></span></td>
@@ -4250,7 +4427,7 @@ function renderPartner() {
 
 const RENDER = {
   terminal: renderTerminal, ideas: renderIdeas, social: renderSocial, inbox: renderInbox,
-  performance: renderPerformance,
+  performance: renderPerformance, trader: renderTrader,
   leaderboard: renderLbPage, arena: renderArena, partner: renderPartner
 };
 
@@ -4382,7 +4559,7 @@ document.addEventListener('click', e => {
     const n = el.dataset.follow;
     following.has(n) ? following.delete(n) : following.add(n);
     toast(following.has(n) ? `Following ${n}` : `Unfollowed ${n}`);
-    return renderSocial();
+    return currentView === 'trader' ? renderTrader() : renderSocial();
   }
   if ((el = q('[data-preply]'))) {
     const p = POSTS.find(x => x.id === +el.dataset.preply);
@@ -4398,7 +4575,7 @@ document.addEventListener('click', e => {
     const i = threads.findIndex(t => t.name === el.dataset.dm);
     inboxTab = 'messages';
     if (i >= 0) activeThread = i;
-    return renderInbox();
+    return currentView === 'inbox' ? renderInbox() : navigate('inbox');
   }
   if ((el = q('[data-inv-acc]'))) {
     const iv = invites[+el.dataset.invAcc];
@@ -4471,6 +4648,8 @@ document.addEventListener('click', e => {
     try { navigator.clipboard.writeText(partner.link); } catch (_e) {}
     return toast('Referral link copied');
   }
+  /* trader rows — fall-through so buttons inside rows keep priority */
+  if ((el = q('[data-trader]'))) return openTrader(el.dataset.trader);
 });
 
 document.addEventListener('input', e => {
