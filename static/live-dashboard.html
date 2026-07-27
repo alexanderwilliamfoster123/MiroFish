@@ -1829,7 +1829,40 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .fpick.up b { color: var(--green); }
 .fpick.down b { color: #e5484d; }
 
-.fstack { position: relative; margin-bottom: 4px; }
+.fstack { position: relative; margin-bottom: 34px; }
+
+.ai-sig-kick {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+  font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-soft); margin-top: 8px;
+}
+.ai-brief-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 16px 0 10px; }
+.ai-brief-tag {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: linear-gradient(92deg, var(--accent-a), var(--accent-b));
+  color: #fff;
+  font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 7px 14px; border-radius: 999px;
+  box-shadow: 0 6px 14px rgba(124, 58, 237, 0.3);
+}
+.ai-brief-box {
+  position: relative;
+  border-radius: 15px;
+  padding: 14px 17px 14px 20px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.06), rgba(217, 70, 239, 0.03));
+  border: 1px solid rgba(124, 58, 237, 0.14);
+  overflow: hidden;
+}
+.ai-brief-box::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--accent-a), var(--accent-b));
+}
+.ai-brief-box .tc-brief-p { margin: 0; }
 .tcard {
   position: relative;
   z-index: 2;
@@ -2962,7 +2995,7 @@ function flickBuild() {
 const CAT_ICONS = { 'Macro': '🌍', 'Central bank': '🏦', 'Technical': '📐', 'Quant': '🧮', 'On-chain': '⛓️', 'Positioning': '📊' };
 
 function flickHead() {
-  return `<div class="fhead"><div><div class="fh-t">Flick</div><div class="fh-s">Read the brief, then take it or skip it</div></div></div>`;
+  return `<div class="fhead"><div><div class="fh-t">Flick</div><div class="fh-s">The AI finds the signal — you decide whether to take it</div></div></div>`;
 }
 
 function flickModelBar() {
@@ -2976,12 +3009,13 @@ function flickCardHTML(c) {
   const up = c.dir === 'up', L = ideaLevels(c);
   return `<div class="tcard" id="flickTop">
     <div class="tc-topbar"><span id="flickBar" style="width:${(flick.sec / 60 * 100).toFixed(0)}%"></span></div>
-    <div class="fstamp exec">${up ? 'BUY' : 'SELL'}</div>
-    <div class="fstamp skip">SKIP</div>
+    <div class="fstamp exec">TAKE</div>
+    <div class="fstamp skip">REJECT</div>
     <div class="tc-hero ${up ? 'up' : 'down'}">
       <div class="tc-hrow"><span class="tc-cat">${CAT_ICONS[c.cat] || '✦'}&nbsp;&nbsp;${c.cat.toUpperCase()}</span>
         <span class="tc-win"><span class="pulse-dot tiny" style="background:#e5484d"></span><span id="flickSec">${flickClock()}</span></span></div>
       ${flickSpark(c)}
+      <div class="ai-sig-kick">✳ AI signal · ${flick.model}</div>
       <div class="tc-dir">${up ? '▲ BUY' : '▼ SELL'}</div>
     </div>
     <div class="tc-body">
@@ -2994,8 +3028,10 @@ function flickCardHTML(c) {
         <div class="tcl sl"><span>✕ Stop</span><b>${L.sl}</b><i>${up ? '−' : '+'}${L.slPct}%</i></div>
         <div class="tcl tp"><span>◆ Target</span><b>${L.tp}</b><i>${up ? '+' : '−'}${L.tpPct}%</i></div>
       </div>
-      <p class="tc-brief-p">${c.brief}</p>
-      <div class="tc-hist"><svg viewBox="0 0 24 24"><path d="M4 16.5l4.5-4.5 3 2.5L20 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6h5v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${c.hist}</span></div>
+      <div class="ai-brief-head"><span class="ai-brief-tag">✦ AI Brief</span>
+        <span class="tc-brief-model">${FLICK_MODELS[flick.prov].ic} ${flick.model}</span></div>
+      <div class="ai-brief-box"><p class="tc-brief-p">${c.brief}</p></div>
+      <div class="tc-hist" style="margin-top:11px"><svg viewBox="0 0 24 24"><path d="M4 16.5l4.5-4.5 3 2.5L20 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6h5v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${c.hist}</span></div>
     </div>
   </div>`;
 }
@@ -3043,7 +3079,7 @@ function flickHTML() {
       <button class="fbtn skip" data-fskip aria-label="Skip">✕</button>
       <button class="fbtn exec" data-ftake aria-label="Take trade">✓</button>
     </div>
-    <div class="flick-hint">Swipe right to take · left to skip · or use the buttons</div>
+    <div class="flick-hint">Swipe right to take the signal · left to reject · or use the buttons</div>
     ${flickPicks()}</div>`;
 }
 
