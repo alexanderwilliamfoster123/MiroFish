@@ -23,6 +23,8 @@
     border-radius: 12px;
     background: #0e0e11;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   .card-bar {
@@ -36,19 +38,59 @@
     color: #55585f;
   }
 
-  .card pre {
-    margin: 0;
-    padding: 1.25rem 1.4rem 1.5rem;
-    overflow-x: auto;
+  .term {
+    padding: 1.25rem 1.4rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: min(60vh, 30rem);
     font: .85rem/1.75 "SF Mono", ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
     color: #9a9ea7;
-    min-height: 19.25em;
+    scrollbar-width: thin;
+    scrollbar-color: #26282d transparent;
+  }
+
+  .term pre {
+    margin: 0;
+    font: inherit;
+    white-space: pre-wrap;
+    word-break: break-word;
   }
 
   .kw  { color: #8fa8d9; }
   .str { color: #c9b28f; }
   .cm  { color: #4c4f56; }
   .id  { color: #c9ced7; }
+
+  .q-line { margin-top: 1.1em; color: #c9ced7; }
+  .q-line .ps1 { color: #8fa8d9; margin-right: .6em; }
+  .a-line { margin-top: .35em; }
+
+  .ask {
+    display: flex;
+    align-items: center;
+    gap: .6em;
+    padding: .8rem 1.4rem;
+    border-top: 1px solid #1c1d21;
+    font: .85rem/1.5 "SF Mono", ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+    opacity: 0;
+    transition: opacity .6s ease;
+  }
+
+  .ask.on { opacity: 1; }
+  .ask .ps1 { color: #8fa8d9; }
+
+  .ask input {
+    flex: 1;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font: inherit;
+    color: #c9ced7;
+    caret-color: #c9ced7;
+    padding: 0;
+  }
+
+  .ask input::placeholder { color: #4c4f56; }
 
   .cursor {
     display: inline-block;
@@ -64,6 +106,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .cursor { animation: none; }
+    .ask { transition: none; }
   }
 </style>
 
@@ -71,11 +114,18 @@
 <body>
 <main class="card">
   <div class="card-bar"><span>whoami</span><span>alex_foster.ts</span></div>
-  <pre><code id="code"></code><span class="cursor" aria-hidden="true"></span></pre>
+  <div class="term" id="term">
+    <pre id="intro"></pre>
+    <div id="log" aria-live="polite"></div>
+  </div>
+  <form class="ask" id="ask">
+    <span class="ps1" aria-hidden="true">&#10095;</span>
+    <input id="q" type="text" placeholder="ask about alex&#8230;" autocomplete="off" aria-label="Ask a question about Alex" maxlength="200">
+  </form>
 </main>
 
 <script>
-  // [class, text] tokens, typed out in order
+  // ---------- typed intro: [class, text] tokens ----------
   const TOKENS = [
     ["cm", "// whoami\n\n"],
     ["kw", "const"], ["", " "], ["id", "alex"], ["", " = {\n"],
@@ -88,36 +138,107 @@
     ["", "    "], ["cm", "// portfolio loading…\n"],
     ["", "  ],\n"],
     ["", "};\n\n"],
-    ["kw", "export default"], ["", " "], ["id", "alex"], ["", ";"],
+    ["cm", "// ask me anything below"],
   ];
 
-  const code = document.getElementById("code");
-  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // ---------- knowledge base: extend freely ----------
+  const KB = [
+    { keys: ["who", "about", "alex", "intro", "yourself"],
+      a: "Alex Foster — founder & investor. He builds and backs early-stage companies, with AI as the through-line." },
+    { keys: ["compan", "own", "found", "build", "vertus", "work"],
+      a: "Alex is the founder of Vertus AI. More detail on what Vertus does is coming to this page soon." },
+    { keys: ["invest", "portfolio", "back", "angel", "fund"],
+      a: "The portfolio list hasn't been published here yet — // portfolio loading… means exactly that. Check back soon." },
+    { keys: ["contact", "email", "reach", "talk", "hire", "pitch", "meet"],
+      a: "Reach Alex at alex@vertus.ai." },
+    { keys: ["page", "site", "made", "built", "html", "code"],
+      a: "One self-contained HTML file — typewriter, chat and all. No frameworks, no server." },
+    { keys: ["hello", "hi ", "hey", "yo "],
+      a: "Hey. Ask me about Alex — who he is, what he's building, or how to reach him." },
+  ];
+  const FALLBACK = "I only know a little so far. Try asking who Alex is, what companies he owns, or how to contact him.";
 
-  function renderAll() {
-    for (const [cls, text] of TOKENS) {
-      const span = document.createElement("span");
-      if (cls) span.className = cls;
-      span.textContent = text;
-      code.appendChild(span);
+  const intro = document.getElementById("intro");
+  const log = document.getElementById("log");
+  const term = document.getElementById("term");
+  const ask = document.getElementById("ask");
+  const q = document.getElementById("q");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const scrollDown = () => { term.scrollTop = term.scrollHeight; };
+
+  function addSpan(parent, cls, text) {
+    const span = document.createElement("span");
+    if (cls) span.className = cls;
+    span.textContent = text;
+    parent.appendChild(span);
+    return span;
+  }
+
+  async function typeSpan(span, text) {
+    for (const ch of text) {
+      span.textContent += ch;
+      scrollDown();
+      await wait(ch === "\n" ? 60 : 12 + Math.random() * 22);
     }
   }
 
-  async function typeOut() {
-    const wait = ms => new Promise(r => setTimeout(r, ms));
+  function answerFor(input) {
+    const s = " " + input.toLowerCase() + " ";
+    let best = null, bestScore = 0;
+    for (const entry of KB) {
+      const score = entry.keys.reduce((n, k) => n + (s.includes(k) ? 1 : 0), 0);
+      if (score > bestScore) { bestScore = score; best = entry; }
+    }
+    return best ? best.a : FALLBACK;
+  }
+
+  let busy = false;
+
+  ask.addEventListener("submit", async e => {
+    e.preventDefault();
+    const text = q.value.trim();
+    if (!text || busy) return;
+    busy = true;
+    q.value = "";
+
+    const qLine = document.createElement("pre");
+    qLine.className = "q-line";
+    addSpan(qLine, "ps1", "❯ ");
+    addSpan(qLine, "", text);
+    log.appendChild(qLine);
+
+    const aLine = document.createElement("pre");
+    aLine.className = "a-line";
+    const aSpan = addSpan(aLine, "", "");
+    log.appendChild(aLine);
+    scrollDown();
+
+    const answer = answerFor(text);
+    if (reduced) { aSpan.textContent = answer; scrollDown(); }
+    else { await wait(350); await typeSpan(aSpan, answer); }
+
+    busy = false;
+    q.focus();
+  });
+
+  function renderIntro() {
+    for (const [cls, text] of TOKENS) addSpan(intro, cls, text);
+  }
+
+  async function typeIntro() {
     await wait(500);
     for (const [cls, text] of TOKENS) {
-      const span = document.createElement("span");
-      if (cls) span.className = cls;
-      code.appendChild(span);
-      for (const ch of text) {
-        span.textContent += ch;
-        await wait(ch === "\n" ? 70 : 16 + Math.random() * 26);
-      }
+      const span = addSpan(intro, cls, "");
+      await typeSpan(span, text);
     }
   }
 
-  reduced ? renderAll() : typeOut();
+  (async () => {
+    if (reduced) renderIntro(); else await typeIntro();
+    addSpan(intro, "cursor", "");
+    ask.classList.add("on");
+  })();
 </script>
 </body>
 </html>
