@@ -5,6 +5,39 @@ agents simulate each page's audience reacting — before anything is posted for 
 
 The studio lives at **http://localhost:3000/ad-reaction** once the app is running.
 
+---
+
+## Option A — Cloud, no computer setup (recommended for non-technical users)
+
+One-time, ~15 minutes, all in the browser. Afterwards the studio is a permanent
+URL you can open from any device.
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/alexanderwilliamfoster123/MiroFish/tree/claude/ad-reaction-dashboard-fhmu4u)
+
+1. **Get an OpenAI API key** (this is the "brain" that generates the reactions):
+   go to [platform.openai.com](https://platform.openai.com), sign up, add ~$5
+   of credit under *Billing*, then *API keys → Create new secret key* and copy
+   the `sk-…` text somewhere safe.
+2. **Create a free account** at [render.com](https://render.com) (sign up with
+   Google is fine).
+3. **Click the Deploy to Render button above.** Render reads this repository
+   and shows one service called `omera-ad-reaction-studio`.
+4. When asked for **LLM_API_KEY**, paste your `sk-…` key. Leave the other two
+   values as they are. Click **Apply / Deploy**.
+5. Wait 5–10 minutes for the first build. Render then shows your URL, something
+   like `https://omera-ad-reaction-studio.onrender.com` — **that's your studio.**
+   Bookmark it. Open it, drop a headline in, pick pages, run.
+
+Notes: on Render's free plan the service sleeps when idle, so the first visit
+of the day takes ~1 minute to wake up. Each simulation run costs a few cents of
+OpenAI credit. This slim deployment (`Dockerfile.studio`) contains only the
+studio — the full MiroFish world-simulation platform still runs locally per
+Option B.
+
+---
+
+## Option B — Run the full app locally (technical)
+
 ## 1. Get the code (this feature's branch)
 
 ```bash

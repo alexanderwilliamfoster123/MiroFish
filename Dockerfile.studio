@@ -1,0 +1,29 @@
+# Slim deployment image for the Ad Reaction Studio only.
+# The full MiroFish platform uses the root Dockerfile; this one keeps the
+# dependency set tiny (no Zep/OASIS) so it runs on small cloud instances.
+
+# --- stage 1: build the frontend ---
+FROM node:20-alpine AS frontend
+WORKDIR /build
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+COPY frontend/ ./
+# same-origin API in production
+ENV VITE_API_BASE_URL=/
+RUN npx vite build
+
+# --- stage 2: python runtime ---
+FROM python:3.11-slim
+WORKDIR /app
+RUN pip install --no-cache-dir flask flask-cors openai python-dotenv
+COPY backend/studio_server.py backend/studio_server.py
+COPY backend/app/config.py backend/app/config.py
+COPY backend/app/utils/logger.py backend/app/utils/logger.py
+COPY backend/app/utils/llm_client.py backend/app/utils/llm_client.py
+COPY backend/app/services/ad_reaction_simulator.py backend/app/services/ad_reaction_simulator.py
+COPY backend/app/api/ad_reaction.py backend/app/api/ad_reaction.py
+COPY --from=frontend /build/dist frontend/dist
+
+ENV PORT=8080
+EXPOSE 8080
+CMD ["python", "backend/studio_server.py"]

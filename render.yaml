@@ -1,0 +1,17 @@
+# Render.com blueprint — one-click deploy of the Ad Reaction Studio.
+# Creates a single web service from Dockerfile.studio. On first deploy,
+# Render prompts for the LLM key (any OpenAI-compatible provider).
+services:
+  - type: web
+    name: omera-ad-reaction-studio
+    runtime: docker
+    dockerfilePath: ./Dockerfile.studio
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: LLM_API_KEY
+        sync: false          # prompted in the Render dashboard — paste your key
+      - key: LLM_BASE_URL
+        value: https://api.openai.com/v1
+      - key: LLM_MODEL_NAME
+        value: gpt-4o-mini
