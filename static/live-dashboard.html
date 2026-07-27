@@ -1758,7 +1758,7 @@ tr.lb-me td:last-child { border-radius: 0 12px 12px 0; }
 .challenge-head { display: flex; align-items: center; gap: 11px; }
 .challenge-name { font-size: 14px; font-weight: 700; }
 .challenge-sub { font-size: 11px; color: var(--text-faint); margin-top: 2px; }
-.challenge-terms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.challenge-terms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .ch-profit { color: var(--green); font-weight: 800; }
 .term-cell { flex: 1; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 12px; padding: 10px 12px; }
 .term-cell .k { font-size: 9.5px; color: var(--text-faint); letter-spacing: 0.1em; text-transform: uppercase; }
@@ -2564,6 +2564,21 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .fame-win b i { font-style: normal; color: var(--text-faint); font-weight: 400; padding: 0 2px; }
 .fame-win > span { display: block; font-size: 11px; font-weight: 700; color: var(--green); margin-top: 2px; }
 
+/* ---------------- Candle chart (terminal) ---------------- */
+.cchart { position: relative; height: 320px; border-radius: 14px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; cursor: crosshair; }
+.cchart svg { display: block; width: 100%; height: 100%; color: var(--text); }
+.cc-tip { position: absolute; top: 10px; left: 10px; min-width: 138px; background: var(--card); box-shadow: var(--neu-out-sm); border-radius: 13px; padding: 9px 12px; pointer-events: none; opacity: 0; transition: opacity .15s ease; z-index: 5; }
+.cc-tip.on { opacity: 1; }
+.cct-t { font-size: 9.5px; letter-spacing: .08em; color: var(--text-faint); margin-bottom: 6px; }
+.cct-r { display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: 11px; padding: 1.5px 0; }
+.cct-r span { font-size: 9px; letter-spacing: .1em; color: var(--text-faint); }
+.cct-r b { font-variant-numeric: tabular-nums; font-weight: 700; }
+
+/* person avatars — photo when the network allows, character face beneath */
+.pav { position: relative; overflow: hidden; }
+.pav .pav-fb { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 1.05em; }
+.pav img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
 /* ---------------- Modals (edit profile, invite) ---------------- */
 .pk-veil { position: fixed; inset: 0; z-index: 120; display: flex; align-items: center; justify-content: center; background: rgba(120, 128, 148, .28); backdrop-filter: blur(10px); zoom: 1.176; }
 .pk-modal { width: min(560px, 92vw); max-height: 88vh; overflow-y: auto; background: var(--card); border-radius: 26px; box-shadow: 0 30px 80px rgba(15, 18, 28, .28); padding: 24px 26px; }
@@ -2595,6 +2610,27 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .thread-av, .stack-avatar, .fame-avatar, .tpc-avatar, .user-avatar-inner { position: relative; overflow: hidden; }
 .thread-av::after, .stack-avatar::after, .fame-avatar::after, .tpc-avatar::after, .user-avatar-inner::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(120% 90% at 28% 18%, rgba(255, 255, 255, .38), transparent 55%); pointer-events: none; }
 .user-avatar-inner img, .tpc-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+/* ---------------- Account toggle (terminal) ---------------- */
+.acct-toggle { position: relative; display: inline-grid; grid-template-columns: repeat(3, minmax(150px, 1fr)); background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 17px; padding: 5px; margin-bottom: 18px; }
+.acct-toggle .at-thumb { position: absolute; top: 5px; bottom: 5px; left: 5px; width: calc((100% - 10px) / 3); border-radius: 13px; background: var(--card); box-shadow: var(--neu-out-sm); transition: transform .35s cubic-bezier(.16, 1, .3, 1); }
+.acct-toggle button { position: relative; z-index: 1; border: 0; background: none; cursor: pointer; padding: 9px 18px; font: inherit; text-align: center; color: var(--text-faint); transition: color .2s ease; }
+.acct-toggle button b { display: block; font-size: 12.5px; font-weight: 800; letter-spacing: .03em; }
+.acct-toggle button small { display: block; font-size: 9.5px; margin-top: 2px; }
+.acct-toggle button.on { color: var(--text); }
+.acct-toggle button.on b { color: var(--accent-a); }
+
+/* ---------------- Clans ---------------- */
+.clan-chip { display: inline-flex; align-items: center; justify-content: center; border-radius: 11px; padding: 8px 11px; color: #fff; font-weight: 800; font-size: 12px; letter-spacing: .08em; flex: none; box-shadow: 0 6px 14px rgba(60, 50, 120, .25); }
+.clan-chip.sm { padding: 5px 8px; font-size: 10px; border-radius: 8px; }
+.cl-head { display: flex; align-items: center; gap: 12px; }
+.cl-name { font-size: 15px; font-weight: 800; letter-spacing: -.01em; display: block; }
+.cl-sub { display: block; font-size: 9.5px; letter-spacing: .1em; color: var(--text-faint); margin-top: 3px; }
+.cl-members { display: flex; align-items: center; gap: 6px; margin-top: 12px; }
+.cl-members .thread-av { width: 30px; height: 30px; }
+.cl-mcount { margin-left: 8px; font-size: 9.5px; letter-spacing: .1em; color: var(--text-faint); }
+.cl-cta { display: flex; flex-direction: column; justify-content: center; }
+#clanLadder .fame-row .btn-neu { flex: none; }
 
 /* ---------------- Spectate ---------------- */
 .spec-hero { padding: 24px 26px; }
@@ -2798,13 +2834,13 @@ const tournaments = [
 const fmtPool = v => v >= 1e6 ? '£' + (v / 1e6).toFixed(2) + 'M' : '£' + (v / 1e3).toFixed(1) + 'K';
 
 const hallOfFame = [
-  { rank: 1, player: 'Theo4', emoji: 'T', tint: 'linear-gradient(135deg,#fcd9a0,#e8935a)', tournament: '2026 World Series', place: '1st', pool: '3.15M', winning: '1.26M', ret: '50400%' },
-  { rank: 2, player: 'Fredi9999', emoji: 'F', tint: 'linear-gradient(135deg,#c9d4e2,#8fa3bd)', tournament: '2025 World Series', place: '1st', pool: '3.15M', winning: '1.26M', ret: '50400%' },
-  { rank: 3, player: 'swisstony', emoji: 'S', tint: 'linear-gradient(135deg,#d9c2ef,#a184c8)', tournament: '2024 World Series', place: '1st', pool: '3.15M', winning: '1.26M', ret: '50400%' },
+  { rank: 1, player: 'Theo4', emoji: '👨‍💻', tint: 'linear-gradient(135deg,#fcd9a0,#e8935a)', tournament: '2026 World Series', place: '1st', pool: '3.15M', winning: '1.26M', ret: '50400%' },
+  { rank: 2, player: 'Fredi9999', emoji: '👩‍💻', tint: 'linear-gradient(135deg,#c9d4e2,#8fa3bd)', tournament: '2025 World Series', place: '1st', pool: '3.15M', winning: '1.26M', ret: '50400%' },
+  { rank: 3, player: 'swisstony', emoji: '👨‍💼', tint: 'linear-gradient(135deg,#d9c2ef,#a184c8)', tournament: '2024 World Series', place: '1st', pool: '3.15M', winning: '1.26M', ret: '50400%' },
   { rank: 4, player: 'kch123', tournament: '2026 World Series', place: '2nd', pool: '3.15M', winning: '630K', ret: '25200%' },
   { rank: 5, player: 'RN1', tournament: '2025 World Series', place: '2nd', pool: '3.15M', winning: '630K', ret: '25200%' },
   { rank: 6, player: 'mintblade', tournament: 'Q3 Championship', place: '1st', pool: '842K', winning: '336.8K', ret: '13472%' },
-  { rank: 7, player: 'fishalive', emoji: 'F', tint: 'linear-gradient(135deg,#e7c9a9,#b98a5a)', tournament: 'Q2 Championship', place: '1st', pool: '842K', winning: '336.8K', ret: '13472%' },
+  { rank: 7, player: 'fishalive', emoji: '👨‍💼', tint: 'linear-gradient(135deg,#e7c9a9,#b98a5a)', tournament: 'Q2 Championship', place: '1st', pool: '842K', winning: '336.8K', ret: '13472%' },
   { rank: 8, player: 'frostrizz', tournament: 'Q1 Championship', place: '1st', pool: '842K', winning: '336.8K', ret: '13472%' }
 ];
 
@@ -2839,7 +2875,7 @@ function renderLeaderboard(tickedName) {
   box.innerHTML = leaderboard.map((row, i) => `
     <li class="leaderboard-row${row.you ? ' me' : ''}" data-trader="${row.name}" style="cursor:pointer">
       <span class="row-rank mono">${String(i + 1).padStart(2, '0')}</span>
-      <span class="row-avatar">${row.name.charAt(0).toUpperCase()}</span>
+      ${avatarHTML(row.name, 'row-avatar')}
       <span class="row-name">${row.name}${row.you ? ' <span class="row-you">· you</span>' : ''}&nbsp;${flagHTML(traderFlag(row.name), 'xs')}</span>
       <span class="row-value mono-num${row.name === tickedName ? ' ticked' : ''}">£${fmt(row.value)}</span>
     </li>`).join('');
@@ -2874,7 +2910,7 @@ function renderFame(query = '') {
   const body = rows.map(row => `
     <div class="fame-row" data-trader="${row.player}">
       <span class="fame-rank mono">${row.rank}</span>
-      <span class="fame-avatar" style="${row.emoji ? `background:${row.tint}` : ''}">${row.emoji || row.player.charAt(0).toUpperCase()}</span>
+      ${avatarHTML(row.player, 'fame-avatar')}
       <div class="fame-tx">
         <b>${row.player} ${flagHTML(traderFlag(row.player), 'xs')}</b>
         <span>${row.tournament} · ${row.place} · £${row.pool} pool</span>
@@ -3038,9 +3074,23 @@ function tickLiveNumbers() {
     if (b) { setOdo(b, fmtRet(w.bRet)); b.className = 'nw-ret odo ' + (w.bRet >= 0 ? 'up' : 'down'); }
     if (bar) bar.style.width = Math.max(8, Math.min(92, 50 + (w.aRet - w.bRet) * 9)).toFixed(0) + '%';
   });
+  /* clan wars drift */
+  CLAN_WARS.forEach((w, i) => {
+    w.ra += (Math.random() - 0.5) * 0.2;
+    w.rb += (Math.random() - 0.5) * 0.2;
+    w.watching += Math.floor(Math.random() * 30);
+    if (currentView !== 'arena') return;
+    const a = document.querySelector(`[data-cwa="${i}"]`);
+    const b = document.querySelector(`[data-cwb="${i}"]`);
+    const bar = document.querySelector(`[data-cwbar="${i}"]`);
+    if (a) { setOdo(a, fmtRet(w.ra)); a.className = 'nw-ret odo ' + (w.ra >= 0 ? 'up' : 'down'); }
+    if (b) { setOdo(b, fmtRet(w.rb)); b.className = 'nw-ret odo ' + (w.rb >= 0 ? 'up' : 'down'); }
+    if (bar) bar.style.width = Math.max(8, Math.min(92, 50 + (w.ra - w.rb) * 9)).toFixed(0) + '%';
+  });
   /* spectate feed — curves extend while you watch */
   if (spec && currentView === 'spectate') {
     if (spec.kind === 'nation') { const w = NATION_WARS[spec.i]; spec.ra = w.aRet; spec.rb = w.bRet; spec.watching = w.watching; }
+    else if (spec.kind === 'clan') { const w = CLAN_WARS[spec.i]; if (w) { spec.ra = w.ra; spec.rb = w.rb; spec.watching = w.watching; } }
     else { spec.ra += (Math.random() - 0.48) * 0.3; spec.rb += (Math.random() - 0.5) * 0.3; spec.watching += Math.floor(Math.random() * 60); }
     spec.sa.push(+spec.ra.toFixed(3)); spec.sb.push(+spec.rb.toFixed(3));
     if (spec.sa.length > 140) { spec.sa.shift(); spec.sb.shift(); }
@@ -3264,6 +3314,142 @@ const gbp0 = n => '£' + Math.round(n).toLocaleString('en-GB');
 
 function cssVar(name) { return getComputedStyle(document.body).getPropertyValue(name).trim(); }
 
+/* ---------------- Candle engine — OHLC + volume, live last bar ---------------- */
+
+const TF_MS = { '1m': 60e3, '5m': 3e5, '15m': 9e5, '1H': 36e5, '1D': 864e5 };
+
+function ensureCandles(a, sym) {
+  if (a.cd && a.cdTf === term.tf) return;
+  let s = hashName(sym + term.tf) || 1;
+  const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+  const arr = [];
+  let prev = 100;
+  for (let i = 0; i < 80; i++) {
+    const o = prev;
+    const c = o * (1 + (rnd() - 0.5) * 0.022);
+    arr.push({
+      o, c,
+      h: Math.max(o, c) * (1 + rnd() * 0.008),
+      l: Math.min(o, c) * (1 - rnd() * 0.008),
+      v: Math.abs(c - o) * 3 + rnd(),
+    });
+    prev = c;
+  }
+  const k = a.px / arr[79].c;
+  arr.forEach(cd => { cd.o *= k; cd.h *= k; cd.l *= k; cd.c *= k; });
+  a.cd = arr; a.cdTf = term.tf; a.cdTicks = 0;
+}
+
+function tickCandles(a) {
+  if (!a.cd) return;
+  const last = a.cd[a.cd.length - 1];
+  last.c = a.px;
+  last.h = Math.max(last.h, a.px);
+  last.l = Math.min(last.l, a.px);
+  last.v += Math.abs(a.px - last.o) * 0.4 + 0.05;
+  if (++a.cdTicks >= 6) {
+    a.cdTicks = 0;
+    a.cd.push({ o: last.c, c: last.c, h: last.c, l: last.c, v: 0.05 });
+    if (a.cd.length > 84) a.cd.shift();
+  }
+}
+
+function drawCandleChart() {
+  const box = document.getElementById('termChart');
+  if (!box) return;
+  const a = INSTR[term.asset];
+  ensureCandles(a, term.asset);
+  const cd = a.cd, n = cd.length;
+  const W = 920, H = 330, AXIS = 62, VOLH = 44, GAP2 = 8;
+  const PH = H - VOLH - GAP2;
+  const plotW = W - AXIS;
+  const min = Math.min(...cd.map(k => k.l)), max = Math.max(...cd.map(k => k.h));
+  const pad = (max - min) * 0.08 || 1;
+  const lo = min - pad, hi = max + pad, rng = hi - lo;
+  const maxV = Math.max(...cd.map(k => k.v));
+  const slot = plotW / n, bw = slot * 0.62;
+  const X = i => i * slot + slot / 2;
+  const Y = v => (1 - (v - lo) / rng) * PH;
+  const dp = a.dp;
+  const fmtN = v => v.toLocaleString('en-GB', { maximumFractionDigits: dp, minimumFractionDigits: dp });
+  const GREEN = '#10b981', RED = '#e5484d';
+  let out = '';
+  /* grid + right axis */
+  for (let g = 0; g <= 4; g++) {
+    const v = lo + rng * g / 4, y = Y(v).toFixed(1);
+    out += `<line x1="0" x2="${plotW}" y1="${y}" y2="${y}" stroke="currentColor" opacity=".06"/>`
+      + `<text x="${W - 4}" y="${+y + 3}" text-anchor="end" fill="currentColor" opacity=".38" font-size="9.5" font-family="ui-monospace,Menlo,monospace">${fmtN(v)}</text>`;
+  }
+  /* last-close guide */
+  const lastUp = cd[n - 1].c >= cd[n - 1].o;
+  out += `<line x1="0" x2="${plotW}" y1="${Y(cd[n - 1].c).toFixed(1)}" y2="${Y(cd[n - 1].c).toFixed(1)}" stroke="${lastUp ? GREEN : RED}" stroke-opacity=".45" stroke-dasharray="2 4"/>`;
+  /* position lines — entry, stop, target */
+  const pos = term.pos;
+  if (pos && pos.sym === term.asset) {
+    const stopPct = (TMODES[pos.mode] || TMODES[term.mode]).stop;
+    const up = pos.dir === 'up';
+    const stopPx = pos.be ? pos.entry : pos.entry * (up ? 1 - stopPct : 1 + stopPct);
+    const tgtPx = pos.entry * (up ? 1 + stopPct * pos.rr : 1 - stopPct * pos.rr);
+    const ln = (v, col, lbl) => {
+      if (v < lo || v > hi) return '';
+      return `<line x1="0" x2="${plotW}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" stroke="${col}" stroke-opacity=".75" stroke-dasharray="5 4"/>`
+        + `<text x="6" y="${(Y(v) - 4).toFixed(1)}" fill="${col}" font-size="8.5" font-family="ui-monospace,Menlo,monospace" letter-spacing=".08em">${lbl} ${fmtN(v)}</text>`;
+    };
+    out += ln(pos.entry, 'color-mix(in srgb, currentColor 65%, transparent)', up ? 'LONG ENTRY' : 'SHORT ENTRY');
+    out += ln(stopPx, RED, pos.be ? 'STOP · BREAKEVEN' : 'STOP');
+    out += ln(tgtPx, GREEN, 'TARGET');
+  }
+  /* candles */
+  const hov = term.cHover;
+  cd.forEach((k, i) => {
+    const col = k.c >= k.o ? GREEN : RED;
+    const top = Y(Math.max(k.o, k.c)), bot = Y(Math.min(k.o, k.c));
+    const dim = hov != null && hov !== i ? ' opacity=".45"' : '';
+    out += `<g${dim}><line x1="${X(i).toFixed(1)}" x2="${X(i).toFixed(1)}" y1="${Y(k.h).toFixed(1)}" y2="${Y(k.l).toFixed(1)}" stroke="${col}"/>`
+      + `<rect x="${(X(i) - bw / 2).toFixed(1)}" y="${top.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(1, bot - top).toFixed(1)}" fill="${col}"/></g>`;
+  });
+  /* volume strip */
+  cd.forEach((k, i) => {
+    const vh = (k.v / maxV) * VOLH;
+    out += `<rect x="${(X(i) - bw / 2).toFixed(1)}" y="${(PH + GAP2 + VOLH - vh).toFixed(1)}" width="${bw.toFixed(1)}" height="${vh.toFixed(1)}" fill="${k.c >= k.o ? GREEN : RED}" fill-opacity="${hov != null && hov !== i ? '.25' : '.55'}"/>`;
+  });
+  /* crosshair */
+  if (hov != null) out += `<line x1="${X(hov).toFixed(1)}" x2="${X(hov).toFixed(1)}" y1="0" y2="${H}" stroke="currentColor" opacity=".28" stroke-dasharray="3 3"/>`;
+  box.querySelector('svg').innerHTML = out;
+  /* crosshair tooltip */
+  const tip = document.getElementById('ccTip');
+  if (tip) {
+    if (hov == null) tip.classList.remove('on');
+    else {
+      const k = cd[hov];
+      const t = new Date(Date.now() - (n - 1 - hov) * (TF_MS[term.tf] || 3e5));
+      const chg = (k.c - k.o) / k.o * 100;
+      tip.innerHTML = `<div class="cct-t mono">${t.toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}</div>`
+        + [['O', k.o], ['H', k.h], ['L', k.l], ['C', k.c]].map(([l2, v]) =>
+          `<div class="cct-r"><span class="mono">${l2}</span><b>${fmtN(v)}</b></div>`).join('')
+        + `<div class="cct-r"><span class="mono">CHG</span><b class="${chg >= 0 ? 'up' : 'down'}">${fmtRet(chg)}</b></div>`;
+      const r = box.getBoundingClientRect();
+      const px = X(hov) / W * r.width;
+      tip.style.left = (px > r.width * 0.55 ? px - tip.offsetWidth - 14 : px + 14) + 'px';
+      tip.classList.add('on');
+    }
+  }
+}
+
+function bindTermChart() {
+  const box = document.getElementById('termChart');
+  if (!box) return;
+  box.addEventListener('pointermove', e => {
+    const r = box.getBoundingClientRect();
+    const a = INSTR[term.asset];
+    if (!a.cd) return;
+    const i = Math.floor((e.clientX - r.left) / r.width * a.cd.length);
+    term.cHover = Math.max(0, Math.min(a.cd.length - 1, i));
+    drawCandleChart();
+  });
+  box.addEventListener('pointerleave', () => { term.cHover = null; drawCandleChart(); });
+}
+
 function drawSeries(canvas, series, opts = {}) {
   if (!canvas) return;
   const dpr = window.devicePixelRatio || 1;
@@ -3324,8 +3510,9 @@ function renderTerminal() {
     `<span class="hist-pill ${h.pnl >= 0 ? 'up' : 'down'}">${h.pnl >= 0 ? '+' : '−'}${gbp(h.pnl)}</span>`).join('');
 
   viewEl('terminal').innerHTML = `
-    <div class="chip-row" style="margin-bottom:16px">${ACCTS.map((ac, i) => `
-      <button class="pill-btn${i === term.acct ? ' on' : ''}" data-tacct="${i}">${ac.id}<small>${ac.label} · £${Math.round(i === term.acct ? term.bal : ac.bal).toLocaleString('en-GB')}</small></button>`).join('')}
+    <div class="acct-toggle" role="tablist" aria-label="Trading account">
+      <span class="at-thumb" style="transform:translateX(${term.acct * 100}%)"></span>
+      ${ACCTS.map((ac, i) => `<button role="tab" aria-selected="${i === term.acct}" class="${i === term.acct ? 'on' : ''}" data-tacct="${i}"><b>${ac.id}</b><small>${ac.label} · £${Math.round(i === term.acct ? term.bal : ac.bal).toLocaleString('en-GB')}</small></button>`).join('')}
     </div>
     <div class="tile-row">
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#34d399,#10b981)">£</span>
@@ -3346,7 +3533,7 @@ function renderTerminal() {
             <div class="chart-chg odo ${chg >= 0 ? 'up' : 'down'}" id="bigChg" data-odo="${fmtRet(chg)}">${odoInner(fmtRet(chg))}</div></div>
         </div>
         <div class="tf-row">${tfs}</div>
-        <canvas class="chart" id="termChart"></canvas>
+        <div class="cchart" id="termChart"><svg viewBox="0 0 920 330" preserveAspectRatio="none"></svg><div class="cc-tip" id="ccTip"></div></div>
       </div>
       <div class="ticket">
         <div><div class="t-label mono"><span>STYLE</span><span>stop ±${(TMODES[term.mode].stop * 100).toFixed(2)}%</span></div>
@@ -3372,7 +3559,8 @@ function renderTerminal() {
         <tbody>${tradeLog.length ? tradeLog.map(tradeRow).join('') : '<tr><td colspan="8" style="text-align:center;color:var(--text-faint);padding:26px">No fills yet — take your first trade above.</td></tr>'}</tbody>
       </table></div></div>
     </div>`;
-  drawSeries(document.getElementById('termChart'), a.series);
+  drawCandleChart();
+  bindTermChart();
 }
 
 function tickPrices() {
@@ -3403,7 +3591,8 @@ function tickPrices() {
     setOdo(bigChg, fmtRet(chg));
     bigChg.className = 'chart-chg odo ' + (chg >= 0 ? 'up' : 'down');
   }
-  drawSeries(document.getElementById('termChart'), a.series);
+  tickCandles(a);
+  drawCandleChart();
   if (term.pos) updatePos();
 }
 
@@ -3921,12 +4110,12 @@ setInterval(() => {
 const AV_TINTS = ['linear-gradient(135deg,#fcd9a0,#e8935a)', 'linear-gradient(135deg,#c9d4e2,#8fa3bd)', 'linear-gradient(135deg,#d9c2ef,#a184c8)', 'linear-gradient(135deg,#a7f3d0,#34d399)', 'linear-gradient(135deg,#fecaca,#f87171)', 'linear-gradient(135deg,#bfdbfe,#60a5fa)'];
 
 const threads = [
-  { name: 'Theo4', av: 'T', tint: AV_TINTS[0], unread: true, msgs: [['them', 'That NAS100 fade printed beautifully'], ['me', 'Called it off the breadth divergence — third time this month'], ['them', 'Teach me your ways. You entering the Q3 Championship?']] },
-  { name: 'swisstony', av: 'S', tint: AV_TINTS[2], unread: true, msgs: [['them', 'Arena battle, £5k pot, 1 week window. You in?'], ['me', 'Terms?'], ['them', 'Any market, higher return takes the pot. Escrowed.']] },
-  { name: 'Fredi9999', av: 'F', tint: AV_TINTS[1], unread: false, msgs: [['them', 'gg on the sprint yesterday'], ['me', 'You had me until the last hour']] },
-  { name: 'mintblade', av: 'M', tint: AV_TINTS[3], unread: false, msgs: [['them', 'Sharing my gold thesis in Ideas — would love your take']] },
-  { name: 'kch123', av: 'K', tint: AV_TINTS[4], unread: false, msgs: [['them', 'How do you size into scalps without blowing daily DD?'], ['me', '1% risk, 1:2 minimum, never add to losers.']] },
-  { name: 'RN1', av: 'R', tint: AV_TINTS[5], unread: false, msgs: [['them', 'World Series grind starts Monday. Good luck out there']] }
+  { name: 'Theo4', av: '👨‍💻', tint: AV_TINTS[0], unread: true, msgs: [['them', 'That NAS100 fade printed beautifully'], ['me', 'Called it off the breadth divergence — third time this month'], ['them', 'Teach me your ways. You entering the Q3 Championship?']] },
+  { name: 'swisstony', av: '👨‍💼', tint: AV_TINTS[2], unread: true, msgs: [['them', 'Arena battle, £5k pot, 1 week window. You in?'], ['me', 'Terms?'], ['them', 'Any market, higher return takes the pot. Escrowed.']] },
+  { name: 'Fredi9999', av: '👩‍💻', tint: AV_TINTS[1], unread: false, msgs: [['them', 'gg on the sprint yesterday'], ['me', 'You had me until the last hour']] },
+  { name: 'mintblade', av: '👨‍🦰', tint: AV_TINTS[3], unread: false, msgs: [['them', 'Sharing my gold thesis in Ideas — would love your take']] },
+  { name: 'kch123', av: '👨‍🦱', tint: AV_TINTS[4], unread: false, msgs: [['them', 'How do you size into scalps without blowing daily DD?'], ['me', '1% risk, 1:2 minimum, never add to losers.']] },
+  { name: 'RN1', av: '👩‍💻', tint: AV_TINTS[5], unread: false, msgs: [['them', 'World Series grind starts Monday. Good luck out there']] }
 ];
 
 let activeThread = 0;
@@ -3954,43 +4143,43 @@ function mediaChartSVG(win, seed) {
 }
 
 const POSTS = [
-  { name: 'GRIMDRIP', handle: '@grimdrip', av: 'G', tint: AV_TINTS[4], time: '14m', type: 'thought',
+  { name: 'GRIMDRIP', handle: '@grimdrip', av: '👱‍♀️', tint: AV_TINTS[4], time: '14m', type: 'thought',
     text: 'sizing down into the data, no heroes today',
     replies: 223, reposts: 110, likes: 1500, views: '15.6K', liked: false, reposted: false },
-  { name: 'delta_dora', handle: '@delta_dora', av: 'D', tint: AV_TINTS[3], time: '5m', type: 'media',
+  { name: 'delta_dora', handle: '@delta_dora', av: '👩‍🦱', tint: AV_TINTS[3], time: '5m', type: 'media',
     text: 'posting this before someone says i made it up',
     media: { win: false, ret: '-17.4%', video: false, seed: 1337 },
     replies: 204, reposts: 74, likes: 280, views: '31.6K', liked: false, reposted: false },
-  { name: 'Fredi9999', handle: '@fredi9999', av: 'F', tint: AV_TINTS[1], time: '9m', type: 'battle-live',
+  { name: 'Fredi9999', handle: '@fredi9999', av: '👩‍💻', tint: AV_TINTS[1], time: '9m', type: 'battle-live',
     text: 'this one is close',
-    battle: { a: 'Fredi9999', aAv: 'F', aTint: AV_TINTS[1], ra: 4.5, b: 'goldenboy', bAv: 'G', bTint: AV_TINTS[0], rb: 2.7, window: '1 week', pot: '£20.0K' },
+    battle: { a: 'Fredi9999', aAv: '👩‍💻', aTint: AV_TINTS[1], ra: 4.5, b: 'goldenboy', bAv: '👩‍🦱', bTint: AV_TINTS[0], rb: 2.7, window: '1 week', pot: '£20.0K' },
     replies: 133, reposts: 15, likes: 1400, views: '48.7K', liked: false, reposted: false },
-  { name: 'frostrizz', handle: '@frostrizz', av: 'F', tint: AV_TINTS[5], time: '28m', type: 'result',
+  { name: 'frostrizz', handle: '@frostrizz', av: '🧑‍💼', tint: AV_TINTS[5], time: '28m', type: 'result',
     text: 'Ran it back on zxgngl, won comfortably.',
-    result: { opp: 'zxgngl', oppAv: 'Z', oppTint: AV_TINTS[2], ret: '+1.61%', pot: '£1.00M' },
+    result: { opp: 'zxgngl', oppAv: '👩‍🦱', oppTint: AV_TINTS[2], ret: '+1.61%', pot: '£1.00M' },
     replies: 200, reposts: 109, likes: 1700, views: '51.1K', liked: false, reposted: false },
-  { name: '0xmaverick', handle: '@0xmaverick', av: 'X', tint: AV_TINTS[0], time: '2h', type: 'idea',
+  { name: '0xmaverick', handle: '@0xmaverick', av: '👩‍🦰', tint: AV_TINTS[0], time: '2h', type: 'idea',
     text: 'eyeing this setup',
     idea: { sym: 'XAU/USD', tag: 'Range', lean: 'Buy', pc: 50, title: 'Gold range compresses under $3,400',
       thesis: 'Gold has coiled into a tight range under resistance while real yields drift lower. Compression like this usually resolves with the macro wind — and the wind is at gold’s back.',
       runners: '840', lens: 'Technical' },
     replies: 96, reposts: 44, likes: 620, views: '27K', liked: false, reposted: false },
-  { name: 'swisstony', handle: '@swisstony', av: 'S', tint: AV_TINTS[2], time: '3h', type: 'battle-open',
+  { name: 'swisstony', handle: '@swisstony', av: '👨‍💼', tint: AV_TINTS[2], time: '3h', type: 'battle-open',
     text: 'Who wants this smoke? Terms are set, seat is open.',
     open: { window: '1 week', pot: '£4.0K' },
     replies: 57, reposts: 21, likes: 410, views: '18K', liked: false, reposted: false },
-  { name: 'mintblade', handle: '@mintblade', av: 'M', tint: AV_TINTS[3], time: '5h', type: 'finish',
+  { name: 'mintblade', handle: '@mintblade', av: '👨‍🦰', tint: AV_TINTS[3], time: '5h', type: 'finish',
     text: 'Locked it in on the last day.',
     finish: { rank: 3, tour: 'Q3 Championship', prize: '£33.7K' },
     replies: 41, reposts: 18, likes: 530, views: '21K', liked: false, reposted: false },
-  { name: 'quantqueen', handle: '@quantqueen', av: 'Q', tint: AV_TINTS[3], time: '6h', type: 'media',
+  { name: 'quantqueen', handle: '@quantqueen', av: '🧑‍🦱', tint: AV_TINTS[3], time: '6h', type: 'media',
     text: 'model output vs my execution. same chart.',
     media: { win: true, ret: '+6.2%', video: true, dur: '0:28', seed: 4242 },
     replies: 27, reposts: 58, likes: 441, views: '19K', liked: false, reposted: false },
-  { name: 'Theo4', handle: '@theo4', av: 'T', tint: AV_TINTS[0], time: '7h', type: 'thought', tag: 'NAS100',
+  { name: 'Theo4', handle: '@theo4', av: '👨‍💻', tint: AV_TINTS[0], time: '7h', type: 'thought', tag: 'NAS100',
     text: 'NAS100 breadth divergence played out exactly as scripted. Third fade this month off the same setup — the market keeps paying the patient.',
     replies: 48, reposts: 112, likes: 894, views: '41K', liked: false, reposted: false },
-  { name: 'fishalive', handle: '@fishalive', av: 'F', tint: AV_TINTS[0], time: '9h', type: 'thought',
+  { name: 'fishalive', handle: '@fishalive', av: '👨‍💼', tint: AV_TINTS[0], time: '9h', type: 'thought',
     text: 'Win streak at 4. Not saying I’m him, but I’m also not not saying it',
     replies: 88, reposts: 61, likes: 1300, views: '52K', liked: false, reposted: false }
 ];
@@ -4018,9 +4207,9 @@ function fdEmbed(p) {
     const lead = Math.max(8, Math.min(92, 50 + (b.ra - b.rb) * 9));
     return `<div class="fd-embed">
       <div class="fd-bt-row">
-        <span class="fd-bt-f"><span class="thread-av" style="background:${b.aTint}">${b.aAv}</span>${b.a}<span class="fd-bt-ret up">+${b.ra}%</span></span>
+        <span class="fd-bt-f">${avatarHTML(b.a, 'thread-av')}${b.a}<span class="fd-bt-ret up">+${b.ra}%</span></span>
         <span class="fd-bt-vs">VS</span>
-        <span class="fd-bt-f"><span class="thread-av" style="background:${b.bTint}">${b.bAv}</span>${b.b}<span class="fd-bt-ret up">+${b.rb}%</span></span>
+        <span class="fd-bt-f">${avatarHTML(b.b, 'thread-av')}${b.b}<span class="fd-bt-ret up">+${b.rb}%</span></span>
       </div>
       <div class="fd-leadbar"><span style="width:${lead.toFixed(0)}%"></span></div>
       <div class="fd-bt-foot"><span class="fd-bt-meta"><span class="pulse-dot tiny"></span>LIVE · ${b.window} · ${b.pot} pot</span>
@@ -4030,7 +4219,7 @@ function fdEmbed(p) {
   if (p.open) {
     return `<div class="fd-embed">
       <div class="fd-bt-row">
-        <span class="fd-bt-f"><span class="thread-av" style="background:${p.tint}">${p.av}</span>${p.name}</span>
+        <span class="fd-bt-f">${avatarHTML(p.name, 'thread-av')}${p.name}</span>
         <span class="fd-bt-vs">VS</span>
         <span class="fd-bt-f"><span class="fd-bt-av-ghost">?</span><span class="fd-dim">open seat</span></span>
       </div>
@@ -4042,9 +4231,9 @@ function fdEmbed(p) {
     const r = p.result;
     return `<div class="fd-embed">
       <div class="fd-bt-row">
-        <span class="fd-bt-f"><span class="thread-av" style="background:${p.tint}">${p.av}</span>${p.name}<span class="fd-won-tag">WON</span></span>
+        <span class="fd-bt-f">${avatarHTML(p.name, 'thread-av')}${p.name}<span class="fd-won-tag">WON</span></span>
         <span class="fd-bt-vs">beat</span>
-        <span class="fd-bt-f"><span class="thread-av" style="background:${r.oppTint}">${r.oppAv}</span><span class="fd-dim">${r.opp}</span></span>
+        <span class="fd-bt-f">${avatarHTML(r.opp, 'thread-av')}<span class="fd-dim">${r.opp}</span></span>
       </div>
       <div class="fd-bt-foot"><span class="fd-rs-ret">▲ ${r.ret}</span><span class="fd-bt-meta">${r.pot} pot</span></div>
     </div>`;
@@ -4074,7 +4263,7 @@ function postCard(p) {
   const tag = fdEmbed(p);
   return `
   <article class="post">
-    <span class="thread-av" data-trader="${p.name}" style="background:${p.tint};cursor:pointer">${p.av}</span>
+    ${avatarHTML(p.name, 'thread-av', `data-trader="${p.name}"`, 'cursor:pointer')}
     <div class="post-body">
       <div class="post-head">
         <span class="post-name">${p.name}</span>${VERIFIED.has(p.name) ? BADGE : ''}
@@ -4106,7 +4295,7 @@ function postCard(p) {
 }
 
 const FD_TYPES = { battles: ['battle-live', 'battle-open'], ideas: ['idea'], results: ['result', 'finish'] };
-const WTF = [['Theo4', 'T', '70% win · 13.7K followers'], ['Fredi9999', 'F', '57% win · 60.8K followers'], ['swisstony', 'S', '62% win · 12.1K followers'], ['kch123', 'K', '59% win · 33.9K followers']];
+const WTF = [['Theo4', '👨‍💻', '70% win · 13.7K followers'], ['Fredi9999', '👩‍💻', '57% win · 60.8K followers'], ['swisstony', '👨‍💼', '62% win · 12.1K followers'], ['kch123', '👨‍🦱', '59% win · 33.9K followers']];
 const TRENDS = [
   ['Trending in markets', 'Gold · XAU/USD', '12.4K posts'],
   ['Live now', 'Non-Farm Payrolls', '8,120 posts'],
@@ -4119,7 +4308,7 @@ function feedRail() {
   const trends = TRENDS.map(([c, t, n], i) =>
     `<div class="fr-trend" data-trend="${i}"><div class="fr-tcat">${c}</div><div class="fr-tt">${t}</div><div class="fr-tn">${n}</div></div>`).join('');
   const wtf = WTF.map(([n, e, sub], i) => `
-    <div class="fr-wtf" data-trader="${n}" style="cursor:pointer"><span class="thread-av" style="background:${AV_TINTS[i % 6]}">${e}</span>
+    <div class="fr-wtf" data-trader="${n}" style="cursor:pointer">${avatarHTML(n, 'thread-av')}
       <div class="fr-wm"><div class="fr-wn">${n}${BADGE}</div><div class="fr-wh">${sub}</div></div>
       <button class="fr-follow${following.has(n) ? ' on' : ''}" data-follow="${n}">${following.has(n) ? 'Following' : 'Follow'}</button>
     </div>`).join('');
@@ -4151,11 +4340,11 @@ function renderFeed() {
   </div>`;
 }
 
-const CONTACTS = [['Theo4', 'T', 'Rank #1 · 2026 WS champion'], ['Fredi9999', 'F', 'Rank #2 · momentum'], ['swisstony', 'S', 'Rank #3 · macro'], ['kch123', 'K', 'Rank #4 · scalper'], ['RN1', 'R', 'Rank #5 · swing'], ['mintblade', 'M', 'Rank #6 · gold bug'], ['fishalive', 'F', 'Rank #7 · quant'], ['frostrizz', 'F', 'Rank #8 · FX']];
+const CONTACTS = [['Theo4', '👨‍💻', 'Rank #1 · 2026 WS champion'], ['Fredi9999', '👩‍💻', 'Rank #2 · momentum'], ['swisstony', '👨‍💼', 'Rank #3 · macro'], ['kch123', '👨‍🦱', 'Rank #4 · scalper'], ['RN1', '👩‍💻', 'Rank #5 · swing'], ['mintblade', '👨‍🦰', 'Rank #6 · gold bug'], ['fishalive', '👨‍💼', 'Rank #7 · quant'], ['frostrizz', '🧑‍💼', 'Rank #8 · FX']];
 
 const invites = [
-  { t: 'Q3 Championship — team invite', s: 'Theo4 invited you to join squad "Alpha Decay" · 33,680 already in', from: 'P' },
-  { t: 'Arena battle challenge', s: 'swisstony challenged you · £5,000 pot · 1 week window · any market', from: 'P' }
+  { t: 'Q3 Championship — team invite', s: 'Theo4 invited you to join squad "Alpha Decay" · 33,680 already in', from: '👩‍💻' },
+  { t: 'Arena battle challenge', s: 'swisstony challenged you · £5,000 pot · 1 week window · any market', from: '👩‍💻' }
 ];
 
 function renderSocial() {
@@ -4185,14 +4374,14 @@ function renderInbox() {
     body = `<div class="split">
       <div class="thread-list">${threads.map((th, i) => `
         <button class="thread${i === activeThread ? ' on' : ''}" data-thread="${i}">
-          <span class="thread-av" style="background:${th.tint}">${th.av}</span>
+          ${avatarHTML(th.name, 'thread-av')}
           <span class="thread-tx"><span class="thread-name">${th.name}</span>
             <span class="thread-last">${th.msgs[th.msgs.length - 1][1]}</span></span>
           ${th.unread ? '<span class="thread-dot"></span>' : ''}
         </button>`).join('')}</div>
       <div class="chat-panel">
         <div class="pos-head" style="margin-bottom:12px"><span style="display:flex;align-items:center;gap:10px">
-          <span class="thread-av" style="background:${t.tint};width:34px;height:34px;font-size:16px">${t.av}</span>${t.name}</span>
+          ${avatarHTML(t.name, 'thread-av', '', 'width:34px;height:34px;font-size:16px')}${t.name}</span>
           <span class="live-tag"><span class="pulse-dot tiny"></span><span class="mono">ONLINE</span></span></div>
         <div class="chat-scroll" id="chatScroll">${t.msgs.map(([who, tx]) => `<div class="bubble ${who}">${tx}</div>`).join('')}</div>
         <div class="chat-inrow">
@@ -4208,10 +4397,10 @@ function renderInbox() {
 }
 
 const STREAM_POOL = [
-  { name: 'delta_dan', handle: '@delta_dan', av: 'D', tint: AV_TINTS[5], tag: 'ETH', text: 'ETH exchange balances just printed another 5-year low. Supply squeeze thesis intact.' },
-  { name: 'wickwizard', handle: '@wickwizard', av: 'W', tint: AV_TINTS[3], tag: 'NAS100', text: 'That 15m wick says everything. Someone big just got stopped out — I’m taking the other side.' },
-  { name: 'gilt_guy', handle: '@gilt_guy', av: 'G', tint: AV_TINTS[1], tag: 'GBPJPY', text: 'Front end repricing after the wage print. GBPJPY carry math just changed.' },
-  { name: 'trendtina', handle: '@trendtina', av: 'T', tint: AV_TINTS[4], tag: null, text: 'Weekly Open pool just crossed £62K. 2,500 in. The board is wide open this week.' }
+  { name: 'delta_dan', handle: '@delta_dan', av: '👩‍🦱', tint: AV_TINTS[5], tag: 'ETH', text: 'ETH exchange balances just printed another 5-year low. Supply squeeze thesis intact.' },
+  { name: 'wickwizard', handle: '@wickwizard', av: '👩‍💻', tint: AV_TINTS[3], tag: 'NAS100', text: 'That 15m wick says everything. Someone big just got stopped out — I’m taking the other side.' },
+  { name: 'gilt_guy', handle: '@gilt_guy', av: '🧑‍💼', tint: AV_TINTS[1], tag: 'GBPJPY', text: 'Front end repricing after the wage print. GBPJPY carry math just changed.' },
+  { name: 'trendtina', handle: '@trendtina', av: '👨‍💻', tint: AV_TINTS[4], tag: null, text: 'Weekly Open pool just crossed £62K. 2,500 in. The board is wide open this week.' }
 ];
 
 setInterval(() => {
@@ -4448,7 +4637,7 @@ function profilePost(name, av, tint, text, ago, likes, views) {
   </article>`;
 }
 
-const TRADER_AV = { Theo4: 'T', Fredi9999: 'F', swisstony: 'S', mintblade: 'M', kch123: 'K', RN1: 'R', fishalive: 'F', frostrizz: 'F', GRIMDRIP: 'G', nattyG: 'N', quantqueen: 'Q', '0xmaverick': 'X', delta_dan: 'D', macro_mia: 'M', wickwizard: 'W', fadefather: 'F', pip_titan: 'P', vol_king: 'V', goldenboy: 'G', delta_dora: 'D', Rudy: 'R', 'Sander Schouten': 'S', 'Dion Trades': 'D' };
+const TRADER_AV = { Theo4: '👨‍💻', Fredi9999: '👩‍💻', swisstony: '👨‍💼', mintblade: '👨‍🦰', kch123: '👨‍🦱', RN1: '👩‍💻', fishalive: '👨‍💼', frostrizz: '🧑‍💼', GRIMDRIP: '👱‍♀️', nattyG: '🧔', quantqueen: '🧑‍🦱', '0xmaverick': '👩‍🦰', delta_dan: '👩‍🦱', macro_mia: '👨‍🦰', wickwizard: '👩‍💻', fadefather: '👩‍💻', pip_titan: '👨‍💼', vol_king: '🧔', goldenboy: '👩‍🦱', delta_dora: '👩‍🦱', Rudy: '👱‍♂️', 'Sander Schouten': '👱‍♂️', 'Dion Trades': '👨‍🦰' };
 const TRADER_BIOS = ['Swing trader. Process over outcome.', 'Momentum & breakouts. Risk first, always.', 'FX by day, crypto by night.', 'Mean reversion is my love language.', 'Macro-driven. Patient. Ruthless on entries.', 'Scalper — in and out before you blink.', 'Index futures specialist.', 'Here to win comps, not to gamble.'];
 
 function hashName(s) {
@@ -4699,7 +4888,7 @@ function renderTrader() {
         </div>
         <div class="tpc-body">
           <div class="tpc-avrow">
-            <span class="tpc-avatar" style="background:${d.tint}">${own && myProfile.avatar ? `<img src="${myProfile.avatar}" alt="">` : own ? (myProfile.name[0] || 'J').toUpperCase() : d.av}</span>
+            <span class="tpc-avatar pav" style="background:${d.tint}">${own && myProfile.avatar ? `<img src="${myProfile.avatar}" alt="">` : own ? (myProfile.name[0] || 'J').toUpperCase() : `<b class="pav-fb">${face(d.name)}</b><img src="https://i.pravatar.cc/200?u=pk-${encodeURIComponent(d.name)}" alt="" onerror="this.remove()">`}</span>
             <span class="tpc-actions">
               ${own ? `<button class="btn-neu" style="padding:8px 16px;font-size:12.5px" data-editprof>Edit profile</button>` : `
               <button class="fr-follow${following.has(d.name) ? ' on' : ''}" data-follow="${d.name}">${following.has(d.name) ? 'Following' : 'Follow'}</button>
@@ -4783,6 +4972,15 @@ function traderPositionsHTML(d) {
 const FLAG_OVERRIDES = { Rudy: 'us', 'Sander Schouten': 'es', 'Dion Trades': 'it', jstone: 'gb', Theo4: 'us', swisstony: 'ch', Fredi9999: 'us', GRIMDRIP: 'de', nattyG: 'au', quantqueen: 'sg', '0xmaverick': 'us', mintblade: 'jp', kch123: 'de', RN1: 'ca', fishalive: 'gb', frostrizz: 'se', pip_titan: 'br', vol_king: 'fr', macro_mia: 'it', delta_dan: 'nl', wickwizard: 'gb', fadefather: 'us' };
 const FLAG_POOL = ['us', 'gb', 'de', 'fr', 'es', 'it', 'nl', 'se', 'ch', 'ca', 'br', 'mx', 'ar', 'jp', 'sg', 'au', 'in', 'kr'];
 const traderFlag = n => FLAG_OVERRIDES[n] || FLAG_POOL[hashName(n + 'geo') % FLAG_POOL.length];
+
+/* character faces — a real person behind every name; photo layers in when the network allows */
+const FACES = ['🧑‍💼', '👩‍💼', '👨‍💼', '🧔', '👨‍🦱', '👩‍🦰', '🧑‍🦱', '👩‍🦱', '👨‍🦰', '👱‍♂️', '👱‍♀️', '👨‍💻', '👩‍💻', '🧑‍💻'];
+const face = n => FACES[hashName(n + 'face') % FACES.length];
+
+function avatarHTML(name, cls, attrs = '', styl = '') {
+  const t = AV_TINTS[hashName(name) % AV_TINTS.length];
+  return `<span class="${cls} pav" style="background:${t};${styl}" ${attrs}><b class="pav-fb">${face(name)}</b><img src="https://i.pravatar.cc/120?u=pk-${encodeURIComponent(name)}" alt="" loading="lazy" onerror="this.remove()"></span>`;
+}
 
 /* ---------------- Your profile — editable, stored locally ---------------- */
 
@@ -4889,9 +5087,7 @@ function renderInvite() {
       <div class="inv-chips">${chips(INV_ODDS, inv.odds, 'invodds', v => v + ':1')}</div></div>
     <div class="inv-row"><div class="b-label mono">TIME&nbsp;—&nbsp;KICK-OFF</div>
       <div class="inv-chips">${chips(INV_STARTS, inv.start, 'invstart')}</div></div>
-    <div class="inv-row"><div class="b-label mono">PLACE&nbsp;—&nbsp;THE&nbsp;MARKET</div>
-      <div class="inv-chips">${chips(INV_MARKETS, inv.market, 'invmarket')}</div></div>
-    <div class="inv-sum">You put up <b>£${inv.stake.toLocaleString('en-GB')}</b> · ${inv.to} puts up <b>£${(inv.stake * inv.odds).toLocaleString('en-GB')}</b> · pot <b>£${(inv.stake * (1 + inv.odds)).toLocaleString('en-GB')}</b> · ${inv.market} · kick-off <b>${inv.start}</b></div>
+    <div class="inv-sum">You put up <b>£${inv.stake.toLocaleString('en-GB')}</b> · ${inv.to} puts up <b>£${(inv.stake * inv.odds).toLocaleString('en-GB')}</b> · pot <b>£${(inv.stake * (1 + inv.odds)).toLocaleString('en-GB')}</b> · all markets · kick-off <b>${inv.start}</b></div>
     <div class="pk-actions">
       <button class="btn-primary" style="flex:1;justify-content:center" data-invsend>Send duel invite</button>
       <button class="btn-neu" data-invclose>Cancel</button>
@@ -4947,7 +5143,7 @@ function renderLbPage() {
     const rank = lbPage * per + i + 1;
     return `<tr class="${r.you ? 'lb-me' : ''}" data-trader="${r.name}" style="cursor:pointer">
       <td class="col-rank mono rank-num">${String(rank).padStart(2, '0')}</td>
-      <td><span class="fame-player"><span class="fame-avatar">${r.name.charAt(0).toUpperCase()}</span>
+      <td><span class="fame-player">${avatarHTML(r.name.replace(' · you', ''), 'fame-avatar')}
         <span class="fame-name">${r.name.replace('· you', '<span class="row-you">· you</span>')} ${flagHTML(traderFlag(r.name.replace(' · you', '')), 'xs')}</span></span></td>
       <td class="col-pool">£25</td>
       <td style="text-align:right"><b class="mono-num">£${r.value.toLocaleString('en-GB')}</b></td>
@@ -4982,10 +5178,10 @@ function renderLbPage() {
 /* ---------------- Arena ---------------- */
 
 const BATTLES = [
-  ['Theo4', 'T', 'swisstony', 'S', 1000000, '9.9K'],
-  ['Fredi9999', 'F', 'mintblade', 'M', 100000, '4.4K'],
-  ['GRIMDRIP', 'G', 'nattyG', 'N', 20000, '3.7K'],
-  ['pip_titan', 'P', 'vol_king', 'V', 4000, '747']
+  ['Theo4', '👨‍💻', 'swisstony', '👨‍💼', 1000000, '9.9K'],
+  ['Fredi9999', '👩‍💻', 'mintblade', '👨‍🦰', 100000, '4.4K'],
+  ['GRIMDRIP', '👱‍♀️', 'nattyG', '🧔', 20000, '3.7K'],
+  ['pip_titan', '👨‍💼', 'vol_king', '🧔', 4000, '747']
 ];
 
 const arenaB = {
@@ -5049,12 +5245,12 @@ function payoffHTML() {
 }
 
 let challenges = [
-  { name: '0xmaverick', av: 'X', market: 'Any market', window: '1 week', pot: 5000, odds: 1, mine: false },
-  { name: 'delta_dan', av: 'D', market: 'Crypto only', window: '48 hours', pot: 2500, odds: 2, mine: false },
-  { name: 'macro_mia', av: 'M', market: 'FX majors', window: '1 month', pot: 10000, odds: 3, mine: false },
-  { name: 'wickwizard', av: 'W', market: 'NAS100', window: '24 hours', pot: 1000, odds: 1, mine: false },
-  { name: 'quantqueen', av: 'Q', market: 'Any market', window: '15 minutes', pot: 500, odds: 5, mine: false },
-  { name: 'fadefather', av: 'F', market: 'Gold', window: '1 week', pot: 7500, odds: 2, mine: false }
+  { name: '0xmaverick', av: '👩‍🦰', market: 'Any market', window: '1 week', pot: 5000, odds: 1, mine: false },
+  { name: 'delta_dan', av: '👩‍🦱', market: 'Crypto only', window: '48 hours', pot: 2500, odds: 2, mine: false },
+  { name: 'macro_mia', av: '👨‍🦰', market: 'FX majors', window: '1 month', pot: 10000, odds: 3, mine: false },
+  { name: 'wickwizard', av: '👩‍💻', market: 'NAS100', window: '24 hours', pot: 1000, odds: 1, mine: false },
+  { name: 'quantqueen', av: '🧑‍🦱', market: 'Any market', window: '15 minutes', pot: 500, odds: 5, mine: false },
+  { name: 'fadefather', av: '👩‍💻', market: 'Gold', window: '1 week', pot: 7500, odds: 2, mine: false }
 ];
 let myBattles = [];
 let battleSeq = 0;
@@ -5081,8 +5277,6 @@ function builderHTML() {
       <div class="b-pills">${oddsPills}</div></div>
     <div class="b-row"><div class="b-label">Battle starts</div>
       <div class="b-pills">${startPills}</div></div>
-    <div class="b-row"><div class="b-label">Market</div>
-      <div class="b-pills">${marketPills}</div></div>
     <div id="bSum">${payoffHTML()}</div>
     <div class="b-foot">
       <button class="btn-primary" data-abpost><span class="pulse-dot small light"></span>Post challenge</button>
@@ -5092,6 +5286,8 @@ function builderHTML() {
 }
 
 /* ---------------- Nation Wars — country vs country, full squads ---------------- */
+
+const FEATURE_NATION_WARS = false; /* back-pocket — flip to true to relaunch Nation Wars */
 
 let battlesLiveN = 1284, escrowVol = 42.6, bigPotLive = 1000000, duelingN = 2547;
 
@@ -5112,7 +5308,7 @@ const countryWon = code => 400000 + (hashName(code + 'won') % 24000000);
 const flagEmoji = c => c.toUpperCase().replace(/./g, ch => String.fromCodePoint(127397 + ch.charCodeAt(0)));
 
 function flagHTML(code, sm) {
-  return `<span class="flagc${sm === true ? ' sm' : sm ? ' ' + sm : ''}"><b class="flag-fb">${flagEmoji(code)}</b><img src="https://flagcdn.com/${code}.svg" alt="" loading="lazy" onerror="this.remove()"></span>`;
+  return `<span class="flagc${sm === true ? ' sm' : sm ? ' ' + sm : ''}"><b class="flag-fb">${flagEmoji(code)}</b></span>`;
 }
 
 function nationWarsHTML() {
@@ -5162,10 +5358,10 @@ function nationWarsHTML() {
     </div>`;
   }).join('');
   return `<div class="section">
-    <div class="section-head"><div><h3 class="section-title">Nation Wars</h3>
+    ${FEATURE_NATION_WARS ? `<div class="section-head"><div><h3 class="section-title">Nation Wars</h3>
       <p class="section-sub"><span class="mono">COUNTRY&nbsp;VS&nbsp;COUNTRY</span><span class="dot-sep">·</span><span>full squads battle for one pot — the side with the higher average return takes it all</span></p></div></div>
-    <div class="nw-grid">${cards}</div>
-    <div class="section-head" style="margin-top:26px"><div><h3 class="section-title">Where the money's being won</h3>
+    <div class="nw-grid">${cards}</div>` : ''}
+    <div class="section-head" ${FEATURE_NATION_WARS ? 'style="margin-top:26px"' : ''}><div><h3 class="section-title">Where the money's being won</h3>
       <p class="section-sub"><span class="mono">GLOBAL&nbsp;DENSITY</span><span class="dot-sep">·</span><span>total winnings banked by traders in each country, all-time</span></p></div></div>
     <div class="nat-acc">${rows}</div>
   </div>`;
@@ -5180,7 +5376,7 @@ function myBattlesHTML() {
         <span class="fd-bt-f"><span class="thread-av" style="background:linear-gradient(135deg,var(--accent-b),var(--accent-a));color:#fff;font-weight:700">J</span>jstone
           <span class="fd-bt-ret odo ${b.my >= 0 ? 'up' : 'down'}" data-bmy="${i}" data-odo="${fmtRet(b.my)}">${odoInner(fmtRet(b.my))}</span></span>
         <span class="fd-bt-vs">VS</span>
-        <span class="fd-bt-f"><span class="thread-av" style="background:${b.tint}">${b.av}</span>${b.opp}
+        <span class="fd-bt-f">${avatarHTML(b.opp, 'thread-av')}${b.opp}
           <span class="fd-bt-ret odo ${b.op >= 0 ? 'up' : 'down'}" data-bop="${i}" data-odo="${fmtRet(b.op)}">${odoInner(fmtRet(b.op))}</span></span>
       </div>
       <div class="fd-leadbar"><span data-blead="${i}" style="width:${lead.toFixed(0)}%"></span></div>
@@ -5192,6 +5388,129 @@ function myBattlesHTML() {
     <div class="section-head"><div><h3 class="section-title">Your battles</h3>
       <p class="section-sub"><span class="mono">${myBattles.length}&nbsp;LIVE</span><span class="dot-sep">·</span><span>higher return when the window closes takes the pot</span></p></div></div>
     ${rows}</div>`;
+}
+
+/* ---------------- Trade Clans — team up, fly a banner, battle as one ---------------- */
+
+const CLAN_TINTS = ['linear-gradient(135deg,#7c3aed,#d946ef)', 'linear-gradient(135deg,#0ea5e9,#6366f1)', 'linear-gradient(135deg,#10b981,#0d9488)', 'linear-gradient(135deg,#f59e0b,#ef4444)'];
+
+let CLANS = [
+  { id: 'ALFA', name: 'Alpha Decay', tint: 0, members: ['Theo4', 'kch123', 'RN1', 'delta_dan', 'macro_mia'], wins: 38, losses: 12, winnings: 2140000, desc: 'Process, patience, pain for opponents.' },
+  { id: 'WICK', name: 'Wick Society', tint: 1, members: ['wickwizard', 'frostrizz', 'fishalive', 'quantqueen'], wins: 31, losses: 15, winnings: 1620000, desc: 'We live in the lower-timeframe shadows.' },
+  { id: 'LQTY', name: 'Liquidity Lords', tint: 2, members: ['Fredi9999', 'mintblade', 'vol_king', 'pip_titan', 'goldenboy'], wins: 27, losses: 18, winnings: 1387000, desc: 'Size talks. We provide the exit you regret.' },
+  { id: 'ZERO', name: 'Zero Edge', tint: 3, members: ['GRIMDRIP', 'nattyG', '0xmaverick', 'fadefather'], wins: 19, losses: 22, winnings: 704000, desc: 'Named ironically. Mostly.' },
+];
+
+let CLAN_WARS = [
+  { a: 'ALFA', b: 'WICK', ra: 2.84, rb: 2.31, pot: 120000, ends: '1d 6h', watching: 12480 },
+  { a: 'LQTY', b: 'ZERO', ra: 0.92, rb: 1.44, pot: 60000, ends: '9h 12m', watching: 5210 },
+];
+
+let myClan = null;
+try { myClan = localStorage.getItem('pkClan') || null; } catch (e) { }
+const clanById = id => CLANS.find(c => c.id === id);
+let clanDraft = null;
+
+const clanChip = (c, sm) => `<span class="clan-chip${sm ? ' sm' : ''}" style="background:${CLAN_TINTS[c.tint]}">${c.id}</span>`;
+
+function clansHTML() {
+  const mine = myClan && clanById(myClan);
+  const myCard = mine ? `
+    <div class="panel-card">
+      <div class="cl-head">${clanChip(mine)}<div><b class="cl-name">${mine.name}</b>
+        <span class="cl-sub mono">${mine.wins}–${mine.losses}&nbsp;RECORD&nbsp;·&nbsp;£${kfmt(mine.winnings)}&nbsp;BANKED</span></div>
+        <button class="btn-neu" style="margin-left:auto;padding:8px 14px;font-size:11.5px" data-clanleave>Leave</button></div>
+      <div class="ch-bio" style="margin-top:10px">${mine.desc}</div>
+      <div class="cl-members">${mine.members.slice(0, 6).map(m => avatarHTML(m, 'thread-av', `data-trader="${m}" title="${m}"`, 'cursor:pointer')).join('')}
+        <span class="cl-mcount mono">${mine.members.length}&nbsp;TRADERS</span></div>
+      <div class="ch-bio" style="margin-top:8px;color:var(--text-faint)">Pick a clan below and hit Battle — five average returns vs theirs, one pot.</div>
+    </div>` : `
+    <div class="panel-card cl-cta">
+      <b class="cl-name">Start your own clan</b>
+      <div class="ch-bio" style="margin-top:6px">Five traders, one banner. Clan average return takes the pot — recruit your crew and call out any clan on the ladder.</div>
+      <div class="pk-actions" style="margin-top:12px">
+        <button class="btn-primary" style="justify-content:center" data-clanopen>Create a clan</button>
+      </div>
+    </div>`;
+  const wars = CLAN_WARS.map((w, i) => {
+    const a = clanById(w.a), b = clanById(w.b);
+    if (!a || !b) return '';
+    const lead = Math.max(8, Math.min(92, 50 + (w.ra - w.rb) * 9));
+    return `<div class="nw-card">
+      <div class="nw-meta mono"><span class="pulse-dot tiny"></span>CLAN&nbsp;WAR&nbsp;·&nbsp;ends ${w.ends}<span class="nw-pot">£${w.pot.toLocaleString('en-GB')} pot</span></div>
+      <div class="nw-face">
+        <div class="nw-side"><div class="nw-country">${clanChip(a, true)}${a.name}</div>
+          <span class="nw-ret odo ${w.ra >= 0 ? 'up' : 'down'}" data-cwa="${i}" data-odo="${fmtRet(w.ra)}">${odoInner(fmtRet(w.ra))}</span></div>
+        <span class="nw-vs mono">VS</span>
+        <div class="nw-side right"><div class="nw-country">${b.name}${clanChip(b, true)}</div>
+          <span class="nw-ret odo ${w.rb >= 0 ? 'up' : 'down'}" data-cwb="${i}" data-odo="${fmtRet(w.rb)}">${odoInner(fmtRet(w.rb))}</span></div>
+      </div>
+      <div class="nw-bar"><span data-cwbar="${i}" style="width:${lead.toFixed(0)}%"></span><i></i></div>
+      <div class="nw-foot"><button class="link-btn" data-cwspec="${i}" style="margin-top:0">Spectate →</button>
+        <span class="nw-watch mono">● ${w.watching.toLocaleString('en-GB')} watching</span></div>
+    </div>`;
+  }).join('');
+  const ladder = [...CLANS].sort((x, y) => y.winnings - x.winnings).map((c, i) => `
+    <div class="fame-row" style="cursor:default">
+      <span class="fame-rank mono">${i + 1}</span>
+      ${clanChip(c, true)}
+      <div class="fame-tx"><b>${c.name}</b><span>${c.members.length} traders · ${c.wins}–${c.losses} record</span></div>
+      <div class="fame-win"><b>£${kfmt(c.winnings)}</b><span>banked</span></div>
+      ${myClan && myClan !== c.id ? `<button class="btn-neu" style="padding:8px 16px;font-size:12px" data-clanbattle="${c.id}">Battle</button>`
+      : !myClan ? `<button class="btn-neu" style="padding:8px 16px;font-size:12px" data-clanjoin="${c.id}">Join</button>`
+      : `<span class="mine-tag">YOURS</span>`}
+    </div>`).join('');
+  return `<div class="section">
+    <div class="section-head"><div><h3 class="section-title">Clans</h3>
+      <p class="section-sub"><span class="mono">TEAM&nbsp;VS&nbsp;TEAM</span><span class="dot-sep">·</span><span>squad up under one banner — clan average return takes the pot</span></p></div></div>
+    <div class="two-col" style="margin-bottom:18px">${myCard}<div style="display:flex;flex-direction:column;gap:14px">${wars}</div></div>
+    <div class="fame-card"><div id="clanLadder">${ladder}</div></div>
+  </div>`;
+}
+
+function renderClanModal() {
+  const veil = document.getElementById('clanVeil');
+  if (!veil) return;
+  veil.innerHTML = `<div class="pk-modal">
+    <div class="pk-modal-h">Create your clan</div>
+    <div class="pk-modal-s">Name it, pick the banner, recruit the crew — then call out any clan on the ladder.</div>
+    <div class="ep-field"><label class="mono">CLAN&nbsp;NAME</label><input id="clanName" maxlength="22" value="${clanDraft.name.replace(/"/g, '&quot;')}" placeholder="e.g. Green Candle Gang"></div>
+    <div class="ep-field"><label class="mono">TAG&nbsp;—&nbsp;4&nbsp;LETTERS</label><input id="clanTag" maxlength="4" value="${clanDraft.tag}" placeholder="GCG" style="text-transform:uppercase;width:120px"></div>
+    <div class="inv-row"><div class="b-label mono">BANNER</div>
+      <div class="inv-chips">${CLAN_TINTS.map((t, i) => `<button class="clan-chip${clanDraft.tint === i ? '' : ''}" style="background:${t};${clanDraft.tint === i ? '' : 'opacity:.45'};border:0;cursor:pointer" data-clantint="${i}">${(clanDraft.tag || 'TAG').toUpperCase() || 'TAG'}</button>`).join('')}</div></div>
+    <div class="inv-row"><div class="b-label mono">RECRUIT&nbsp;—&nbsp;PICK&nbsp;YOUR&nbsp;CREW</div>
+      <div class="inv-chips">${CONTACTS.map(c => `<button class="pill-btn${clanDraft.members.includes(c[0]) ? ' on' : ''}" data-claninv="${c[0]}">${c[0]}</button>`).join('')}</div></div>
+    <div class="inv-sum">You + <b>${clanDraft.members.length}</b> recruits fly the banner · battles use your clan's average return</div>
+    <div class="pk-actions">
+      <button class="btn-primary" style="flex:1;justify-content:center" data-clancreate>Found the clan</button>
+      <button class="btn-neu" data-clanclose>Cancel</button>
+    </div>
+  </div>`;
+}
+
+function stashClanInputs() {
+  clanDraft.name = document.getElementById('clanName')?.value ?? clanDraft.name;
+  clanDraft.tag = (document.getElementById('clanTag')?.value ?? clanDraft.tag).toUpperCase();
+}
+
+function openClanWar(i) {
+  const w = CLAN_WARS[i];
+  const a = clanById(w.a), b = clanById(w.b);
+  if (!a || !b) return;
+  const seed = hashName(w.a + w.b);
+  const squad = (c, avg, off) => c.members.slice(0, 5).map((m, k) =>
+    ({ name: m, ret: +(avg + (((hashName(m + w.a + off) % 100) / 100) - 0.45) * 5).toFixed(2) })).sort((x, y) => y.ret - x.ret);
+  spec = {
+    kind: 'clan', i,
+    a: { name: a.name, tag: a.id, tint: CLAN_TINTS[a.tint] },
+    b: { name: b.name, tag: b.id, tint: CLAN_TINTS[b.tint] },
+    ra: w.ra, rb: w.rb, pot: w.pot, watching: w.watching, ends: w.ends,
+    squadA: squad(a, w.ra, 1), squadB: squad(b, w.rb, 2),
+    loadA: specLoadout(seed), loadB: specLoadout(seed * 17 % 2147483647 || 7),
+  };
+  spec.sa = specSeries(w.ra, seed);
+  spec.sb = specSeries(w.rb, seed * 29 % 2147483647 || 11);
+  navigate('spectate');
 }
 
 /* ---------------- Spectate — watching battles is a sport of its own ---------------- */
@@ -5280,9 +5599,9 @@ function specChartSVG() {
 
 function specFaceHTML(side, col) {
   const s = spec[side === 'a' ? 'a' : 'b'];
-  const ic = spec.kind === 'nation'
-    ? flagHTML(s.flag)
-    : `<span class="thread-av" style="background:${s.tint}">${s.av}</span>`;
+  const ic = spec.kind === 'nation' ? flagHTML(s.flag)
+    : spec.kind === 'clan' ? `<span class="clan-chip sm" style="background:${s.tint}">${s.tag}</span>`
+    : avatarHTML(s.name, 'thread-av');
   return `<span class="spec-face" ${spec.kind === 'duel' ? `data-trader="${s.name}" style="cursor:pointer"` : ''}>${ic}<b style="color:${col}">${s.name}</b></span>`;
 }
 
@@ -5300,7 +5619,7 @@ function specSideCard(side) {
     <div class="spec-mini mono">
       <span>${p.winRate}% WIN</span><span>${p.followers} FOLLOWERS</span><span>LV ${traderTier(p.winnings).lv} ${traderTier(p.winnings).name.toUpperCase()}</span><span>${p.trades.toLocaleString('en-GB')} TRADES</span>
     </div>` : `
-    <div class="spec-brief">${spec.size}-trader squad · higher average return when the window closes takes the pot for the whole nation.</div>
+    <div class="spec-brief">${squad.length}-trader squad · higher average return when the window closes takes the pot for the whole ${spec.kind === "clan" ? "clan" : "nation"}.</div>
     <table class="trades-table spec-squad"><thead><tr class="mono"><th>TOP&nbsp;MOVERS</th><th style="text-align:right">RETURN</th></tr></thead>
       <tbody>${squad.map(m => `<tr data-trader="${m.name}" style="cursor:pointer"><td><b>${m.name}</b></td>
         <td style="text-align:right" class="${m.ret >= 0 ? 'up' : 'down'}"><b>${fmtRet(m.ret)}</b></td></tr>`).join('')}</tbody></table>`}
@@ -5431,8 +5750,7 @@ function renderArena() {
   const battleRows = BATTLES.map((b, i) => `
     <li class="leaderboard-row" data-spectate="${i}" style="cursor:pointer">
       <span class="row-rank mono">${String(i + 1).padStart(2, '0')}</span>
-      <span class="vs-pair"><span class="thread-av" style="background:${AV_TINTS[i % 6]}">${b[1]}</span>
-        <span class="thread-av" style="background:${AV_TINTS[(i + 3) % 6]}">${b[3]}</span></span>
+      <span class="vs-pair">${avatarHTML(b[0], 'thread-av')}${avatarHTML(b[2], 'thread-av')}</span>
       <span class="row-name">${b[0]} v ${b[2]}<span class="watching">● ${b[5]} watching</span></span>
       <span class="row-value mono-num">£${b[4].toLocaleString('en-GB')}</span>
     </li>`).join('');
@@ -5441,7 +5759,7 @@ function renderArena() {
     const tier = p ? traderTier(p.winnings) : null;
     return `
     <article class="challenge-card">
-      <div class="challenge-head"${c.mine ? '' : ` data-trader="${c.name}" style="cursor:pointer"`}><span class="thread-av" style="background:${AV_TINTS[i % 6]}">${c.av}</span>
+      <div class="challenge-head"${c.mine ? '' : ` data-trader="${c.name}" style="cursor:pointer"`}>${avatarHTML(c.name, 'thread-av')}
         <div><div class="challenge-name">${c.name}${c.mine ? ' <span class="mine-tag">YOURS</span>' : ` <span class="tier-chip">LV ${tier.lv} ${tier.name.toUpperCase()}</span>`}</div>
           <div class="challenge-sub">${c.mine ? 'waiting for an opponent' : 'set the terms · take the other side'}</div></div></div>
       ${p ? `<div class="ch-bio">${p.bio}</div>
@@ -5452,7 +5770,6 @@ function renderArena() {
         <span>${p.followers}&nbsp;FOLLOWERS</span>
       </div>` : ''}
       <div class="challenge-terms">
-        <div class="term-cell"><div class="k">Market</div><div class="v" style="font-size:12.5px">${c.market}</div></div>
         <div class="term-cell"><div class="k">${c.mine ? 'Starts' : 'Window'}</div><div class="v" style="font-size:12.5px">${c.mine ? c.start : c.window}</div></div>
         <div class="term-cell"><div class="k">Odds</div><div class="v">${c.odds || 1}:1</div></div>
         <div class="term-cell"><div class="k">${c.mine ? 'They put up' : 'You put up'}</div><div class="v">£${Math.round((c.mine ? c.stake : c.pot) * (c.odds || 1)).toLocaleString('en-GB')}</div></div>
@@ -5501,6 +5818,7 @@ function renderArena() {
     ${arenaB.open ? builderHTML() : ''}
     ${myBattlesHTML()}
     ${nationWarsHTML()}
+    ${clansHTML()}
     <div class="section">
       <div class="section-head"><div><h3 class="section-title">Open challenges</h3>
         <p class="section-sub"><span class="mono">${challenges.length}&nbsp;OPEN</span><span class="dot-sep">·</span><span>someone set the terms — take the other side and it locks in at kick-off</span></p></div></div>
@@ -5773,7 +6091,7 @@ document.addEventListener('click', e => {
   if ((el = q('[data-postbtn]'))) {
     const inp = document.getElementById('composeIn');
     if (!inp || !inp.value.trim()) return toast('Write something first');
-    POSTS.unshift({ id: postId++, name: 'jstone', handle: '@jstone', av: 'J', tint: 'linear-gradient(135deg,var(--accent-b),var(--accent-a))', time: 'now', tag: null, text: inp.value.trim(), replies: 0, reposts: 0, likes: 0, views: '1', liked: false, reposted: false, bm: false });
+    POSTS.unshift({ id: postId++, name: 'jstone', handle: '@jstone', av: '👱‍♂️', tint: 'linear-gradient(135deg,var(--accent-b),var(--accent-a))', time: 'now', tag: null, text: inp.value.trim(), replies: 0, reposts: 0, likes: 0, views: '1', liked: false, reposted: false, bm: false });
     renderSocial();
     return toast('Posted to your followers');
   }
@@ -5856,7 +6174,7 @@ document.addEventListener('click', e => {
   if ((el = q('[data-abmarket]'))) { arenaB.market = el.dataset.abmarket; return renderArena(); }
   if ((el = q('[data-abpost]'))) {
     challenges.unshift({
-      name: 'jstone', av: 'J', market: arenaB.market, start: startLabel(),
+      name: 'jstone', av: '👱‍♂️', market: arenaB.market, start: startLabel(),
       stake: arenaB.stake, odds: oddsMult(),
       pot: Math.round(arenaB.stake * (1 + oddsMult())), mine: true
     });
@@ -5871,13 +6189,20 @@ document.addEventListener('click', e => {
     return renderArena();
   }
   if ((el = q('[data-tacct]'))) {
+    const i = +el.dataset.tacct;
+    if (i === term.acct) return;
     ACCTS[term.acct].bal = term.bal;
     ACCTS[term.acct].pos = term.pos;
-    term.acct = +el.dataset.tacct;
-    term.bal = ACCTS[term.acct].bal;
-    term.pos = ACCTS[term.acct].pos;
-    renderTerminal();
-    return toast(`Switched to ${ACCTS[term.acct].id} — ${ACCTS[term.acct].label}`);
+    term.acct = i;
+    term.bal = ACCTS[i].bal;
+    term.pos = ACCTS[i].pos;
+    const tg = document.querySelector('.acct-toggle');
+    if (tg) {
+      tg.querySelector('.at-thumb').style.transform = `translateX(${i * 100}%)`;
+      [...tg.querySelectorAll('button')].forEach((b, k) => b.classList.toggle('on', k === i));
+      setTimeout(renderTerminal, 300);
+    } else renderTerminal();
+    return toast(`Switched to ${ACCTS[i].id} — ${ACCTS[i].label}`);
   }
   if ((el = q('[data-editprof]'))) return openEditProfile();
   if ((el = q('[data-epcover]'))) return pickImage(1280, url => { epDraft.cover = url; renderEditProfile(); });
@@ -5906,7 +6231,7 @@ document.addEventListener('click', e => {
   }
   if ((el = q('[data-invsend]'))) {
     challenges.unshift({
-      name: 'jstone', av: 'J', market: inv.market, start: inv.start,
+      name: 'jstone', av: '👱‍♂️', market: inv.market, start: inv.start,
       stake: inv.stake, odds: inv.odds, pot: inv.stake * (1 + inv.odds), mine: true
     });
     closeInvite();
@@ -5915,6 +6240,63 @@ document.addEventListener('click', e => {
     if (currentView === 'arena') renderArena();
     return;
   }
+  if ((el = q('[data-clanopen]'))) {
+    clanDraft = { name: '', tag: '', tint: 0, members: ['Theo4'] };
+    if (!document.getElementById('clanVeil')) {
+      const v = document.createElement('div'); v.className = 'pk-veil'; v.id = 'clanVeil';
+      document.body.appendChild(v);
+    }
+    return renderClanModal();
+  }
+  if ((el = q('[data-clantint]'))) { stashClanInputs(); clanDraft.tint = +el.dataset.clantint; return renderClanModal(); }
+  if ((el = q('[data-claninv]'))) {
+    stashClanInputs();
+    const n = el.dataset.claninv;
+    clanDraft.members.includes(n) ? clanDraft.members.splice(clanDraft.members.indexOf(n), 1) : clanDraft.members.push(n);
+    return renderClanModal();
+  }
+  if ((el = q('[data-clancreate]'))) {
+    stashClanInputs();
+    const name = clanDraft.name.trim(), tag = clanDraft.tag.trim().toUpperCase();
+    if (!name || tag.length < 2) return toast('Give your clan a name and a 2–4 letter tag');
+    if (clanById(tag)) return toast('That tag is taken — pick another');
+    CLANS.unshift({ id: tag, name, tint: clanDraft.tint, members: ['jstone', ...clanDraft.members], wins: 0, losses: 0, winnings: 0, desc: 'Founded today — the ladder awaits.' });
+    myClan = tag;
+    try { localStorage.setItem('pkClan', tag); } catch (e) { }
+    document.getElementById('clanVeil')?.remove();
+    toast(`${name} [${tag}] founded — ${clanDraft.members.length + 1} traders under the banner`);
+    addNotif('CL', `Clan founded — ${name}`, `${clanDraft.members.length + 1} traders recruited. Call out any clan on the ladder to start a war.`);
+    return renderArena();
+  }
+  if ((el = q('[data-clanclose]'))) return document.getElementById('clanVeil')?.remove();
+  if ((el = q('[data-clanjoin]'))) {
+    const c = clanById(el.dataset.clanjoin);
+    if (!c) return;
+    myClan = c.id;
+    try { localStorage.setItem('pkClan', c.id); } catch (e) { }
+    if (!c.members.includes('jstone')) c.members.push('jstone');
+    toast(`Joined ${c.name} [${c.id}] — welcome to the crew`);
+    addNotif('CL', `Joined ${c.name}`, `You fly the ${c.id} banner now. Clan battles count your return toward the squad average.`);
+    return renderArena();
+  }
+  if ((el = q('[data-clanleave]'))) {
+    const c = clanById(myClan);
+    if (c) c.members = c.members.filter(m => m !== 'jstone');
+    myClan = null;
+    try { localStorage.removeItem('pkClan'); } catch (e) { }
+    toast('Left the clan — free agent again');
+    return renderArena();
+  }
+  if ((el = q('[data-clanbattle]'))) {
+    const opp = clanById(el.dataset.clanbattle), mine = clanById(myClan);
+    if (!opp || !mine) return;
+    const pot = (mine.members.length + opp.members.length) * 2500;
+    CLAN_WARS.unshift({ a: mine.id, b: opp.id, ra: 0, rb: 0, pot, ends: '24h', watching: 200 + Math.floor(Math.random() * 800) });
+    toast(`Clan war declared — ${mine.name} vs ${opp.name}, £${pot.toLocaleString('en-GB')} pot over 24h`);
+    addNotif('CL', `Clan war: ${mine.id} vs ${opp.id}`, `£${pot.toLocaleString('en-GB')} pot · 24h window · squad average return takes it. Rally the crew.`);
+    return renderArena();
+  }
+  if ((el = q('[data-cwspec]'))) return openClanWar(+el.dataset.cwspec);
   if ((el = q('[data-njoin]'))) {
     const w = NATION_WARS[+el.dataset.njoin];
     if (!w || w.joined || w.aIn >= w.size) return;
