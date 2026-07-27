@@ -1457,6 +1457,91 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .tier-bar { height: 10px; border-radius: 5px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; }
 .tier-bar span { display: block; height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--accent-a), var(--accent-b)); }
 
+/* Social feed (X-style) */
+
+.feed-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) 300px; gap: 20px; align-items: start; }
+.feed-col { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+.composer { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 18px; display: flex; gap: 13px; }
+.composer-body { flex: 1; min-width: 0; }
+.composer textarea {
+  width: 100%; min-height: 64px; resize: none; border: none;
+  padding: 13px 16px; border-radius: 14px;
+  background: var(--surface); color: var(--text);
+  font-family: inherit; font-size: 14px; line-height: 1.5;
+  box-shadow: var(--neu-in-sm);
+}
+.composer textarea:focus { outline: none; }
+.composer textarea::placeholder { color: var(--text-faint); }
+.composer-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 11px; }
+.composer-hint { font-size: 11px; color: var(--text-faint); }
+.post-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 24px; border: none; border-radius: 12px;
+  background: linear-gradient(160deg, #24262c, #0c0d10); color: #fff;
+  font-size: 13.5px; font-weight: 600; cursor: pointer;
+  box-shadow: 5px 6px 14px var(--shadow-dark), -4px -4px 10px var(--shadow-light),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition: all 0.25s ease;
+}
+.post-btn:hover { transform: translateY(-1px); }
+.post-btn:active { transform: translateY(1px); }
+
+.post { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 18px; display: flex; gap: 13px; animation: viewfade 0.35s ease; }
+.post-body { flex: 1; min-width: 0; }
+.post-head { display: flex; align-items: baseline; gap: 7px; flex-wrap: wrap; }
+.post-name { font-size: 14px; font-weight: 700; }
+.post-handle { font-size: 12px; color: var(--text-faint); }
+.post-time { font-size: 12px; color: var(--text-faint); margin-left: auto; font-variant-numeric: tabular-nums; }
+.post-text { font-size: 14px; line-height: 1.55; margin: 6px 0 10px; overflow-wrap: break-word; }
+.post-tag {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 12px; border-radius: 999px; margin-bottom: 11px;
+  background: var(--surface); box-shadow: var(--neu-in-sm);
+  font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+  font-size: 11px; font-weight: 600; color: var(--text-soft);
+  font-variant-numeric: tabular-nums;
+}
+.post-tag .asset-ic { width: 18px; height: 18px; border-radius: 6px; font-size: 8.5px; }
+.post-actions { display: flex; gap: 8px; margin-left: -8px; }
+.pact {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: none; background: none; cursor: pointer;
+  font-size: 12px; font-weight: 600; color: var(--text-faint);
+  font-family: inherit; font-variant-numeric: tabular-nums;
+  padding: 6px 10px; border-radius: 10px; transition: all 0.2s ease;
+}
+.pact svg { width: 15px; height: 15px; }
+.pact:hover { background: var(--surface); }
+.pact.reply:hover { color: #2f6bff; }
+.pact.rt:hover, .pact.rt.on { color: #10b981; }
+.pact.like:hover, .pact.like.on { color: #db2777; }
+.pact.views { margin-left: auto; cursor: default; }
+.pact.views:hover { background: none; color: var(--text-faint); }
+
+.rail { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 20px; }
+.rail-card { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 18px 20px; }
+.rail-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.trend-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.trend-row:last-child { border-bottom: none; padding-bottom: 2px; }
+.trend-sym { font-size: 12.5px; font-weight: 700; flex: 1; }
+.trend-sym small { display: block; font-weight: 500; font-size: 10.5px; color: var(--text-faint); }
+.trend-px { font-size: 12px; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+.trend-px small { display: block; font-size: 10.5px; }
+.follow-row { display: flex; align-items: center; gap: 11px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.follow-row:last-child { border-bottom: none; padding-bottom: 2px; }
+.follow-row .thread-av { width: 34px; height: 34px; font-size: 16px; }
+.follow-tx { flex: 1; min-width: 0; }
+.follow-name { display: block; font-size: 12.5px; font-weight: 700; }
+.follow-sub { display: block; font-size: 10.5px; color: var(--text-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.follow-btn { padding: 7px 14px; font-size: 11.5px; }
+.follow-btn.on { color: var(--green); }
+
+@media (max-width: 1180px) {
+  .feed-grid { grid-template-columns: 1fr; }
+  .rail { position: static; }
+}
+
 /* Responsive for new pages */
 
 @media (max-width: 1180px) {
@@ -1984,7 +2069,7 @@ const TITLES = {
   leaderboard: ['Tournaments', '<span class="mono">LEADERBOARD</span><span class="dot-sep">·</span><span>live standings, resorted in real time</span>'],
   ideas: ['Trade Ideas', '<span class="mono">LIVE&nbsp;WIRE</span><span class="dot-sep">·</span><span>signals streaming from every market</span>'],
   terminal: ['Trade', '<span class="mono">TR-1001</span><span class="dot-sep">·</span><span>£100k competition balance</span>'],
-  social: ['Social', '<span class="mono">INBOX</span><span class="dot-sep">·</span><span>messages, contacts &amp; invites</span>'],
+  social: ['Social', '<span class="mono">FEED</span><span class="dot-sep">·</span><span>what 177K traders are saying right now</span>'],
   assistant: ['Assistant', '<span class="mono">AI</span><span class="dot-sep">·</span><span>your trading copilot</span>'],
   performance: ['Performance', '<span class="mono">ALL&nbsp;ACCOUNTS</span><span class="dot-sep">·</span><span>verified live track record</span>'],
   partner: ['Partner', '<span class="mono">AFFILIATE</span><span class="dot-sep">·</span><span>earn 30% lifetime on every referral</span>']
@@ -2170,6 +2255,7 @@ function tickPrices() {
     a.series.push(a.px);
     if (a.series.length > 120) a.series.shift();
   });
+  document.querySelectorAll('[data-ptag]').forEach(el => { el.textContent = fmtPx(el.dataset.ptag); });
   if (currentView !== 'terminal') return;
   Object.keys(INSTR).forEach(k => {
     const el = document.querySelector(`[data-tpx="${k}"]`);
@@ -2303,7 +2389,95 @@ const threads = [
   { name: 'RN1', av: '🚀', tint: AV_TINTS[5], unread: false, msgs: [['them', 'World Series grind starts Monday. Good luck out there']] }
 ];
 
-let socialTab = 'messages', activeThread = 0;
+let socialTab = 'feed', activeThread = 0;
+
+/* X-style feed */
+
+const POSTS = [
+  { name: 'Theo4', handle: '@Theo4', av: '🦊', tint: AV_TINTS[0], time: '12m', tag: 'NAS100',
+    text: 'NAS100 breadth divergence played out exactly as scripted. Third fade this month off the same setup — the market keeps paying the patient. 📉',
+    replies: 48, reposts: 112, likes: 894, views: '41K', liked: false, reposted: false },
+  { name: 'swisstony', handle: '@swisstony', av: '🐵', tint: AV_TINTS[2], time: '34m', tag: 'XAUUSD',
+    text: 'Gold breaking a 6-week range while real yields roll over. Cleanest macro chart of the summer, and nobody is positioned for it.',
+    replies: 31, reposts: 76, likes: 512, views: '22K', liked: true, reposted: false },
+  { name: 'GRIMDRIP', handle: '@GRIMDRIP', av: '💀', tint: AV_TINTS[4], time: '1h', tag: null,
+    text: '£1M arena battle vs @nattyG starts at London open. Winner takes the escrow. See you in the pit ⚔️',
+    replies: 203, reposts: 340, likes: 2100, views: '188K', liked: false, reposted: true },
+  { name: 'macro_mia', handle: '@macro_mia', av: '🌍', tint: AV_TINTS[5], time: '2h', tag: 'EURUSD',
+    text: 'ECB minutes were hawkish but the euro still can’t rally. When good news stops working, listen to the tape — not the headlines.',
+    replies: 19, reposts: 41, likes: 306, views: '14K', liked: false, reposted: false },
+  { name: 'quantqueen', handle: '@quantqueen', av: '👸', tint: AV_TINTS[3], time: '3h', tag: 'BTC',
+    text: 'CME basis mean-revert window closed at +2.3R. Desk is 7 for 9 this month. The edge is boring and that’s the point.',
+    replies: 27, reposts: 58, likes: 441, views: '19K', liked: false, reposted: false },
+  { name: 'Fredi9999', handle: '@Fredi9999', av: '🐺', tint: AV_TINTS[1], time: '5h', tag: null,
+    text: 'Daily Sprint closes in 13 hours. 736 in, £18.4K pool, £25 entry. Free money if you can read a 5-minute chart.',
+    replies: 64, reposts: 95, likes: 730, views: '35K', liked: false, reposted: false },
+  { name: 'mintblade', handle: '@mintblade', av: '⚔️', tint: AV_TINTS[3], time: '7h', tag: 'XAUUSD',
+    text: 'Posted my full gold thesis in Ideas. Long from 3,380, target 3,450, invalidation below 3,355. Risk 1, make 2.3.',
+    replies: 22, reposts: 37, likes: 289, views: '12K', liked: false, reposted: false },
+  { name: 'fishalive', handle: '@fishalive', av: '🐹', tint: AV_TINTS[0], time: '9h', tag: null,
+    text: 'Win streak at 4. Not saying I’m him, but I’m also not not saying it 🐹',
+    replies: 88, reposts: 61, likes: 1300, views: '52K', liked: false, reposted: false }
+];
+
+const following = new Set(['Theo4']);
+const kfmt = n => n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K' : String(n);
+
+function postCard(p, i) {
+  const tag = p.tag ? `<div><span class="post-tag"><span class="asset-ic" style="background:${INSTR[p.tag].tint}">${INSTR[p.tag].ic}</span>${p.tag}&nbsp;·&nbsp;<span data-ptag="${p.tag}">${fmtPx(p.tag)}</span></span></div>` : '';
+  return `
+  <article class="post">
+    <span class="thread-av" style="background:${p.tint}">${p.av}</span>
+    <div class="post-body">
+      <div class="post-head"><span class="post-name">${p.name}</span><span class="post-handle">${p.handle}</span><span class="post-time">${p.time}</span></div>
+      <p class="post-text">${p.text}</p>
+      ${tag}
+      <div class="post-actions">
+        <button class="pact reply" data-preply="${i}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>${kfmt(p.replies)}</button>
+        <button class="pact rt${p.reposted ? ' on' : ''}" data-prt="${i}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4M21 6H8a4 4 0 0 0-4 4v1M7 22l-4-4 4-4M3 18h13a4 4 0 0 0 4-4v-1"/></svg>${kfmt(p.reposts)}</button>
+        <button class="pact like${p.liked ? ' on' : ''}" data-plike="${i}">
+          <svg viewBox="0 0 24 24" fill="${p.liked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-9.8-9.2C.7 8.6 2.7 5 6.2 5c2.2 0 3.6 1.2 4.3 2.4L12 9l1.5-1.6C14.2 6.2 15.6 5 17.8 5c3.5 0 5.5 3.6 4 6.8C19.5 16.4 12 21 12 21z"/></svg>${kfmt(p.likes)}</button>
+        <span class="pact views">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>${p.views}</span>
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderFeed() {
+  const trends = Object.keys(INSTR).slice(0, 5).map(k => {
+    const a = INSTR[k], chg = (a.px - a.open) / a.open * 100;
+    return `<div class="trend-row">
+      <span class="asset-ic" style="background:${a.tint};width:26px;height:26px;border-radius:8px;font-size:10px">${a.ic}</span>
+      <span class="trend-sym">${k}<small>${a.name}</small></span>
+      <span class="trend-px">${fmtPx(k)}<small class="${chg >= 0 ? 'up' : 'down'}">${chg >= 0 ? '+' : ''}${chg.toFixed(2)}%</small></span>
+    </div>`;
+  }).join('');
+  const follows = CONTACTS.slice(0, 5).map(([n, e], i) => `
+    <div class="follow-row"><span class="thread-av" style="background:${AV_TINTS[i % 6]}">${e}</span>
+      <span class="follow-tx"><span class="follow-name">${n}</span><span class="follow-sub">@${n}</span></span>
+      <button class="pill-btn follow-btn${following.has(n) ? ' on' : ''}" data-follow="${n}">${following.has(n) ? 'Following' : 'Follow'}</button>
+    </div>`).join('');
+  return `<div class="feed-grid">
+    <div class="feed-col">
+      <div class="composer">
+        <span class="thread-av" style="background:linear-gradient(135deg,var(--accent-b),var(--accent-a));color:#fff;font-size:15px;font-weight:700">J</span>
+        <div class="composer-body">
+          <textarea id="composeIn" placeholder="What’s happening in the markets?"></textarea>
+          <div class="composer-foot"><span class="composer-hint">Posting as <b>@jstone</b> · visible to everyone</span>
+            <button class="post-btn" data-postbtn><span class="pulse-dot small light"></span>Post</button></div>
+        </div>
+      </div>
+      <div class="feed-col" id="feedList">${POSTS.map(postCard).join('')}</div>
+    </div>
+    <div class="rail">
+      <div class="rail-card"><div class="rail-title">Trending markets</div>${trends}</div>
+      <div class="rail-card"><div class="rail-title">Who to follow</div>${follows}</div>
+    </div>
+  </div>`;
+}
 
 const CONTACTS = [['Theo4', '🦊', 'Rank #1 · 2026 WS champion'], ['Fredi9999', '🐺', 'Rank #2 · momentum'], ['swisstony', '🐵', 'Rank #3 · macro'], ['kch123', '🎯', 'Rank #4 · scalper'], ['RN1', '🚀', 'Rank #5 · swing'], ['mintblade', '⚔️', 'Rank #6 · gold bug'], ['fishalive', '🐹', 'Rank #7 · quant'], ['frostrizz', '❄️', 'Rank #8 · FX']];
 
@@ -2313,10 +2487,12 @@ const invites = [
 ];
 
 function renderSocial() {
-  const tabs = [['messages', 'Messages'], ['contacts', 'Contacts'], ['invites', 'Invites']].map(([k, l]) =>
+  const tabs = [['feed', 'Feed'], ['messages', 'Messages'], ['contacts', 'Contacts'], ['invites', 'Invites']].map(([k, l]) =>
     `<button class="pill-btn${socialTab === k ? ' on' : ''}" data-stab="${k}">${l}${k === 'messages' && threads.some(t => t.unread) ? ' ·' : ''}${k === 'invites' && invites.length ? ' · ' + invites.length : ''}</button>`).join('');
   let body = '';
-  if (socialTab === 'contacts') {
+  if (socialTab === 'feed') {
+    body = renderFeed();
+  } else if (socialTab === 'contacts') {
     body = `<div class="contact-grid">${CONTACTS.map(([n, e, s], i) => `
       <div class="contact-card"><span class="contact-av" style="background:${AV_TINTS[i % 6]}">${e}</span>
         <span class="contact-name">${n}</span><span class="contact-sub">${s}</span>
@@ -2716,6 +2892,37 @@ document.addEventListener('click', e => {
   if ((el = q('[data-icat]'))) { ideaCat = el.dataset.icat; return renderIdeas(); }
   if ((el = q('[data-ihz]'))) { ideaHz = el.dataset.ihz; return renderIdeas(); }
   if ((el = q('[data-itrade]'))) { term.asset = el.dataset.itrade; navigate('terminal'); return toast(`${el.dataset.itrade} loaded in the terminal`); }
+  /* social feed */
+  if ((el = q('[data-postbtn]'))) {
+    const inp = document.getElementById('composeIn');
+    if (!inp || !inp.value.trim()) return toast('Write something first');
+    POSTS.unshift({ name: 'jstone', handle: '@jstone', av: 'J', tint: 'linear-gradient(135deg,var(--accent-b),var(--accent-a))', time: 'now', tag: null, text: inp.value.trim(), replies: 0, reposts: 0, likes: 0, views: '1', liked: false, reposted: false });
+    renderSocial();
+    return toast('Posted to your followers');
+  }
+  if ((el = q('[data-plike]'))) {
+    const p = POSTS[+el.dataset.plike];
+    p.liked = !p.liked; p.likes += p.liked ? 1 : -1;
+    return renderSocial();
+  }
+  if ((el = q('[data-prt]'))) {
+    const p = POSTS[+el.dataset.prt];
+    p.reposted = !p.reposted; p.reposts += p.reposted ? 1 : -1;
+    toast(p.reposted ? 'Reposted to your followers' : 'Repost removed');
+    return renderSocial();
+  }
+  if ((el = q('[data-preply]'))) {
+    const p = POSTS[+el.dataset.preply];
+    const i = threads.findIndex(t => t.name === p.name);
+    if (i >= 0) { socialTab = 'messages'; activeThread = i; threads[i].unread = false; return renderSocial(); }
+    return toast('Replies open a DM — this trader has DMs closed');
+  }
+  if ((el = q('[data-follow]'))) {
+    const n = el.dataset.follow;
+    following.has(n) ? following.delete(n) : following.add(n);
+    toast(following.has(n) ? `Following ${n}` : `Unfollowed ${n}`);
+    return renderSocial();
+  }
   /* social */
   if ((el = q('[data-stab]'))) { socialTab = el.dataset.stab; return renderSocial(); }
   if ((el = q('[data-thread]'))) { activeThread = +el.dataset.thread; threads[activeThread].unread = false; return renderSocial(); }
