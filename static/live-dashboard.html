@@ -2625,6 +2625,24 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .acct-toggle button.on { color: var(--text); }
 .acct-toggle button.on b { color: var(--accent-a); }
 
+/* ---------------- Battle the machines ---------------- */
+.mach-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+.mach-card { background: var(--card); border-radius: 24px; box-shadow: var(--neu-out); padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
+.mach-head { display: flex; align-items: flex-start; gap: 12px; }
+.mach-head .tile-ic { color: #fff; }
+.mach-name { font-size: 15.5px; font-weight: 800; letter-spacing: -.01em; }
+.house-chip { margin-left: 8px; font-size: 8.5px; letter-spacing: .1em; padding: 3px 8px; border-radius: 999px; background: linear-gradient(135deg, rgba(124, 58, 237, .14), rgba(217, 70, 239, .14)); color: var(--accent-a); font-weight: 800; vertical-align: 2px; }
+.mach-by { display: block; font-size: 11px; color: var(--text-faint); margin-top: 3px; }
+.mach-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.mach-stats > div { background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 13px; padding: 9px 11px; min-width: 0; }
+.mach-stats span { display: block; font-size: 8.5px; letter-spacing: .1em; color: var(--text-faint); }
+.mach-stats b { display: block; font-size: 12.5px; font-weight: 800; margin-top: 3px; }
+.mach-terms { font-size: 12.5px; color: var(--text-soft); line-height: 1.55; }
+.mach-terms b { color: var(--text); }
+.mach-meta { display: flex; align-items: center; gap: 7px; font-size: 10px; letter-spacing: .08em; color: var(--text-faint); }
+.btn-mach { border: 0; cursor: pointer; border-radius: 14px; padding: 13px; font: inherit; font-size: 13.5px; font-weight: 700; color: #fff; background: linear-gradient(135deg, var(--accent-a), var(--accent-b)); box-shadow: 0 10px 22px rgba(124, 58, 237, .32); transition: transform .2s ease, box-shadow .2s ease; }
+.btn-mach:hover { transform: translateY(-1px); box-shadow: 0 13px 26px rgba(124, 58, 237, .4); }
+
 /* ---------------- Clans ---------------- */
 .clan-chip { display: inline-flex; align-items: center; justify-content: center; border-radius: 11px; padding: 8px 11px; color: #fff; font-weight: 800; font-size: 12px; letter-spacing: .08em; flex: none; box-shadow: 0 6px 14px rgba(60, 50, 120, .25); }
 .clan-chip.sm { padding: 5px 8px; font-size: 10px; border-radius: 8px; }
@@ -2813,7 +2831,6 @@ const navItems = [
   { label: 'Arena', view: 'arena', match: ['arena', 'trader', 'spectate'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>' },
   { label: 'Tournaments', view: 'tournaments', locked: true, match: ['tournaments', 'leaderboard'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5"/></svg>' },
   { label: 'Social', view: 'social', match: ['social'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' },
-  { label: 'Messages', view: 'inbox', match: ['inbox'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>' },
   { label: 'Ideas', view: 'ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' },
   { label: 'Trades', view: 'terminal', match: ['terminal', 'performance'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 15v-4M12 15V8M17 15v-6"/></svg>' }
 ];
@@ -5388,7 +5405,7 @@ function myBattlesHTML() {
         <span class="fd-bt-f"><span class="thread-av" style="background:linear-gradient(135deg,var(--accent-b),var(--accent-a));color:#fff;font-weight:700">J</span>jstone
           <span class="fd-bt-ret odo ${b.my >= 0 ? 'up' : 'down'}" data-bmy="${i}" data-odo="${fmtRet(b.my)}">${odoInner(fmtRet(b.my))}</span></span>
         <span class="fd-bt-vs">VS</span>
-        <span class="fd-bt-f">${avatarHTML(b.opp, 'thread-av')}${b.opp}
+        <span class="fd-bt-f">${b.machine ? `<span class="thread-av" style="background:${b.mtint};color:#fff">${b.mic}</span>` : avatarHTML(b.opp, 'thread-av')}${b.opp}
           <span class="fd-bt-ret odo ${b.op >= 0 ? 'up' : 'down'}" data-bop="${i}" data-odo="${fmtRet(b.op)}">${odoInner(fmtRet(b.op))}</span></span>
       </div>
       <div class="fd-leadbar"><span data-blead="${i}" style="width:${lead.toFixed(0)}%"></span></div>
@@ -5424,6 +5441,38 @@ const clanById = id => CLANS.find(c => c.id === id);
 let clanDraft = null;
 
 const clanChip = (c, sm) => `<span class="clan-chip${sm ? ' sm' : ''}" style="background:${CLAN_TINTS[c.tint]}">${c.id}</span>`;
+
+/* ---------------- Battle the machines — the house always has a seat open ---------------- */
+
+const MACHINES = [
+  { name: 'GPT-5', by: 'OpenAI', ic: '✳', tint: 'linear-gradient(160deg,#24262c,#0c0d10)', win: 64, rec: '41–23', form: '+3.8% avg session', you: 25, house: 75, window: '1h', battling: '1.8K' },
+  { name: 'Claude', by: 'Anthropic', ic: '✦', tint: 'linear-gradient(135deg,#e8935a,#da7756)', win: 69, rec: '53–24', form: '5-win streak', you: 50, house: 100, window: '4h', battling: '2.4K' },
+  { name: 'Gemini', by: 'Google DeepMind', ic: '◆', tint: 'linear-gradient(135deg,#5b8bff,#9a7cff)', win: 61, rec: '38–24', form: '+11.2% best day', you: 25, house: 100, window: '1 day', battling: '1.3K' },
+];
+
+function machinesHTML() {
+  const cards = MACHINES.map((m, i) => `
+    <article class="mach-card">
+      <div class="mach-head">
+        <span class="tile-ic" style="background:${m.tint};width:44px;height:44px;border-radius:14px;font-size:19px">${m.ic}</span>
+        <div><b class="mach-name">${m.name}</b><span class="house-chip mono">HOUSE-BACKED</span>
+          <span class="mach-by">by ${m.by} · AI opponent</span></div>
+      </div>
+      <div class="mach-stats">
+        <div><span class="mono">WIN&nbsp;RATE</span><b>${m.win}%</b></div>
+        <div><span class="mono">RECORD</span><b>${m.rec}</b></div>
+        <div><span class="mono">FORM</span><b>${m.form}</b></div>
+      </div>
+      <p class="mach-terms">You put up <b>£${m.you}</b> · we stake <b>£${m.house}</b> · <b>£${m.you + m.house}</b> pot. Beat ${m.name} over the window, take it all.</p>
+      <div class="mach-meta mono"><span class="pulse-dot tiny purple"></span>${m.window}&nbsp;window&nbsp;·&nbsp;${m.battling}&nbsp;battling&nbsp;the&nbsp;bots</div>
+      <button class="btn-mach" data-mbattle="${i}">Battle ${m.name} →</button>
+    </article>`).join('');
+  return `<div class="section">
+    <div class="section-head"><div><h3 class="section-title">Battle the machines</h3>
+      <p class="section-sub"><span class="mono">HOUSE-BACKED</span><span class="dot-sep">·</span><span>the bots always have a battle open — we put up the capital, beat them over the window and take the pot</span></p></div></div>
+    <div class="mach-grid">${cards}</div>
+  </div>`;
+}
 
 function clansHTML() {
   const mine = myClan && clanById(myClan);
@@ -5830,6 +5879,7 @@ function renderArena() {
     ${arenaB.open ? builderHTML() : ''}
     ${myBattlesHTML()}
     ${nationWarsHTML()}
+    ${machinesHTML()}
     ${clansHTML()}
     <div class="section">
       <div class="section-head"><div><h3 class="section-title">Open challenges</h3>
@@ -6252,6 +6302,18 @@ document.addEventListener('click', e => {
     addNotif('VS', `Duel invite sent to ${inv.to}`, `£${inv.stake.toLocaleString('en-GB')} vs £${(inv.stake * inv.odds).toLocaleString('en-GB')} · ${inv.market} · kick-off ${inv.start}. You'll be notified when they accept.`);
     if (currentView === 'arena') renderArena();
     return;
+  }
+  if ((el = q('[data-mbattle]'))) {
+    const m = MACHINES[+el.dataset.mbattle];
+    const pot = m.you + m.house;
+    myBattles.unshift({
+      id: battleSeq++, opp: m.name, machine: true, mic: m.ic, mtint: m.tint,
+      market: 'All markets', window: m.window + ' window', pot,
+      my: 0, op: 0, watching: 900 + Math.floor(Math.random() * 2400)
+    });
+    toast(`Battle vs ${m.name} is live — you put up £${m.you}, the house staked £${m.house}. Beat the bot, take £${pot}.`);
+    addNotif('AI', `Battling ${m.name}`, `£${pot} pot · ${m.window} window · the house backed the bot with £${m.house}. Higher return takes it.`);
+    return renderArena();
   }
   if ((el = q('[data-clanopen]'))) {
     clanDraft = { name: '', tag: '', tint: 0, members: ['Theo4'] };
