@@ -1566,6 +1566,53 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .pact.views { margin-left: auto; cursor: default; }
 .pact.views:hover { background: none; color: var(--text-faint); }
 
+/* Neumorphic counter (soft-UI stepper) */
+
+.neu-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px;
+  border-radius: 17px;
+  background: var(--surface);
+  box-shadow: var(--neu-in-sm);
+}
+.cnt-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 13px;
+  background: var(--surface-raised);
+  box-shadow: var(--neu-out-sm);
+  color: var(--text-soft);
+  font-size: 19px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+  padding-bottom: 2px;
+}
+.cnt-btn:hover { color: var(--accent-a); }
+.cnt-btn:active { box-shadow: var(--neu-in-sm); }
+.cnt-wrap { display: flex; flex-direction: column; align-items: center; min-width: 62px; padding: 0 4px; }
+.cnt-label { font-size: 8.5px; color: var(--text-faint); }
+.cnt-val {
+  font-size: 19px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+.cnt-val.pop { animation: cntpop 0.25s ease; }
+@keyframes cntpop {
+  0% { transform: translateY(7px) scale(0.85); opacity: 0; }
+  100% { transform: none; opacity: 1; }
+}
+
 /* Responsive for new pages */
 
 @media (max-width: 1180px) {
@@ -1727,8 +1774,13 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
           </div>
 
           <div class="hero-actions">
-            <button class="btn-primary"><span class="pulse-dot small light"></span>Enter Now</button>
-            <button class="btn-neu">Invite friends to compete</button>
+            <div class="neu-counter" title="Number of entries">
+              <button class="cnt-btn" data-cnt="-1" aria-label="Fewer entries">−</button>
+              <span class="cnt-wrap"><span class="cnt-label mono">ENTRIES</span><span class="cnt-val" id="cntVal">1</span></span>
+              <button class="cnt-btn" data-cnt="1" aria-label="More entries">+</button>
+            </div>
+            <button class="btn-primary" data-enter><span class="pulse-dot small light"></span><span id="enterLabel">Enter Now · £25</span></button>
+            <button class="btn-neu" data-nav="social">Invite friends to compete</button>
           </div>
 
           <div class="hero-social">
@@ -3054,6 +3106,46 @@ document.addEventListener('keydown', e => {
     if (e.target.value.trim()) askAI(e.target.value.trim());
   }
 });
+
+/* Neumorphic entries counter + Enter Now */
+
+let entryCount = 1;
+
+document.addEventListener('click', e => {
+  let el;
+  if ((el = e.target.closest('[data-cnt]'))) {
+    entryCount = Math.max(1, Math.min(50, entryCount + (+el.dataset.cnt)));
+    const v = document.getElementById('cntVal');
+    v.textContent = entryCount;
+    v.classList.remove('pop');
+    void v.offsetWidth;
+    v.classList.add('pop');
+    document.getElementById('enterLabel').textContent = `Enter Now · £${(entryCount * 25).toLocaleString('en-GB')}`;
+    return;
+  }
+  if ((el = e.target.closest('[data-enter]'))) {
+    prizePool += entryCount * 25;
+    activePlayers += 1;
+    toast(`Entered with ${entryCount} ${entryCount === 1 ? 'entry' : 'entries'} — £${(entryCount * 25).toLocaleString('en-GB')} added to the pool`);
+    return;
+  }
+});
+
+/* Count-up animation on the hero stats (dashboard-template flourish) */
+
+function countUp(el, to, fmt, ms = 950) {
+  const t0 = performance.now();
+  const ease = x => 1 - Math.pow(1 - x, 3);
+  (function frame(now) {
+    const k = Math.min(1, (now - t0) / ms);
+    el.textContent = fmt(to * ease(k));
+    if (k < 1) requestAnimationFrame(frame);
+  })(t0);
+}
+
+countUp(document.getElementById('stat-pool'), prizePool, v => '£' + (v / 1e6).toFixed(2) + 'M');
+countUp(document.getElementById('stat-players'), activePlayers, v => Math.round(v).toLocaleString('en-GB'));
+countUp(document.getElementById('stat-capital'), liveCapital, v => '£' + (v / 1e9).toFixed(2) + 'B');
 
 /* Partner mode toggle */
 document.querySelector('.segmented-state').addEventListener('change', e => {
