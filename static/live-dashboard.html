@@ -2562,6 +2562,55 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .fame-win b i { font-style: normal; color: var(--text-faint); font-weight: 400; padding: 0 2px; }
 .fame-win > span { display: block; font-size: 11px; font-weight: 700; color: var(--green); margin-top: 2px; }
 
+/* ---------------- Spectate ---------------- */
+.spec-hero { padding: 24px 26px; }
+.spec-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+.spec-vs { display: flex; align-items: center; gap: 14px; }
+.spec-face { display: inline-flex; align-items: center; gap: 9px; font-size: 15.5px; font-weight: 800; }
+.spec-meta { display: flex; align-items: center; gap: 16px; font-size: 11px; color: var(--text-faint); flex-wrap: wrap; }
+.spec-meta .odo { color: var(--text); font-weight: 700; }
+.spec-leadtxt { font-size: 10.5px; letter-spacing: .12em; color: var(--text-faint); margin-bottom: 10px; }
+.spec-chart { border-radius: 16px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; }
+.spec-chart svg { display: block; width: 100%; height: 250px; color: var(--text); }
+.spec-legend { display: flex; align-items: center; gap: 18px; margin-top: 12px; font-size: 10.5px; color: var(--text-faint); }
+.spec-legend i { display: inline-block; width: 16px; height: 4px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+.spec-side-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.spec-ret { font-size: 22px; font-weight: 800; letter-spacing: -.4px; }
+.spec-brief { font-size: 12.5px; color: var(--text-soft); line-height: 1.55; margin-bottom: 12px; }
+.spec-mini { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 10px; letter-spacing: .08em; color: var(--text-faint); margin-bottom: 14px; }
+.spec-squad { margin-bottom: 14px; }
+.spec-load { border-top: 1px solid var(--surface); padding-top: 13px; }
+.spec-load-t { font-size: 9.5px; letter-spacing: .12em; color: var(--text-faint); margin-bottom: 10px; }
+.spec-load-row { display: flex; align-items: center; gap: 9px; margin-bottom: 7px; }
+.spec-load-sym { font-size: 11px; font-weight: 700; width: 58px; }
+.spec-load-bar { flex: 1; height: 6px; border-radius: 999px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; }
+.spec-load-bar i { display: block; height: 100%; border-radius: 999px; opacity: .8; }
+.spec-load-pc { font-size: 10px; color: var(--text-faint); width: 32px; text-align: right; }
+
+/* ---------------- Challenge card trader brief ---------------- */
+.ch-bio { font-size: 11.5px; color: var(--text-soft); line-height: 1.5; margin: 2px 0 10px; }
+.ch-stats { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 9.5px; letter-spacing: .08em; color: var(--text-faint); margin-bottom: 13px; }
+.tier-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 9px; font-weight: 800; letter-spacing: .06em; padding: 3px 8px; border-radius: 999px; background: linear-gradient(135deg, rgba(124, 58, 237, .14), rgba(217, 70, 239, .14)); color: var(--accent-a); }
+
+/* ---------------- Winnings globe ---------------- */
+.globe-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 18px; margin-bottom: 18px; }
+.globe-panel { position: relative; display: flex; flex-direction: column; align-items: center; }
+.globe-panel canvas { width: 100%; max-width: 380px; aspect-ratio: 1; cursor: grab; touch-action: none; }
+.globe-panel canvas:active { cursor: grabbing; }
+.globe-cap { font-size: 9.5px; letter-spacing: .12em; color: var(--text-faint); margin-top: 8px; }
+.globe-tip { position: absolute; pointer-events: none; background: var(--card); box-shadow: var(--neu-out-sm); border-radius: 12px; padding: 8px 12px; font-size: 11px; opacity: 0; transition: opacity .15s ease; z-index: 5; white-space: nowrap; }
+.globe-tip.on { opacity: 1; }
+.globe-tip b { display: block; font-size: 12px; }
+.grank { display: flex; align-items: center; gap: 11px; padding: 9px 2px; }
+.grank + .grank { border-top: 1px solid var(--surface); }
+.grank-n { width: 22px; font-size: 10.5px; color: var(--text-faint); text-align: center; }
+.grank-tx { flex: 1; min-width: 0; }
+.grank-name { font-size: 12.5px; font-weight: 700; }
+.grank-bar { height: 5px; border-radius: 999px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; margin-top: 5px; }
+.grank-bar i { display: block; height: 100%; border-radius: 999px; }
+.grank-won { font-size: 12.5px; font-weight: 800; font-variant-numeric: tabular-nums; }
+@media (max-width: 900px) { .globe-row { grid-template-columns: 1fr; } }
+
 /* ---------------- Ideas grid — market cards ---------------- */
 .icg-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .asset-ic.lg { width: 38px; height: 38px; border-radius: 13px; font-size: 16px; }
@@ -2688,6 +2737,7 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
     <div class="view" data-view="inbox"></div>
     <div class="view" data-view="performance"></div>
     <div class="view" data-view="trader"></div>
+    <div class="view" data-view="spectate"></div>
     <div class="view" data-view="partner"></div>
     </div><!-- /views -->
 
@@ -2704,7 +2754,7 @@ const MARK_SVG = '<svg viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/
 const TROPHY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="__S__" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5"/></svg>';
 
 const navItems = [
-  { label: 'Arena', view: 'arena', match: ['arena', 'trader'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>' },
+  { label: 'Arena', view: 'arena', match: ['arena', 'trader', 'spectate'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>' },
   { label: 'Tournaments', view: 'tournaments', match: ['tournaments', 'leaderboard'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5"/></svg>' },
   { label: 'Social', view: 'social', match: ['social', 'inbox'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' },
   { label: 'Ideas', view: 'ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' },
@@ -2973,6 +3023,23 @@ function tickLiveNumbers() {
     if (b) { setOdo(b, fmtRet(w.bRet)); b.className = 'nw-ret odo ' + (w.bRet >= 0 ? 'up' : 'down'); }
     if (bar) bar.style.width = Math.max(8, Math.min(92, 50 + (w.aRet - w.bRet) * 9)).toFixed(0) + '%';
   });
+  /* spectate feed — curves extend while you watch */
+  if (spec && currentView === 'spectate') {
+    if (spec.kind === 'nation') { const w = NATION_WARS[spec.i]; spec.ra = w.aRet; spec.rb = w.bRet; spec.watching = w.watching; }
+    else { spec.ra += (Math.random() - 0.48) * 0.3; spec.rb += (Math.random() - 0.5) * 0.3; spec.watching += Math.floor(Math.random() * 60); }
+    spec.sa.push(+spec.ra.toFixed(3)); spec.sb.push(+spec.rb.toFixed(3));
+    if (spec.sa.length > 140) { spec.sa.shift(); spec.sb.shift(); }
+    const ch = document.getElementById('specChart');
+    if (ch) ch.innerHTML = specChartSVG();
+    const ra = document.getElementById('specRa'), rb = document.getElementById('specRb');
+    if (ra) { setOdo(ra, fmtRet(spec.ra)); ra.className = 'spec-ret odo ' + (spec.ra >= 0 ? 'up' : 'down'); }
+    if (rb) { setOdo(rb, fmtRet(spec.rb)); rb.className = 'spec-ret odo ' + (spec.rb >= 0 ? 'up' : 'down'); }
+    setOdo('specWatch', spec.watching.toLocaleString('en-GB'));
+    const ld = document.getElementById('specLead');
+    if (ld) ld.style.width = Math.max(6, Math.min(94, 50 + (spec.ra - spec.rb) * 9)).toFixed(0) + '%';
+    const lt = document.getElementById('specLeadTxt');
+    if (lt) lt.textContent = '🏆 ' + (spec.ra >= spec.rb ? spec.a.name : spec.b.name) + ' LEADS';
+  }
   /* arena hero counters — always climbing */
   battlesLiveN += Math.floor(Math.random() * 6);
   escrowVol += Math.random() * 0.12;
@@ -3030,6 +3097,7 @@ const TITLES = {
   performance: ['Performance', '<span class="mono">ALL&nbsp;ACCOUNTS</span><span class="dot-sep">·</span><span>verified live track record</span>'],
   partner: ['Partner', '<span class="mono">AFFILIATE</span><span class="dot-sep">·</span><span>earn 30% lifetime on every referral</span>'],
   inbox: ['Messages', '<span class="mono">INBOX</span><span class="dot-sep">·</span><span>messages, contacts &amp; invites</span>'],
+  spectate: ['Spectate', '<span class="mono">LIVE&nbsp;FEED</span><span class="dot-sep">·</span><span>watching the battle unfold in real time</span>'],
   trader: ['Trader', '<span class="mono">PROFILE</span><span class="dot-sep">·</span><span>verified live track record</span>']
 };
 
@@ -3273,7 +3341,7 @@ function renderTerminal() {
       </div>
     </div>
     <div class="section" style="margin-top:30px">
-      <div class="section-head"><div><h3 class="section-title">Trade history</h3>
+      <div class="section-head"><div><h3 class="section-title">📜 Trade history</h3>
         <p class="section-sub"><span class="mono">${tradeLog.length}&nbsp;FILLS</span><span class="dot-sep">·</span><span>every trade stamped with when, where and how it closed</span></p></div></div>
       <div class="fame-card"><div class="fame-scroll"><table class="trades-table" style="min-width:860px">
         <thead><tr class="mono"><th>CLOSED</th><th>MARKET</th><th>SIDE</th><th>ENTRY&nbsp;→&nbsp;EXIT</th><th>RISK</th><th>R:R</th><th>OUTCOME</th><th style="text-align:right">P&amp;L</th></tr></thead>
@@ -3430,7 +3498,7 @@ const FLICK_MODELS = {
   deepseek: { name: 'DeepSeek', ic: '◉', models: ['DeepSeek-V3.2', 'DeepSeek-R1'] }
 };
 
-let ideaCat = 'All', ideaHz = 'all', ideaMode = 'board', ideaFeed = [], ideaUid = 0, stackTop = 0;
+let ideaCat = 'All', ideaHz = 'all', ideaMode = 'flick', ideaFeed = [], ideaUid = 0, stackTop = 0;
 const openBriefs = new Set();
 const flick = { deck: null, pos: 0, taken: [], passed: 0, missed: 0, risk: 2, prov: 'claude', model: 'Claude Opus 4.8', sec: 60 };
 
@@ -3784,7 +3852,7 @@ function bindFlick() {
 
 function renderIdeas() {
   seedIdeas();
-  const modes = [['board', 'Board'], ['stack', 'Stack'], ['flick', 'Flick ⚡']].map(([k, l]) =>
+  const modes = [['flick', 'Flick ⚡'], ['board', 'Board'], ['stack', 'Stack']].map(([k, l]) =>
     `<button class="pill-btn${ideaMode === k ? ' on' : ''}" data-imode="${k}">${l}${k === 'flick' ? ' <small style="display:inline">swipe</small>' : k === 'stack' ? ' <small style="display:inline">morph</small>' : ''}</button>`).join('');
   viewEl('ideas').innerHTML = `<div class="chip-row">${modes}</div>` +
     (ideaMode === 'flick' ? flickHTML() : ideaMode === 'stack' ? stackHTML() : boardHTML());
@@ -4525,7 +4593,7 @@ function tpBattlesHTML(d) {
   const rows = d.acts.filter(a => a.battle);
   return `<div class="fame-card"><div class="fame-scroll"><table class="trades-table">
     <thead><tr class="mono"><th>RESULT</th><th>OPPONENT</th><th style="text-align:right">POT&nbsp;SWING</th><th style="text-align:right">WHEN</th></tr></thead>
-    <tbody>${rows.length ? rows.map(a => `<tr>
+    <tbody>${rows.length ? rows.map(a => `<tr data-duel="${d.name}|${a.market.replace('vs ', '')}|${a.amount * 2}" style="cursor:pointer">
       <td><span class="obadge ${a.win ? 'target' : 'stopped'}">${a.win ? '⚔ Battle won' : '⚔ Battle lost'}</span></td>
       <td><b>${a.market.replace('vs ', '')}</b></td>
       <td style="text-align:right" class="${a.win ? 'up' : 'down'}"><b>${a.win ? '+' : '−'}£${a.amount.toLocaleString('en-GB')}</b></td>
@@ -4898,6 +4966,7 @@ function nationWarsHTML() {
           : aLeft > 0
             ? `<button class="btn-neu" data-njoin="${i}"><span class="pulse-dot tiny purple"></span>Join ${w.a[1]} · ${aLeft} spot${aLeft === 1 ? '' : 's'} left</button>`
             : `<button class="btn-neu" disabled style="opacity:.65">Squads full</button>`}
+        <button class="link-btn" data-nwopen="${i}" style="margin-top:0">▶ Spectate</button>
         <span class="nw-watch mono">● ${w.watching.toLocaleString('en-GB')} watching</span>
       </div>
     </article>`;
@@ -4918,11 +4987,28 @@ function nationWarsHTML() {
     </div>`;
   }).join('');
   return `<div class="section">
-    <div class="section-head"><div><h3 class="section-title">Nation Wars</h3>
+    <div class="section-head"><div><h3 class="section-title">⚔️ Nation Wars</h3>
       <p class="section-sub"><span class="mono">COUNTRY&nbsp;VS&nbsp;COUNTRY</span><span class="dot-sep">·</span><span>full squads battle for one pot — the side with the higher average return takes it all</span></p></div></div>
     <div class="nw-grid">${cards}</div>
-    <div class="section-head" style="margin-top:26px"><div><h3 class="section-title">Where the money's being won</h3>
+    <div class="section-head" style="margin-top:26px"><div><h3 class="section-title">🌍 Where the money's being won</h3>
       <p class="section-sub"><span class="mono">GLOBAL&nbsp;DENSITY</span><span class="dot-sep">·</span><span>total winnings banked by traders in each country, all-time</span></p></div></div>
+    <div class="globe-row">
+      <div class="panel-card globe-panel">
+        <canvas id="globeCv"></canvas>
+        <div class="globe-tip" id="globeTip"></div>
+        <div class="globe-cap mono">DRAG&nbsp;TO&nbsp;SPIN&nbsp;·&nbsp;MARKER&nbsp;HEAT&nbsp;=&nbsp;MONEY&nbsp;WON</div>
+      </div>
+      <div class="panel-card">
+        <div class="panel-title">🔥 Country heat ranking</div>
+        ${globeData().slice(0, 8).map((d, i) => `<div class="grank">
+          <span class="grank-n mono">${i + 1}</span>
+          ${flagHTML(d.c, true)}
+          <div class="grank-tx"><div class="grank-name">${d.name}</div>
+            <div class="grank-bar"><i style="width:${Math.max(6, d.won / globeData()[0].won * 100).toFixed(0)}%;background:${heatCol(1 - i / 7)}"></i></div></div>
+          <span class="grank-won">£${(d.won / 1e6).toFixed(1)}M</span>
+        </div>`).join('')}
+      </div>
+    </div>
     <div class="nat-acc">${rows}</div>
   </div>`;
 }
@@ -4931,7 +5017,7 @@ function myBattlesHTML() {
   if (!myBattles.length) return '';
   const rows = myBattles.map((b, i) => {
     const lead = Math.max(8, Math.min(92, 50 + (b.my - b.op) * 9));
-    return `<div class="blive">
+    return `<div class="blive" data-bspec="${i}" style="cursor:pointer">
       <div class="fd-bt-row">
         <span class="fd-bt-f"><span class="thread-av" style="background:linear-gradient(135deg,var(--accent-b),var(--accent-a));color:#fff;font-weight:700">J</span>jstone
           <span class="fd-bt-ret odo ${b.my >= 0 ? 'up' : 'down'}" data-bmy="${i}" data-odo="${fmtRet(b.my)}">${odoInner(fmtRet(b.my))}</span></span>
@@ -4945,9 +5031,263 @@ function myBattlesHTML() {
     </div>`;
   }).join('');
   return `<div class="section">
-    <div class="section-head"><div><h3 class="section-title">Your battles</h3>
+    <div class="section-head"><div><h3 class="section-title">⚡ Your battles</h3>
       <p class="section-sub"><span class="mono">${myBattles.length}&nbsp;LIVE</span><span class="dot-sep">·</span><span>higher return when the window closes takes the pot</span></p></div></div>
     ${rows}</div>`;
+}
+
+/* ---------------- Winnings globe — the world heat map, drawn by hand ---------------- */
+
+const COUNTRY_GEO = {
+  ch: [46.8, 8.2], gb: [54, -2], nl: [52.1, 5.3], se: [60.1, 18.6], de: [51.2, 10.4],
+  fr: [46.2, 2.2], it: [41.9, 12.6], es: [40.5, -3.7], us: [39.8, -98.6], ca: [56.1, -106.3],
+  br: [-14.2, -51.9], mx: [23.6, -102.5], ar: [-38.4, -63.6], cl: [-35.7, -71.5],
+  co: [4.6, -74.1], pe: [-9.2, -75], jp: [36.2, 138.3], sg: [1.35, 103.8], au: [-25.3, 133.8],
+  in: [20.6, 79], kr: [35.9, 127.8], hk: [22.3, 114.2], th: [15.9, 101], my: [4.2, 102],
+};
+const COUNTRY_NAME = {};
+
+function globeData() {
+  NATION_REGIONS.forEach(r => r.countries.forEach(([c, n]) => { COUNTRY_NAME[c] = n; }));
+  const rows = Object.keys(COUNTRY_GEO).filter(c => COUNTRY_NAME[c]).map(c => ({ c, name: COUNTRY_NAME[c], won: countryWon(c) }));
+  rows.sort((a, b) => b.won - a.won);
+  return rows;
+}
+
+const heatCol = (t, a = 1) => `rgba(${Math.round(56 + t * 161)},${Math.round(189 - t * 119)},${Math.round(248 - t * 9)},${a})`;
+
+function bindGlobe() {
+  const cv = document.getElementById('globeCv');
+  if (!cv) return;
+  if (window._globeRaf) cancelAnimationFrame(window._globeRaf);
+  const tip = document.getElementById('globeTip');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const S = cv.clientWidth || 360;
+  cv.width = S * dpr; cv.height = S * dpr;
+  const ctx = cv.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const R = S / 2 - 24;
+  const data = globeData();
+  const maxWon = data[0].won;
+  let rot = 0.9, dragging = false, lx = 0, marks = [];
+
+  const proj = (lat, lng) => {
+    const la = lat * Math.PI / 180, lo = lng * Math.PI / 180 + rot, tl = -0.38;
+    const x = Math.cos(la) * Math.sin(lo), y = Math.sin(la), z = Math.cos(la) * Math.cos(lo);
+    const y2 = y * Math.cos(tl) - z * Math.sin(tl), z2 = y * Math.sin(tl) + z * Math.cos(tl);
+    return { x: S / 2 + R * x, y: S / 2 - R * y2, z: z2 };
+  };
+
+  function frame() {
+    window._globeRaf = requestAnimationFrame(frame);
+    if (currentView !== 'arena' || !document.getElementById('globeCv')) return;
+    if (!dragging) rot += 0.0032;
+    const dark = document.body.classList.contains('dark');
+    ctx.clearRect(0, 0, S, S);
+    /* sphere ground */
+    const g = ctx.createRadialGradient(S / 2 - R * .3, S / 2 - R * .35, R * .2, S / 2, S / 2, R);
+    g.addColorStop(0, dark ? 'rgba(148,163,184,.10)' : 'rgba(255,255,255,.9)');
+    g.addColorStop(1, dark ? 'rgba(30,41,59,.35)' : 'rgba(203,213,225,.35)');
+    ctx.beginPath(); ctx.arc(S / 2, S / 2, R, 0, 7); ctx.fillStyle = g; ctx.fill();
+    ctx.strokeStyle = dark ? 'rgba(148,163,184,.18)' : 'rgba(100,116,139,.18)'; ctx.lineWidth = 1; ctx.stroke();
+    /* graticule dots */
+    ctx.fillStyle = dark ? 'rgba(148,163,184,.5)' : 'rgba(100,116,139,.45)';
+    for (let la = -75; la <= 75; la += 15) for (let lo = 0; lo < 360; lo += 15) {
+      const p = proj(la, lo);
+      if (p.z > 0.05) {
+        ctx.globalAlpha = 0.06 + 0.16 * p.z;
+        ctx.beginPath(); ctx.arc(p.x, p.y, 1.1, 0, 7); ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+    /* heat markers, back to front */
+    marks = data.map((d, i) => {
+      const [lat, lng] = COUNTRY_GEO[d.c];
+      const p = proj(lat, lng);
+      return { ...d, ...p, r: 3.5 + 10 * Math.sqrt(d.won / maxWon), t: 1 - i / (data.length - 1), rank: i + 1 };
+    }).sort((a, b) => a.z - b.z);
+    marks.forEach(m => {
+      if (m.z < -0.12) return;
+      const a = Math.max(0.12, Math.min(1, 0.25 + m.z));
+      ctx.shadowColor = heatCol(m.t, .9); ctx.shadowBlur = m.z > 0 ? 14 * m.t + 4 : 0;
+      ctx.beginPath(); ctx.arc(m.x, m.y, m.r * (0.65 + 0.35 * Math.max(0, m.z)), 0, 7);
+      ctx.fillStyle = heatCol(m.t, a); ctx.fill();
+      ctx.shadowBlur = 0;
+    });
+    /* labels for the hottest front-facing countries */
+    ctx.font = '600 9px ui-monospace, Menlo, monospace';
+    ctx.textAlign = 'center';
+    marks.filter(m => m.z > 0.3 && m.rank <= 6).forEach(m => {
+      ctx.fillStyle = dark ? 'rgba(226,232,240,.85)' : 'rgba(51,65,85,.85)';
+      ctx.fillText(`${m.c.toUpperCase()} £${(m.won / 1e6).toFixed(0)}M`, m.x, m.y - m.r - 5);
+    });
+  }
+  frame();
+
+  cv.onpointerdown = e => { dragging = true; lx = e.clientX; cv.setPointerCapture(e.pointerId); };
+  cv.onpointermove = e => {
+    if (dragging) { rot += (e.clientX - lx) * 0.006; lx = e.clientX; return; }
+    const rc = cv.getBoundingClientRect();
+    const mx = (e.clientX - rc.left) * (S / rc.width), my = (e.clientY - rc.top) * (S / rc.height);
+    const hit = marks.filter(m => m.z > 0).find(m => Math.hypot(m.x - mx, m.y - my) < m.r + 6);
+    if (hit && tip) {
+      tip.innerHTML = `<b>${hit.name}</b>#${hit.rank} · £${(hit.won / 1e6).toFixed(1)}M won by profitable traders`;
+      tip.style.left = (hit.x / S * rc.width + 12) + 'px';
+      tip.style.top = (hit.y / S * rc.height - 12) + 'px';
+      tip.classList.add('on');
+    } else if (tip) tip.classList.remove('on');
+  };
+  cv.onpointerup = cv.onpointercancel = () => { dragging = false; };
+  cv.onpointerleave = () => { if (tip) tip.classList.remove('on'); };
+}
+
+/* ---------------- Spectate — watching battles is a sport of its own ---------------- */
+
+let spec = null;
+
+function specSeries(end, seed) {
+  let s = seed || 1;
+  const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+  const pts = [0];
+  for (let i = 1; i < 90; i++) pts.push(pts[i - 1] + (rnd() - 0.5) * 0.8);
+  const drift = (end - pts[89]) / 89;
+  return pts.map((v, i) => +(v + drift * i).toFixed(3));
+}
+
+function specLoadout(seed) {
+  let s = seed || 1;
+  const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+  const raw = Object.keys(INSTR).map(k => [k, 0.15 + rnd()]);
+  const tot = raw.reduce((a, r) => a + r[1], 0);
+  return raw.map(([k, v]) => [k, Math.round(v / tot * 100)]).sort((a, b) => b[1] - a[1]).slice(0, 4);
+}
+
+function specSquad(warSeed, avg, offset) {
+  const pool = Object.keys(TRADER_AV);
+  let s = warSeed;
+  const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+  const picks = [];
+  while (picks.length < 5) {
+    const n = pool[Math.floor(rnd() * pool.length)];
+    if (!picks.find(p => p.name === n)) picks.push({ name: n, ret: +(avg + (rnd() - 0.45) * 6).toFixed(2) });
+  }
+  return picks.sort((a, b) => b.ret - a.ret);
+}
+
+function openDuel(aName, bName, pot, watching, ra, rb) {
+  const ha = hashName(aName), hb = hashName(bName);
+  spec = {
+    kind: 'duel',
+    a: { name: aName, av: TRADER_AV[aName] || aName.charAt(0).toUpperCase(), tint: AV_TINTS[ha % AV_TINTS.length] },
+    b: { name: bName, av: TRADER_AV[bName] || bName.charAt(0).toUpperCase(), tint: AV_TINTS[hb % AV_TINTS.length] },
+    ra: ra ?? +(1 + (ha % 500) / 100).toFixed(2),
+    rb: rb ?? +(1 + (hb % 500) / 100).toFixed(2),
+    pot, watching: watching || 800 + ha % 9000, ends: '3h 12m',
+    loadA: specLoadout(ha), loadB: specLoadout(hb),
+  };
+  spec.sa = specSeries(spec.ra, ha);
+  spec.sb = specSeries(spec.rb, hb);
+  navigate('spectate');
+}
+
+function openNation(i) {
+  const w = NATION_WARS[i];
+  const seed = hashName(w.a[0] + w.b[0]);
+  spec = {
+    kind: 'nation', i,
+    a: { name: w.a[1], flag: w.a[0] }, b: { name: w.b[1], flag: w.b[0] },
+    ra: w.aRet, rb: w.bRet, pot: w.pot, watching: w.watching, ends: w.ends, size: w.size,
+    squadA: specSquad(seed, w.aRet, 0), squadB: specSquad(seed * 7 % 2147483647 || 3, w.bRet, 1),
+    loadA: specLoadout(seed), loadB: specLoadout(seed * 13 % 2147483647 || 5),
+  };
+  spec.sa = specSeries(w.aRet, seed);
+  spec.sb = specSeries(w.bRet, seed * 31 % 2147483647 || 9);
+  navigate('spectate');
+}
+
+function specChartSVG() {
+  const W = 920, H = 250, pad = 18;
+  const all = spec.sa.concat(spec.sb);
+  const min = Math.min(...all, 0), max = Math.max(...all, 0.1), rng = max - min || 1;
+  const X = (i, n) => pad + i / (n - 1) * (W - pad * 2);
+  const Y = v => H - pad - (v - min) / rng * (H - pad * 2);
+  const path = s => s.map((v, i) => `${i ? 'L' : 'M'}${X(i, s.length).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+  const grid = [0.25, 0.5, 0.75].map(f => `<line x1="${pad}" x2="${W - pad}" y1="${(pad + (H - pad * 2) * f).toFixed(1)}" y2="${(pad + (H - pad * 2) * f).toFixed(1)}" stroke="currentColor" opacity=".07" stroke-dasharray="3 5"/>`).join('');
+  const zero = `<line x1="${pad}" x2="${W - pad}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}" stroke="currentColor" opacity=".14" stroke-dasharray="2 4"/>`;
+  const dot = (s, col) => `<circle cx="${X(s.length - 1, s.length).toFixed(1)}" cy="${Y(s[s.length - 1]).toFixed(1)}" r="4.5" fill="${col}" stroke="var(--card)" stroke-width="2"/>`;
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    ${grid}${zero}
+    <path d="${path(spec.sa)} L${(W - pad)},${H} L${pad},${H} Z" fill="#10b981" opacity=".07"/>
+    <path d="${path(spec.sb)} L${(W - pad)},${H} L${pad},${H} Z" fill="#a855f7" opacity=".07"/>
+    <path d="${path(spec.sa)}" fill="none" stroke="#10b981" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="${path(spec.sb)}" fill="none" stroke="#a855f7" stroke-width="2.6" stroke-linejoin="round"/>
+    ${dot(spec.sa, '#10b981')}${dot(spec.sb, '#a855f7')}
+  </svg>`;
+}
+
+function specFaceHTML(side, col) {
+  const s = spec[side === 'a' ? 'a' : 'b'];
+  const ic = spec.kind === 'nation'
+    ? flagHTML(s.flag)
+    : `<span class="thread-av" style="background:${s.tint}">${s.av}</span>`;
+  return `<span class="spec-face" ${spec.kind === 'duel' ? `data-trader="${s.name}" style="cursor:pointer"` : ''}>${ic}<b style="color:${col}">${s.name}</b></span>`;
+}
+
+function specSideCard(side) {
+  const col = side === 'a' ? '#10b981' : '#a855f7';
+  const s = spec[side], ret = side === 'a' ? spec.ra : spec.rb;
+  const load = side === 'a' ? spec.loadA : spec.loadB;
+  const squad = side === 'a' ? spec.squadA : spec.squadB;
+  const p = spec.kind === 'duel' ? traderProfile(s.name) : null;
+  return `<div class="panel-card">
+    <div class="spec-side-head">${specFaceHTML(side, col)}
+      <span class="spec-ret odo ${ret >= 0 ? 'up' : 'down'}" id="specR${side}" data-odo="${fmtRet(ret)}">${odoInner(fmtRet(ret))}</span></div>
+    ${p ? `
+    <div class="spec-brief">${p.bio}</div>
+    <div class="spec-mini mono">
+      <span>🎯 ${p.winRate}% WIN</span><span>👥 ${p.followers}</span><span>⭐ LV ${traderTier(p.winnings).lv} ${traderTier(p.winnings).name.toUpperCase()}</span><span>📈 ${p.trades.toLocaleString('en-GB')} TRADES</span>
+    </div>` : `
+    <div class="spec-brief">${spec.size}-trader squad · higher average return when the window closes takes the pot for the whole nation.</div>
+    <table class="trades-table spec-squad"><thead><tr class="mono"><th>TOP&nbsp;MOVERS</th><th style="text-align:right">RETURN</th></tr></thead>
+      <tbody>${squad.map(m => `<tr data-trader="${m.name}" style="cursor:pointer"><td><b>${TRADER_AV[m.name] || ''} ${m.name}</b></td>
+        <td style="text-align:right" class="${m.ret >= 0 ? 'up' : 'down'}"><b>${fmtRet(m.ret)}</b></td></tr>`).join('')}</tbody></table>`}
+    <div class="spec-load">
+      <div class="spec-load-t mono">⚙️ LOADOUT · WHERE&nbsp;THE&nbsp;RISK&nbsp;SITS</div>
+      ${load.map(([k, v]) => `<div class="spec-load-row"><span class="asset-ic" style="background:${INSTR[k].tint};width:20px;height:20px;border-radius:7px;font-size:9px">${INSTR[k].ic}</span>
+        <span class="spec-load-sym">${k}</span>
+        <span class="spec-load-bar"><i style="width:${v}%;background:${col}"></i></span>
+        <span class="spec-load-pc mono">${v}%</span></div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderSpectate() {
+  if (!spec) return navigate('arena');
+  const lead = Math.max(6, Math.min(94, 50 + (spec.ra - spec.rb) * 9));
+  const leader = spec.ra >= spec.rb ? spec.a.name : spec.b.name;
+  viewEl('spectate').innerHTML = `
+    <button class="back-btn" data-nav="arena">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to Arena</button>
+    <div class="panel-card spec-hero">
+      <div class="spec-top">
+        <div class="spec-vs">${specFaceHTML('a', '#10b981')}<span class="nw-vs mono">VS</span>${specFaceHTML('b', '#a855f7')}</div>
+        <div class="spec-meta mono">
+          <span class="live-tag"><span class="pulse-dot tiny"></span>LIVE</span>
+          <span>💰 ${odoHTML('specPot', '£' + spec.pot.toLocaleString('en-GB'))}&nbsp;pot</span>
+          <span>👁 ${odoHTML('specWatch', spec.watching.toLocaleString('en-GB'))}&nbsp;watching</span>
+          <span>⏱ ends ${spec.ends}</span>
+        </div>
+      </div>
+      <div class="nw-bar" style="margin:14px 0 6px"><span id="specLead" style="width:${lead.toFixed(0)}%"></span><i></i></div>
+      <div class="spec-leadtxt mono" id="specLeadTxt">🏆 ${leader}&nbsp;LEADS</div>
+      <div class="spec-chart" id="specChart">${specChartSVG()}</div>
+      <div class="spec-legend mono">
+        <span><i style="background:#10b981"></i>${spec.a.name}</span>
+        <span><i style="background:#a855f7"></i>${spec.b.name}</span>
+        <span style="margin-left:auto">EQUITY&nbsp;·&nbsp;%&nbsp;RETURN&nbsp;SINCE&nbsp;KICK-OFF</span>
+      </div>
+    </div>
+    <div class="two-col" style="margin-top:22px">${specSideCard('a')}${specSideCard('b')}</div>`;
 }
 
 /* Tournaments live inside the Arena — one competitive home */
@@ -4993,7 +5333,7 @@ function tournamentsSectionHTML() {
     </div>
   </section>
   <div class="section">
-    <div class="section-head"><div><h3 class="section-title">Active tournaments</h3>
+    <div class="section-head"><div><h3 class="section-title">🎟️ Active tournaments</h3>
       <p class="section-sub"><span class="mono">5&nbsp;RUNNING</span><span class="dot-sep">·</span><span>tap a card to view its board — pools grow live with every entry</span></p></div>
       <div class="section-head-right">
         <div class="feed-switch">
@@ -5007,7 +5347,7 @@ function tournamentsSectionHTML() {
     <div class="tournament-grid" id="tournaments"></div>
   </div>
   <div class="section">
-    <div class="section-head"><div><h3 class="section-title">Hall of Fame</h3>
+    <div class="section-head"><div><h3 class="section-title">🏆 Hall of Fame</h3>
       <p class="section-sub">Biggest wins all-time — £25 in, life-changing out. Tap anyone to see how they did it.</p></div>
       <div class="section-head-right">
         <input id="fame-search" class="neu-input" type="text" placeholder="Search player…" aria-label="Search Hall of Fame">
@@ -5016,7 +5356,7 @@ function tournamentsSectionHTML() {
     <div class="fame-card"><div id="fame-body"></div></div>
   </div>
   <div class="section">
-    <div class="section-head"><h3 class="section-title">Past tournaments</h3>
+    <div class="section-head"><h3 class="section-title">📍 Past tournaments</h3>
       <div class="pager">
         <button class="icon-btn round" aria-label="Previous" onclick="cyclePast(-1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
         <button class="icon-btn round" aria-label="Next" onclick="cyclePast(1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
@@ -5035,27 +5375,38 @@ function renderTournamentsPage() {
 
 function renderArena() {
   const battleRows = BATTLES.map((b, i) => `
-    <li class="leaderboard-row">
+    <li class="leaderboard-row" data-spectate="${i}" style="cursor:pointer">
       <span class="row-rank mono">${String(i + 1).padStart(2, '0')}</span>
       <span class="vs-pair"><span class="thread-av" style="background:${AV_TINTS[i % 6]}">${b[1]}</span>
         <span class="thread-av" style="background:${AV_TINTS[(i + 3) % 6]}">${b[3]}</span></span>
       <span class="row-name">${b[0]} v ${b[2]}<span class="watching">● ${b[5]} watching</span></span>
       <span class="row-value mono-num">£${b[4].toLocaleString('en-GB')}</span>
     </li>`).join('');
-  const cards = challenges.map((c, i) => `
+  const cards = challenges.map((c, i) => {
+    const p = c.mine ? null : traderProfile(c.name);
+    const tier = p ? traderTier(p.winnings) : null;
+    return `
     <article class="challenge-card">
-      <div class="challenge-head"><span class="thread-av" style="background:${AV_TINTS[i % 6]}">${c.av}</span>
-        <div><div class="challenge-name">${c.name}${c.mine ? ' <span class="mine-tag">YOURS</span>' : ''}</div>
+      <div class="challenge-head"${c.mine ? '' : ` data-trader="${c.name}" style="cursor:pointer"`}><span class="thread-av" style="background:${AV_TINTS[i % 6]}">${c.av}</span>
+        <div><div class="challenge-name">${c.name}${c.mine ? ' <span class="mine-tag">YOURS</span>' : ` <span class="tier-chip">⭐ LV ${tier.lv} ${tier.name.toUpperCase()}</span>`}</div>
           <div class="challenge-sub">${c.mine ? 'waiting for an opponent' : 'set the terms · take the other side'}</div></div></div>
+      ${p ? `<div class="ch-bio">${p.bio}</div>
+      <div class="ch-stats mono">
+        <span>🎯 ${p.winRate}%&nbsp;WIN</span>
+        <span>⚔️ ${p.wins}–${p.losses}</span>
+        <span>👥 ${p.followers}</span>
+        <span>🏆 ${p.podiums}&nbsp;PODIUMS</span>
+      </div>` : ''}
       <div class="challenge-terms">
-        <div class="term-cell"><div class="k">Market</div><div class="v" style="font-size:12.5px">${c.market}</div></div>
-        <div class="term-cell"><div class="k">${c.mine ? 'Starts' : 'Window'}</div><div class="v" style="font-size:12.5px">${c.mine ? c.start : c.window}</div></div>
-        <div class="term-cell"><div class="k">Pot</div><div class="v">£${c.pot.toLocaleString('en-GB')}</div></div>
+        <div class="term-cell"><div class="k">📊 Market</div><div class="v" style="font-size:12.5px">${c.market}</div></div>
+        <div class="term-cell"><div class="k">${c.mine ? '🚀 Starts' : '⏱ Window'}</div><div class="v" style="font-size:12.5px">${c.mine ? c.start : c.window}</div></div>
+        <div class="term-cell"><div class="k">💰 Pot</div><div class="v">£${c.pot.toLocaleString('en-GB')}</div></div>
       </div>
       ${c.mine
         ? `<button class="btn-neu enter" data-abcancel="${i}">Cancel challenge</button>`
         : `<button class="btn-neu enter" data-accept="${i}"><span class="pulse-dot tiny purple"></span>Accept battle</button>`}
-    </article>`).join('');
+    </article>`;
+  }).join('');
   viewEl('arena').innerHTML = `
     <section class="hero">
       <div class="hero-glow"></div>
@@ -5095,10 +5446,11 @@ function renderArena() {
     ${myBattlesHTML()}
     ${nationWarsHTML()}
     <div class="section">
-      <div class="section-head"><div><h3 class="section-title">Open challenges</h3>
+      <div class="section-head"><div><h3 class="section-title">🎯 Open challenges</h3>
         <p class="section-sub"><span class="mono">${challenges.length}&nbsp;OPEN</span><span class="dot-sep">·</span><span>someone set the terms — take the other side and it locks in at kick-off</span></p></div></div>
       <div class="challenge-grid">${cards}</div>
     </div>`;
+  bindGlobe();
 }
 
 /* ---------------- Partner ---------------- */
@@ -5265,7 +5617,7 @@ function fireConfetti() {
 const RENDER = {
   terminal: renderTerminal, ideas: renderIdeas, social: renderSocial, inbox: renderInbox,
   performance: renderPerformance, trader: renderTrader,
-  leaderboard: renderLbPage, arena: renderArena, tournaments: renderTournamentsPage, partner: renderPartner
+  leaderboard: renderLbPage, arena: renderArena, tournaments: renderTournamentsPage, partner: renderPartner, spectate: renderSpectate
 };
 
 document.addEventListener('click', e => {
@@ -5471,6 +5823,21 @@ document.addEventListener('click', e => {
     addNotif('🏴', `Joined the ${w.a[1]} squad`, `${w.size}v${w.size} nation war vs ${w.b[1]} · £${w.pot.toLocaleString('en-GB')} pot · ends ${w.ends}. Your return now counts toward the squad average.`);
     return renderArena();
   }
+  if ((el = q('[data-spectate]'))) {
+    const b = BATTLES[+el.dataset.spectate];
+    if (b) openDuel(b[0], b[2], b[4], Math.round(parseFloat(b[5]) * 1000));
+    return;
+  }
+  if ((el = q('[data-bspec]'))) {
+    const b = myBattles[+el.dataset.bspec];
+    if (b) openDuel('jstone', b.opp, b.pot, b.watching, b.my, b.op);
+    return;
+  }
+  if ((el = q('[data-nwopen]'))) return openNation(+el.dataset.nwopen);
+  if ((el = q('[data-duel]'))) {
+    const [a, b, pot] = el.dataset.duel.split('|');
+    return openDuel(a, b, +pot || 5000);
+  }
   if ((el = q('[data-nreg]'))) {
     const more = document.querySelector(`[data-nmore="${el.dataset.nreg}"]`);
     if (!more) return;
@@ -5494,8 +5861,8 @@ document.addEventListener('click', e => {
     return renderArena();
   }
   if ((el = q('[data-watch]'))) {
-    if (currentView !== 'arena') { navigate('arena'); return toast('The biggest battles are live here'); }
-    return toast('Spectator streams launch with live data — take the other side instead');
+    const b = BATTLES[0];
+    return openDuel(b[0], b[2], b[4], Math.round(parseFloat(b[5]) * 1000));
   }
   /* partner */
   if ((el = q('[data-copyref]'))) {
