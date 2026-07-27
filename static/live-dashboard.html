@@ -4024,7 +4024,7 @@ function renderPerformance() {
 
 /* Textured progress-metric card — dot-grid depth, right-region chart, scrub readout */
 
-function metricCardHTML(id, title, chip) {
+function metricCardHTML(id, title, chip, extraHead) {
   return `<div class="pmc2" id="${id}">
     <div class="pmc2-region">
       <div class="pmc2-wash" data-role="wash"></div>
@@ -4032,7 +4032,7 @@ function metricCardHTML(id, title, chip) {
       <div class="pmc2-chart" data-role="chart"><svg data-role="svg"></svg></div>
     </div>
     <div class="pmc2-main">
-      <div class="pmc2-head"><span class="pmc2-title">${title}</span><span class="pmc2-chip mono">${chip}</span></div>
+      <div class="pmc2-head"><span class="pmc2-title">${title}</span><span class="pmc2-chip mono">${chip}</span>${extraHead ? `<span style="margin-left:auto;display:flex;gap:6px;pointer-events:auto">${extraHead}</span>` : ''}</div>
       <div class="pmc2-headline"><span data-role="val">—</span><span class="pmc2-trendchip" data-role="trend"></span></div>
       <div class="pmc2-date mono" data-role="date"></div>
     </div>
@@ -4106,7 +4106,8 @@ function buildMetric(id, series, opts = {}) {
 
 /* ---------------- Trader profiles ---------------- */
 
-let traderId = 'Theo4', traderBack = 'tournaments';
+let traderId = 'Theo4', traderBack = 'tournaments', traderTab = 'activity', traderRange = 'ALL';
+const TR_RANGES = { '1D': 10, '1W': 30, '1M': 70, 'ALL': 160 };
 
 const TRADER_AV = { Theo4: '🦊', Fredi9999: '🐺', swisstony: '🐵', mintblade: '⚔️', kch123: '🎯', RN1: '🚀', fishalive: '🐹', frostrizz: '❄️', GRIMDRIP: '💀', nattyG: '🌿', quantqueen: '👸', '0xmaverick': '🃏', delta_dan: '📐', macro_mia: '🌍', wickwizard: '🧙', fadefather: '🎩', pip_titan: '🗿', vol_king: '👑', goldenboy: '👑', delta_dora: '🦎', Rudy: '🎺', 'Sander Schouten': '🌷', 'Dion Trades': '🍝' };
 const TRADER_BIOS = ['Swing trader. Process over outcome.', 'Momentum & breakouts. Risk first, always.', 'FX by day, crypto by night.', 'Mean reversion is my love language.', 'Macro-driven. Patient. Ruthless on entries.', 'Scalper — in and out before you blink.', 'Index futures specialist.', 'Here to win comps, not to gamble.'];
@@ -4145,7 +4146,28 @@ function traderProfile(name) {
     battlesMonth: 1 + Math.floor(rnd() * 5),
     formBars,
     hours: 40 + Math.floor(rnd() * 140),
-    series
+    series,
+    acts: Array.from({ length: 10 }, () => {
+      const MK = ['BTC', 'ETH', 'NAS100', 'XAUUSD', 'EURUSD', 'GBPJPY'];
+      const battle = rnd() < 0.25;
+      const win = rnd() < winRate / 100;
+      return {
+        battle, win,
+        dir: rnd() < 0.55 ? 'Long' : 'Short',
+        market: battle ? 'vs ' + ['pip_titan', 'vol_king', 'nattyG', 'wickwizard', 'quantqueen'][Math.floor(rnd() * 5)] : MK[Math.floor(rnd() * 6)],
+        amount: Math.round(Math.pow(10, 1.6 + rnd() * 3.2)),
+        ago: 1 + Math.floor(rnd() * 420)
+      };
+    }),
+    positions: Array.from({ length: Math.floor(rnd() * 3.4) }, () => {
+      const MK = ['BTC', 'ETH', 'NAS100', 'XAUUSD', 'EURUSD', 'GBPJPY'];
+      return {
+        market: MK[Math.floor(rnd() * 6)],
+        dir: rnd() < 0.55 ? 'Long' : 'Short',
+        size: Math.round(500 + rnd() * 20000),
+        pnl: Math.round((rnd() - 0.42) * 6000)
+      };
+    })
   };
 }
 
@@ -4216,9 +4238,41 @@ function renderTrader() {
     </div>
     <div class="tp-grid">
       ${scoreCardHTML(d)}
-      ${metricCardHTML('traderEquity', 'Competition equity', `${d.trades.toLocaleString('en-GB')}&nbsp;TRADES&nbsp;·&nbsp;VERIFIED`)}
+      ${metricCardHTML('traderEquity', 'Profit / Loss', `${d.trades.toLocaleString('en-GB')}&nbsp;TRADES&nbsp;·&nbsp;VERIFIED`,
+        Object.keys(TR_RANGES).map(r => `<button class="pill-btn${traderRange === r ? ' on' : ''}" style="padding:6px 11px;font-size:11px" data-trrange="${r}">${r}</button>`).join(''))}
+    </div>
+    <div class="section" style="margin-top:26px">
+      <div class="chip-row">${[['positions', `Positions${d.positions.length ? ' · ' + d.positions.length : ''}`], ['activity', 'Activity']].map(([k, l]) =>
+        `<button class="pill-btn${traderTab === k ? ' on' : ''}" data-trtab="${k}">${l}</button>`).join('')}</div>
+      <div class="fame-card"><div class="fame-scroll">${traderTab === 'positions' ? traderPositionsHTML(d) : traderActivityHTML(d)}</div></div>
     </div>`;
-  buildMetric('traderEquity', d.series);
+  buildMetric('traderEquity', d.series.slice(-TR_RANGES[traderRange]));
+}
+
+const agoStr = m => m < 60 ? `${m}m ago` : m < 1440 ? `${Math.round(m / 60)}h ago` : `${Math.round(m / 1440)}d ago`;
+
+function traderActivityHTML(d) {
+  return `<table class="trades-table">
+    <thead><tr class="mono"><th>RESULT</th><th>MARKET</th><th>SIDE</th><th style="text-align:right">AMOUNT</th><th style="text-align:right">WHEN</th></tr></thead>
+    <tbody>${d.acts.map(a => `<tr>
+      <td><span class="obadge ${a.win ? 'target' : 'stopped'}">${a.battle ? (a.win ? '⚔ Battle won' : '⚔ Battle lost') : (a.win ? '◆ Win' : '✕ Loss')}</span></td>
+      <td><b>${a.market}</b></td>
+      <td class="${a.dir === 'Long' ? 'up' : 'down'}">${a.battle ? '—' : a.dir}</td>
+      <td style="text-align:right" class="${a.win ? 'up' : 'down'}"><b>${a.win ? '+' : '−'}£${a.amount.toLocaleString('en-GB')}</b></td>
+      <td style="text-align:right;color:var(--text-faint)">${agoStr(a.ago)}</td>
+    </tr>`).join('')}</tbody></table>`;
+}
+
+function traderPositionsHTML(d) {
+  if (!d.positions.length) return '<div style="text-align:center;color:var(--text-faint);padding:34px;font-size:13px">No open positions right now — check Activity for settled results.</div>';
+  return `<table class="trades-table">
+    <thead><tr class="mono"><th>MARKET</th><th>SIDE</th><th style="text-align:right">SIZE</th><th style="text-align:right">LIVE&nbsp;P&amp;L</th></tr></thead>
+    <tbody>${d.positions.map(p => `<tr>
+      <td><b>${p.market}</b></td>
+      <td class="${p.dir === 'Long' ? 'up' : 'down'}">${p.dir}</td>
+      <td style="text-align:right">£${p.size.toLocaleString('en-GB')}</td>
+      <td style="text-align:right" class="${p.pnl >= 0 ? 'up' : 'down'}"><b>${p.pnl >= 0 ? '+' : '−'}£${Math.abs(p.pnl).toLocaleString('en-GB')}</b></td>
+    </tr>`).join('')}</tbody></table>`;
 }
 
 function openTrader(name) {
@@ -4226,6 +4280,8 @@ function openTrader(name) {
   if (clean === 'jstone') return navigate('performance');
   traderId = clean;
   traderBack = currentView;
+  traderTab = 'activity';
+  traderRange = 'ALL';
   navigate('trader');
 }
 
@@ -4773,6 +4829,9 @@ document.addEventListener('click', e => {
     try { navigator.clipboard.writeText(partner.link); } catch (_e) {}
     return toast('Referral link copied');
   }
+  /* trader profile controls */
+  if ((el = q('[data-trtab]'))) { traderTab = el.dataset.trtab; return renderTrader(); }
+  if ((el = q('[data-trrange]'))) { traderRange = el.dataset.trrange; return renderTrader(); }
   /* trader rows — fall-through so buttons inside rows keep priority */
   if ((el = q('[data-trader]'))) return openTrader(el.dataset.trader);
 });
