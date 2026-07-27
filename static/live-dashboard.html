@@ -1511,6 +1511,118 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
 .sc-rank-cat { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); margin-top: 3px; }
 .sc-rank { margin-top: auto; }
 
+/* Holographic award badge (£1M+ club) */
+
+.award-badge { display: inline-block; width: 260px; max-width: 100%; cursor: pointer; }
+.award-tilt { transition: transform 0.2s ease-out; transform: perspective(700px); will-change: transform; }
+.award-badge svg { width: 100%; height: auto; display: block; border-radius: 10px; box-shadow: 0 10px 26px rgba(180, 140, 40, 0.28); }
+.holo { transform-origin: center center; will-change: transform; }
+.hg1 { animation: holo1 5s infinite; }
+.hg2 { animation: holo2 5s infinite; }
+.hg3 { animation: holo3 5s infinite; }
+.hg4 { animation: holo4 5s infinite; }
+.hg5 { animation: holo5 5s infinite; }
+.hg6 { animation: holo6 5s infinite; }
+@keyframes holo1 { 0% { transform: rotate(0deg); } 50% { transform: rotate(10deg); } 100% { transform: rotate(0deg); } }
+@keyframes holo2 { 0% { transform: rotate(10deg); } 50% { transform: rotate(20deg); } 100% { transform: rotate(10deg); } }
+@keyframes holo3 { 0% { transform: rotate(20deg); } 50% { transform: rotate(30deg); } 100% { transform: rotate(20deg); } }
+@keyframes holo4 { 0% { transform: rotate(30deg); } 50% { transform: rotate(40deg); } 100% { transform: rotate(30deg); } }
+@keyframes holo5 { 0% { transform: rotate(40deg); } 50% { transform: rotate(50deg); } 100% { transform: rotate(40deg); } }
+@keyframes holo6 { 0% { transform: rotate(90deg); } 50% { transform: rotate(100deg); } 100% { transform: rotate(90deg); } }
+
+/* Badge wall (spec card) */
+
+.badge-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 900px) { .badge-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.bdg {
+  background: var(--card);
+  box-shadow: var(--neu-out-sm);
+  border-radius: 16px;
+  padding: 15px 12px 13px;
+  text-align: center;
+  border: 1px solid transparent;
+}
+.bdg.earned { border-color: rgba(245, 158, 11, 0.22); background: linear-gradient(160deg, rgba(245, 158, 11, 0.07), var(--card) 55%); }
+.bdg.locked { opacity: 0.45; filter: grayscale(1); }
+.bdg-emoji { font-size: 26px; line-height: 1; }
+.bdg-name { font-size: 12px; font-weight: 700; margin-top: 8px; }
+.bdg-req { font-size: 9.5px; color: var(--text-faint); margin-top: 3px; line-height: 1.4; }
+
+/* X-style profile page */
+
+.tpc { background: var(--card); border-radius: 24px; box-shadow: var(--neu-out-sm); overflow: hidden; display: flex; flex-direction: column; }
+.tpc-cover {
+  position: relative;
+  height: 112px;
+  background:
+    radial-gradient(80% 140% at 85% 0%, rgba(217, 70, 239, 0.25), transparent 55%),
+    linear-gradient(120deg, #101c2b, #0c2b26 55%, #14203a);
+}
+.tpc-cover .past-chip { top: 12px; }
+.tpc-body { padding: 0 24px 20px; display: flex; flex-direction: column; flex: 1; }
+.tpc-avrow { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.tpc-avatar {
+  width: 76px; height: 76px; border-radius: 50%;
+  border: 4px solid var(--card);
+  margin-top: -38px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  box-shadow: var(--neu-out-sm);
+}
+.tpc-actions { display: flex; gap: 9px; padding-top: 12px; }
+.tpc-name { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; display: flex; align-items: center; gap: 6px; margin-top: 10px; }
+.tpc-handle { font-size: 12.5px; color: var(--text-faint); }
+.tpc-bio { font-size: 13.5px; color: var(--text-soft); margin-top: 8px; }
+.tpc-meta { font-size: 11.5px; color: var(--text-faint); margin-top: 5px; }
+.tpc-follows { display: flex; gap: 16px; font-size: 12.5px; color: var(--text-faint); margin-top: 8px; }
+.tpc-follows b { color: var(--text); }
+
+.tp-level {
+  display: flex; align-items: center; gap: 13px;
+  margin-top: 16px; padding: 13px 15px;
+  border-radius: 15px;
+  background: var(--surface); box-shadow: var(--neu-in-sm);
+}
+.tp-level-ic {
+  width: 40px; height: 40px; border-radius: 12px; flex: 0 0 auto;
+  background: linear-gradient(145deg, #38bdf8, #2563eb);
+  color: #fff; display: flex; align-items: center; justify-content: center; font-size: 17px;
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.3);
+}
+.tp-level-tx { flex: 1; min-width: 0; }
+.tp-level-name { display: flex; align-items: center; justify-content: space-between; font-size: 14px; font-weight: 700; }
+.tp-level-lv { font-size: 10px; font-weight: 700; color: var(--text-faint); background: var(--card); padding: 3px 9px; border-radius: 999px; }
+.tp-level-bar { height: 8px; border-radius: 4px; background: var(--card); overflow: hidden; margin: 8px 0 6px; }
+.tp-level-bar span { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, #38bdf8, #2563eb); }
+.tp-level-sub { font-size: 10.5px; color: var(--text-faint); }
+
+.tp-strip { display: flex; gap: 30px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); flex-wrap: wrap; }
+.tp-level-tx > span { display: block; }
+.tp-level-name { display: flex !important; }
+.tp-ss b { display: block; font-size: 19px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.tp-ss span { font-size: 10.5px; color: var(--text-faint); }
+
+.bk-card { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 18px 22px; }
+.bk-title { font-size: 13.5px; font-weight: 700; margin-bottom: 13px; }
+.bk-bar { display: flex; height: 9px; border-radius: 5px; overflow: hidden; margin-bottom: 6px; }
+.bk-bar i { display: block; height: 100%; }
+.bk-row { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+.bk-row:last-child { border-bottom: none; padding-bottom: 2px; }
+.bk-ic { width: 34px; height: 34px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex: 0 0 auto; }
+.bk-tx { flex: 1; min-width: 0; }
+.bk-t { display: block; font-size: 13px; font-weight: 700; }
+.bk-s { display: block; font-size: 10.5px; color: var(--text-faint); margin-top: 1px; }
+.bk-v { font-weight: 800; font-variant-numeric: tabular-nums; }
+
+.media-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.media-tile {
+  height: 118px; border-radius: 16px; padding: 13px 15px;
+  color: #fff; display: flex; flex-direction: column; justify-content: space-between;
+  box-shadow: var(--neu-out-sm);
+}
+.media-ret { font-size: 19px; font-weight: 800; font-variant-numeric: tabular-nums; text-shadow: 0 1px 6px rgba(0,0,0,.25); }
+.media-cap { font-size: 11px; font-weight: 600; opacity: 0.9; }
+
 /* Trader profile header */
 
 .tp-head {
@@ -4091,8 +4203,54 @@ function buildMetric(id, series, opts = {}) {
 
 /* ---------------- Trader profiles ---------------- */
 
-let traderId = 'Theo4', traderBack = 'tournaments', traderTab = 'activity', traderRange = 'ALL';
+let traderId = 'Theo4', traderBack = 'tournaments', traderTab = 'posts', traderRange = 'ALL';
 const TR_RANGES = { '1D': 10, '1W': 30, '1M': 70, 'ALL': 160 };
+
+const TP_TIERS = [[0, 'Rookie'], [50000, 'Operator'], [150000, 'Sharp'], [400000, 'Apex'], [1000000, 'Legend']];
+function traderTier(w) {
+  let i = 0;
+  while (i + 1 < TP_TIERS.length && w >= TP_TIERS[i + 1][0]) i++;
+  const next = TP_TIERS[i + 1];
+  return {
+    name: TP_TIERS[i][1], lv: i + 1,
+    pct: next ? Math.round((w - TP_TIERS[i][0]) / (next[0] - TP_TIERS[i][0]) * 100) : 100,
+    toNext: next ? `£${kfmt(next[0] - w)} more P/L to reach ${next[1]}` : 'Top tier — nowhere left to climb'
+  };
+}
+
+const TP_POSTS = [
+  'GBP/JPY is the cleanest setup on my board right now.',
+  'Won my Arena battle today — GGs to a tough opponent.',
+  'Watching Silver coil up. Big move incoming.',
+  'Cut it at breakeven. Live to fight another session.',
+  'Three green days in a row. Process over outcome.',
+  'The Q3 board is heating up — see you in the top ten.',
+  'Risk small, win big. That’s the whole game.',
+  'New personal best today. Grateful for the grind.'
+];
+
+function profilePost(name, av, tint, text, ago, likes, views) {
+  return `<article class="post">
+    <span class="thread-av" style="background:${tint}">${av}</span>
+    <div class="post-body">
+      <div class="post-head"><span class="post-name">${name}</span>${BADGE}
+        <span class="post-handle">@${name.toLowerCase().replace(/\s+/g, '')}</span><span class="post-time">${ago}</span></div>
+      <p class="post-text">${text}</p>
+      <div class="post-actions">
+        <span class="grow">
+          <button class="pact reply" data-tst="Join the conversation from the Social feed">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>${Math.floor(likes / 9)}</button>
+          <button class="pact rt" data-tst="Reposts happen from the Social feed">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4M21 6H8a4 4 0 0 0-4 4v1M7 22l-4-4 4-4M3 18h13a4 4 0 0 0 4-4v-1"/></svg>${Math.floor(likes / 5)}</button>
+          <button class="pact like" data-tst="Likes happen from the Social feed">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-9.8-9.2C.7 8.6 2.7 5 6.2 5c2.2 0 3.6 1.2 4.3 2.4L12 9l1.5-1.6C14.2 6.2 15.6 5 17.8 5c3.5 0 5.5 3.6 4 6.8C19.5 16.4 12 21 12 21z"/></svg>${likes}</button>
+          <span class="pact views">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>${views}</span>
+        </span>
+      </div>
+    </div>
+  </article>`;
+}
 
 const TRADER_AV = { Theo4: '🦊', Fredi9999: '🐺', swisstony: '🐵', mintblade: '⚔️', kch123: '🎯', RN1: '🚀', fishalive: '🐹', frostrizz: '❄️', GRIMDRIP: '💀', nattyG: '🌿', quantqueen: '👸', '0xmaverick': '🃏', delta_dan: '📐', macro_mia: '🌍', wickwizard: '🧙', fadefather: '🎩', pip_titan: '🗿', vol_king: '👑', goldenboy: '👑', delta_dora: '🦎', Rudy: '🎺', 'Sander Schouten': '🌷', 'Dion Trades': '🍝' };
 const TRADER_BIOS = ['Swing trader. Process over outcome.', 'Momentum & breakouts. Risk first, always.', 'FX by day, crypto by night.', 'Mean reversion is my love language.', 'Macro-driven. Patient. Ruthless on entries.', 'Scalper — in and out before you blink.', 'Index futures specialist.', 'Here to win comps, not to gamble.'];
@@ -4112,7 +4270,9 @@ function traderProfile(name) {
   const drift = 0.435 + rnd() * 0.035;
   for (let i = 1; i < 160; i++) series.push(Math.max(20000, series[i - 1] * (1 + (rnd() - drift) * 0.014)));
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const winnings = Math.round(3000 + rnd() * rnd() * 1400000);
+  /* Hall of Fame champions banked seven figures — their profiles must agree */
+  const CHAMPIONS = { Theo4: 1382400, Fredi9999: 1291150, swisstony: 1265800, Rudy: 1147695 };
+  const winnings = CHAMPIONS[name] || Math.round(3000 + rnd() * rnd() * 900000);
   const formBars = Array.from({ length: 24 }, () => 0.1 + rnd() * 0.9);
   return {
     name, av: TRADER_AV[name] || name.charAt(0).toUpperCase(),
@@ -4125,6 +4285,10 @@ function traderProfile(name) {
     trades: 40 + Math.floor(rnd() * 4200),
     joined: months[hashName(name + 'm') % 12] + ' ' + (2023 + hashName(name + 'y') % 3),
     rank: 1 + hashName(name + 'r') % 200,
+    views: (1 + rnd() * 60).toFixed(1) + 'K',
+    tourShare: 0.55 + rnd() * 0.2,
+    podiums: 2 + Math.floor(rnd() * 12),
+    mediaRets: Array.from({ length: 6 }, () => (2 + rnd() * 40).toFixed(1)),
     winnings,
     winningsChange: Math.round(winnings * (0.04 + rnd() * 0.18)),
     tours: 4 + Math.floor(rnd() * 60), toursMonth: 1 + Math.floor(rnd() * 6),
@@ -4193,43 +4357,190 @@ function scoreCardHTML(d) {
   </div></div>`;
 }
 
+const BADGES_DEF = [
+  ['👑', 'Seven-Figure Club', '£1M+ banked profits', d => d.winnings >= 1e6],
+  ['💰', 'Six-Figure Club', '£100K+ banked profits', d => d.winnings >= 1e5],
+  ['🏆', 'Podium Regular', '5+ podium finishes', d => d.podiums >= 5],
+  ['⚔️', 'Gladiator', '25+ arena battle wins', d => d.wins >= 25],
+  ['🎯', 'Sharpshooter', '65%+ win rate', d => d.winRate >= 65],
+  ['🐋', 'Whale Hunter', 'A £250K+ single win', d => d.big >= 250000],
+  ['🛡️', 'Iron Discipline', '1,000+ trades logged', d => d.trades >= 1000],
+  ['🔥', 'Hot Streak', 'A 10-win streak', d => hashName(d.name + 'streak') % 3 === 0]
+];
+
+const AWARD_FLOWER = 'M14.963 9.075c.787-3-.188-5.887-.188-5.887S12.488 5.175 11.7 8.175c-.787 3 .188 5.887.188 5.887s2.25-1.987 3.075-4.987m-4.5 1.987c.787 3-.188 5.888-.188 5.888S7.988 14.962 7.2 11.962c-.787-3 .188-5.887.188-5.887s2.287 1.987 3.075 4.987m.862 10.388s-.6-2.962-2.775-5.175C6.337 14.1 3.375 13.5 3.375 13.5s.6 2.962 2.775 5.175c2.213 2.175 5.175 2.775 5.175 2.775m3.3 3.413s-1.988-2.288-4.988-3.075-5.887.187-5.887.187 1.987 2.287 4.988 3.075c3 .787 5.887-.188 5.887-.188Zm6.75 0s1.988-2.288 4.988-3.075c3-.826 5.887.187 5.887.187s-1.988 2.287-4.988 3.075c-3 .787-5.887-.188-5.887-.188ZM32.625 13.5s-2.963.6-5.175 2.775c-2.213 2.213-2.775 5.175-2.775 5.175s2.962-.6 5.175-2.775c2.175-2.213 2.775-5.175 2.775-5.175M28.65 6.075s.975 2.887.188 5.887c-.826 3-3.076 4.988-3.076 4.988s-.974-2.888-.187-5.888c.788-3 3.075-4.987 3.075-4.987m-4.5 7.987s.975-2.887.188-5.887c-.788-3-3.076-4.988-3.076-4.988s-.974 2.888-.187 5.888c.788 3 3.075 4.988 3.075 4.988ZM18 26.1c.975-.225 3.113-.6 5.325 0 3 .788 5.063 3.038 5.063 3.038s-2.888.975-5.888.187a13 13 0 0 1-1.425-.525c.563.788 1.125 1.425 2.288 1.913l-.863 2.062c-2.063-.862-2.925-2.137-3.675-3.262-.262-.375-.525-.713-.787-1.05-.26.293-.465.586-.686.903l-.102.147-.048.068c-.775 1.108-1.643 2.35-3.627 3.194l-.862-2.062c1.162-.488 1.725-1.125 2.287-1.913-.45.225-.938.375-1.425.525-3 .788-5.887-.187-5.887-.187s1.987-2.288 4.987-3.075c2.212-.563 4.35-.188 5.325.037';
+
+function awardBadgeHTML() {
+  const holos = ['hsl(358,100%,62%)', 'hsl(30,100%,50%)', 'hsl(60,100%,50%)', 'hsl(96,100%,50%)', 'hsl(233,85%,47%)', 'white'].map((c, i) =>
+    `<g class="holo hg${i + 1}"><polygon points="0,0 260,54 260,0 0,54" fill="${c}" filter="url(#awb)" opacity="0.5"/></g>`).join('');
+  return `<span class="award-badge" id="awardBadge" data-tst="Seven-Figure Club — £1,000,000+ banked profits" title="Seven-Figure Club">
+    <span class="award-tilt" style="display:block">
+      <svg viewBox="0 0 260 54" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="awb"><feGaussianBlur in="SourceGraphic" stdDeviation="3"/></filter>
+          <mask id="awm"><rect width="260" height="54" fill="white" rx="10"/></mask>
+        </defs>
+        <rect width="260" height="54" rx="10" fill="#f3e3ac"/>
+        <rect x="4" y="4" width="252" height="46" rx="8" fill="transparent" stroke="#bbb" stroke-width="1"/>
+        <text font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#666" x="53" y="20">PAKTOS AWARDS</text>
+        <text font-family="Helvetica, Arial, sans-serif" font-size="16" font-weight="bold" fill="#666" x="52" y="40">Seven-Figure Club</text>
+        <g transform="translate(8, 9)"><path fill="#666" d="${AWARD_FLOWER}"/></g>
+        <g style="mix-blend-mode:overlay" mask="url(#awm)">${holos}</g>
+      </svg>
+    </span>
+  </span>`;
+}
+
+function bindAwardTilt() {
+  const el = document.getElementById('awardBadge');
+  if (!el) return;
+  const tilt = el.querySelector('.award-tilt');
+  el.addEventListener('pointermove', e => {
+    const r = el.getBoundingClientRect();
+    const rx = ((e.clientY - r.top) / r.height - 0.5) * -16;
+    const ry = ((e.clientX - r.left) / r.width - 0.5) * 18;
+    tilt.style.transform = `perspective(700px) rotateX(${rx.toFixed(1)}deg) rotateY(${ry.toFixed(1)}deg) scale(0.985)`;
+  });
+  el.addEventListener('pointerleave', () => { tilt.style.transform = 'perspective(700px)'; });
+}
+
+function tpPostsHTML(d) {
+  const real = POSTS.filter(p => p.name === d.name)
+    .map(p => profilePost(p.name, p.av, p.tint, p.text, p.time, p.likes, p.views));
+  const h = hashName(d.name + 'p');
+  const seeded = [0, 1, 2].map(i => {
+    const t = TP_POSTS[(h + i * 3) % TP_POSTS.length];
+    return profilePost(d.name, d.av, d.tint, t, `${2 + i}d`, 80 + ((h >>> (i + 2)) % 900), kfmt(2000 + ((h >>> i) % 40000)));
+  });
+  return `<div class="xfeed">${real.join('')}${seeded.join('')}</div>`;
+}
+
+function tpBattlesHTML(d) {
+  const rows = d.acts.filter(a => a.battle);
+  return `<div class="fame-card"><div class="fame-scroll"><table class="trades-table">
+    <thead><tr class="mono"><th>RESULT</th><th>OPPONENT</th><th style="text-align:right">POT&nbsp;SWING</th><th style="text-align:right">WHEN</th></tr></thead>
+    <tbody>${rows.length ? rows.map(a => `<tr>
+      <td><span class="obadge ${a.win ? 'target' : 'stopped'}">${a.win ? '⚔ Battle won' : '⚔ Battle lost'}</span></td>
+      <td><b>${a.market.replace('vs ', '')}</b></td>
+      <td style="text-align:right" class="${a.win ? 'up' : 'down'}"><b>${a.win ? '+' : '−'}£${a.amount.toLocaleString('en-GB')}</b></td>
+      <td style="text-align:right;color:var(--text-faint)">${agoStr(a.ago)}</td>
+    </tr>`).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--text-faint);padding:26px">No settled battles yet.</td></tr>'}</tbody>
+  </table></div></div>`;
+}
+
+function tpSpecHTML(d) {
+  const badges = BADGES_DEF.map(([e, name, req, fn]) => {
+    const earned = fn(d);
+    return `<div class="bdg ${earned ? 'earned' : 'locked'}">
+      <div class="bdg-emoji">${earned ? e : '🔒'}</div>
+      <div class="bdg-name">${name}</div>
+      <div class="bdg-req">${req}</div>
+    </div>`;
+  }).join('');
+  return `${d.winnings >= 1e6 ? `<div style="margin-bottom:20px">${awardBadgeHTML()}</div>` : ''}
+    <div class="tp-grid" style="grid-template-columns:minmax(0,1.35fr) 380px">
+      <div>
+        <div class="badge-grid">${badges}</div>
+        <p style="font-size:11px;color:var(--text-faint);margin-top:14px">${BADGES_DEF.filter(([, , , fn]) => fn(d)).length} of ${BADGES_DEF.length} badges earned · every badge is verified from live results</p>
+      </div>
+      ${scoreCardHTML(d)}
+    </div>`;
+}
+
+function tpMediaHTML(d) {
+  const caps = ['Battle win', 'Tournament finish', 'Best day', 'Arena KO', 'Streak', 'Podium'];
+  const tints = ['linear-gradient(135deg,#f472b6,#7c3aed)', 'linear-gradient(135deg,#fbbf24,#ef4444)', 'linear-gradient(135deg,#34d399,#0891b2)', 'linear-gradient(135deg,#818cf8,#d946ef)', 'linear-gradient(135deg,#f97316,#db2777)', 'linear-gradient(135deg,#22d3ee,#6d28d9)'];
+  return `<div class="media-grid">${d.mediaRets.map((r, i) => `
+    <div class="media-tile" style="background:${tints[i]}">
+      <span class="media-ret">+${r}%</span><span class="media-cap">${caps[i]}</span>
+    </div>`).join('')}</div>`;
+}
+
+function tpLikesHTML(d) {
+  const names = Object.keys(TRADER_AV);
+  const h = hashName(d.name + 'lk');
+  return `<div class="xfeed">${[0, 1, 2].map(i => {
+    const n = names[(h + i * 7) % names.length];
+    const o = traderProfile(n);
+    const t = TP_POSTS[(h + i * 5) % TP_POSTS.length];
+    return profilePost(n, o.av, o.tint, t, `${1 + i}d`, 60 + ((h >>> i) % 700), kfmt(1000 + ((h >>> (i + 1)) % 30000)));
+  }).join('')}</div>`;
+}
+
 function renderTrader() {
   const d = traderProfile(traderId);
+  const tier = traderTier(d.winnings);
+  const tour = Math.round(d.winnings * d.tourShare), arena = d.winnings - tour;
+  const tourPct = Math.round(tour / d.winnings * 100);
+  const tabs = [['posts', 'Posts'], ['spec', 'Spec'], ['battles', 'Battles'], ['trades', 'Trades'], ['media', 'Media'], ['likes', 'Likes']].map(([k, l]) =>
+    `<button class="pill-btn${traderTab === k ? ' on' : ''}" data-trtab="${k}">${l}</button>`).join('');
+  const body =
+    traderTab === 'spec' ? tpSpecHTML(d) :
+    traderTab === 'battles' ? tpBattlesHTML(d) :
+    traderTab === 'trades' ? `<div class="fame-card" style="margin-bottom:16px"><div class="fame-scroll">${traderPositionsHTML(d)}</div></div><div class="fame-card"><div class="fame-scroll">${traderActivityHTML(d)}</div></div>` :
+    traderTab === 'media' ? tpMediaHTML(d) :
+    traderTab === 'likes' ? tpLikesHTML(d) :
+    tpPostsHTML(d);
   viewEl('trader').innerHTML = `
     <button class="back-btn" data-nav="${traderBack}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back</button>
-    <div class="tp-head">
-      <span class="tp-av" style="background:${d.tint}">${d.av}</span>
-      <div style="flex:1;min-width:180px">
-        <div class="tp-name">${d.name}${BADGE}</div>
-        <div class="tp-sub">@${d.name.toLowerCase().replace(/\s+/g, '')} · ${d.bio}</div>
-        <div class="tp-follows"><span><b>${d.followers}</b> followers</span><span><b>${d.following}</b> following</span><span>Joined ${d.joined}</span></div>
+    <div class="tp-grid" style="grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);margin-bottom:24px">
+      <div class="tpc">
+        <div class="tpc-cover">
+          <span class="past-chip" data-tst="Public results page — shareable when live">Public results ↗</span>
+        </div>
+        <div class="tpc-body">
+          <div class="tpc-avrow">
+            <span class="tpc-avatar" style="background:${d.tint}">${d.av}</span>
+            <span class="tpc-actions">
+              <button class="fr-follow${following.has(d.name) ? ' on' : ''}" data-follow="${d.name}">${following.has(d.name) ? 'Following' : 'Follow'}</button>
+              <button class="btn-neu" style="padding:8px 16px;font-size:12.5px" data-dm="${d.name}">Message</button>
+            </span>
+          </div>
+          <div class="tpc-name">${d.name}${BADGE}</div>
+          <div class="tpc-handle">@${d.name.toLowerCase().replace(/\s+/g, '')}</div>
+          <div class="tpc-bio">${d.bio}</div>
+          <div class="tpc-meta">Joined ${d.joined} · ${d.views} views · Rank #${d.rank}</div>
+          <div class="tpc-follows"><span><b>${d.followers}</b> followers</span><span><b>${d.following}</b> following</span></div>
+          <div class="tp-level">
+            <span class="tp-level-ic">★</span>
+            <span class="tp-level-tx">
+              <span class="tp-level-name">${tier.name}<span class="tp-level-lv">Lv ${tier.lv}</span></span>
+              <span class="tp-level-bar"><span style="width:${tier.pct}%"></span></span>
+              <span class="tp-level-sub">${tier.toNext}</span>
+            </span>
+          </div>
+          <div class="tp-strip">
+            <span class="tp-ss"><b>${(d.wins / Math.max(1, d.losses)).toFixed(2)}</b><span>W / L · ${d.wins}–${d.losses}</span></span>
+            <span class="tp-ss"><b>${d.winRate}%</b><span>Win rate</span></span>
+            <span class="tp-ss"><b>£${kfmt(d.big)}</b><span>Biggest win</span></span>
+            <span class="tp-ss"><b>${d.trades.toLocaleString('en-GB')}</b><span>Trades</span></span>
+          </div>
+        </div>
       </div>
-      <button class="fr-follow${following.has(d.name) ? ' on' : ''}" data-follow="${d.name}">${following.has(d.name) ? 'Following' : 'Follow'}</button>
-      <button class="btn-neu" style="padding:9px 18px;font-size:13px" data-dm="${d.name}">Message</button>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        ${metricCardHTML('traderEquity', 'Prize winnings', 'ALL-TIME · VERIFIED',
+          Object.keys(TR_RANGES).map(r => `<button class="pill-btn${traderRange === r ? ' on' : ''}" style="padding:6px 11px;font-size:11px" data-trrange="${r}">${r}</button>`).join(''))}
+        <div class="bk-card">
+          <div class="bk-title">How these winnings were built</div>
+          <div class="bk-bar"><i style="width:${tourPct}%;background:linear-gradient(90deg,#fbbf24,#f59e0b)"></i><i style="width:${100 - tourPct}%;background:linear-gradient(90deg,#a855f7,#7c3aed)"></i></div>
+          <div class="bk-row">
+            <span class="bk-ic" style="background:rgba(245,158,11,.15)">🏆</span>
+            <span class="bk-tx"><span class="bk-t">Tournament prizes</span><span class="bk-s">${d.podiums} podium finishes</span></span>
+            <span class="bk-v up">+£${kfmt(tour)}</span>
+          </div>
+          <div class="bk-row">
+            <span class="bk-ic" style="background:rgba(124,58,237,.12)">⚔️</span>
+            <span class="bk-tx"><span class="bk-t">Arena battle winnings</span><span class="bk-s">${d.wins}–${d.losses} record</span></span>
+            <span class="bk-v up">+£${kfmt(arena)}</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="tile-row">
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#34d399,#10b981)">◎</span>
-        <div class="tile-tx"><div class="tile-label mono">WIN&nbsp;RATE</div><div class="tile-value">${d.winRate}%</div>
-          <div class="tile-bar"><span style="width:${d.winRate}%"></span></div></div></div>
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9a7cff,#7c5cff)">⚔</span>
-        <div class="tile-tx"><div class="tile-label mono">ARENA&nbsp;W&nbsp;/&nbsp;L</div><div class="tile-value">${d.wins}–${d.losses}</div></div></div>
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#ffc24b,#f59e0b)">🏆</span>
-        <div class="tile-tx"><div class="tile-label mono">BIGGEST&nbsp;WIN</div><div class="tile-value">£${d.big.toLocaleString('en-GB')}</div></div></div>
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">★</span>
-        <div class="tile-tx"><div class="tile-label mono">GLOBAL&nbsp;RANK</div><div class="tile-value">#${d.rank}</div></div></div>
-    </div>
-    <div class="tp-grid">
-      ${scoreCardHTML(d)}
-      ${metricCardHTML('traderEquity', 'Profit / Loss', `${d.trades.toLocaleString('en-GB')}&nbsp;TRADES&nbsp;·&nbsp;VERIFIED`,
-        Object.keys(TR_RANGES).map(r => `<button class="pill-btn${traderRange === r ? ' on' : ''}" style="padding:6px 11px;font-size:11px" data-trrange="${r}">${r}</button>`).join(''))}
-    </div>
-    <div class="section" style="margin-top:26px">
-      <div class="chip-row">${[['positions', `Positions${d.positions.length ? ' · ' + d.positions.length : ''}`], ['activity', 'Activity']].map(([k, l]) =>
-        `<button class="pill-btn${traderTab === k ? ' on' : ''}" data-trtab="${k}">${l}</button>`).join('')}</div>
-      <div class="fame-card"><div class="fame-scroll">${traderTab === 'positions' ? traderPositionsHTML(d) : traderActivityHTML(d)}</div></div>
-    </div>`;
+    <div class="chip-row">${tabs}</div>
+    ${body}`;
   buildMetric('traderEquity', d.series.slice(-TR_RANGES[traderRange]));
+  bindAwardTilt();
 }
 
 const agoStr = m => m < 60 ? `${m}m ago` : m < 1440 ? `${Math.round(m / 60)}h ago` : `${Math.round(m / 1440)}d ago`;
