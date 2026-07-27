@@ -2642,6 +2642,35 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .sc-input { display: flex; gap: 10px; }
 .sc-input input { flex: 1; border: 0; font: inherit; font-size: 13px; color: var(--text); background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 13px; padding: 11px 15px; outline: none; }
 
+.ch-kick { display: flex; align-items: center; gap: 8px; font-size: 9.5px; letter-spacing: .1em; color: var(--text-faint); margin-bottom: 12px; }
+.ch-kick .ch-eye { margin-left: auto; letter-spacing: .05em; }
+
+/* ---------------- Live battles hub ---------------- */
+.lb-hero { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px 26px; margin-bottom: 16px; flex-wrap: wrap; }
+.lb-hero-stats { display: flex; gap: 24px; font-size: 12px; color: var(--text-faint); }
+.lb-hero-stats .odo { color: var(--text); font-weight: 800; font-size: 15px; }
+.lb-filters { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+.lb-fgroup { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.lb-fgroup .b-label { width: 74px; flex: none; margin: 0; }
+.lb-fgroup .pill-btn { padding: 7px 13px; font-size: 11.5px; }
+.lb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; }
+.lb-card { background: var(--card); border-radius: 22px; box-shadow: var(--neu-out-sm); padding: 16px 18px; display: flex; flex-direction: column; gap: 11px; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease; }
+.lb-card:hover { transform: translateY(-2px); box-shadow: var(--neu-out); }
+.lb-top { display: flex; align-items: center; gap: 7px; font-size: 9px; letter-spacing: .1em; }
+.lb-kind { padding: 3.5px 8px; border-radius: 999px; background: var(--surface); box-shadow: var(--neu-in-sm); color: var(--text-soft); font-weight: 800; }
+.lb-kind.clan { color: var(--accent-a); }
+.hot-chip { padding: 3.5px 8px; border-radius: 999px; background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; font-weight: 800; }
+.nn-chip { padding: 3.5px 8px; border-radius: 999px; background: linear-gradient(135deg, var(--accent-a), var(--accent-b)); color: #fff; font-weight: 800; }
+.lb-watching { margin-left: auto; color: var(--text-faint); letter-spacing: .06em; }
+.lb-face-row { display: grid; grid-template-columns: 1fr auto auto auto 1fr; align-items: center; gap: 9px; }
+.lb-face { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; min-width: 0; }
+.lb-face b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lb-face-row .lb-face:last-child { justify-content: flex-end; }
+.lb-ret { font-size: 13.5px; font-weight: 800; }
+.lb-foot { display: flex; align-items: center; gap: 12px; font-size: 10px; letter-spacing: .06em; color: var(--text-faint); }
+.lb-foot b { color: var(--text); font-size: 12px; letter-spacing: 0; }
+.lb-go { margin-left: auto; color: var(--accent-a); font-weight: 700; letter-spacing: 0; font-size: 11.5px; }
+
 /* ---------------- Partner portal ---------------- */
 .pt-hero { display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 26px; padding: 26px 28px; margin-bottom: 18px; }
 .pt-eyebrow { font-size: 9.5px; letter-spacing: .18em; color: var(--accent-a); margin-bottom: 10px; }
@@ -2857,6 +2886,8 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
     <div class="view" data-view="performance"></div>
     <div class="view" data-view="trader"></div>
     <div class="view" data-view="spectate"></div>
+    <div class="view" data-view="live"></div>
+    <div class="view" data-view="clan"></div>
     <div class="view" data-view="partner"></div>
     </div><!-- /views -->
 
@@ -2873,7 +2904,7 @@ const MARK_SVG = '<svg viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/
 const TROPHY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="__S__" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5"/></svg>';
 
 const navItems = [
-  { label: 'Arena', view: 'arena', match: ['arena', 'trader', 'spectate'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>' },
+  { label: 'Arena', view: 'arena', match: ['arena', 'trader', 'spectate', 'live', 'clan'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>' },
   { label: 'Tournaments', view: 'tournaments', locked: true, match: ['tournaments', 'leaderboard'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5"/></svg>' },
   { label: 'Social', view: 'social', match: ['social'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' },
   { label: 'Ideas', view: 'ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' },
@@ -3163,7 +3194,11 @@ function tickLiveNumbers() {
   /* spectate feed — curves extend while you watch */
   if (spec && currentView === 'spectate') {
     if (spec.kind === 'nation') { const w = NATION_WARS[spec.i]; spec.ra = w.aRet; spec.rb = w.bRet; spec.watching = w.watching; }
-    else if (spec.kind === 'clan') { const w = CLAN_WARS[spec.i]; if (w) { spec.ra = w.ra; spec.rb = w.rb; spec.watching = w.watching; } }
+    else if (spec.kind === 'clan') {
+      const w = CLAN_WARS[spec.i];
+      if (w) { spec.ra = w.ra; spec.rb = w.rb; spec.watching = w.watching; }
+      else { spec.ra += (Math.random() - 0.48) * 0.25; spec.rb += (Math.random() - 0.5) * 0.25; spec.watching += Math.floor(Math.random() * 50); }
+    }
     else { spec.ra += (Math.random() - 0.48) * 0.3; spec.rb += (Math.random() - 0.5) * 0.3; spec.watching += Math.floor(Math.random() * 60); }
     spec.sa.push(+spec.ra.toFixed(3)); spec.sb.push(+spec.rb.toFixed(3));
     if (spec.sa.length > 140) { spec.sa.shift(); spec.sb.shift(); }
@@ -3206,6 +3241,26 @@ function tickLiveNumbers() {
       }
     }
   }
+  /* live battles board drift + churn */
+  LIVE_B.forEach((b, i) => {
+    b.ra += (Math.random() - 0.5) * 0.18;
+    b.rb += (Math.random() - 0.5) * 0.18;
+    b.watching += Math.floor(Math.random() * 25);
+    b.endsMin = Math.max(1, b.endsMin - 0.025);
+    if (currentView !== 'live') return;
+    const a = document.querySelector(`[data-lba="${i}"]`);
+    const bb = document.querySelector(`[data-lbb="${i}"]`);
+    const bar = document.querySelector(`[data-lbbar="${i}"]`);
+    const w = document.querySelector(`[data-lbw="${i}"]`);
+    if (a) { setOdo(a, fmtRet(b.ra)); a.style.color = b.ra >= 0 ? 'var(--green)' : '#e5484d'; }
+    if (bb) { setOdo(bb, fmtRet(b.rb)); bb.style.color = b.rb >= 0 ? 'var(--green)' : '#e5484d'; }
+    if (bar) bar.style.width = Math.max(8, Math.min(92, 50 + (b.ra - b.rb) * 9)).toFixed(0) + '%';
+    if (w) w.textContent = '● ' + b.watching.toLocaleString('en-GB') + ' watching';
+  });
+  if (currentView === 'live') {
+    setOdo('lbCount', String(LIVE_B.length));
+    setOdo('lbPool', '£' + (LIVE_B.reduce((a2, b2) => a2 + b2.pot, 0) / 1e6).toFixed(2) + 'M');
+  }
   /* arena hero counters — always climbing */
   battlesLiveN += Math.floor(Math.random() * 6);
   escrowVol += Math.random() * 0.12;
@@ -3215,6 +3270,12 @@ function tickLiveNumbers() {
   setOdo('ahEscrow', '£' + escrowVol.toFixed(1) + 'M');
   setOdo('ahBigPot', '£' + (bigPotLive / 1e6).toFixed(2) + 'M');
   setOdo('ahDueling', duelingN.toLocaleString('en-GB'));
+  /* open challenges — eyes on them keep climbing */
+  challenges.forEach((c, i) => {
+    if (Math.random() < 0.4) c.eyeing = (c.eyeing || 8 + hashName(c.name + 'e') % 46) + Math.floor(Math.random() * 3);
+    const e2 = document.querySelector(`[data-eye="${i}"]`);
+    if (e2) e2.textContent = '● ' + c.eyeing + ' eyeing it';
+  });
   /* tournament pools grow live with entries */
   tournaments.forEach((t, i) => {
     t.poolN += Math.floor(Math.random() * 260);
@@ -3263,6 +3324,8 @@ const TITLES = {
   performance: ['Performance', '<span class="mono">ALL&nbsp;ACCOUNTS</span><span class="dot-sep">·</span><span>verified live track record</span>'],
   partner: ['Partner', '<span class="mono">PARTNER&nbsp;PROGRAMME</span><span class="dot-sep">·</span><span>earn 20% for the lifetime of every client</span>'],
   inbox: ['Messages', '<span class="mono">INBOX</span><span class="dot-sep">·</span><span>messages, contacts &amp; invites</span>'],
+  clan: ['Clan', '<span class="mono">CLAN&nbsp;PAGE</span><span class="dot-sep">·</span><span>the banner, the roster, the war record</span>'],
+  live: ['Live Battles', '<span class="mono">SPECTATOR&nbsp;HUB</span><span class="dot-sep">·</span><span>every battle on the platform, live — pick one and watch</span>'],
   spectate: ['Spectate', '<span class="mono">LIVE&nbsp;FEED</span><span class="dot-sep">·</span><span>watching the battle unfold in real time</span>'],
   trader: ['Trader', '<span class="mono">PROFILE</span><span class="dot-sep">·</span><span>verified live track record</span>']
 };
@@ -4740,7 +4803,7 @@ function profilePost(name, av, tint, text, ago, likes, views) {
 }
 
 const TRADER_AV = { Theo4: '👨‍💻', Fredi9999: '👩‍💻', swisstony: '👨‍💼', mintblade: '👨‍🦰', kch123: '👨‍🦱', RN1: '👩‍💻', fishalive: '👨‍💼', frostrizz: '🧑‍💼', GRIMDRIP: '👱‍♀️', nattyG: '🧔', quantqueen: '🧑‍🦱', '0xmaverick': '👩‍🦰', delta_dan: '👩‍🦱', macro_mia: '👨‍🦰', wickwizard: '👩‍💻', fadefather: '👩‍💻', pip_titan: '👨‍💼', vol_king: '🧔', goldenboy: '👩‍🦱', delta_dora: '👩‍🦱', Rudy: '👱‍♂️', 'Sander Schouten': '👱‍♂️', 'Dion Trades': '👨‍🦰' };
-const TRADER_BIOS = ['Swing trader. Process over outcome.', 'Momentum & breakouts. Risk first, always.', 'FX by day, crypto by night.', 'Mean reversion is my love language.', 'Macro-driven. Patient. Ruthless on entries.', 'Scalper — in and out before you blink.', 'Index futures specialist.', 'Here to win comps, not to gamble.'];
+const TRADER_BIOS = ['Swing trader. Process over outcome.', 'Momentum & breakouts. Risk first, always.', 'FX by day, crypto by night.', 'Mean reversion is my love language.', 'Macro-driven. Patient. Ruthless on entries.', 'Scalper — in and out before you blink.', 'Index futures specialist.', 'Here to win comps, not to gamble.', 'Gold bug with a stop loss.', 'Two setups. A thousand reps.', 'I fade your breakout and sleep fine.', 'Session opens only. Londons mine.', 'Small size, big streaks.', 'Volatility is the product. I just package it.', 'One clean R a day keeps the tilt away.', 'Retired poker pro. Same game, better odds.'];
 
 function hashName(s) {
   let h = 2166136261;
@@ -4934,7 +4997,7 @@ function tpSpecHTML(d) {
         <div class="badge-grid">${badges}</div>
         <p style="font-size:11px;color:var(--text-faint);margin-top:14px">${BADGES_DEF.filter(([, , , fn]) => fn(d)).length} of ${BADGES_DEF.length} badges earned · every badge is verified from live results</p>
       </div>
-      ${scoreCardHTML(d)}
+      
     </div>`;
 }
 
@@ -5035,6 +5098,7 @@ function renderTrader() {
             <span class="bk-v up">+£${kfmt(arena)}</span>
           </div>
         </div>
+        ${scoreCardHTML(d)}
       </div>
     </div>
     <div class="chip-row">${tabs}</div>
@@ -5544,17 +5608,127 @@ function machinesHTML() {
   </div>`;
 }
 
+const fmtM = v => v >= 1e6 ? '£' + (v / 1e6).toFixed(2) + 'M' : '£' + Math.round(v / 1e3) + 'K';
+const CLAN_TIERS = [[0, 'Bronze'], [400000, 'Silver'], [900000, 'Gold'], [1800000, 'Diamond'], [3000000, 'Legend']];
+function clanTier(w) {
+  let i = 0;
+  while (i + 1 < CLAN_TIERS.length && w >= CLAN_TIERS[i + 1][0]) i++;
+  const next = CLAN_TIERS[i + 1];
+  return { name: CLAN_TIERS[i][1], lv: i + 1, pct: next ? Math.round((w - CLAN_TIERS[i][0]) / (next[0] - CLAN_TIERS[i][0]) * 100) : 100, toNext: next ? fmtM(next[0] - w) + ' banked to ' + next[1] : 'Top tier — the ladder fears you' };
+}
+
+const CLAN_ROLES = ['CAPTAIN', 'OFFICER'];
+const clanMemberRet = (id, m) => +((hashName(m + id) % 900) / 100 - 1.5).toFixed(2);
+
+function clanHistory(c) {
+  return Array.from({ length: 6 }, (_, k) => {
+    const opps = CLANS.filter(x => x.id !== c.id);
+    const opp = opps[hashName(c.id + 'h' + k) % opps.length];
+    return {
+      opp, win: hashName(c.id + 'w' + k) % 5 < 3,
+      pot: [15000, 25000, 40000, 60000, 90000, 120000][hashName(c.id + 'p' + k) % 6],
+      ago: ['2d ago', '5d ago', '1w ago', '2w ago', '3w ago', '1mo ago'][k],
+    };
+  });
+}
+
+let clanView = null;
+function openClan(id) { clanView = id; navigate('clan'); }
+
+function renderClan() {
+  const c = clanById(clanView);
+  if (!c) return navigate('arena');
+  const tier = clanTier(c.winnings);
+  const hist = clanHistory(c);
+  const wars = CLAN_WARS.map((w, i) => ({ ...w, i })).filter(w => w.a === c.id || w.b === c.id);
+  const winRate = Math.round(c.wins / Math.max(1, c.wins + c.losses) * 100);
+  const roster = c.members.map((m, i) => `<div class="fame-row" data-trader="${m}">
+    <span class="fame-rank mono">${i + 1}</span>
+    ${avatarHTML(m, 'fame-avatar')}
+    <div class="fame-tx"><b>${m} ${flagHTML(traderFlag(m), 'xs')}</b><span>${CLAN_ROLES[i] || 'MEMBER'}</span></div>
+    <div class="fame-win"><b class="${clanMemberRet(c.id, m) >= 0 ? 'up' : 'down'}">${fmtRet(clanMemberRet(c.id, m))}</b><span>this war</span></div>
+  </div>`).join('');
+  viewEl('clan').innerHTML = `
+    <button class="back-btn" data-nav="arena">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to Arena</button>
+    <div class="panel-card cl-hero">
+      <div class="cl-hero-l">
+        <div class="cl-head">${clanChip(c)}<div><b class="cl-name" style="font-size:20px">${c.name}</b>
+          <span class="cl-sub mono">FOUNDED&nbsp;2025&nbsp;·&nbsp;${c.members.length}&nbsp;TRADERS&nbsp;·&nbsp;${c.wins}–${c.losses}&nbsp;WAR&nbsp;RECORD</span></div></div>
+        <div class="ch-bio" style="margin:10px 0 14px">${c.desc}</div>
+        <div class="tp-level" style="margin:0 0 14px">
+          <span class="tp-level-ic" style="background:${CLAN_TINTS[c.tint]}">★</span>
+          <span class="tp-level-tx">
+            <span class="tp-level-name">${tier.name}<span class="tp-level-lv">Clan Lv ${tier.lv}</span></span>
+            <span class="tp-level-bar"><span style="width:${tier.pct}%"></span></span>
+            <span class="tp-level-sub">${tier.toNext}</span>
+          </span>
+        </div>
+        <div class="pk-actions" style="margin:0">
+          ${myClan === c.id ? '<button class="btn-neu" data-clanleave>Leave clan</button>'
+          : myClan ? `<button class="btn-primary" data-clanbattle="${c.id}">Declare war</button>`
+          : `<button class="btn-primary" data-clanjoin="${c.id}">Join ${c.id}</button>`}
+        </div>
+      </div>
+      <div class="pt-status" style="grid-template-columns:repeat(2,1fr);margin:0;align-content:start">
+        <div><b>${fmtM(c.winnings)}</b><span class="mono">BANKED</span></div>
+        <div><b>${winRate}%</b><span class="mono">WAR&nbsp;WIN&nbsp;RATE</span></div>
+        <div><b>W${1 + hashName(c.id + 'st') % 6}</b><span class="mono">CURRENT&nbsp;STREAK</span></div>
+        <div><b>£${(120000 + hashName(c.id + 'bp') % 180000).toLocaleString('en-GB')}</b><span class="mono">BIGGEST&nbsp;POT&nbsp;WON</span></div>
+      </div>
+    </div>
+    ${wars.length ? `<div class="section"><div class="section-head"><div><h3 class="section-title">Active wars</h3></div></div>
+      <div class="nw-grid">${wars.map(w => {
+        const a = clanById(w.a), b = clanById(w.b);
+        return `<div class="nw-card">
+          <div class="nw-meta mono"><span class="pulse-dot tiny"></span>CLAN&nbsp;WAR&nbsp;·&nbsp;ends ${w.ends}<span class="nw-pot">£${w.pot.toLocaleString('en-GB')} pot</span></div>
+          <div class="nw-face">
+            <div class="nw-side"><div class="nw-country">${clanChip(a, true)}${a.name}</div><span class="nw-ret ${w.ra >= 0 ? 'up' : 'down'}">${fmtRet(w.ra)}</span></div>
+            <span class="nw-vs mono">VS</span>
+            <div class="nw-side right"><div class="nw-country">${b.name}${clanChip(b, true)}</div><span class="nw-ret ${w.rb >= 0 ? 'up' : 'down'}">${fmtRet(w.rb)}</span></div>
+          </div>
+          <div class="nw-bar"><span style="width:${Math.max(8, Math.min(92, 50 + (w.ra - w.rb) * 9)).toFixed(0)}%"></span><i></i></div>
+          <div class="nw-foot"><button class="link-btn" data-cwspec="${w.i}" style="margin-top:0">Spectate →</button>
+            <span class="nw-watch mono">● ${w.watching.toLocaleString('en-GB')} watching</span></div>
+        </div>`;
+      }).join('')}</div></div>` : ''}
+    <div class="two-col" style="margin-top:22px">
+      <div class="panel-card">
+        <div class="panel-title">Roster</div>
+        ${roster}
+      </div>
+      <div class="panel-card">
+        <div class="panel-title">War history</div>
+        <table class="trades-table"><thead><tr class="mono"><th>RESULT</th><th>OPPONENT</th><th style="text-align:right">POT</th><th style="text-align:right">WHEN</th></tr></thead>
+        <tbody>${hist.map(h => `<tr>
+          <td><span class="obadge ${h.win ? 'target' : 'stopped'}">${h.win ? 'War won' : 'War lost'}</span></td>
+          <td><span style="display:inline-flex;align-items:center;gap:8px;cursor:pointer" data-clanview="${h.opp.id}">${clanChip(h.opp, true)}<b>${h.opp.name}</b></span></td>
+          <td style="text-align:right"><b>£${h.pot.toLocaleString('en-GB')}</b></td>
+          <td style="text-align:right;color:var(--text-faint)">${h.ago}</td></tr>`).join('')}</tbody></table>
+      </div>
+    </div>`;
+}
+
 function clansHTML() {
   const mine = myClan && clanById(myClan);
   const myCard = mine ? `
     <div class="panel-card">
       <div class="cl-head">${clanChip(mine)}<div><b class="cl-name">${mine.name}</b>
-        <span class="cl-sub mono">${mine.wins}–${mine.losses}&nbsp;RECORD&nbsp;·&nbsp;£${kfmt(mine.winnings)}&nbsp;BANKED</span></div>
+        <span class="cl-sub mono">${mine.wins}–${mine.losses}&nbsp;RECORD&nbsp;·&nbsp;${fmtM(mine.winnings)}&nbsp;BANKED&nbsp;·&nbsp;CLAN&nbsp;LV&nbsp;${clanTier(mine.winnings).lv}&nbsp;${clanTier(mine.winnings).name.toUpperCase()}</span></div>
         <button class="btn-neu" style="margin-left:auto;padding:8px 14px;font-size:11.5px" data-clanleave>Leave</button></div>
       <div class="ch-bio" style="margin-top:10px">${mine.desc}</div>
+      <div class="tp-level" style="margin:12px 0 4px">
+        <span class="tp-level-ic" style="background:${CLAN_TINTS[mine.tint]}">★</span>
+        <span class="tp-level-tx">
+          <span class="tp-level-name">${clanTier(mine.winnings).name}<span class="tp-level-lv">Clan Lv ${clanTier(mine.winnings).lv}</span></span>
+          <span class="tp-level-bar"><span style="width:${clanTier(mine.winnings).pct}%"></span></span>
+          <span class="tp-level-sub">${clanTier(mine.winnings).toNext}</span>
+        </span>
+      </div>
       <div class="cl-members">${mine.members.slice(0, 6).map(m => avatarHTML(m, 'thread-av', `data-trader="${m}" title="${m}"`, 'cursor:pointer')).join('')}
-        <span class="cl-mcount mono">${mine.members.length}&nbsp;TRADERS</span></div>
-      <div class="ch-bio" style="margin-top:8px;color:var(--text-faint)">Pick a clan below and hit Battle — five average returns vs theirs, one pot.</div>
+        <span class="cl-mcount mono">${mine.members.length}&nbsp;TRADERS</span>
+        <button class="link-btn" data-clanview="${mine.id}" style="margin:0 0 0 auto">Clan page →</button></div>
+      <div class="ch-bio" style="margin-top:8px;color:var(--text-faint)">Pick a clan below and hit Battle — your squad's average return vs theirs, one pot.</div>
     </div>` : `
     <div class="panel-card cl-cta">
       <b class="cl-name">Start your own clan</b>
@@ -5582,11 +5756,11 @@ function clansHTML() {
     </div>`;
   }).join('');
   const ladder = [...CLANS].sort((x, y) => y.winnings - x.winnings).map((c, i) => `
-    <div class="fame-row" style="cursor:default">
+    <div class="fame-row" data-clanview="${c.id}" style="cursor:pointer">
       <span class="fame-rank mono">${i + 1}</span>
       ${clanChip(c, true)}
       <div class="fame-tx"><b>${c.name}</b><span>${c.members.length} traders · ${c.wins}–${c.losses} record</span></div>
-      <div class="fame-win"><b>£${kfmt(c.winnings)}</b><span>banked</span></div>
+      <div class="fame-win"><b>${fmtM(c.winnings)}</b><span>banked</span></div>
       ${myClan && myClan !== c.id ? `<button class="btn-neu" style="padding:8px 16px;font-size:12px" data-clanbattle="${c.id}">Battle</button>`
       : !myClan ? `<button class="btn-neu" style="padding:8px 16px;font-size:12px" data-clanjoin="${c.id}">Join</button>`
       : `<span class="mine-tag">YOURS</span>`}
@@ -5624,8 +5798,10 @@ function stashClanInputs() {
   clanDraft.tag = (document.getElementById('clanTag')?.value ?? clanDraft.tag).toUpperCase();
 }
 
-function openClanWar(i) {
-  const w = CLAN_WARS[i];
+function openClanWar(i) { openClanWarObj(CLAN_WARS[i], i); }
+
+function openClanWarObj(w, i) {
+  if (!w) return;
   const a = clanById(w.a), b = clanById(w.b);
   if (!a || !b) return;
   const seed = hashName(w.a + w.b);
@@ -5853,6 +6029,113 @@ syncUserCard();
     </div>`;
 }
 
+/* ---------------- Live Battles hub — the spectator sport, end to end ---------------- */
+
+const LB_WINDOWS = [['15m', 15], ['1h', 60], ['4h', 240], ['1d', 1440], ['1w', 10080], ['1M', 43200]];
+const LB_POTS = [500, 1000, 2500, 5000, 10000, 25000, 50000, 100000, 250000, 1000000];
+
+function genLiveBattle(kind) {
+  const names = Object.keys(TRADER_AV);
+  const [wl, wm] = LB_WINDOWS[Math.floor(Math.random() * LB_WINDOWS.length)];
+  const pot = LB_POTS[Math.floor(Math.pow(Math.random(), 1.6) * LB_POTS.length)];
+  const b = {
+    kind, pot, window: wl, windowMin: wm,
+    endsMin: Math.max(2, Math.floor(Math.random() * wm)),
+    ra: +((Math.random() - 0.45) * 6).toFixed(2),
+    rb: +((Math.random() - 0.45) * 6).toFixed(2),
+    watching: Math.round(80 + Math.sqrt(pot) * (2 + Math.random() * 8)),
+  };
+  if (kind === 'clan') {
+    const cs = [...CLANS].sort(() => Math.random() - 0.5);
+    b.a = cs[0].id; b.b = cs[1] ? cs[1].id : cs[0].id;
+  } else {
+    const shuffled = [...names].sort(() => Math.random() - 0.5);
+    b.a = shuffled[0]; b.b = shuffled[1];
+  }
+  return b;
+}
+
+const LIVE_B = [
+  ...BATTLES.map(x => ({ kind: '1v1', a: x[0], b: x[2], pot: x[4], window: '1d', windowMin: 1440, endsMin: 200 + Math.floor(Math.random() * 800), ra: +((Math.random()) * 5).toFixed(2), rb: +((Math.random()) * 5).toFixed(2), watching: Math.round(parseFloat(x[5]) * 1000) })),
+  ...Array.from({ length: 18 }, () => genLiveBattle('1v1')),
+  ...Array.from({ length: 6 }, () => genLiveBattle('clan')),
+];
+
+let lbf = { kind: 'all', pot: 'any', dur: 'any', sort: 'pot' };
+
+const LB_POT_BANDS = { any: [0, 1e12], small: [0, 1000], mid: [1000, 10000], big: [10000, 100000], whale: [100000, 1e12] };
+const LB_DUR_BANDS = { any: [0, 1e9], sprint: [0, 60], day: [61, 1440], week: [1441, 1e9] };
+
+const lbEnds = m => m < 60 ? m + 'm' : m < 1440 ? Math.round(m / 60) + 'h' : Math.round(m / 1440) + 'd';
+
+function lbFace(b, side) {
+  const id = side === 'a' ? b.a : b.b;
+  if (b.kind === 'clan') {
+    const c = clanById(id);
+    return `<span class="lb-face">${c ? clanChip(c, true) : ''}<b>${c ? c.name : id}</b></span>`;
+  }
+  return `<span class="lb-face" data-trader="${id}" style="cursor:pointer">${avatarHTML(id, 'thread-av', '', 'width:26px;height:26px')}<b>${id}</b></span>`;
+}
+
+function renderLive() {
+  const list = LIVE_B
+    .map((b, i) => ({ ...b, i }))
+    .filter(b => (lbf.kind === 'all' || b.kind === lbf.kind)
+      && b.pot >= LB_POT_BANDS[lbf.pot][0] && b.pot <= LB_POT_BANDS[lbf.pot][1]
+      && b.windowMin >= LB_DUR_BANDS[lbf.dur][0] && b.windowMin <= LB_DUR_BANDS[lbf.dur][1]);
+  list.sort((x, y) => lbf.sort === 'pot' ? y.pot - x.pot
+    : lbf.sort === 'watch' ? y.watching - x.watching
+    : lbf.sort === 'close' ? Math.abs(x.ra - x.rb) - Math.abs(y.ra - y.rb)
+    : x.endsMin - y.endsMin);
+  const hotCut = [...LIVE_B].sort((x, y) => y.watching - x.watching)[3]?.watching || 0;
+  const chips = (opts, cur, attr) => opts.map(([v, l]) =>
+    `<button class="pill-btn${v === cur ? ' on' : ''}" data-${attr}="${v}">${l}</button>`).join('');
+  const cards = list.map(b => {
+    const lead = Math.max(8, Math.min(92, 50 + (b.ra - b.rb) * 9));
+    const close = Math.abs(b.ra - b.rb) < 0.35;
+    return `<article class="lb-card" data-lbwatch="${b.i}">
+      <div class="lb-top mono">
+        <span class="lb-kind${b.kind === 'clan' ? ' clan' : ''}">${b.kind === 'clan' ? 'CLAN WAR' : '1V1'}</span>
+        ${b.watching >= hotCut ? '<span class="hot-chip">HOT</span>' : ''}
+        ${close ? '<span class="nn-chip">NECK &amp; NECK</span>' : ''}
+        <span class="lb-watching" data-lbw="${b.i}">● ${b.watching.toLocaleString('en-GB')} watching</span>
+      </div>
+      <div class="lb-face-row">
+        ${lbFace(b, 'a')}
+        <span class="lb-ret odo up" data-lba="${b.i}" data-odo="${fmtRet(b.ra)}" style="color:${b.ra >= 0 ? 'var(--green)' : '#e5484d'}">${odoInner(fmtRet(b.ra))}</span>
+        <span class="nw-vs mono">VS</span>
+        <span class="lb-ret odo" data-lbb="${b.i}" data-odo="${fmtRet(b.rb)}" style="color:${b.rb >= 0 ? 'var(--green)' : '#e5484d'}">${odoInner(fmtRet(b.rb))}</span>
+        ${lbFace(b, 'b')}
+      </div>
+      <div class="nw-bar"><span data-lbbar="${b.i}" style="width:${lead.toFixed(0)}%"></span><i></i></div>
+      <div class="lb-foot mono">
+        <b>£${b.pot.toLocaleString('en-GB')}&nbsp;pot</b>
+        <span>${b.window}&nbsp;window&nbsp;·&nbsp;ends&nbsp;${lbEnds(b.endsMin)}</span>
+        <span class="lb-go">Watch →</span>
+      </div>
+    </article>`;
+  }).join('');
+  viewEl('live').innerHTML = `
+    <button class="back-btn" data-nav="arena">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to Arena</button>
+    <div class="lb-hero panel-card">
+      <div><span class="live-tag"><span class="pulse-dot"></span><span class="mono">LIVE&nbsp;NOW</span></span>
+        <h2 class="pt-title" style="margin:8px 0 2px">Live battles</h2>
+        <p class="section-sub" style="margin:0">every duel and clan war on the platform — pick one and pull up ringside</p></div>
+      <div class="lb-hero-stats mono">
+        <span>${odoHTML('lbCount', String(LIVE_B.length))}&nbsp;LIVE</span>
+        <span>${odoHTML('lbPool', '£' + (LIVE_B.reduce((a2, b2) => a2 + b2.pot, 0) / 1e6).toFixed(2) + 'M')}&nbsp;ESCROWED</span>
+      </div>
+    </div>
+    <div class="lb-filters">
+      <div class="lb-fgroup"><span class="b-label mono">TYPE</span>${chips([['all', 'All'], ['1v1', '1v1'], ['clan', 'Clans']], lbf.kind, 'lbkind')}</div>
+      <div class="lb-fgroup"><span class="b-label mono">POT</span>${chips([['any', 'Any'], ['small', '<£1K'], ['mid', '£1K–10K'], ['big', '£10K–100K'], ['whale', '£100K+']], lbf.pot, 'lbpot')}</div>
+      <div class="lb-fgroup"><span class="b-label mono">DURATION</span>${chips([['any', 'Any'], ['sprint', 'Sprint ≤1h'], ['day', 'Intraday'], ['week', 'Week+']], lbf.dur, 'lbdur')}</div>
+      <div class="lb-fgroup"><span class="b-label mono">SORT</span>${chips([['pot', 'Biggest pot'], ['watch', 'Most watched'], ['close', 'Closest fight'], ['ends', 'Ending soon']], lbf.sort, 'lbsort')}</div>
+    </div>
+    <div class="lb-grid">${cards || '<p style="color:var(--text-faint);font-size:13.5px;padding:20px">No battles match these filters — loosen them up, the action never stops.</p>'}</div>`;
+}
+
 /* Tournaments live inside the Arena — one competitive home */
 function tournamentsSectionHTML() {
   const arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg>';
@@ -5957,11 +6240,12 @@ function renderArena() {
         <span class="ch-profit">+£${kfmt(p.winnings)}&nbsp;PROFIT</span>
         <span>${p.winRate}%&nbsp;WIN</span>
         <span>${p.wins}–${p.losses}&nbsp;RECORD</span>
-        <span>${p.followers}&nbsp;FOLLOWERS</span>
+        <span>FORM&nbsp;+${p.mediaRets[0]}%&nbsp;BEST</span>
       </div>` : ''}
+      <div class="ch-kick mono"><span class="pulse-dot tiny purple"></span>KICKS&nbsp;OFF&nbsp;${(c.start || 'ON ACCEPT').toUpperCase()}<span class="ch-eye" data-eye="${i}">● ${c.eyeing || (c.eyeing = 8 + hashName(c.name + 'e') % 46)} eyeing it</span></div>
       <div class="challenge-terms">
         <div class="term-cell"><div class="k">${c.mine ? 'Starts' : 'Window'}</div><div class="v" style="font-size:12.5px">${c.mine ? c.start : c.window}</div></div>
-        <div class="term-cell"><div class="k">Odds</div><div class="v">${c.odds || 1}:1</div></div>
+        <div class="term-cell"><div class="k">Odds</div><div class="v" style="color:var(--accent-a);font-weight:800">offering ${c.odds || 1}:1</div></div>
         <div class="term-cell"><div class="k">${c.mine ? 'They put up' : 'You put up'}</div><div class="v">£${Math.round((c.mine ? c.stake : c.pot) * (c.odds || 1)).toLocaleString('en-GB')}</div></div>
         <div class="term-cell"><div class="k">Total pot</div><div class="v">£${Math.round(c.mine ? c.pot : c.pot * (1 + (c.odds || 1))).toLocaleString('en-GB')}</div></div>
       </div>
@@ -5987,6 +6271,7 @@ function renderArena() {
           <div class="hero-actions">
             <button class="btn-primary" data-abopen><span class="pulse-dot small light"></span>Start a battle</button>
             <button class="btn-neu" data-invopen="duel">Challenge a friend</button>
+            <button class="btn-neu" data-nav="live"><span class="pulse-dot small"></span>Watch live battles</button>
           </div>
           <div class="hero-social">
             <div class="avatar-stack">
@@ -6000,6 +6285,7 @@ function renderArena() {
         <div class="leaderboard">
           <div class="leaderboard-head"><span class="pulse-dot purple"></span><span class="mono leaderboard-title">BIGGEST&nbsp;BATTLES&nbsp;LIVE</span></div>
           <ul class="leaderboard-list">${battleRows}</ul>
+          <button class="link-btn" data-nav="live" style="margin-bottom:2px">All live battles</button>
           <button class="link-btn" data-watch>Watch the £1M battle
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
         </div>
@@ -6296,7 +6582,7 @@ function fireConfetti() {
 const RENDER = {
   terminal: renderTerminal, ideas: renderIdeas, social: renderSocial, inbox: renderInbox,
   performance: renderPerformance, trader: renderTrader,
-  leaderboard: renderLbPage, arena: renderArena, tournaments: renderTournamentsPage, partner: renderPartner, spectate: renderSpectate
+  leaderboard: renderLbPage, arena: renderArena, tournaments: renderTournamentsPage, partner: renderPartner, spectate: renderSpectate, live: renderLive, clan: renderClan
 };
 
 document.addEventListener('click', e => {
@@ -6615,6 +6901,20 @@ document.addEventListener('click', e => {
     addNotif('CL', `Clan war: ${mine.id} vs ${opp.id}`, `£${pot.toLocaleString('en-GB')} pot · 24h window · squad average return takes it. Rally the crew.`);
     return renderArena();
   }
+  if ((el = q('[data-lbkind]'))) { lbf.kind = el.dataset.lbkind; return renderLive(); }
+  if ((el = q('[data-lbpot]'))) { lbf.pot = el.dataset.lbpot; return renderLive(); }
+  if ((el = q('[data-lbdur]'))) { lbf.dur = el.dataset.lbdur; return renderLive(); }
+  if ((el = q('[data-lbsort]'))) { lbf.sort = el.dataset.lbsort; return renderLive(); }
+  if ((el = q('[data-lbwatch]'))) {
+    const face = e.target.closest('[data-trader]');
+    if (face) return openTrader(face.dataset.trader);
+    const b = LIVE_B[+el.dataset.lbwatch];
+    if (!b) return;
+    if (b.kind === 'clan') openClanWarObj({ a: b.a, b: b.b, ra: b.ra, rb: b.rb, pot: b.pot, ends: lbEnds(b.endsMin), watching: b.watching }, -1);
+    else openDuel(b.a, b.b, b.pot, b.watching, b.ra, b.rb);
+    return;
+  }
+  if ((el = q('[data-clanview]'))) return openClan(el.dataset.clanview);
   if ((el = q('[data-cheer]'))) {
     if (!spec || !spec.x) return;
     const a = el.dataset.cheer === 'a';
@@ -6691,8 +6991,14 @@ document.addEventListener('click', e => {
     const b = BATTLES[0];
     return openDuel(b[0], b[2], b[4], Math.round(parseFloat(b[5]) * 1000));
   }
-  if ((el = q('[data-ptx]'))) return toast('Opening X with your referral card — 20% on every trader you bring');
-  if ((el = q('[data-ptwa]'))) return toast('WhatsApp share ready — your link is in the message');
+  if ((el = q('[data-ptx]'))) {
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(`I earn 20% for the lifetime of every trader I bring to Paktos — trading battles with real pots. Join me: https://${partner.link}`), '_blank');
+    return toast('Opening X — your referral post is prefilled');
+  }
+  if ((el = q('[data-ptwa]'))) {
+    window.open('https://wa.me/?text=' + encodeURIComponent(`Join me on Paktos — head-to-head trading battles, tournaments and real pots. My link: https://${partner.link}`), '_blank');
+    return toast('Opening WhatsApp — your invite message is ready');
+  }
   if ((el = q('[data-ptcode]'))) {
     try { navigator.clipboard.writeText(partner.code); } catch (e) { }
     return toast('Code JSTONE copied — works at signup');
