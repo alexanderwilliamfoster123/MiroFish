@@ -1,11 +1,16 @@
-# Claude of Duty 🎯
+# Claude of Duty 🎯✈️
 
-A browser first-person shooter built entirely with **Three.js** and **WebGL2** —
-a playable homage to [mshumer/Claude-of-Duty](https://github.com/mshumer/Claude-of-Duty).
+A browser combat game built entirely with **Three.js** and **WebGL2** — a
+playable homage to [mshumer/Claude-of-Duty](https://github.com/mshumer/Claude-of-Duty),
+with **two modes**:
+
+- **🔫 Ground War** — on-foot wave-survival FPS in a procedural market district.
+- **✈️ Flight Combat** — jet dogfighting over an open ocean: guns, heat-seeking
+  missiles with lock-on, flares, and enemy ace AI, with a full glass-cockpit HUD.
 
 Like the original, it uses **no art assets**. Every texture, mesh, weapon,
-sound effect, and animation is **generated procedurally at runtime**. Three.js
-(vendored under `vendor/`) is the only dependency.
+aircraft, sound effect, and animation is **generated procedurally at runtime**.
+Three.js (vendored under `vendor/`) is the only dependency.
 
 ![gameplay](https://img.shields.io/badge/engine-three.js%20r180-black) ![no assets](https://img.shields.io/badge/art%20assets-0-brightgreen)
 
@@ -32,25 +37,39 @@ npx serve claude-of-duty            # then open the printed URL
 
 ## Controls
 
+### 🔫 Ground War
 | Input | Action |
 |-------|--------|
 | `W A S D` | Move |
 | Mouse | Look / aim |
-| Left click | Fire |
-| Right click | Aim down sights |
+| Left click | Fire · Right click | Aim down sights |
 | `R` | Reload |
-| `Shift` | Sprint |
-| `Ctrl` / `C` | Crouch |
-| `Space` | Jump |
-| `1` `2` `3` | Rifle / SMG / Pistol |
-| Scroll | Cycle weapons |
+| `Shift` Sprint · `Ctrl`/`C` Crouch · `Space` Jump | |
+| `1` `2` `3` / Scroll | Rifle / SMG / Pistol |
+| `Esc` | Pause |
+
+### ✈️ Flight Combat
+| Input | Action |
+|-------|--------|
+| Mouse | Steer (pitch & roll) — auto-levels when released |
+| `W` / `S` | Throttle up / down |
+| `Shift` | Afterburner |
+| Left click | Cannon |
+| Right click | Fire missile (hold your nose on a bandit to build **LOCK**) |
+| `X` | Deploy flares (decoy incoming missiles) |
+| `Q` / `E` | Rudder yaw |
+| `V` | Toggle cockpit / chase camera |
 | `Esc` | Pause |
 
 ## The game
 
-Hold the procedural market district against **8 waves** of hostiles. Each wave
-adds more — and tougher — enemies. Headshots deal 2.4× damage and score extra.
-Clear a wave to get resupplied. Survive to the final assault.
+**Ground War** — hold the procedural market district against **8 waves** of
+infantry. Headshots deal 2.4× damage and score extra. Clear a wave to resupply.
+
+**Flight Combat** — down **6 waves** of enemy fighters over the ocean. Line a
+bandit up in your nose to lock a missile; watch your radar and RWR — when the
+"⚠ MISSILE" warning flashes, break hard and punch flares (`X`). Each cleared
+wave rearms your missiles and flares.
 
 ## Subsystems
 
@@ -66,8 +85,9 @@ same way, at a scale one context can hold:
 | `src/fx.js` | Pooled GPU particles: muzzle flash, tracers, impacts, blood, bullet-hole decals |
 | `src/audio.js` | Fully synthesized audio via Web Audio API — gunfire, impacts, footsteps, UI, ambient bed |
 | `src/hud.js` | DOM HUD: crosshair, health, ammo, killfeed, compass, wave banner, overlays |
-| `src/game.js` | Orchestrator: renderer/scene/camera, game loop, hit resolution, wave & score state machine |
-| `src/main.js` | Bootstrap, WebGL detection, menu wiring, error surface |
+| `src/game.js` | Ground-mode orchestrator: game loop, hit resolution, wave & score state machine |
+| `src/flight.js` | Flight mode: shader sky + ocean, cloudscape, islands, carrier, fighter jet, flight physics, missiles/lock-on/flares, dogfight AI, glass-cockpit HUD |
+| `src/main.js` | Bootstrap, WebGL detection, mode-select menu, shared renderer, error surface |
 
 ## Tech notes
 

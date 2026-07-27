@@ -15,19 +15,19 @@ function sprite() {
 }
 
 export class FX {
-  constructor(scene) {
+  constructor(scene, opts = {}) {
     this.scene = scene;
     this.sprite = sprite();
 
     // particle pool via Points
-    this.MAX = 2000;
+    this.MAX = opts.max || 2000;
     this.pos = new Float32Array(this.MAX * 3);
     this.col = new Float32Array(this.MAX * 3);
     this.geo = new THREE.BufferGeometry();
     this.geo.setAttribute('position', new THREE.BufferAttribute(this.pos, 3));
     this.geo.setAttribute('color', new THREE.BufferAttribute(this.col, 3));
     const mat = new THREE.PointsMaterial({
-      size: 0.18, map: this.sprite, vertexColors: true, transparent: true,
+      size: opts.pointSize || 0.18, map: this.sprite, vertexColors: true, transparent: true,
       depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true,
     });
     this.points = new THREE.Points(this.geo, mat);
@@ -96,6 +96,33 @@ export class FX {
         dir.z * sp + (Math.random() - 0.5) * 4,
         0.6, 0.05, 0.05, 0.5 + Math.random() * 0.3, 10);
     }
+  }
+
+  // large mid-air explosion — fireball + sparks (scale for aircraft kills)
+  explosion(pos, scale = 1) {
+    const n = Math.floor(40 * scale);
+    for (let i = 0; i < n; i++) {
+      const sp = (4 + Math.random() * 22) * scale;
+      const a = Math.random() * Math.PI * 2, e = (Math.random() - 0.5) * Math.PI;
+      const dx = Math.cos(a) * Math.cos(e), dy = Math.sin(e), dz = Math.sin(a) * Math.cos(e);
+      const hot = Math.random();
+      const r = 1.0, g = 0.4 + hot * 0.5, b = hot * 0.2;
+      this._spawn(pos.x, pos.y, pos.z, dx * sp, dy * sp + 2, dz * sp,
+        r, g, b, 0.5 + Math.random() * 0.7, 6 * scale);
+    }
+    // dark smoke puffs (low, slow)
+    for (let i = 0; i < Math.floor(14 * scale); i++) {
+      const sp = (1 + Math.random() * 6) * scale;
+      const a = Math.random() * Math.PI * 2;
+      this._spawn(pos.x, pos.y, pos.z, Math.cos(a) * sp, Math.random() * 4, Math.sin(a) * sp,
+        0.12, 0.1, 0.09, 1.2 + Math.random() * 0.8, 2);
+    }
+  }
+
+  // small smoke/heat puff for missile & contrail trails
+  trailPuff(pos, r = 0.8, g = 0.8, b = 0.85, life = 0.6) {
+    this._spawn(pos.x, pos.y, pos.z, (Math.random() - 0.5) * 1.5, (Math.random() - 0.5) * 1.5, (Math.random() - 0.5) * 1.5,
+      r, g, b, life, 0.5);
   }
 
   deathBurst(pos) {

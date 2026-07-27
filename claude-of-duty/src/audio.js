@@ -193,4 +193,108 @@ export class AudioEngine {
       o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.42);
     });
   }
+
+  // ===== flight-mode sounds =====
+
+  // Continuous jet engine: layered noise + tonal whine, throttle-controlled.
+  startEngine() {
+    if (!this.ctx || this._engine) return;
+    const t = this.ctx.currentTime;
+    const out = this.ctx.createGain(); out.gain.value = 0.0; out.connect(this.master);
+
+    // turbine whine (two detuned saws)
+    const o1 = this.ctx.createOscillator(); o1.type = 'sawtooth'; o1.frequency.value = 90;
+    const o2 = this.ctx.createOscillator(); o2.type = 'sawtooth'; o2.frequency.value = 92;
+    const whineGain = this.ctx.createGain(); whineGain.gain.value = 0.15;
+    const whineLp = this.ctx.createBiquadFilter(); whineLp.type = 'lowpass'; whineLp.frequency.value = 1400;
+    o1.connect(whineGain); o2.connect(whineGain); whineGain.connect(whineLp).connect(out);
+
+    // combustion roar (looping noise through bandpass)
+    const roar = this._noiseSrc(); roar.loop = true;
+    const roarBp = this.ctx.createBiquadFilter(); roarBp.type = 'lowpass'; roarBp.frequency.value = 500;
+    const roarGain = this.ctx.createGain(); roarGain.gain.value = 0.4;
+    roar.connect(roarBp).connect(roarGain).connect(out);
+
+    o1.start(t); o2.start(t); roar.start(t);
+    this._engine = { out, o1, o2, whineLp, roarBp, roarGain };
+  }
+
+  setEngine(throttle, speed) {
+    if (!this._engine) return;
+    const e = this._engine; const now = this.ctx.currentTime;
+    const th = Math.max(0, Math.min(1.2, throttle));
+    e.out.gain.setTargetAtTime(0.25 + th * 0.25, now, 0.1);
+    e.o1.frequency.setTargetAtTime(80 + th * 220, now, 0.15);
+    e.o2.frequency.setTargetAtTime(82 + th * 224, now, 0.15);
+    e.whineLp.frequency.setTargetAtTime(800 + th * 3000, now, 0.2);
+    e.roarBp.frequency.setTargetAtTime(300 + th * 900 + speed * 0.4, now, 0.2);
+  }
+
+  stopEngine() {
+    if (!this._engine) return;
+    const e = this._engine; const t = this.ctx.currentTime;
+    e.out.gain.setTargetAtTime(0, t, 0.2);
+    try { e.o1.stop(t + 0.6); e.o2.stop(t + 0.6); } catch (_) {}
+    this._engine = null;
+  }
+
+  cannon() {
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+    const s = this._noiseSrc();
+    const bp = this.ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 900; bp.Q.value = 0.8;
+    const g = this.ctx.createGain(); g.gain.setValueAtTime(0.5, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+    s.connect(bp).connect(g).connect(this.master); s.start(t); s.stop(t + 0.07);
+    const o = this.ctx.createOscillator(); o.type = 'square'; o.frequency.setValueAtTime(120, t);
+    o.frequency.exponentialRampToValueAtTime(50, t + 0.05);
+    const og = this.ctx.createGain(); og.gain.setValueAtTime(0.3, t); og.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+    o.connect(og).connect(this.master); o.start(t); o.stop(t + 0.07);
+  }
+
+  missileLaunch() {
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+    const s = this._noiseSrc();
+    const bp = this.ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.setValueAtTime(400, t);
+    bp.frequency.exponentialRampToValueAtTime(2500, t + 0.5); bp.Q.value = 1.5;
+    const g = this.ctx.createGain(); g.gain.setValueAtTime(0.5, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.7);
+    s.connect(bp).connect(g).connect(this.master); s.start(t); s.stop(t + 0.72);
+  }
+
+  lockTone(locked) {
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+    const o = this.ctx.createOscillator(); o.type = 'square';
+    o.frequency.value = locked ? 1500 : 900;
+    const g = this.ctx.createGain();
+    g.gain.setValueAtTime(0.08, t); g.gain.exponentialRampToValueAtTime(0.001, t + (locked ? 0.08 : 0.05));
+    o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.1);
+  }
+
+  explosion(dist = 0) {
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+    const out = this.ctx.createGain(); out.gain.value = this._distGain(dist * 0.3) * 1.2; out.connect(this.master);
+    const s = this._noiseSrc();
+    const lp = this.ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.setValueAtTime(1800, t);
+    lp.frequency.exponentialRampToValueAtTime(120, t + 0.6);
+    const g = this.ctx.createGain(); g.gain.setValueAtTime(1.0, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.8);
+    s.connect(lp).connect(g).connect(out); s.start(t); s.stop(t + 0.82);
+    const o = this.ctx.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(80, t);
+    o.frequency.exponentialRampToValueAtTime(28, t + 0.5);
+    const og = this.ctx.createGain(); og.gain.setValueAtTime(0.9, t); og.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+    o.connect(og).connect(out); o.start(t); o.stop(t + 0.62);
+  }
+
+  warn() {
+    // missile-warning "beep beep"
+    if (!this.ctx) return;
+    const t0 = this.ctx.currentTime;
+    [0, 0.15].forEach((d) => {
+      const t = t0 + d;
+      const o = this.ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = 660;
+      const g = this.ctx.createGain(); g.gain.setValueAtTime(0.12, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+      o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.11);
+    });
+  }
 }

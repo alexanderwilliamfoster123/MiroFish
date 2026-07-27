@@ -14,18 +14,22 @@ import { HUD } from './hud.js';
 const BASE_FOV = 75;
 
 export class Game {
-  constructor(container) {
+  constructor(container, sharedRenderer) {
     this.container = container;
 
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.05;
-    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-    container.appendChild(this.renderer.domElement);
+    if (sharedRenderer) {
+      this.renderer = sharedRenderer;
+    } else {
+      this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.shadowMap.enabled = true;
+      this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      this.renderer.toneMappingExposure = 1.05;
+      this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+      container.appendChild(this.renderer.domElement);
+    }
 
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(BASE_FOV, window.innerWidth / window.innerHeight, 0.05, 600);
@@ -214,6 +218,7 @@ export class Game {
       <div class="stat">Wave <b>${this.wave}</b> · Score <b>${this.score.toLocaleString()}</b></div>
       <p>Click resume to re-lock your mouse and get back in the fight.</p>
       <button class="play" data-act="resume">RESUME</button>
+      <button class="play alt" data-act="menu">MAIN MENU</button>
     `);
   }
 
@@ -257,6 +262,7 @@ export class Game {
       <div class="stat">Accuracy <b>${acc}%</b></div>
       <p>Outstanding work, operator.</p>
       <button class="play" data-act="restart">REDEPLOY</button>
+      <button class="play alt" data-act="menu">MAIN MENU</button>
     `);
   }
 
@@ -273,6 +279,7 @@ export class Game {
       <div class="stat">Eliminations <b>${this.kills}</b> · Headshots <b>${this.headshots}</b></div>
       <div class="stat">Accuracy <b>${acc}%</b></div>
       <button class="play" data-act="restart">REDEPLOY</button>
+      <button class="play alt" data-act="menu">MAIN MENU</button>
     `);
   }
 

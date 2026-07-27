@@ -22,7 +22,7 @@ const threeDataUrl = toDataUrl(moduleSrc);
 
 // 2. Concatenate game modules in dependency order, stripping local imports
 //    and `export` keywords so everything shares one module scope.
-const order = ['audio', 'fx', 'world', 'player', 'weapons', 'enemies', 'hud', 'game', 'main'];
+const order = ['audio', 'fx', 'world', 'player', 'weapons', 'enemies', 'hud', 'game', 'flight', 'main'];
 let body = '';
 for (const name of order) {
   let src = read(`src/${name}.js`);
