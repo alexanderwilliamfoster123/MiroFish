@@ -1353,44 +1353,6 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
 /* Assistant */
 
 .asst { max-width: 780px; margin: 0 auto; padding-top: 26px; }
-.asst-h {
-  font-size: clamp(30px, 3.4vw, 42px); font-weight: 600; letter-spacing: -0.03em;
-  text-align: center; margin-bottom: 26px;
-}
-.asst-h span {
-  background: linear-gradient(92deg, var(--accent-a) 10%, var(--accent-b) 90%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-}
-.asst-box { position: relative; margin-bottom: 16px; }
-.asst-box textarea {
-  width: 100%; min-height: 92px; resize: none; border: none;
-  padding: 18px 60px 18px 20px; border-radius: 18px;
-  background: var(--surface); color: var(--text);
-  font-family: inherit; font-size: 14.5px; line-height: 1.5;
-  box-shadow: var(--neu-in-sm);
-}
-.asst-box textarea:focus { outline: none; }
-.asst-box textarea::placeholder { color: var(--text-faint); }
-.asst-send {
-  position: absolute; right: 14px; bottom: 14px;
-  width: 38px; height: 38px; border: none; border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
-  color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 8px 16px rgba(124, 58, 237, 0.35);
-}
-.asst-send svg { width: 17px; height: 17px; }
-.asst-chips { display: flex; gap: 9px; flex-wrap: wrap; justify-content: center; margin-bottom: 34px; }
-.asst-chat { display: flex; flex-direction: column; gap: 10px; margin-bottom: 26px; }
-.prod-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-.prod-card {
-  background: var(--card); border-radius: 18px; box-shadow: var(--neu-out-sm);
-  padding: 18px; text-align: left; border: none; cursor: pointer;
-  color: var(--text); transition: all 0.25s ease;
-  display: flex; flex-direction: column; gap: 8px;
-}
-.prod-t { font-size: 14px; font-weight: 700; }
-.prod-s { font-size: 11.5px; color: var(--text-faint); line-height: 1.5; }
-
 /* Performance */
 
 .stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
@@ -2504,13 +2466,13 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 @media (max-width: 1180px) {
   .term-grid, .two-col { grid-template-columns: 1fr; }
   .idea-grid, .challenge-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .contact-grid, .prod-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .contact-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .split { grid-template-columns: 1fr; }
   .tile-row, .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 640px) {
-  .idea-grid, .challenge-grid, .contact-grid, .prod-grid, .tile-row, .stats-grid { grid-template-columns: 1fr; }
+  .idea-grid, .challenge-grid, .contact-grid, .tile-row, .stats-grid { grid-template-columns: 1fr; }
 }
 
 /* ---------------- Odometer — every live number rolls like a slot machine ---------------- */
@@ -4190,48 +4152,6 @@ function sendDM() {
 }
 
 /* ---------------- Assistant ---------------- */
-
-let chat = [];
-const AI_REPLIES = [
-  'Looking at your last 30 trades: your win rate is 58%, but your average winner (£1,240) is 1.9× your average loser — that asymmetry is doing the heavy lifting. Your edge concentrates in Intraday NAS100 shorts; your scalps on FX pairs are roughly breakeven after costs.',
-  'Your biggest leak is revenge sizing: after a loss, your next position averages 2.3× normal risk and wins only 41% of the time. Cap risk at your standard 5% for the first trade after any loss and your expectancy improves ~18%.',
-  'Risk management looks solid overall — max drawdown 4.1% against a 10% tournament limit, and you’ve never breached daily loss caps. One flag: you move stops to breakeven too early on swing trades, cutting your average winner by ~0.4R.',
-  'Your best setups share three traits: entered within 2 hours of a macro catalyst, aligned with the daily trend, and held at least 4 hours. Trades matching all three are 71% winners at 2.1R average.'
-];
-
-function renderAssistant() {
-  const hr = new Date().getHours();
-  const greet = hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
-  const chips = ['Analyze my trading performance', 'What patterns do you see?', 'How is my risk management?', 'What are my best trades?'];
-  viewEl('assistant').innerHTML = `
-    <div class="asst">
-      <h2 class="asst-h">${greet}, <span>jstone</span></h2>
-      ${chat.length ? `<div class="asst-chat">${chat.map(([who, tx]) => `<div class="bubble ${who}" style="max-width:100%">${tx}</div>`).join('')}</div>` : ''}
-      <div class="asst-box">
-        <textarea id="askIn" placeholder="How can I help you today?"></textarea>
-        <button class="asst-send" data-asksend aria-label="Send">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
-        </button>
-      </div>
-      <div class="asst-chips">${chips.map(c => `<button class="pill-btn" data-ask="${c}">${c}</button>`).join('')}</div>
-      <div class="section-head" style="margin-bottom:14px"><h3 class="section-title" style="font-size:16px">Our products</h3></div>
-      <div class="prod-grid">
-        <button class="prod-card" data-nav="performance"><span class="prod-t">Performance</span><span class="prod-s">Share your track record live or as a snapshot.</span></button>
-        <button class="prod-card" data-nav="tournaments"><span class="prod-t">Tournaments</span><span class="prod-s">Compete with traders worldwide and climb the ranks.</span></button>
-        <button class="prod-card" data-nav="terminal"><span class="prod-t">Trade</span><span class="prod-s">One-tap terminal with risk built in from the start.</span></button>
-        <button class="prod-card" data-nav="ideas"><span class="prod-t">Ideas</span><span class="prod-s">Live signal wire across every market that moves.</span></button>
-      </div>
-    </div>`;
-}
-
-function askAI(q) {
-  chat.push(['me', q]);
-  renderAssistant();
-  setTimeout(() => {
-    chat.push(['them', AI_REPLIES[(chat.filter(c => c[0] === 'them').length) % AI_REPLIES.length]]);
-    if (currentView === 'assistant') renderAssistant();
-  }, 900);
-}
 
 /* ---------------- Performance ---------------- */
 
