@@ -1397,6 +1397,28 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
 .sg-l { font-size: 10.5px; color: var(--text-faint); margin-bottom: 5px; }
 .sg-v { font-size: 15.5px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
 
+/* Progress metric card (scrubbable) */
+
+.pmc {
+  background: var(--card);
+  border-radius: 22px;
+  box-shadow: var(--neu-out-sm);
+  padding: 24px 26px 14px;
+}
+.pmc-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pmc-title { font-size: 13.5px; font-weight: 700; color: var(--text-soft); }
+.pmc-unit {
+  font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+  font-size: 9.5px; letter-spacing: 0.1em; color: var(--text-faint);
+  background: var(--surface); box-shadow: var(--neu-in-sm);
+  padding: 5px 11px; border-radius: 999px;
+}
+.pmc-val { font-size: clamp(28px, 2.8vw, 38px); font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; margin-top: 10px; line-height: 1.1; }
+.pmc-delta { font-size: 12.5px; font-weight: 700; margin-left: 10px; font-variant-numeric: tabular-nums; }
+.pmc-date { font-size: 10px; color: var(--text-faint); margin-top: 4px; }
+.pmc-wrap { position: relative; margin-top: 12px; cursor: crosshair; touch-action: none; }
+.pmc-wrap svg { width: 100%; height: 235px; display: block; }
+
 .perf-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
 .perf-name { font-size: 19px; font-weight: 700; }
 .perf-hash { font-size: 10.5px; color: var(--text-faint); }
@@ -1524,15 +1546,15 @@ body.side-collapsed .brand { display: none; }
   gap: 6px;
 }
 .bp-card.win {
-  background: linear-gradient(150deg, rgba(16, 185, 129, 0.14), rgba(16, 185, 129, 0.03));
+  background: linear-gradient(150deg, rgba(16, 185, 129, 0.03), rgba(16, 185, 129, 0.14));
   border: 1px solid rgba(16, 185, 129, 0.2);
   box-shadow: 0 10px 24px rgba(16, 185, 129, 0.12);
+  text-align: right;
+  align-items: flex-end;
 }
 .bp-card.lose {
   background: linear-gradient(150deg, rgba(229, 72, 77, 0.11), rgba(229, 72, 77, 0.02));
   border: 1px solid rgba(229, 72, 77, 0.16);
-  text-align: right;
-  align-items: flex-end;
 }
 .bp-k { font-size: 9.5px; color: var(--text-soft); }
 .bp-v { font-size: clamp(24px, 2.6vw, 34px); font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; line-height: 1.1; }
@@ -3817,7 +3839,12 @@ function renderPerformance() {
       <thead><tr class="mono"><th>CLOSED</th><th>MARKET</th><th>SIDE</th><th>ENTRY&nbsp;→&nbsp;EXIT</th><th>RISK</th><th>R:R</th><th>OUTCOME</th><th style="text-align:right">P&amp;L</th></tr></thead>
       <tbody>${tradeLog.map(tradeRow).join('')}</tbody>
     </table></div></div>` : `
-    <div class="chart-card"><canvas class="chart" id="perfChart"></canvas></div>
+    <div class="pmc">
+      <div class="pmc-head"><span class="pmc-title">Account equity</span><span class="pmc-unit">GBP · LIVE</span></div>
+      <div class="pmc-val"><span id="pmcVal">—</span><span class="pmc-delta" id="pmcDelta"></span></div>
+      <div class="pmc-date mono" id="pmcDate"></div>
+      <div class="pmc-wrap" id="pmcWrap"><svg id="pmcSvg"></svg></div>
+    </div>
     <div class="stats-grid">
       <div class="sg-cell"><div class="sg-l mono">YTD&nbsp;RETURN</div><div class="sg-v ${ret >= 0 ? 'up' : 'down'}">${sPct(ret * 0.7)}</div></div>
       <div class="sg-cell"><div class="sg-l mono">AVG&nbsp;MONTHLY</div><div class="sg-v">${sPct(ret / 7)}</div></div>
@@ -3848,7 +3875,55 @@ function renderPerformance() {
         <div class="tile-tx"><div class="tile-label mono">SHARPE</div><div class="tile-value">2.14</div></div></div>
     </div>
     ${body}`;
-  drawSeries(document.getElementById('perfChart'), s, { color: '#7c3aed' });
+  buildPMC(s);
+}
+
+/* Scrubbable progress-metric chart — pointer over the series reads value + date */
+function buildPMC(series) {
+  const svg = document.getElementById('pmcSvg');
+  const wrap = document.getElementById('pmcWrap');
+  if (!svg || !wrap || !series.length) return;
+  const W = Math.max(320, wrap.clientWidth || 760), H = 235, pad = 14;
+  const n = series.length;
+  const min = Math.min(...series), max = Math.max(...series), rng = (max - min) || 1;
+  const X = i => pad + (i / (n - 1)) * (W - pad * 2);
+  const Y = v => pad + (1 - (v - min) / rng) * (H - pad * 2 - 6);
+  let line = `M${X(0)},${Y(series[0]).toFixed(1)}`;
+  for (let i = 1; i < n; i++) line += ` L${X(i).toFixed(1)},${Y(series[i]).toFixed(1)}`;
+  const area = `${line} L${X(n - 1).toFixed(1)},${H} L${X(0)},${H} Z`;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = `
+    <defs><linearGradient id="pmcG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7c3aed" stop-opacity=".2"/><stop offset="1" stop-color="#d946ef" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="${area}" fill="url(#pmcG)"/>
+    <path d="${line}" fill="none" stroke="#7c3aed" stroke-width="2.2" stroke-linejoin="round"/>
+    <line id="pmcLine" y1="6" y2="${H}" stroke="${cssVar('--text-faint')}" stroke-width="1" stroke-dasharray="3,4" opacity="0"/>
+    <circle id="pmcDot" r="5.5" fill="#7c3aed" stroke="#fff" stroke-width="2.5" opacity="0"/>`;
+  const val = document.getElementById('pmcVal');
+  const delta = document.getElementById('pmcDelta');
+  const dateEl = document.getElementById('pmcDate');
+  const dot = svg.querySelector('#pmcDot');
+  const vline = svg.querySelector('#pmcLine');
+  const dateFor = i => new Date(Date.now() - (n - 1 - i) * 86400000)
+    .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  const setIdx = (i, scrub) => {
+    i = Math.max(0, Math.min(n - 1, i));
+    val.textContent = '£' + Math.round(series[i]).toLocaleString('en-GB');
+    const d = (series[i] - series[0]) / series[0] * 100;
+    delta.textContent = (d >= 0 ? '+' : '−') + Math.abs(d).toFixed(1) + '%';
+    delta.className = 'pmc-delta ' + (d >= 0 ? 'up' : 'down');
+    dateEl.textContent = dateFor(i) + (scrub ? '' : ' · latest');
+    dot.setAttribute('cx', X(i)); dot.setAttribute('cy', Y(series[i]));
+    vline.setAttribute('x1', X(i)); vline.setAttribute('x2', X(i));
+    dot.setAttribute('opacity', 1); vline.setAttribute('opacity', scrub ? 1 : 0);
+  };
+  wrap.onpointermove = e => {
+    const r = wrap.getBoundingClientRect();
+    setIdx(Math.round((e.clientX - r.left) / r.width * (n - 1)), true);
+  };
+  wrap.onpointerleave = () => setIdx(n - 1, false);
+  setIdx(n - 1, false);
 }
 
 /* ---------------- Leaderboard page ---------------- */
@@ -3954,20 +4029,20 @@ function payoffHTML() {
   const win = pays - S;
   const f = n => '£' + Math.abs(n).toLocaleString('en-GB');
   return `<div class="b-payoff">
-    <div class="bp-card win">
-      <div class="bp-k mono">🏆 IF&nbsp;YOU&nbsp;WIN</div>
-      <div class="bp-v up">+${f(win)}</div>
-      <div class="bp-s">${f(pays)} payout · straight to your balance</div>
+    <div class="bp-card lose">
+      <div class="bp-k mono">💀 IF&nbsp;YOU&nbsp;LOSE</div>
+      <div class="bp-v down">−${f(S)}</div>
+      <div class="bp-s">your stake — gone to the victor</div>
     </div>
     <div class="bp-mid">
       <div class="bp-k mono">THE&nbsp;POT</div>
       <div class="bp-potv">${f(pool)}</div>
       <div class="bp-rake mono">5%&nbsp;RAKE&nbsp;·&nbsp;−${f(rake)}</div>
     </div>
-    <div class="bp-card lose">
-      <div class="bp-k mono">💀 IF&nbsp;YOU&nbsp;LOSE</div>
-      <div class="bp-v down">−${f(S)}</div>
-      <div class="bp-s">your stake — gone to the victor</div>
+    <div class="bp-card win">
+      <div class="bp-k mono">IF&nbsp;YOU&nbsp;WIN 🏆</div>
+      <div class="bp-v up">+${f(win)}</div>
+      <div class="bp-s">${f(pays)} payout · straight to your balance</div>
     </div>
   </div>
   <div class="bp-note">Kick-off <b>${startLabel()}</b> · ${arenaB.market} · higher return when it settles takes the pot</div>`;
