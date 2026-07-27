@@ -1494,26 +1494,21 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
 .sc-sub { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .sc-sub-cell { background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 14px; padding: 12px 15px; }
 .sc-sub-v { font-size: 21px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
-.sc-sub-l { font-size: 11.5px; color: var(--text-soft); margin-top: 2px; }
-.sc-sub-s { font-size: 10px; color: var(--text-faint); margin-top: 2px; }
+.sc-sub-v span { font-size: 12px; font-weight: 500; color: var(--text-faint); letter-spacing: 0; }
+.sc-sub-s { font-size: 10px; color: var(--text-faint); margin-top: 4px; }
 .sc-rank {
-  position: relative;
-  text-align: center;
-  padding: 16px 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 18px;
   border-radius: 16px;
   background: linear-gradient(150deg, rgba(245, 158, 11, 0.09), rgba(217, 70, 239, 0.05));
   border: 1px solid rgba(245, 158, 11, 0.18);
 }
-.sc-rank svg {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%) scale(1.9);
-  color: #b45309;
-  opacity: 0.18;
-  pointer-events: none;
-}
-.sc-rank-place { font-size: 21px; font-weight: 800; letter-spacing: -0.01em; }
-.sc-rank-cat { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); margin-top: 3px; }
+.sc-rank svg { color: #b45309; opacity: 0.25; flex: 0 0 auto; }
+.sc-rank-place { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
+.sc-rank-cat { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); margin-top: 3px; }
 .sc-form { margin-top: auto; }
 .sc-form-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 9px; }
 .sc-form-label { font-size: 9.5px; letter-spacing: 0.12em; color: var(--text-faint); }
@@ -1522,9 +1517,13 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
 .sc-bars span {
   flex: 1;
   border-radius: 3px;
-  background: linear-gradient(180deg, var(--accent-b), var(--accent-a));
   min-height: 4px;
-  opacity: 0.85;
+  transform-origin: bottom;
+  animation: scbar 0.5s ease-out both;
+}
+@keyframes scbar {
+  from { transform: scaleY(0); opacity: 0; }
+  to { transform: scaleY(1); opacity: 0.9; }
 }
 
 /* Trader profile header */
@@ -4187,8 +4186,14 @@ function ordinal(n) {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
+const SC_BAR_COLORS = ['#3b82f6', '#4f46e5', '#a855f7', '#d946ef', '#ec4899', '#ef4444'];
+
 function scoreCardHTML(d) {
-  const bars = d.formBars.map(l => `<span style="height:${Math.round(l * 100)}%"></span>`).join('');
+  const n = d.formBars.length;
+  const bars = d.formBars.map((l, i) => {
+    const color = SC_BAR_COLORS[Math.floor((i / n) * (SC_BAR_COLORS.length - 1))];
+    return `<span style="height:${Math.round(l * 100)}%;background:${color};animation-delay:${(i * 0.05).toFixed(2)}s"></span>`;
+  }).join('');
   return `<div class="glow-wrap"><div class="score-card">
     <div class="sc-head"><span class="sc-title">Stats</span><span class="pmc2-chip mono">ALL&nbsp;TIME</span></div>
     <div>
@@ -4197,12 +4202,15 @@ function scoreCardHTML(d) {
       <div class="sc-change">▲ +£${d.winningsChange.toLocaleString('en-GB')} <span>since last month</span></div>
     </div>
     <div class="sc-sub">
-      <div class="sc-sub-cell"><div class="sc-sub-v">${d.tours}</div><div class="sc-sub-l">tournaments</div><div class="sc-sub-s">${d.toursMonth} this month</div></div>
-      <div class="sc-sub-cell"><div class="sc-sub-v">${d.wins}</div><div class="sc-sub-l">battle wins</div><div class="sc-sub-s">${d.battlesMonth} this month</div></div>
+      <div class="sc-sub-cell"><div class="sc-sub-v">${d.tours} <span>tournaments</span></div><div class="sc-sub-s">${d.toursMonth} this month</div></div>
+      <div class="sc-sub-cell"><div class="sc-sub-v">${d.wins} <span>battle wins</span></div><div class="sc-sub-s">${d.battlesMonth} this month</div></div>
     </div>
-    <div class="sc-rank">${LAUREL}
-      <div class="sc-rank-place">${ordinal(d.rank)} place</div>
-      <div class="sc-rank-cat">top ranked traders</div>
+    <div class="sc-rank">
+      <div>
+        <div class="sc-rank-place">${ordinal(d.rank)} place</div>
+        <div class="sc-rank-cat">top ranked traders</div>
+      </div>
+      ${LAUREL}
     </div>
     <div class="sc-form">
       <div class="sc-form-head"><span class="sc-form-label mono">FORM · LAST 30 DAYS</span><span class="sc-form-sub">${d.winRate}% win rate · ${d.hours}h traded</span></div>
