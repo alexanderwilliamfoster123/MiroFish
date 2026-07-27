@@ -1964,10 +1964,18 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
   transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
   will-change: transform;
 }
-.scard.d1 { transform: translateY(18px) scale(0.955); opacity: 0.75; }
-.scard.d2 { transform: translateY(36px) scale(0.91); opacity: 0.45; }
-.scard.d3 { transform: translateY(52px) scale(0.87); opacity: 0.2; }
+.scard.d0 { z-index: 4; cursor: pointer; }
+.scard.d1 { transform: translateY(18px) scale(0.955); opacity: 0.75; z-index: 3; }
+.scard.d2 { transform: translateY(36px) scale(0.91); opacity: 0.45; z-index: 2; }
+.scard.d3 { transform: translateY(52px) scale(0.87); opacity: 0.2; z-index: 1; }
 .scard.out { transform: translateX(125%) rotate(9deg) !important; opacity: 0 !important; }
+.scard-head { display: flex; align-items: center; gap: 12px; }
+.scard-title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.35; }
+.scard-desc {
+  font-size: 13.5px; line-height: 1.6; color: var(--text-soft);
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+}
+.scard .idea-cat { margin-right: auto; }
 .scard-foot { margin-top: auto; display: flex; gap: 10px; align-items: center; }
 .stack-hint { text-align: center; font-size: 11px; color: var(--text-faint); margin-top: 68px; }
 
@@ -2921,7 +2929,7 @@ const FLICK_MODELS = {
   deepseek: { name: 'DeepSeek', ic: '◉', models: ['DeepSeek-V3.2', 'DeepSeek-R1'] }
 };
 
-let ideaCat = 'All', ideaHz = 'all', ideaMode = 'board', ideaFeed = [], ideaUid = 0;
+let ideaCat = 'All', ideaHz = 'all', ideaMode = 'board', ideaFeed = [], ideaUid = 0, stackTop = 0;
 const openBriefs = new Set();
 const flick = { deck: null, pos: 0, taken: [], passed: 0, missed: 0, risk: 2, prov: 'claude', model: 'Claude Opus 4.8', sec: 60 };
 
@@ -3017,6 +3025,35 @@ function boardHTML() {
     <div class="chip-row">${cats}</div>
     <div class="idea-grid">${cards || '<p style="color:var(--text-faint);font-size:13.5px">No live signals match this filter — they stream in continuously.</p>'}</div>
     <p style="margin-top:22px;font-size:11px;color:var(--text-faint);text-align:center">Streaming from Reuters · Bloomberg · Fed &amp; ECB wires · CFTC COT · Glassnode · Paktos quant &amp; TA engines</p>`;
+}
+
+/* ---- Stack (morphing card stack) ---- */
+
+function stackHTML() {
+  const n = ideaFeed.length;
+  if (!n) return '';
+  const deck = Array.from({ length: Math.min(4, n) }, (_, i) => ideaFeed[(stackTop + i) % n]);
+  const cards = deck.map((c, depth) => {
+    const up = c.dir === 'up';
+    return `<div class="scard d${depth}"${depth === 0 ? ' data-stacknext' : ''}>
+      <div class="scard-head">
+        <span class="asset-ic" style="background:${INSTR[c.sym].tint};width:44px;height:44px;border-radius:14px;font-size:18px">${INSTR[c.sym].ic}</span>
+        <div><b style="font-size:14px">${c.sym}</b>
+          <span style="display:block;font-size:11px;color:var(--text-faint)">${HZCFG[c.hz].l} · ${up ? '▲ long bias' : '▼ short bias'}</span></div>
+        <span class="idea-cat" style="margin-left:auto">${CAT_ICONS[c.cat] || '✦'} ${c.cat}</span>
+      </div>
+      <div class="scard-title">${c.head}</div>
+      <p class="scard-desc">${c.brief}</p>
+      <div class="scard-foot">
+        <button class="dir-btn buy" style="padding:11px 22px;font-size:13px;border-radius:12px" data-itrade="${c.sym}" data-idir="up">▲ Buy</button>
+        <button class="dir-btn sell" style="padding:11px 22px;font-size:13px;border-radius:12px" data-itrade="${c.sym}" data-idir="down">▼ Sell</button>
+        <button class="link-btn" data-stacknext style="margin-left:auto;margin-top:0">Next
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </div>`;
+  }).reverse().join('');
+  return `<div class="stack-wrap">${cards}</div>
+    <div class="stack-hint">${stackTop % n + 1} / ${n} — tap the card to morph to the next signal</div>`;
 }
 
 /* ---- Flick (tinder-style swipe deck) ---- */
@@ -3181,10 +3218,10 @@ function bindFlick() {
 
 function renderIdeas() {
   seedIdeas();
-  const modes = [['board', 'Board'], ['flick', 'Flick ⚡']].map(([k, l]) =>
-    `<button class="pill-btn${ideaMode === k ? ' on' : ''}" data-imode="${k}">${l}${k === 'flick' ? ' <small style="display:inline">swipe</small>' : ''}</button>`).join('');
+  const modes = [['board', 'Board'], ['stack', 'Stack'], ['flick', 'Flick ⚡']].map(([k, l]) =>
+    `<button class="pill-btn${ideaMode === k ? ' on' : ''}" data-imode="${k}">${l}${k === 'flick' ? ' <small style="display:inline">swipe</small>' : k === 'stack' ? ' <small style="display:inline">morph</small>' : ''}</button>`).join('');
   viewEl('ideas').innerHTML = `<div class="chip-row">${modes}</div>` +
-    (ideaMode === 'flick' ? flickHTML() : boardHTML());
+    (ideaMode === 'flick' ? flickHTML() : ideaMode === 'stack' ? stackHTML() : boardHTML());
   if (ideaMode === 'flick') bindFlick();
 }
 
@@ -4038,6 +4075,14 @@ document.addEventListener('click', e => {
   }
   if ((el = q('[data-fpick]'))) { term.asset = el.dataset.fpick; return navigate('terminal'); }
   if ((el = q('[data-itrade]'))) { term.asset = el.dataset.itrade; navigate('terminal'); return toast(`${el.dataset.itrade} loaded in the terminal`); }
+  if ((el = q('[data-stacknext]'))) {
+    const front = document.querySelector('.scard.d0');
+    if (front && !front.classList.contains('out')) {
+      front.classList.add('out');
+      setTimeout(() => { stackTop = (stackTop + 1) % ideaFeed.length; renderIdeas(); }, 380);
+    }
+    return;
+  }
   /* social feed */
   if ((el = q('[data-ftab]'))) { feedTab = el.dataset.ftab; return renderSocial(); }
   if ((el = q('[data-showposts]'))) {
