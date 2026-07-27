@@ -2582,24 +2582,37 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
   .nrow-label { width: auto; padding-top: 0; }
 }
 
-/* ---------------- Exchange card (terminal) ---------------- */
-.exch-wrap { display: flex; justify-content: center; }
-.exch-card { width: 100%; max-width: 460px; background: var(--card); border-radius: 26px; box-shadow: var(--neu-out); padding: 24px 26px; display: flex; flex-direction: column; gap: 18px; }
-.exch-selrow { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 18px; padding: 12px 14px; }
-.exch-sel { display: flex; align-items: center; gap: 9px; min-width: 0; }
-.exch-sel select { border: 0; background: transparent; font: inherit; font-weight: 800; font-size: 14.5px; color: var(--text); outline: none; cursor: pointer; -webkit-appearance: none; appearance: none; padding-right: 14px; background-image: linear-gradient(45deg, transparent 50%, var(--text-faint) 50%), linear-gradient(135deg, var(--text-faint) 50%, transparent 50%); background-position: calc(100% - 8px) 55%, calc(100% - 4px) 55%; background-size: 4px 4px; background-repeat: no-repeat; }
-.exch-swap { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 36px; height: 36px; border-radius: 50%; border: 0; cursor: pointer; background: var(--card); box-shadow: var(--neu-out-sm); color: var(--text-soft); font-size: 15px; display: flex; align-items: center; justify-content: center; transition: transform .2s ease; }
-.exch-swap:active { transform: translate(-50%, -50%) scale(.92); }
-.exch-amtwrap { position: relative; text-align: center; padding: 6px 0 2px; }
-.exch-ghost { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); font-size: 52px; font-weight: 800; color: var(--text); opacity: .06; pointer-events: none; letter-spacing: -.02em; }
-.exch-amt { width: 100%; border: 0; background: transparent; text-align: center; font: inherit; font-size: 44px; font-weight: 800; letter-spacing: -.03em; color: var(--text); outline: none; }
-.exch-avail { margin-top: 4px; font-size: 12px; color: var(--text-faint); }
-.exch-rate { display: flex; align-items: center; justify-content: center; gap: 5px; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 12px; padding: 9px 14px; font-size: 11.5px; color: var(--text-soft); }
-.exch-break { display: flex; flex-direction: column; gap: 8px; font-size: 12.5px; }
-.exch-break > div { display: flex; justify-content: space-between; color: var(--text-faint); }
-.exch-break > div b { color: var(--text-soft); font-weight: 600; }
-.exch-break .exch-total { border-top: 1px solid var(--surface); padding-top: 10px; font-size: 14px; font-weight: 800; color: var(--text); }
-.exch-break .exch-total .odo { font-weight: 800; color: var(--text); }
+/* ---------------- Tournaments inside the Arena ---------------- */
+.hero.sub { margin-top: 30px; }
+.hero.sub .hero-title { font-size: 34px; }
+.btn-invite {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 15px 26px; border: none; border-radius: 14px; cursor: pointer;
+  background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
+  color: #fff; font-size: 14px; font-weight: 600; letter-spacing: -.01em;
+  box-shadow: 0 10px 22px rgba(124, 58, 237, .32);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.btn-invite:hover { transform: translateY(-1px); box-shadow: 0 13px 26px rgba(124, 58, 237, .4); }
+.hero-foot { display: flex; align-items: center; gap: 9px; margin-top: 18px; font-size: 10.5px; letter-spacing: .1em; color: var(--text-faint); }
+.hero-foot .hf-close { margin-left: auto; }
+.hero-foot .hf-close b { color: #e5484d; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tc2-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.tile-ic.sm { width: 32px; height: 32px; border-radius: 11px; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.tc2-cad { font-size: 13.5px; font-weight: 800; letter-spacing: -.01em; }
+.tc2-head .live-tag { margin-left: auto; }
+.tc2-view { color: var(--accent-a); font-weight: 600; font-size: 11.5px; }
+.tournament-pool { font-size: 29px; }
+.fame-row { display: flex; align-items: center; gap: 14px; padding: 15px 4px; cursor: pointer; border-radius: 12px; }
+.fame-row + .fame-row { border-top: 1px solid var(--surface); }
+.fame-rank { width: 20px; flex: none; text-align: center; font-size: 11px; color: var(--text-faint); }
+.fame-tx { min-width: 0; flex: 1; }
+.fame-tx b { display: flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 700; color: var(--text); }
+.fame-tx > span { display: block; font-size: 11.5px; color: var(--text-faint); margin-top: 2px; }
+.fame-win { text-align: right; flex: none; }
+.fame-win b { display: block; font-size: 13.5px; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; }
+.fame-win b i { font-style: normal; color: var(--text-faint); font-weight: 400; padding: 0 2px; }
+.fame-win > span { display: block; font-size: 11px; font-weight: 700; color: var(--green); margin-top: 2px; }
 
 /* ---------------- Ideas grid — market cards ---------------- */
 .icg-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
@@ -2717,188 +2730,7 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
       </div>
     </header>
 
-    <div class="tabs" id="mainTabs">
-      <button class="tab" id="tabArena" data-nav="arena">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5" />
-        </svg>
-        <span>Arena</span>
-        <span class="tab-count">·&nbsp;3</span>
-      </button>
-      <button class="tab" id="tabTournaments" data-nav="tournaments">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z" />
-          <path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5" />
-        </svg>
-        <span>Tournaments</span>
-      </button>
-    </div>
-
     <div id="views">
-    <div class="view on" data-view="tournaments">
-
-    <!-- ============ HERO ============ -->
-    <section class="hero">
-      <div class="hero-glow"></div>
-      <div class="hero-content">
-        <div class="hero-left">
-          <div class="live-badge">
-            <span class="pulse-dot"></span>
-            <span class="mono">LIVE</span>
-          </div>
-
-          <h2 class="hero-title">Live <span class="hero-title-accent">tournaments</span></h2>
-
-          <p class="hero-desc">
-            Every entry adds 100% to its prize pool and the top 10 on each board
-            share it. Open to everyone — buy in any time, no spot limit.
-          </p>
-
-          <div class="hero-stats">
-            <div class="stat">
-              <span class="stat-label mono">TOTAL&nbsp;PRIZE&nbsp;POOL</span>
-              <span class="stat-value" id="stat-pool">£4.42M</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label mono">ACTIVE&nbsp;PLAYERS</span>
-              <span class="stat-value" id="stat-players">177,792</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label mono">LIVE&nbsp;CAPITAL</span>
-              <span class="stat-value" id="stat-capital">£17.80B</span>
-            </div>
-          </div>
-
-          <div class="hero-actions">
-            <div class="neu-counter" title="Number of entries">
-              <button class="cnt-btn" data-cnt="-1" aria-label="Fewer entries">−</button>
-              <span class="cnt-wrap"><span class="cnt-label mono">ENTRIES</span><span class="cnt-val" id="cntVal">1</span></span>
-              <button class="cnt-btn" data-cnt="1" aria-label="More entries">+</button>
-            </div>
-            <button class="btn-primary" data-enter><span class="pulse-dot small light"></span><span id="enterLabel">Enter Now · £25</span></button>
-            <button class="btn-neu" data-nav="social">Invite friends to compete</button>
-          </div>
-
-          <div class="hero-social">
-            <div class="avatar-stack">
-              <span class="stack-avatar" style="background: linear-gradient(135deg, #fcd9a0, #e8935a)">🦊</span>
-              <span class="stack-avatar" style="background: linear-gradient(135deg, #c9d4e2, #8fa3bd)">🐺</span>
-              <span class="stack-avatar" style="background: linear-gradient(135deg, #d9c2ef, #a184c8)">🐵</span>
-            </div>
-            <p class="hero-social-text"><strong>@Theo4</strong>, <strong>@swisstony</strong> &amp; 12.6K others competing</p>
-          </div>
-        </div>
-
-        <div class="leaderboard">
-          <div class="leaderboard-head">
-            <span class="pulse-dot purple"></span>
-            <span class="mono leaderboard-title">LIVE&nbsp;LEADERBOARD</span>
-          </div>
-          <ul class="leaderboard-list" id="leaderboard"></ul>
-          <button class="link-btn" data-nav="leaderboard">
-            View leaderboard
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 12h15M13 6l6 6-6 6" />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ ACTIVE TOURNAMENTS ============ -->
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <h3 class="section-title">Active tournaments</h3>
-          <p class="section-sub">
-            <span class="mono">5&nbsp;RUNNING</span>
-            <span class="dot-sep">·</span>
-            <span>tap to view the board</span>
-          </p>
-        </div>
-
-        <div class="section-head-right">
-          <div class="feed-switch">
-            <span class="feed-label mono" id="feed-label">FEED LIVE</span>
-            <div class="switch-container">
-              <input type="checkbox" id="feed-toggle" class="toggle-checkbox" checked />
-              <label class="switch" for="feed-toggle">
-                <div class="toggle"><div class="led"></div></div>
-              </label>
-            </div>
-          </div>
-          <button class="link-btn" data-nav="leaderboard">
-            View leaderboard
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 12h15M13 6l6 6-6 6" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="tournament-grid" id="tournaments"></div>
-    </section>
-
-    <!-- ============ HALL OF FAME ============ -->
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <h3 class="section-title">Hall of Fame</h3>
-          <p class="section-sub">Biggest wins all-time — best returns ever made on Paktos, across every market</p>
-        </div>
-        <div class="section-head-right">
-          <input id="fame-search" class="neu-input" type="text" placeholder="Search player…" aria-label="Search Hall of Fame" />
-          <button class="link-btn" data-nav="leaderboard">
-            See all
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 12h15M13 6l6 6-6 6" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="fame-card">
-        <div class="fame-scroll">
-          <table class="fame-table">
-            <thead>
-              <tr class="mono">
-                <th class="col-rank">#</th>
-                <th class="col-player">PLAYER</th>
-                <th class="col-tournament">TOURNAMENT</th>
-                <th class="col-place">PLACE</th>
-                <th class="col-pool">POOL</th>
-                <th class="col-entry">ENTRY</th>
-                <th class="col-winning">WINNING</th>
-              </tr>
-            </thead>
-            <tbody id="fame-body"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ PAST TOURNAMENTS ============ -->
-    <section class="section">
-      <div class="section-head">
-        <h3 class="section-title">Past tournaments</h3>
-        <div class="pager">
-          <button class="icon-btn round" aria-label="Previous" onclick="cyclePast(-1)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M15 6l-6 6 6 6" />
-            </svg>
-          </button>
-          <button class="icon-btn round" aria-label="Next" onclick="cyclePast(1)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M9 6l6 6-6 6" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="past-grid" id="past-grid"></div>
-    </section>
-
-    </div><!-- /tournaments -->
     <div class="view" data-view="arena"></div>
     <div class="view" data-view="leaderboard"></div>
     <div class="view" data-view="ideas"></div>
@@ -2941,12 +2773,14 @@ const leaderboard = [
 ];
 
 const tournaments = [
-  { name: 'DAILY SPRINT', pool: '18.4K', entries: 736, secondsLeft: 13 * 3600 + 38 * 60 + 2 },
-  { name: 'WEEKLY OPEN', pool: '62.5K', entries: 2500, secondsLeft: ((2 * 24 + 1) * 3600) + 4 * 60 + 17 },
-  { name: 'JULY GLOBAL OPEN', pool: '250.0K', entries: 10000, secondsLeft: ((4 * 24 + 2) * 3600) + 10 * 60 + 12 },
-  { name: 'Q3 CHAMPIONSHIP', pool: '842.0K', entries: 33680, secondsLeft: ((61 * 24 + 23) * 3600) + 51 * 60 + 48 },
-  { name: '2026 WORLD SERIES', pool: '3.15M', entries: 126000, secondsLeft: ((186 * 24 + 23) * 3600) + 47 * 60 + 31 }
+  { name: 'DAILY SPRINT', cad: 'Daily', series: 'Daily Sprint', icon: '⚡', tint: 'linear-gradient(145deg,#fbbf24,#f59e0b)', poolN: 18400, entries: 736, secondsLeft: 13 * 3600 + 38 * 60 + 2 },
+  { name: 'WEEKLY OPEN', cad: 'Weekly', series: 'Weekly Open', icon: '📅', tint: 'linear-gradient(145deg,#5b8bff,#2f6bff)', poolN: 62500, entries: 2500, secondsLeft: ((2 * 24 + 1) * 3600) + 4 * 60 + 17 },
+  { name: 'JULY GLOBAL OPEN', cad: 'Monthly', series: 'July Global Open', icon: '🌍', tint: 'linear-gradient(145deg,#9a7cff,#7c5cff)', poolN: 250000, entries: 10000, secondsLeft: ((4 * 24 + 2) * 3600) + 10 * 60 + 12 },
+  { name: 'Q3 CHAMPIONSHIP', cad: 'Quarterly', series: 'Q3 Championship', icon: '🏆', tint: 'linear-gradient(145deg,#34d399,#10b981)', poolN: 842000, entries: 33680, secondsLeft: ((61 * 24 + 23) * 3600) + 51 * 60 + 48 },
+  { name: '2026 WORLD SERIES', cad: 'Yearly', series: '2026 World Series', icon: '✦', tint: 'linear-gradient(145deg,#f9a8d4,#d946ef)', poolN: 3150000, entries: 126000, secondsLeft: ((186 * 24 + 23) * 3600) + 47 * 60 + 31 }
 ];
+
+const fmtPool = v => v >= 1e6 ? '£' + (v / 1e6).toFixed(2) + 'M' : '£' + (v / 1e3).toFixed(1) + 'K';
 
 const hallOfFame = [
   { rank: 1, player: 'Theo4', emoji: '🦊', tint: 'linear-gradient(135deg,#fcd9a0,#e8935a)', tournament: '2026 World Series', place: '1st', pool: '3.15M', winning: '1.26M', ret: '50400%' },
@@ -2985,7 +2819,9 @@ function renderNav() {
 }
 
 function renderLeaderboard(tickedName) {
-  document.getElementById('leaderboard').innerHTML = leaderboard.map((row, i) => `
+  const box = document.getElementById('leaderboard');
+  if (!box) return;
+  box.innerHTML = leaderboard.map((row, i) => `
     <li class="leaderboard-row${row.you ? ' me' : ''}" data-trader="${row.name}" style="cursor:pointer">
       <span class="row-rank mono">${String(i + 1).padStart(2, '0')}</span>
       <span class="row-avatar">${row.name.charAt(0).toUpperCase()}</span>
@@ -2995,55 +2831,54 @@ function renderLeaderboard(tickedName) {
 }
 
 function renderTournaments() {
-  document.getElementById('tournaments').innerHTML = tournaments.map((t, i) => `
+  const box = document.getElementById('tournaments');
+  if (!box) return;
+  box.innerHTML = tournaments.map((t, i) => `
     <article class="tournament-card glow" data-tour="${t.name}">
-      <div class="tournament-card-top">
-        <span class="trophy-tile">${TROPHY_SVG.replace('__S__', '#fff').replace('stroke-width="1.8"', 'stroke-width="2"')}</span>
+      <div class="tc2-head">
+        <span class="tile-ic sm" style="background:${t.tint}">${t.icon}</span>
+        <b class="tc2-cad">${t.cad}</b>
         <span class="live-tag"><span class="pulse-dot tiny"></span><span class="mono">LIVE</span></span>
       </div>
-      <p class="tournament-name mono">${t.name}</p>
-      <p class="tournament-pool">£${t.pool}</p>
+      <p class="tournament-name mono">${t.series}</p>
+      <p class="tournament-pool odo" id="tpool-${i}" data-odo="${fmtPool(t.poolN)}">${odoInner(fmtPool(t.poolN))}</p>
       <div class="tournament-meta">
-        <p>${t.entries.toLocaleString('en-GB')} in <span class="dot-sep">·</span> £25 entry</p>
+        <p><span id="tent-${i}">${t.entries.toLocaleString('en-GB')}</span> in <span class="dot-sep">·</span> £25 entry</p>
         <p>Closes in <strong class="closes" id="countdown-${i}">--</strong></p>
+        <p><span class="tc2-view">view board ›</span></p>
       </div>
-      <button class="btn-neu enter" data-enter><span class="pulse-dot tiny purple"></span>Enter Now</button>
+      <button class="btn-primary enter" data-enter style="width:100%;justify-content:center;padding:12px;font-size:13.5px">Enter now</button>
     </article>`).join('');
 }
 
 function renderFame(query = '') {
+  const box = document.getElementById('fame-body');
+  if (!box) return;
   const q = query.trim().toLowerCase();
   const rows = hallOfFame.filter(r => !q || r.player.toLowerCase().includes(q) || r.tournament.toLowerCase().includes(q));
   const body = rows.map(row => `
-    <tr data-trader="${row.player}" style="cursor:pointer">
-      <td class="col-rank mono rank-num">${String(row.rank).padStart(2, '0')}</td>
-      <td class="col-player">
-        <span class="fame-player">
-          <span class="fame-avatar" style="${row.emoji ? `background:${row.tint}` : ''}">${row.emoji || row.player.charAt(0).toUpperCase()}</span>
-          <span class="fame-name">${row.player}</span>
-          <span class="row-flag">🇺🇸</span>
-        </span>
-      </td>
-      <td class="col-tournament">${row.tournament}</td>
-      <td class="col-place">${row.place}</td>
-      <td class="col-pool">£${row.pool}</td>
-      <td class="col-entry">£25</td>
-      <td class="col-winning">
-        <span class="winning-amount">£${row.winning}</span>
-        <span class="winning-return">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6 4 4 6-7"/><path d="M14 8h6v6"/></svg>
-          ${row.ret}
-        </span>
-      </td>
-    </tr>`).join('');
-  document.getElementById('fame-body').innerHTML =
-    body || `<tr><td colspan="7" class="fame-empty">No players match “${query}”</td></tr>`;
+    <div class="fame-row" data-trader="${row.player}">
+      <span class="fame-rank mono">${row.rank}</span>
+      <span class="fame-avatar" style="${row.emoji ? `background:${row.tint}` : ''}">${row.emoji || row.player.charAt(0).toUpperCase()}</span>
+      <div class="fame-tx">
+        <b>${row.player} <span class="row-flag">🇺🇸</span></b>
+        <span>${row.tournament} · ${row.place} · £${row.pool} pool</span>
+      </div>
+      <div class="fame-win">
+        <b>£25 <i>→</i> £${row.winning}</b>
+        <span>${parseInt(row.ret).toLocaleString('en-GB')}× return</span>
+      </div>
+    </div>`).join('');
+  box.innerHTML =
+    body || `<div class="fame-empty" style="padding:22px;text-align:center">No players match “${query}”</div>`;
 }
 
 function renderPast() {
+  const box = document.getElementById('past-grid');
+  if (!box) return;
   const n = pastTournaments.length;
   const ordered = Array.from({ length: n }, (_, i) => pastTournaments[((i + pastOffset) % n + n) % n]);
-  document.getElementById('past-grid').innerHTML = ordered.map(p => `
+  box.innerHTML = ordered.map(p => `
     <article class="past-card glow">
       <div class="past-art ${p.art}">
         <span class="past-chip">
@@ -3087,6 +2922,8 @@ function tickCountdowns() {
     const el = document.getElementById('countdown-' + i);
     if (el) el.textContent = formatCountdown(t.secondsLeft);
   });
+  const hc = document.getElementById('heroClose');
+  if (hc) hc.textContent = formatCountdown(Math.min(...tournaments.map(t => t.secondsLeft)));
 }
 
 /* ---------------- Odometer — digits roll vertically like a slot machine.
@@ -3135,15 +2972,16 @@ let activeUsers = 24318, totalWon = 212437800, battlesToday = 3481;
 
 function tickLiveNumbers() {
   if (!feedLive) return;
-  prizePool += Math.floor(Math.random() * 900);
-  activePlayers += Math.floor(Math.random() * 7) - 2;
-  liveCapital += Math.floor(Math.random() * 4e6);
+  /* the house always grows — every platform counter only climbs */
+  prizePool += 120 + Math.floor(Math.random() * 900);
+  activePlayers += Math.floor(Math.random() * 6);
+  liveCapital += 500000 + Math.floor(Math.random() * 4e6);
   setOdo('stat-pool', '£' + (prizePool / 1e6).toFixed(2) + 'M');
   setOdo('stat-players', activePlayers.toLocaleString('en-GB'));
   setOdo('stat-capital', '£' + (liveCapital / 1e9).toFixed(2) + 'B');
-  activeUsers += Math.floor(Math.random() * 34) - 7;
-  totalWon += Math.floor(Math.random() * 120000);
-  battlesToday += Math.floor(Math.random() * 8);
+  activeUsers += Math.floor(Math.random() * 26);
+  totalWon += 20000 + Math.floor(Math.random() * 120000);
+  battlesToday += Math.floor(Math.random() * 7);
   setOdo('puUsers', activeUsers.toLocaleString('en-GB'));
   setOdo('puWon', '£' + (totalWon / 1e6).toFixed(1) + 'M');
   setOdo('puBattles', battlesToday.toLocaleString('en-GB'));
@@ -3195,11 +3033,23 @@ function tickLiveNumbers() {
     if (b) { setOdo(b, fmtRet(w.bRet)); b.className = 'nw-ret odo ' + (w.bRet >= 0 ? 'up' : 'down'); }
     if (bar) bar.style.width = Math.max(8, Math.min(92, 50 + (w.aRet - w.bRet) * 9)).toFixed(0) + '%';
   });
-  /* arena hero counters */
-  battlesLiveN += Math.floor(Math.random() * 9) - 3;
+  /* arena hero counters — always climbing */
+  battlesLiveN += Math.floor(Math.random() * 6);
   escrowVol += Math.random() * 0.12;
+  bigPotLive += Math.floor(Math.random() * 4000);
+  duelingN += Math.floor(Math.random() * 9);
   setOdo('ahBattles', battlesLiveN.toLocaleString('en-GB'));
   setOdo('ahEscrow', '£' + escrowVol.toFixed(1) + 'M');
+  setOdo('ahBigPot', '£' + (bigPotLive / 1e6).toFixed(2) + 'M');
+  setOdo('ahDueling', duelingN.toLocaleString('en-GB'));
+  /* tournament pools grow live with entries */
+  tournaments.forEach((t, i) => {
+    t.poolN += Math.floor(Math.random() * 260);
+    if (Math.random() < 0.5) t.entries += 1 + Math.floor(Math.random() * 3);
+    setOdo('tpool-' + i, fmtPool(t.poolN));
+    const en = document.getElementById('tent-' + i);
+    if (en) en.textContent = t.entries.toLocaleString('en-GB');
+  });
 }
 
 /* ---------------- Wiring ---------------- */
@@ -3208,22 +3058,19 @@ document.getElementById('theme-state').addEventListener('change', e => {
   document.body.classList.toggle('dark', e.target.checked);
 });
 
-document.getElementById('feed-toggle').addEventListener('change', e => {
-  feedLive = e.target.checked;
-  document.getElementById('feed-label').textContent = feedLive ? 'FEED LIVE' : 'PAUSED';
+document.addEventListener('change', e => {
+  if (e.target.id === 'feed-toggle') {
+    feedLive = e.target.checked;
+    const l = document.getElementById('feed-label');
+    if (l) l.textContent = feedLive ? 'FEED LIVE' : 'PAUSED';
+  }
 });
 
-document.getElementById('fame-search').addEventListener('input', e => renderFame(e.target.value));
-
 renderNav();
-renderLeaderboard();
-renderTournaments();
-renderFame();
-renderPast();
 tickCountdowns();
 
 setInterval(tickCountdowns, 1000);
-setInterval(tickLiveNumbers, 2600);
+setInterval(tickLiveNumbers, 1500);
 
 /* ==================================================================
    Multi-page app — router, terminal, ideas, social, assistant,
@@ -3234,7 +3081,7 @@ var currentView = 'tournaments';
 
 const TITLES = {
   tournaments: ['Arena', '<span class="mono">TOURNAMENTS</span><span class="dot-sep">·</span><span>3 accounts · active TR-1001 (Monthly)</span>'],
-  arena: ['Arena', '<span class="mono">HEAD-TO-HEAD</span><span class="dot-sep">·</span><span>battles, stakes &amp; the £1M pot</span>'],
+  arena: ['Arena', '<span class="mono">ONE&nbsp;ARENA</span><span class="dot-sep">·</span><span>battles, tournaments, nation wars &amp; the £1M pot</span>'],
   leaderboard: ['Arena', '<span class="mono">LEADERBOARD</span><span class="dot-sep">·</span><span>live standings, resorted in real time</span>'],
   ideas: ['Trade Ideas', '<span class="mono">LIVE&nbsp;WIRE</span><span class="dot-sep">·</span><span>signals streaming from every market</span>'],
   terminal: ['Trade', '<span class="mono">TR-1001</span><span class="dot-sep">·</span><span>£100k competition balance</span>'],
@@ -3256,13 +3103,10 @@ function toast(msg) {
 function viewEl(v) { return document.querySelector(`#views > .view[data-view="${v}"]`); }
 
 function navigate(v) {
+  if (v === 'tournaments') v = 'arena'; /* tournaments live inside the Arena — one place */
   currentView = v;
   document.querySelectorAll('#views > .view').forEach(el => el.classList.toggle('on', el.dataset.view === v));
-  const tabs = document.getElementById('mainTabs');
-  tabs.style.display = (v === 'tournaments' || v === 'arena') ? 'flex' : 'none';
-  document.getElementById('tabTournaments').classList.toggle('active', v === 'tournaments');
-  document.getElementById('tabArena').classList.toggle('active', v === 'arena');
-  const t = TITLES[v] || TITLES.tournaments;
+  const t = TITLES[v] || TITLES.arena;
   document.getElementById('pageTitle').textContent = t[0];
   document.getElementById('pageSub').innerHTML = t[1];
   const seg = document.querySelector('.segmented-state');
@@ -3429,7 +3273,7 @@ function renderTerminal() {
   const chips = Object.keys(INSTR).map(k => `
     <button class="asset-chip${k === term.asset ? ' on' : ''}" data-tasset="${k}">
       <span class="asset-ic" style="background:${INSTR[k].tint}">${INSTR[k].ic}</span>
-      <span class="asset-tx"><span class="asset-sym">${k}</span><span class="asset-px" data-tpx="${k}">${fmtPx(k)}</span></span>
+      <span class="asset-tx"><span class="asset-sym">${k}</span><span class="asset-px odo" data-tpx="${k}" data-odo="${fmtPx(k)}">${odoInner(fmtPx(k))}</span></span>
     </button>`).join('');
   const tfs = ['1m', '5m', '15m', '1H', '1D'].map(tf =>
     `<button class="pill-btn${tf === term.tf ? ' on' : ''}" data-ttf="${tf}">${tf}</button>`).join('');
@@ -3489,11 +3333,6 @@ function renderTerminal() {
       </div>
     </div>
     <div class="section" style="margin-top:30px">
-      <div class="section-head"><div><h3 class="section-title">Exchange</h3>
-        <p class="section-sub"><span class="mono">INSTANT&nbsp;SWAP</span><span class="dot-sep">·</span><span>move your balance between currencies &amp; crypto at the live rate</span></p></div></div>
-      <div class="exch-wrap">${exchCardHTML()}</div>
-    </div>
-    <div class="section" style="margin-top:30px">
       <div class="section-head"><div><h3 class="section-title">Trade history</h3>
         <p class="section-sub"><span class="mono">${tradeLog.length}&nbsp;FILLS</span><span class="dot-sep">·</span><span>every trade stamped with when, where and how it closed</span></p></div></div>
       <div class="fame-card"><div class="fame-scroll"><table class="trades-table" style="min-width:860px">
@@ -3504,74 +3343,6 @@ function renderTerminal() {
   drawSeries(document.getElementById('termChart'), a.series);
 }
 
-/* ---------------- Exchange — swap balance between currencies & crypto ---------------- */
-
-const FX = {
-  GBP: { flag: 'gb', name: 'British Pound', dp: 2 },
-  USD: { flag: 'us', name: 'US Dollar', dp: 2 },
-  EUR: { flag: 'eu', name: 'Euro', dp: 2 },
-  BTC: { ic: 'BTC', name: 'Bitcoin', dp: 6 },
-  ETH: { ic: 'ETH', name: 'Ethereum', dp: 5 },
-};
-const exch = { from: 'GBP', to: 'BTC', amt: '250.00' };
-
-/* value of one unit, in GBP — crypto legs track the live tape */
-const fxGbp = c => c === 'GBP' ? 1 : c === 'USD' ? 0.787 : c === 'EUR' ? 0.855
-  : c === 'BTC' ? INSTR.BTC.px * 0.787 : INSTR.ETH.px * 0.787;
-
-const fmtFx = (v, c) => v.toLocaleString('en-GB', { minimumFractionDigits: FX[c].dp, maximumFractionDigits: FX[c].dp });
-
-function exIcon(c) {
-  return FX[c].flag ? flagHTML(FX[c].flag, true)
-    : `<span class="asset-ic" style="background:${INSTR[c].tint};width:22px;height:22px;border-radius:50%;font-size:10px">${INSTR[c].ic}</span>`;
-}
-
-function exSelect(id, cur) {
-  return `<label class="exch-sel">${exIcon(cur)}<select id="${id}">
-    ${Object.keys(FX).map(k => `<option value="${k}"${k === cur ? ' selected' : ''}>${k}</option>`).join('')}
-  </select></label>`;
-}
-
-function exCalc() {
-  const amt = parseFloat(exch.amt) || 0;
-  const fee = amt * 0.01, spread = amt * 0.002;
-  const rate = fxGbp(exch.from) / fxGbp(exch.to);
-  return { amt, fee, spread, rate, total: Math.max(0, amt - fee - spread) * rate };
-}
-
-function exchCardHTML() {
-  const c = exCalc();
-  return `<div class="exch-card">
-    <div class="exch-selrow">
-      ${exSelect('exFrom', exch.from)}
-      <button class="exch-swap" data-exswap title="Swap direction">⇄</button>
-      ${exSelect('exTo', exch.to)}
-    </div>
-    <div class="exch-amtwrap">
-      <span class="exch-ghost" id="exGhost">${exch.from}</span>
-      <input class="exch-amt" id="exAmt" inputmode="decimal" value="${exch.amt}" placeholder="0.00">
-      <p class="exch-avail">Available: <b>${gbp0(term.bal)}</b> practice balance</p>
-    </div>
-    <div class="exch-rate mono">1&nbsp;${exch.from}&nbsp;=&nbsp;${odoHTML('exRate', fmtFx(c.rate, exch.to))}&nbsp;<span id="exRateTo">${exch.to}</span></div>
-    <div class="exch-break">
-      <div><span>Exchange fee (1%)</span><b id="exFee">${fmtFx(c.fee, exch.from)} ${exch.from}</b></div>
-      <div><span>FX spread (0.2%)</span><b id="exSpread">${fmtFx(c.spread, exch.from)} ${exch.from}</b></div>
-      <div class="exch-total"><span>You receive</span><span style="display:flex;gap:5px">${odoHTML('exTotal', fmtFx(c.total, exch.to))}<span id="exTotalTo">${exch.to}</span></span></div>
-    </div>
-    <button class="btn-primary" data-exgo style="width:100%;justify-content:center">⇆&nbsp;&nbsp;Exchange now</button>
-  </div>`;
-}
-
-function updateExchange() {
-  if (!document.getElementById('exAmt')) return;
-  const c = exCalc();
-  setOdo('exRate', fmtFx(c.rate, exch.to));
-  setOdo('exTotal', fmtFx(c.total, exch.to));
-  document.getElementById('exFee').textContent = fmtFx(c.fee, exch.from) + ' ' + exch.from;
-  document.getElementById('exSpread').textContent = fmtFx(c.spread, exch.from) + ' ' + exch.from;
-  document.getElementById('exGhost').textContent = exch.from;
-}
-
 function tickPrices() {
   if (!feedLive) return;
   Object.keys(INSTR).forEach(k => {
@@ -3580,7 +3351,7 @@ function tickPrices() {
     a.series.push(a.px);
     if (a.series.length > 120) a.series.shift();
   });
-  document.querySelectorAll('[data-ptag]').forEach(el => { el.textContent = fmtPx(el.dataset.ptag); });
+  document.querySelectorAll('[data-ptag]').forEach(el => setOdo(el, fmtPx(el.dataset.ptag)));
   document.querySelectorAll('[data-podo]').forEach(el => setOdo(el, fmtPx(el.dataset.podo)));
   document.querySelectorAll('[data-ppill]').forEach(el => {
     const p = INSTR[el.dataset.ppill];
@@ -3590,10 +3361,7 @@ function tickPrices() {
     if (b) b.textContent = fmtRet(chg);
   });
   if (currentView !== 'terminal') return;
-  Object.keys(INSTR).forEach(k => {
-    const el = document.querySelector(`[data-tpx="${k}"]`);
-    if (el) el.textContent = fmtPx(k);
-  });
+  Object.keys(INSTR).forEach(k => setOdo(document.querySelector(`[data-tpx="${k}"]`), fmtPx(k)));
   const a = INSTR[term.asset];
   const bigPx = document.getElementById('bigPx');
   if (bigPx) {
@@ -3604,7 +3372,6 @@ function tickPrices() {
     bigChg.className = 'chart-chg odo ' + (chg >= 0 ? 'up' : 'down');
   }
   drawSeries(document.getElementById('termChart'), a.series);
-  updateExchange();
   if (term.pos) updatePos();
 }
 
@@ -5187,7 +4954,7 @@ function builderHTML() {
 
 /* ---------------- Nation Wars — country vs country, full squads ---------------- */
 
-let battlesLiveN = 1284, escrowVol = 42.6;
+let battlesLiveN = 1284, escrowVol = 42.6, bigPotLive = 1000000, duelingN = 2547;
 
 const NATION_WARS = [
   { a: ['gb', 'United Kingdom'], b: ['us', 'United States'], size: 100, aRet: 4.21, bRet: 3.87, pot: 250000, ends: '2h 18m', aIn: 100, bIn: 97, joined: false, watching: 18402 },
@@ -5293,6 +5060,81 @@ function myBattlesHTML() {
     ${rows}</div>`;
 }
 
+/* Tournaments live inside the Arena — one competitive home */
+function tournamentsSectionHTML() {
+  const arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg>';
+  return `
+  <section class="hero sub">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="live-badge"><span class="pulse-dot"></span><span class="mono">LIVE</span></div>
+        <h2 class="hero-title">Live <span class="hero-title-accent">tournaments</span></h2>
+        <p class="hero-desc">Every entry adds 100% to its prize pool and the top 10 on each board share it. Open to everyone — buy in any time, no spot limit.</p>
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-label mono">TOTAL&nbsp;PRIZE&nbsp;POOL</span><span class="stat-value">${odoHTML('stat-pool', '£' + (prizePool / 1e6).toFixed(2) + 'M')}</span></div>
+          <div class="stat"><span class="stat-label mono">ACTIVE&nbsp;PLAYERS</span><span class="stat-value">${odoHTML('stat-players', activePlayers.toLocaleString('en-GB'))}</span></div>
+          <div class="stat"><span class="stat-label mono">LIVE&nbsp;CAPITAL</span><span class="stat-value">${odoHTML('stat-capital', '£' + (liveCapital / 1e9).toFixed(2) + 'B')}</span></div>
+        </div>
+        <div class="hero-actions">
+          <div class="neu-counter" title="Number of entries">
+            <button class="cnt-btn" data-cnt="-1" aria-label="Fewer entries">−</button>
+            <span class="cnt-wrap"><span class="cnt-label mono">ENTRIES</span><span class="cnt-val" id="cntVal">${entryCount}</span></span>
+            <button class="cnt-btn" data-cnt="1" aria-label="More entries">+</button>
+          </div>
+          <button class="btn-primary" data-enter><span class="pulse-dot small light"></span><span id="enterLabel">Enter Now · £${(entryCount * 25).toLocaleString('en-GB')}</span></button>
+          <button class="btn-invite" data-nav="social">Invite friends to compete →</button>
+        </div>
+        <div class="hero-social">
+          <div class="avatar-stack">
+            <span class="stack-avatar" style="background:linear-gradient(135deg,#fcd9a0,#e8935a)">🦊</span>
+            <span class="stack-avatar" style="background:linear-gradient(135deg,#c9d4e2,#8fa3bd)">🐺</span>
+            <span class="stack-avatar" style="background:linear-gradient(135deg,#d9c2ef,#a184c8)">🐵</span>
+          </div>
+          <p class="hero-social-text"><strong>@Theo4</strong>, <strong>@swisstony</strong> &amp; <strong>12.6K</strong> others competing — tap anyone to scout them</p>
+        </div>
+        <div class="hero-foot mono"><span class="pulse-dot tiny"></span>OPEN&nbsp;TO&nbsp;ALL&nbsp;·&nbsp;NO&nbsp;SPOT&nbsp;LIMIT<span class="hf-close">NEXT&nbsp;CLOSE&nbsp;<b id="heroClose">--</b></span></div>
+      </div>
+      <div class="leaderboard">
+        <div class="leaderboard-head"><span class="pulse-dot purple"></span><span class="mono leaderboard-title">LIVE&nbsp;LEADERBOARD</span></div>
+        <ul class="leaderboard-list" id="leaderboard"></ul>
+        <button class="link-btn" data-nav="leaderboard">View leaderboard ${arrow}</button>
+      </div>
+    </div>
+  </section>
+  <div class="section">
+    <div class="section-head"><div><h3 class="section-title">Active tournaments</h3>
+      <p class="section-sub"><span class="mono">5&nbsp;RUNNING</span><span class="dot-sep">·</span><span>tap a card to view its board — pools grow live with every entry</span></p></div>
+      <div class="section-head-right">
+        <div class="feed-switch">
+          <span class="feed-label mono" id="feed-label">${feedLive ? 'FEED LIVE' : 'PAUSED'}</span>
+          <div class="switch-container">
+            <input type="checkbox" id="feed-toggle" class="toggle-checkbox"${feedLive ? ' checked' : ''}>
+            <label class="switch" for="feed-toggle"><div class="toggle"><div class="led"></div></div></label>
+          </div>
+        </div>
+      </div></div>
+    <div class="tournament-grid" id="tournaments"></div>
+  </div>
+  <div class="section">
+    <div class="section-head"><div><h3 class="section-title">Hall of Fame</h3>
+      <p class="section-sub">Biggest wins all-time — £25 in, life-changing out. Tap anyone to see how they did it.</p></div>
+      <div class="section-head-right">
+        <input id="fame-search" class="neu-input" type="text" placeholder="Search player…" aria-label="Search Hall of Fame">
+        <button class="link-btn" data-nav="leaderboard">See all ${arrow}</button>
+      </div></div>
+    <div class="fame-card"><div id="fame-body"></div></div>
+  </div>
+  <div class="section">
+    <div class="section-head"><h3 class="section-title">Past tournaments</h3>
+      <div class="pager">
+        <button class="icon-btn round" aria-label="Previous" onclick="cyclePast(-1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <button class="icon-btn round" aria-label="Next" onclick="cyclePast(1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+      </div></div>
+    <div class="past-grid" id="past-grid"></div>
+  </div>`;
+}
+
 function renderArena() {
   const battleRows = BATTLES.map((b, i) => `
     <li class="leaderboard-row">
@@ -5327,8 +5169,8 @@ function renderArena() {
           <div class="hero-stats">
             <div class="stat"><span class="stat-label mono">BATTLES&nbsp;LIVE&nbsp;NOW</span><span class="stat-value">${odoHTML('ahBattles', battlesLiveN.toLocaleString('en-GB'))}</span></div>
             <div class="stat"><span class="stat-label mono">ESCROWED&nbsp;VOLUME</span><span class="stat-value">${odoHTML('ahEscrow', '£' + escrowVol.toFixed(1) + 'M')}</span></div>
-            <div class="stat"><span class="stat-label mono">YOUR&nbsp;RECORD</span><span class="stat-value">23–9 <span style="font-size:14px;color:var(--green)">W4</span></span></div>
-            <div class="stat"><span class="stat-label mono">YOUR&nbsp;RATING</span><span class="stat-value" style="display:flex;align-items:center;gap:10px">1,847 <span class="rating-chip">🥇 GOLD III</span></span></div>
+            <div class="stat"><span class="stat-label mono">BIGGEST&nbsp;POT&nbsp;LIVE</span><span class="stat-value">${odoHTML('ahBigPot', '£' + (bigPotLive / 1e6).toFixed(2) + 'M')}</span></div>
+            <div class="stat"><span class="stat-label mono">TRADERS&nbsp;DUELING</span><span class="stat-value">${odoHTML('ahDueling', duelingN.toLocaleString('en-GB'))}</span></div>
           </div>
           <div class="hero-actions">
             <button class="btn-primary" data-abopen><span class="pulse-dot small light"></span>Start a battle</button>
@@ -5354,12 +5196,17 @@ function renderArena() {
     ${pulseStripHTML()}
     ${arenaB.open ? builderHTML() : ''}
     ${myBattlesHTML()}
+    ${tournamentsSectionHTML()}
     ${nationWarsHTML()}
     <div class="section">
       <div class="section-head"><div><h3 class="section-title">Open challenges</h3>
         <p class="section-sub"><span class="mono">${challenges.length}&nbsp;OPEN</span><span class="dot-sep">·</span><span>someone set the terms — take the other side and it locks in at kick-off</span></p></div></div>
       <div class="challenge-grid">${cards}</div>
     </div>`;
+  renderTournaments();
+  renderLeaderboard();
+  renderFame();
+  renderPast();
 }
 
 /* ---------------- Partner ---------------- */
@@ -5723,20 +5570,6 @@ document.addEventListener('click', e => {
     toast('Challenge cancelled — stake released from escrow');
     return renderArena();
   }
-  if ((el = q('[data-exswap]'))) {
-    const t = exch.from; exch.from = exch.to; exch.to = t;
-    return renderTerminal();
-  }
-  if ((el = q('[data-exgo]'))) {
-    const c = exCalc();
-    if (!c.amt) return toast('Enter an amount to exchange');
-    if (exch.from === 'GBP' && c.amt > term.bal) return toast('Not enough balance — you have ' + gbp0(term.bal));
-    if (exch.from === 'GBP') term.bal -= c.amt;
-    if (exch.to === 'GBP') term.bal += c.total;
-    toast(`Exchanged ${fmtFx(c.amt, exch.from)} ${exch.from} → ${fmtFx(c.total, exch.to)} ${exch.to} at the live rate`);
-    addNotif('💱', `Exchange filled`, `${fmtFx(c.amt, exch.from)} ${exch.from} → ${fmtFx(c.total, exch.to)} ${exch.to} · 1% fee + 0.2% spread taken from the pot.`);
-    return renderTerminal();
-  }
   if ((el = q('[data-njoin]'))) {
     const w = NATION_WARS[+el.dataset.njoin];
     if (!w || w.joined || w.aIn >= w.size) return;
@@ -5788,17 +5621,7 @@ document.addEventListener('click', e => {
 });
 
 document.addEventListener('input', e => {
-  if (e.target.id === 'exAmt') {
-    if (!/^\d*\.?\d{0,8}$/.test(e.target.value)) { e.target.value = exch.amt; return; }
-    exch.amt = e.target.value;
-    return updateExchange();
-  }
-  if (e.target.id === 'exFrom' || e.target.id === 'exTo') {
-    const key = e.target.id === 'exFrom' ? 'from' : 'to', other = key === 'from' ? 'to' : 'from';
-    if (e.target.value === exch[other]) exch[other] = exch[key];
-    exch[key] = e.target.value;
-    return renderTerminal();
-  }
+  if (e.target.id === 'fame-search') return renderFame(e.target.value);
   if (e.target.id === 'rrSlider') {
     term.rr = +e.target.value;
     const riskAmt = term.bal * term.risk / 100;
@@ -5860,15 +5683,9 @@ document.addEventListener('click', e => {
   }
 });
 
-/* Hero stats roll in from zero — every digit a slot-machine reel */
-
-odoIntro('stat-pool', '£0.00M', '£' + (prizePool / 1e6).toFixed(2) + 'M');
-odoIntro('stat-players', '000,000', activePlayers.toLocaleString('en-GB'));
-odoIntro('stat-capital', '£00.00B', '£' + (liveCapital / 1e9).toFixed(2) + 'B');
-
 /* Partner mode toggle */
 document.querySelector('.segmented-state').addEventListener('change', e => {
-  navigate(e.target.checked ? 'partner' : 'tournaments');
+  navigate(e.target.checked ? 'partner' : 'arena');
 });
 
 /* Redraw charts on theme change */
@@ -5877,6 +5694,11 @@ document.getElementById('theme-state').addEventListener('change', () => {
 });
 
 navigate('arena');
+
+/* Hero stats roll in from zero — every digit a slot-machine reel */
+odoIntro('stat-pool', '£0.00M', '£' + (prizePool / 1e6).toFixed(2) + 'M');
+odoIntro('stat-players', '000,000', activePlayers.toLocaleString('en-GB'));
+odoIntro('stat-capital', '£00.00B', '£' + (liveCapital / 1e9).toFixed(2) + 'B');
 </script>
 </body>
 </html>
