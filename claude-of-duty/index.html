@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Claude of Duty</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🎯</text></svg>" />
+  <style>
+    :root { color-scheme: dark; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #05070b; }
+    body { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; color: #e7edf5; user-select: none; }
+    #app { position: fixed; inset: 0; }
+    canvas { display: block; width: 100%; height: 100%; }
+
+    /* ---------- HUD ---------- */
+    #hud { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+    #hud .hidden { display: none; }
+
+    #crosshair {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: 26px; height: 26px;
+    }
+    #crosshair .line { position: absolute; background: rgba(230, 240, 255, .85); box-shadow: 0 0 3px rgba(0,0,0,.8); }
+    #crosshair .h { top: 50%; height: 2px; transform: translateY(-50%); }
+    #crosshair .v { left: 50%; width: 2px; transform: translateX(-50%); }
+    #crosshair .l { left: 0; width: 8px; } #crosshair .r { right: 0; width: 8px; }
+    #crosshair .t { top: 0; height: 8px; } #crosshair .b { bottom: 0; height: 8px; }
+    #crosshair .dot { left: 50%; top: 50%; width: 3px; height: 3px; transform: translate(-50%,-50%); border-radius: 50%; }
+    #crosshair.hit .line { background: #ff5a4d; }
+
+    #bottom-left { position: absolute; left: 26px; bottom: 24px; }
+    #health-wrap { width: 260px; }
+    #health-label { font-size: 12px; letter-spacing: 2px; opacity: .7; margin-bottom: 5px; }
+    #health-bar { height: 14px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); border-radius: 3px; overflow: hidden; }
+    #health-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #37c26a, #7ee08a); transition: width .12s linear; }
+    #health-fill.low { background: linear-gradient(90deg, #d63b2f, #ff7a5c); }
+
+    #bottom-right { position: absolute; right: 30px; bottom: 20px; text-align: right; }
+    #ammo { font-size: 46px; font-weight: 700; letter-spacing: 1px; line-height: 1; text-shadow: 0 2px 8px rgba(0,0,0,.6); }
+    #ammo .mag { color: #fff; } #ammo .sep { opacity: .4; margin: 0 6px; } #ammo .reserve { opacity: .6; font-size: 30px; }
+    #weapon-name { font-size: 13px; letter-spacing: 3px; opacity: .55; margin-top: 4px; }
+    #reload-hint { color: #ffcf4d; font-size: 13px; letter-spacing: 2px; margin-top: 6px; height: 16px; }
+
+    #top-center { position: absolute; left: 50%; top: 18px; transform: translateX(-50%); text-align: center; }
+    #wave-info { font-size: 13px; letter-spacing: 4px; opacity: .7; }
+    #score { font-size: 30px; font-weight: 700; margin-top: 2px; text-shadow: 0 2px 8px rgba(0,0,0,.6); }
+    #enemies-left { font-size: 12px; letter-spacing: 2px; opacity: .55; margin-top: 2px; }
+    #wave-banner {
+      position: absolute; left: 50%; top: 38%; transform: translate(-50%,-50%);
+      font-size: 44px; font-weight: 800; letter-spacing: 4px; text-align: center;
+      text-shadow: 0 3px 20px rgba(0,0,0,.8); opacity: 0; transition: opacity .4s;
+    }
+    #wave-banner .sub { display:block; font-size: 16px; letter-spacing: 6px; opacity: .7; margin-top: 8px; font-weight: 500; }
+
+    #killfeed { position: absolute; right: 26px; top: 74px; text-align: right; font-size: 14px; }
+    #killfeed div { background: rgba(0,0,0,.35); display: inline-block; padding: 3px 9px; border-radius: 3px; margin-bottom: 5px;
+      opacity: 0; animation: kfin .2s forwards; }
+    #killfeed .name { color: #ff8a7a; font-weight: 700; }
+    @keyframes kfin { to { opacity: 1; } }
+
+    #compass { position: absolute; left: 50%; top: 96px; transform: translateX(-50%); width: 320px; height: 22px;
+      overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); }
+    #compass-strip { position: absolute; top: 0; left: 0; width: 100%; text-align: center; height: 22px; white-space: nowrap; font-size: 12px; letter-spacing: 2px; }
+    #compass .tick { display: inline-block; width: 40px; text-align: center; opacity: .55; }
+    #compass .card { color: #ffd36b; opacity: .95; font-weight: 700; }
+    #compass-needle { position: absolute; left: 50%; top: 0; width: 2px; height: 22px; background: #ffd36b; transform: translateX(-50%); }
+
+    #hitflash { position: absolute; inset: 0; background: radial-gradient(circle at center, transparent 40%, rgba(180,20,10,.55) 100%);
+      opacity: 0; transition: opacity .1s; }
+
+    /* ---------- Overlays ---------- */
+    #overlay { position: fixed; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(circle at 50% 30%, rgba(20,30,50,.75), rgba(3,5,9,.94)); backdrop-filter: blur(3px); }
+    #overlay.hidden { display: none; }
+    .panel { width: min(560px, 90vw); text-align: center; padding: 40px; }
+    .panel h1 { font-size: 52px; font-weight: 800; letter-spacing: 3px; margin-bottom: 4px;
+      background: linear-gradient(90deg,#ffd36b,#ff8a5c); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .panel .tag { font-size: 14px; letter-spacing: 5px; opacity: .55; margin-bottom: 28px; text-transform: uppercase; }
+    .panel p { opacity: .8; line-height: 1.7; margin-bottom: 22px; font-size: 15px; }
+    .controls { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; text-align: left;
+      max-width: 340px; margin: 0 auto 30px; font-size: 14px; }
+    .controls .k { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 4px;
+      padding: 2px 8px; font-weight: 600; text-align: center; min-width: 46px; }
+    .controls .d { opacity: .75; align-self: center; }
+    button.play { pointer-events: auto; cursor: pointer; font: inherit; font-size: 18px; font-weight: 700; letter-spacing: 2px;
+      color: #0b0d12; background: linear-gradient(90deg,#ffd36b,#ff9d5c); border: none; border-radius: 8px;
+      padding: 14px 46px; box-shadow: 0 6px 24px rgba(255,160,80,.35); transition: transform .08s, box-shadow .12s; }
+    button.play:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(255,160,80,.5); }
+    button.play:active { transform: translateY(1px); }
+    #overlay .stat { font-size: 15px; opacity: .85; margin-bottom: 8px; }
+    #overlay .stat b { color: #ffd36b; font-size: 20px; }
+    #loading { position: fixed; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 18px; background: #05070b; }
+    #loading .bar { width: 220px; height: 4px; background: rgba(255,255,255,.1); border-radius: 3px; overflow: hidden; }
+    #loading .bar i { display: block; height: 100%; width: 30%; background: linear-gradient(90deg,#ffd36b,#ff8a5c);
+      animation: load 1s ease-in-out infinite; }
+    @keyframes load { 0%{ margin-left:-30%; } 100%{ margin-left:100%; } }
+    #loading .t { letter-spacing: 4px; opacity: .6; font-size: 13px; }
+    #err { position: fixed; inset: 0; z-index: 40; display: none; align-items: center; justify-content: center; padding: 30px; }
+    #err .box { max-width: 560px; background: rgba(30,10,10,.6); border: 1px solid rgba(255,90,70,.4); border-radius: 10px;
+      padding: 26px; font-size: 14px; line-height: 1.6; }
+    #err h2 { color: #ff7a5c; margin-bottom: 10px; }
+    #err code { background: rgba(0,0,0,.4); padding: 2px 6px; border-radius: 4px; }
+  </style>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./vendor/three.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+
+  <div id="hud">
+    <div id="hitflash"></div>
+    <div id="crosshair">
+      <div class="line h l"></div><div class="line h r"></div>
+      <div class="line v t"></div><div class="line v b"></div>
+      <div class="line dot"></div>
+    </div>
+    <div id="compass">
+      <div id="compass-strip"></div>
+    </div>
+    <div id="compass-needle"></div>
+    <div id="top-center">
+      <div id="wave-info">WAVE 1</div>
+      <div id="score">0</div>
+      <div id="enemies-left">0 HOSTILES</div>
+    </div>
+    <div id="killfeed"></div>
+    <div id="wave-banner"></div>
+    <div id="bottom-left">
+      <div id="health-wrap">
+        <div id="health-label">HEALTH</div>
+        <div id="health-bar"><div id="health-fill"></div></div>
+      </div>
+    </div>
+    <div id="bottom-right">
+      <div id="ammo"><span class="mag">30</span><span class="sep">/</span><span class="reserve">90</span></div>
+      <div id="weapon-name">CQB RIFLE</div>
+      <div id="reload-hint"></div>
+    </div>
+  </div>
+
+  <div id="loading"><div class="t">COMPILING SHADERS…</div><div class="bar"><i></i></div></div>
+
+  <div id="overlay" class="hidden">
+    <div class="panel" id="panel"></div>
+  </div>
+
+  <div id="err"><div class="box">
+    <h2>Failed to start</h2>
+    <p id="err-msg"></p>
+    <p>This game needs WebGL2 and must be served over http(s) (ES modules don't load from <code>file://</code>). Try <code>npx serve claude-of-duty</code> and open it in a modern browser.</p>
+  </div></div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
