@@ -1509,22 +1509,7 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
 .sc-rank svg { color: #b45309; opacity: 0.25; flex: 0 0 auto; }
 .sc-rank-place { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
 .sc-rank-cat { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); margin-top: 3px; }
-.sc-form { margin-top: auto; }
-.sc-form-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 9px; }
-.sc-form-label { font-size: 9.5px; letter-spacing: 0.12em; color: var(--text-faint); }
-.sc-form-sub { font-size: 10.5px; color: var(--text-soft); font-weight: 600; }
-.sc-bars { display: flex; align-items: flex-end; gap: 4px; height: 44px; }
-.sc-bars span {
-  flex: 1;
-  border-radius: 3px;
-  min-height: 4px;
-  transform-origin: bottom;
-  animation: scbar 0.5s ease-out both;
-}
-@keyframes scbar {
-  from { transform: scaleY(0); opacity: 0; }
-  to { transform: scaleY(1); opacity: 0.9; }
-}
+.sc-rank { margin-top: auto; }
 
 /* Trader profile header */
 
@@ -4186,14 +4171,7 @@ function ordinal(n) {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-const SC_BAR_COLORS = ['#3b82f6', '#4f46e5', '#a855f7', '#d946ef', '#ec4899', '#ef4444'];
-
 function scoreCardHTML(d) {
-  const n = d.formBars.length;
-  const bars = d.formBars.map((l, i) => {
-    const color = SC_BAR_COLORS[Math.floor((i / n) * (SC_BAR_COLORS.length - 1))];
-    return `<span style="height:${Math.round(l * 100)}%;background:${color};animation-delay:${(i * 0.05).toFixed(2)}s"></span>`;
-  }).join('');
   return `<div class="glow-wrap"><div class="score-card">
     <div class="sc-head"><span class="sc-title">Stats</span><span class="pmc2-chip mono">ALL&nbsp;TIME</span></div>
     <div>
@@ -4211,10 +4189,6 @@ function scoreCardHTML(d) {
         <div class="sc-rank-cat">top ranked traders</div>
       </div>
       ${LAUREL}
-    </div>
-    <div class="sc-form">
-      <div class="sc-form-head"><span class="sc-form-label mono">FORM · LAST 30 DAYS</span><span class="sc-form-sub">${d.winRate}% win rate · ${d.hours}h traded</span></div>
-      <div class="sc-bars">${bars}</div>
     </div>
   </div></div>`;
 }
