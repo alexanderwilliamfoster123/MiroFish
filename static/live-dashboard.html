@@ -2592,25 +2592,6 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .ch-stats { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 9.5px; letter-spacing: .08em; color: var(--text-faint); margin-bottom: 13px; }
 .tier-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 9px; font-weight: 800; letter-spacing: .06em; padding: 3px 8px; border-radius: 999px; background: linear-gradient(135deg, rgba(124, 58, 237, .14), rgba(217, 70, 239, .14)); color: var(--accent-a); }
 
-/* ---------------- Winnings globe ---------------- */
-.globe-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 18px; margin-bottom: 18px; }
-.globe-panel { position: relative; display: flex; flex-direction: column; align-items: center; }
-.globe-panel canvas { width: 100%; max-width: 380px; aspect-ratio: 1; cursor: grab; touch-action: none; }
-.globe-panel canvas:active { cursor: grabbing; }
-.globe-cap { font-size: 9.5px; letter-spacing: .12em; color: var(--text-faint); margin-top: 8px; }
-.globe-tip { position: absolute; pointer-events: none; background: var(--card); box-shadow: var(--neu-out-sm); border-radius: 12px; padding: 8px 12px; font-size: 11px; opacity: 0; transition: opacity .15s ease; z-index: 5; white-space: nowrap; }
-.globe-tip.on { opacity: 1; }
-.globe-tip b { display: block; font-size: 12px; }
-.grank { display: flex; align-items: center; gap: 11px; padding: 9px 2px; }
-.grank + .grank { border-top: 1px solid var(--surface); }
-.grank-n { width: 22px; font-size: 10.5px; color: var(--text-faint); text-align: center; }
-.grank-tx { flex: 1; min-width: 0; }
-.grank-name { font-size: 12.5px; font-weight: 700; }
-.grank-bar { height: 5px; border-radius: 999px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; margin-top: 5px; }
-.grank-bar i { display: block; height: 100%; border-radius: 999px; }
-.grank-won { font-size: 12.5px; font-weight: 800; font-variant-numeric: tabular-nums; }
-@media (max-width: 900px) { .globe-row { grid-template-columns: 1fr; } }
-
 /* ---------------- Ideas grid — market cards ---------------- */
 .icg-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .asset-ic.lg { width: 38px; height: 38px; border-radius: 13px; font-size: 16px; }
@@ -2766,30 +2747,30 @@ let activePlayers = 177792;
 let liveCapital = 17800000000;
 
 const leaderboard = [
-  { name: 'Rudy', flag: '🇺🇸', value: 1147695 },
-  { name: 'Sander Schouten', flag: '🇪🇸', value: 154292 },
-  { name: 'Dion Trades', flag: '🇮🇹', value: 153339 },
-  { name: 'jstone', flag: '🇬🇧', value: 121300, you: true }
+  { name: 'Rudy', value: 1147695 },
+  { name: 'Sander Schouten', value: 154292 },
+  { name: 'Dion Trades', value: 153339 },
+  { name: 'jstone', value: 121300, you: true }
 ];
 
 const tournaments = [
-  { name: 'DAILY SPRINT', cad: 'Daily', series: 'Daily Sprint', icon: '⚡', tint: 'linear-gradient(145deg,#fbbf24,#f59e0b)', poolN: 18400, entries: 736, secondsLeft: 13 * 3600 + 38 * 60 + 2 },
-  { name: 'WEEKLY OPEN', cad: 'Weekly', series: 'Weekly Open', icon: '📅', tint: 'linear-gradient(145deg,#5b8bff,#2f6bff)', poolN: 62500, entries: 2500, secondsLeft: ((2 * 24 + 1) * 3600) + 4 * 60 + 17 },
-  { name: 'JULY GLOBAL OPEN', cad: 'Monthly', series: 'July Global Open', icon: '🌍', tint: 'linear-gradient(145deg,#9a7cff,#7c5cff)', poolN: 250000, entries: 10000, secondsLeft: ((4 * 24 + 2) * 3600) + 10 * 60 + 12 },
-  { name: 'Q3 CHAMPIONSHIP', cad: 'Quarterly', series: 'Q3 Championship', icon: '🏆', tint: 'linear-gradient(145deg,#34d399,#10b981)', poolN: 842000, entries: 33680, secondsLeft: ((61 * 24 + 23) * 3600) + 51 * 60 + 48 },
-  { name: '2026 WORLD SERIES', cad: 'Yearly', series: '2026 World Series', icon: '✦', tint: 'linear-gradient(145deg,#f9a8d4,#d946ef)', poolN: 3150000, entries: 126000, secondsLeft: ((186 * 24 + 23) * 3600) + 47 * 60 + 31 }
+  { name: 'DAILY SPRINT', cad: 'Daily', series: 'Daily Sprint', icon: 'D', tint: 'linear-gradient(145deg,#fbbf24,#f59e0b)', poolN: 18400, entries: 736, secondsLeft: 13 * 3600 + 38 * 60 + 2 },
+  { name: 'WEEKLY OPEN', cad: 'Weekly', series: 'Weekly Open', icon: 'W', tint: 'linear-gradient(145deg,#5b8bff,#2f6bff)', poolN: 62500, entries: 2500, secondsLeft: ((2 * 24 + 1) * 3600) + 4 * 60 + 17 },
+  { name: 'JULY GLOBAL OPEN', cad: 'Monthly', series: 'July Global Open', icon: 'M', tint: 'linear-gradient(145deg,#9a7cff,#7c5cff)', poolN: 250000, entries: 10000, secondsLeft: ((4 * 24 + 2) * 3600) + 10 * 60 + 12 },
+  { name: 'Q3 CHAMPIONSHIP', cad: 'Quarterly', series: 'Q3 Championship', icon: 'Q', tint: 'linear-gradient(145deg,#34d399,#10b981)', poolN: 842000, entries: 33680, secondsLeft: ((61 * 24 + 23) * 3600) + 51 * 60 + 48 },
+  { name: '2026 WORLD SERIES', cad: 'Yearly', series: '2026 World Series', icon: 'Y', tint: 'linear-gradient(145deg,#f9a8d4,#d946ef)', poolN: 3150000, entries: 126000, secondsLeft: ((186 * 24 + 23) * 3600) + 47 * 60 + 31 }
 ];
 
 const fmtPool = v => v >= 1e6 ? '£' + (v / 1e6).toFixed(2) + 'M' : '£' + (v / 1e3).toFixed(1) + 'K';
 
 const hallOfFame = [
-  { rank: 1, player: 'Theo4', emoji: '🦊', tint: 'linear-gradient(135deg,#fcd9a0,#e8935a)', tournament: '2026 World Series', place: '1st', pool: '3.15M', winning: '1.26M', ret: '50400%' },
-  { rank: 2, player: 'Fredi9999', emoji: '🐺', tint: 'linear-gradient(135deg,#c9d4e2,#8fa3bd)', tournament: '2025 World Series', place: '1st', pool: '3.15M', winning: '1.26M', ret: '50400%' },
-  { rank: 3, player: 'swisstony', emoji: '🐵', tint: 'linear-gradient(135deg,#d9c2ef,#a184c8)', tournament: '2024 World Series', place: '1st', pool: '3.15M', winning: '1.26M', ret: '50400%' },
+  { rank: 1, player: 'Theo4', emoji: 'T', tint: 'linear-gradient(135deg,#fcd9a0,#e8935a)', tournament: '2026 World Series', place: '1st', pool: '3.15M', winning: '1.26M', ret: '50400%' },
+  { rank: 2, player: 'Fredi9999', emoji: 'F', tint: 'linear-gradient(135deg,#c9d4e2,#8fa3bd)', tournament: '2025 World Series', place: '1st', pool: '3.15M', winning: '1.26M', ret: '50400%' },
+  { rank: 3, player: 'swisstony', emoji: 'S', tint: 'linear-gradient(135deg,#d9c2ef,#a184c8)', tournament: '2024 World Series', place: '1st', pool: '3.15M', winning: '1.26M', ret: '50400%' },
   { rank: 4, player: 'kch123', tournament: '2026 World Series', place: '2nd', pool: '3.15M', winning: '630K', ret: '25200%' },
   { rank: 5, player: 'RN1', tournament: '2025 World Series', place: '2nd', pool: '3.15M', winning: '630K', ret: '25200%' },
   { rank: 6, player: 'mintblade', tournament: 'Q3 Championship', place: '1st', pool: '842K', winning: '336.8K', ret: '13472%' },
-  { rank: 7, player: 'fishalive', emoji: '🐹', tint: 'linear-gradient(135deg,#e7c9a9,#b98a5a)', tournament: 'Q2 Championship', place: '1st', pool: '842K', winning: '336.8K', ret: '13472%' },
+  { rank: 7, player: 'fishalive', emoji: 'F', tint: 'linear-gradient(135deg,#e7c9a9,#b98a5a)', tournament: 'Q2 Championship', place: '1st', pool: '842K', winning: '336.8K', ret: '13472%' },
   { rank: 8, player: 'frostrizz', tournament: 'Q1 Championship', place: '1st', pool: '842K', winning: '336.8K', ret: '13472%' }
 ];
 
@@ -2825,7 +2806,7 @@ function renderLeaderboard(tickedName) {
     <li class="leaderboard-row${row.you ? ' me' : ''}" data-trader="${row.name}" style="cursor:pointer">
       <span class="row-rank mono">${String(i + 1).padStart(2, '0')}</span>
       <span class="row-avatar">${row.name.charAt(0).toUpperCase()}</span>
-      <span class="row-name">${row.name}${row.you ? ' <span class="row-you">· you</span>' : ''}<span class="row-flag">${row.flag}</span></span>
+      <span class="row-name">${row.name}${row.you ? ' <span class="row-you">· you</span>' : ''}</span>
       <span class="row-value mono-num${row.name === tickedName ? ' ticked' : ''}">£${fmt(row.value)}</span>
     </li>`).join('');
 }
@@ -2861,7 +2842,7 @@ function renderFame(query = '') {
       <span class="fame-rank mono">${row.rank}</span>
       <span class="fame-avatar" style="${row.emoji ? `background:${row.tint}` : ''}">${row.emoji || row.player.charAt(0).toUpperCase()}</span>
       <div class="fame-tx">
-        <b>${row.player} <span class="row-flag">🇺🇸</span></b>
+        <b>${row.player}</b>
         <span>${row.tournament} · ${row.place} · £${row.pool} pool</span>
       </div>
       <div class="fame-win">
@@ -2994,7 +2975,7 @@ function tickLiveNumbers() {
         showReward(b.pot, b.opp);
       } else {
         toast(`Battle settled — ${b.opp} edged it ${b.op.toFixed(2)}% to ${b.my.toFixed(2)}%`);
-        addNotif('💀', `Battle lost to ${b.opp}`, `They took the £${b.pot.toLocaleString('en-GB')} pot by ${(b.op - b.my).toFixed(2)}%. Run it back?`);
+        addNotif('L', `Battle lost to ${b.opp}`, `They took the £${b.pot.toLocaleString('en-GB')} pot by ${(b.op - b.my).toFixed(2)}%. Run it back?`);
       }
       if (currentView === 'arena') renderArena();
     });
@@ -3038,7 +3019,7 @@ function tickLiveNumbers() {
     const ld = document.getElementById('specLead');
     if (ld) ld.style.width = Math.max(6, Math.min(94, 50 + (spec.ra - spec.rb) * 9)).toFixed(0) + '%';
     const lt = document.getElementById('specLeadTxt');
-    if (lt) lt.textContent = '🏆 ' + (spec.ra >= spec.rb ? spec.a.name : spec.b.name) + ' LEADS';
+    if (lt) lt.textContent = (spec.ra >= spec.rb ? spec.a.name : spec.b.name) + ' LEADS';
   }
   /* arena hero counters — always climbing */
   battlesLiveN += Math.floor(Math.random() * 6);
@@ -3202,7 +3183,7 @@ function tradeRow(t) {
 
 /* Notifications */
 
-const notifs = [{ ic: '👋', t: 'Welcome to Paktos', s: 'Your £100k competition balance is live in TR-1001.', ago: '2h', read: true }];
+const notifs = [{ ic: 'PK', t: 'Welcome to Paktos', s: 'Your £100k competition balance is live in TR-1001.', ago: '2h', read: true }];
 let notifOpen = false;
 
 function addNotif(ic, t, s) {
@@ -3308,7 +3289,7 @@ function renderTerminal() {
         <div class="tile-tx"><div class="tile-label mono">PRACTICE&nbsp;BALANCE</div><div class="tile-value" id="tileBal">${gbp0(term.bal)}</div></div></div>
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#ffc24b,#f59e0b)">★</span>
         <div class="tile-tx"><div class="tile-label mono">BEST&nbsp;RANK</div><div class="tile-value">#13</div></div></div>
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9a7cff,#7c5cff)">⚡</span>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9a7cff,#7c5cff)">S</span>
         <div class="tile-tx"><div class="tile-label mono">WIN&nbsp;STREAK</div><div class="tile-value" id="tileStreak">${winStreak()}</div></div></div>
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">▲</span>
         <div class="tile-tx"><div class="tile-label mono">TOTAL&nbsp;WINNINGS</div><div class="tile-value">£121,300</div></div></div>
@@ -3341,7 +3322,7 @@ function renderTerminal() {
       </div>
     </div>
     <div class="section" style="margin-top:30px">
-      <div class="section-head"><div><h3 class="section-title">📜 Trade history</h3>
+      <div class="section-head"><div><h3 class="section-title">Trade history</h3>
         <p class="section-sub"><span class="mono">${tradeLog.length}&nbsp;FILLS</span><span class="dot-sep">·</span><span>every trade stamped with when, where and how it closed</span></p></div></div>
       <div class="fame-card"><div class="fame-scroll"><table class="trades-table" style="min-width:860px">
         <thead><tr class="mono"><th>CLOSED</th><th>MARKET</th><th>SIDE</th><th>ENTRY&nbsp;→&nbsp;EXIT</th><th>RISK</th><th>R:R</th><th>OUTCOME</th><th style="text-align:right">P&amp;L</th></tr></thead>
@@ -3418,7 +3399,7 @@ function closePos(pnl, outcome = 'manual') {
     manual: pnl >= 0 ? `✂ Closed early — +${gbp(pnl)}` : `✂ Closed early — −${gbp(pnl)}`
   }[outcome];
   toast(msg);
-  addNotif(pnl > 0 ? '🏆' : pnl < 0 ? '📉' : '➖', `${pos.sym} ${pos.dir === 'up' ? 'long' : 'short'} closed`, msg);
+  addNotif(pnl > 0 ? 'W' : pnl < 0 ? 'L' : '—', `${pos.sym} ${pos.dir === 'up' ? 'long' : 'short'} closed`, msg);
   renderTerminal();
 }
 
@@ -3494,7 +3475,7 @@ const AICOUNTER = {
 };
 const FLICK_MODELS = {
   gpt: { name: 'ChatGPT', ic: '◈', models: ['GPT-5', 'GPT-5 mini', 'o4-mini'] },
-  claude: { name: 'Claude', ic: '✳', models: ['Claude Opus 4.8', 'Claude Sonnet 5', 'Claude Haiku 4.5'] },
+  claude: { name: 'Claude', ic: '✦', models: ['Claude Opus 4.8', 'Claude Sonnet 5', 'Claude Haiku 4.5'] },
   deepseek: { name: 'DeepSeek', ic: '◉', models: ['DeepSeek-V3.2', 'DeepSeek-R1'] }
 };
 
@@ -3552,7 +3533,7 @@ function flickSpark(c) {
 function briefBox(c) {
   const L = ideaLevels(c);
   return `<div class="brief">
-    <div class="brief-h">✳ AI BRIEF · ${flick.model.toUpperCase()} · ${c.conf}% CONFIDENCE</div>
+    <div class="brief-h">AI BRIEF · ${flick.model.toUpperCase()} · ${c.conf}% CONFIDENCE</div>
     <p>${c.brief}</p>
     <div class="brief-lv">
       <div class="term-cell"><div class="k">Entry</div><div class="v">${L.entry}</div></div>
@@ -3673,7 +3654,7 @@ function stackHTML() {
         <span class="asset-ic" style="background:${INSTR[c.sym].tint};width:44px;height:44px;border-radius:14px;font-size:18px">${INSTR[c.sym].ic}</span>
         <div><b style="font-size:14px">${c.sym}</b>
           <span style="display:block;font-size:11px;color:var(--text-faint)">${HZCFG[c.hz].l} · ${up ? '▲ long bias' : '▼ short bias'}</span></div>
-        <span class="idea-cat" style="margin-left:auto">${CAT_ICONS[c.cat] || '✦'} ${c.cat}</span>
+        <span class="idea-cat" style="margin-left:auto">${c.cat}</span>
       </div>
       <div class="scard-title">${c.head}</div>
       <p class="scard-desc">${c.brief}</p>
@@ -3697,7 +3678,6 @@ function flickBuild() {
   flick.pos = 0; flick.taken = []; flick.passed = 0; flick.missed = 0; flick.sec = 60;
 }
 
-const CAT_ICONS = { 'Macro': '🌍', 'Central bank': '🏦', 'Technical': '📐', 'Quant': '🧮', 'On-chain': '⛓️', 'Positioning': '📊' };
 
 function flickHead() {
   return `<div class="fhead"><div><div class="fh-t">Flick</div><div class="fh-s">The AI finds the signal — you decide whether to take it</div></div></div>`;
@@ -3717,10 +3697,10 @@ function flickCardHTML(c) {
     <div class="fstamp exec">TAKE</div>
     <div class="fstamp skip">REJECT</div>
     <div class="tc-hero ${up ? 'up' : 'down'}">
-      <div class="tc-hrow"><span class="tc-cat">${CAT_ICONS[c.cat] || '✦'}&nbsp;&nbsp;${c.cat.toUpperCase()}</span>
+      <div class="tc-hrow"><span class="tc-cat">${c.cat.toUpperCase()}</span>
         <span class="tc-win"><span class="pulse-dot tiny" style="background:#e5484d"></span><span id="flickSec">${flickClock()}</span></span></div>
       ${flickSpark(c)}
-      <div class="ai-sig-kick">✳ AI signal · ${flick.model}</div>
+      <div class="ai-sig-kick">AI signal · ${flick.model}</div>
       <div class="tc-dir">${up ? '▲ BUY' : '▼ SELL'}</div>
     </div>
     <div class="tc-body">
@@ -3733,7 +3713,7 @@ function flickCardHTML(c) {
         <div class="tcl sl"><span>✕ Stop</span><b>${L.sl}</b><i>${up ? '−' : '+'}${L.slPct}%</i></div>
         <div class="tcl tp"><span>◆ Target</span><b>${L.tp}</b><i>${up ? '+' : '−'}${L.tpPct}%</i></div>
       </div>
-      <div class="ai-brief-head"><span class="ai-brief-tag">✦ AI Brief</span>
+      <div class="ai-brief-head"><span class="ai-brief-tag">AI Brief</span>
         <span class="tc-brief-model">${FLICK_MODELS[flick.prov].ic} ${flick.model}</span></div>
       <div class="ai-brief-box"><p class="tc-brief-p">${c.brief}</p></div>
       <div class="tc-hist" style="margin-top:11px"><svg viewBox="0 0 24 24"><path d="M4 16.5l4.5-4.5 3 2.5L20 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6h5v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${c.hist}</span></div>
@@ -3793,7 +3773,7 @@ function executeIdea(c) {
   term.asset = c.sym;
   term.pos = { sym: c.sym, dir: c.dir, entry: INSTR[c.sym].px, risk: term.bal * flick.risk / 100, riskPct: flick.risk, rr: HZCFG[c.hz].rr, mode: modeMap[c.hz] || 'day', be: false, src: 'flick', openedAt: Date.now() };
   toast(`${c.dir === 'up' ? 'Bought' : 'Sold'} ${c.sym} @ ${fmtPx(c.sym)} — ${flick.risk}% risk, 1:${HZCFG[c.hz].rr}`);
-  addNotif('⚡', `Flick signal taken — ${c.sym}`, `${c.dir === 'up' ? 'Long' : 'Short'} @ ${fmtPx(c.sym)}, ${flick.risk}% risk, 1:${HZCFG[c.hz].rr} target`);
+  addNotif('F', `Flick signal taken — ${c.sym}`, `${c.dir === 'up' ? 'Long' : 'Short'} @ ${fmtPx(c.sym)}, ${flick.risk}% risk, 1:${HZCFG[c.hz].rr} target`);
 }
 
 function flickResolve(take) {
@@ -3852,7 +3832,7 @@ function bindFlick() {
 
 function renderIdeas() {
   seedIdeas();
-  const modes = [['flick', 'Flick ⚡'], ['board', 'Board'], ['stack', 'Stack']].map(([k, l]) =>
+  const modes = [['flick', 'Flick'], ['board', 'Board'], ['stack', 'Stack']].map(([k, l]) =>
     `<button class="pill-btn${ideaMode === k ? ' on' : ''}" data-imode="${k}">${l}${k === 'flick' ? ' <small style="display:inline">swipe</small>' : k === 'stack' ? ' <small style="display:inline">morph</small>' : ''}</button>`).join('');
   viewEl('ideas').innerHTML = `<div class="chip-row">${modes}</div>` +
     (ideaMode === 'flick' ? flickHTML() : ideaMode === 'stack' ? stackHTML() : boardHTML());
@@ -3897,12 +3877,12 @@ setInterval(() => {
 const AV_TINTS = ['linear-gradient(135deg,#fcd9a0,#e8935a)', 'linear-gradient(135deg,#c9d4e2,#8fa3bd)', 'linear-gradient(135deg,#d9c2ef,#a184c8)', 'linear-gradient(135deg,#a7f3d0,#34d399)', 'linear-gradient(135deg,#fecaca,#f87171)', 'linear-gradient(135deg,#bfdbfe,#60a5fa)'];
 
 const threads = [
-  { name: 'Theo4', av: '🦊', tint: AV_TINTS[0], unread: true, msgs: [['them', 'That NAS100 fade printed beautifully 🔥'], ['me', 'Called it off the breadth divergence — third time this month'], ['them', 'Teach me your ways. You entering the Q3 Championship?']] },
-  { name: 'swisstony', av: '🐵', tint: AV_TINTS[2], unread: true, msgs: [['them', 'Arena battle, £5k pot, 1 week window. You in?'], ['me', 'Terms?'], ['them', 'Any market, higher return takes the pot. Escrowed.']] },
-  { name: 'Fredi9999', av: '🐺', tint: AV_TINTS[1], unread: false, msgs: [['them', 'gg on the sprint yesterday'], ['me', 'You had me until the last hour 😅']] },
-  { name: 'mintblade', av: '⚔️', tint: AV_TINTS[3], unread: false, msgs: [['them', 'Sharing my gold thesis in Ideas — would love your take']] },
-  { name: 'kch123', av: '🎯', tint: AV_TINTS[4], unread: false, msgs: [['them', 'How do you size into scalps without blowing daily DD?'], ['me', '1% risk, 1:2 minimum, never add to losers.']] },
-  { name: 'RN1', av: '🚀', tint: AV_TINTS[5], unread: false, msgs: [['them', 'World Series grind starts Monday. Good luck out there']] }
+  { name: 'Theo4', av: 'T', tint: AV_TINTS[0], unread: true, msgs: [['them', 'That NAS100 fade printed beautifully'], ['me', 'Called it off the breadth divergence — third time this month'], ['them', 'Teach me your ways. You entering the Q3 Championship?']] },
+  { name: 'swisstony', av: 'S', tint: AV_TINTS[2], unread: true, msgs: [['them', 'Arena battle, £5k pot, 1 week window. You in?'], ['me', 'Terms?'], ['them', 'Any market, higher return takes the pot. Escrowed.']] },
+  { name: 'Fredi9999', av: 'F', tint: AV_TINTS[1], unread: false, msgs: [['them', 'gg on the sprint yesterday'], ['me', 'You had me until the last hour']] },
+  { name: 'mintblade', av: 'M', tint: AV_TINTS[3], unread: false, msgs: [['them', 'Sharing my gold thesis in Ideas — would love your take']] },
+  { name: 'kch123', av: 'K', tint: AV_TINTS[4], unread: false, msgs: [['them', 'How do you size into scalps without blowing daily DD?'], ['me', '1% risk, 1:2 minimum, never add to losers.']] },
+  { name: 'RN1', av: 'R', tint: AV_TINTS[5], unread: false, msgs: [['them', 'World Series grind starts Monday. Good luck out there']] }
 ];
 
 let activeThread = 0;
@@ -3930,44 +3910,44 @@ function mediaChartSVG(win, seed) {
 }
 
 const POSTS = [
-  { name: 'GRIMDRIP', handle: '@grimdrip', av: '💀', tint: AV_TINTS[4], time: '14m', type: 'thought',
+  { name: 'GRIMDRIP', handle: '@grimdrip', av: 'G', tint: AV_TINTS[4], time: '14m', type: 'thought',
     text: 'sizing down into the data, no heroes today',
     replies: 223, reposts: 110, likes: 1500, views: '15.6K', liked: false, reposted: false },
-  { name: 'delta_dora', handle: '@delta_dora', av: '🦎', tint: AV_TINTS[3], time: '5m', type: 'media',
+  { name: 'delta_dora', handle: '@delta_dora', av: 'D', tint: AV_TINTS[3], time: '5m', type: 'media',
     text: 'posting this before someone says i made it up',
     media: { win: false, ret: '-17.4%', video: false, seed: 1337 },
     replies: 204, reposts: 74, likes: 280, views: '31.6K', liked: false, reposted: false },
-  { name: 'Fredi9999', handle: '@fredi9999', av: '🐺', tint: AV_TINTS[1], time: '9m', type: 'battle-live',
-    text: 'this one is close 👀',
-    battle: { a: 'Fredi9999', aAv: '🐺', aTint: AV_TINTS[1], ra: 4.5, b: 'goldenboy', bAv: '👑', bTint: AV_TINTS[0], rb: 2.7, window: '1 week', pot: '£20.0K' },
+  { name: 'Fredi9999', handle: '@fredi9999', av: 'F', tint: AV_TINTS[1], time: '9m', type: 'battle-live',
+    text: 'this one is close',
+    battle: { a: 'Fredi9999', aAv: 'F', aTint: AV_TINTS[1], ra: 4.5, b: 'goldenboy', bAv: 'G', bTint: AV_TINTS[0], rb: 2.7, window: '1 week', pot: '£20.0K' },
     replies: 133, reposts: 15, likes: 1400, views: '48.7K', liked: false, reposted: false },
-  { name: 'frostrizz', handle: '@frostrizz', av: '❄️', tint: AV_TINTS[5], time: '28m', type: 'result',
+  { name: 'frostrizz', handle: '@frostrizz', av: 'F', tint: AV_TINTS[5], time: '28m', type: 'result',
     text: 'Ran it back on zxgngl, won comfortably.',
-    result: { opp: 'zxgngl', oppAv: '🌀', oppTint: AV_TINTS[2], ret: '+1.61%', pot: '£1.00M' },
+    result: { opp: 'zxgngl', oppAv: 'Z', oppTint: AV_TINTS[2], ret: '+1.61%', pot: '£1.00M' },
     replies: 200, reposts: 109, likes: 1700, views: '51.1K', liked: false, reposted: false },
   { name: '0xmaverick', handle: '@0xmaverick', av: '🃏', tint: AV_TINTS[0], time: '2h', type: 'idea',
-    text: 'eyeing this setup 👀',
+    text: 'eyeing this setup',
     idea: { sym: 'XAU/USD', tag: 'Range', lean: 'Buy', pc: 50, title: 'Gold range compresses under $3,400',
       thesis: 'Gold has coiled into a tight range under resistance while real yields drift lower. Compression like this usually resolves with the macro wind — and the wind is at gold’s back.',
       runners: '840', lens: 'Technical' },
     replies: 96, reposts: 44, likes: 620, views: '27K', liked: false, reposted: false },
-  { name: 'swisstony', handle: '@swisstony', av: '🐵', tint: AV_TINTS[2], time: '3h', type: 'battle-open',
+  { name: 'swisstony', handle: '@swisstony', av: 'S', tint: AV_TINTS[2], time: '3h', type: 'battle-open',
     text: 'Who wants this smoke? Terms are set, seat is open.',
     open: { window: '1 week', pot: '£4.0K' },
     replies: 57, reposts: 21, likes: 410, views: '18K', liked: false, reposted: false },
-  { name: 'mintblade', handle: '@mintblade', av: '⚔️', tint: AV_TINTS[3], time: '5h', type: 'finish',
+  { name: 'mintblade', handle: '@mintblade', av: 'M', tint: AV_TINTS[3], time: '5h', type: 'finish',
     text: 'Locked it in on the last day.',
     finish: { rank: 3, tour: 'Q3 Championship', prize: '£33.7K' },
     replies: 41, reposts: 18, likes: 530, views: '21K', liked: false, reposted: false },
-  { name: 'quantqueen', handle: '@quantqueen', av: '👸', tint: AV_TINTS[3], time: '6h', type: 'media',
+  { name: 'quantqueen', handle: '@quantqueen', av: 'Q', tint: AV_TINTS[3], time: '6h', type: 'media',
     text: 'model output vs my execution. same chart.',
     media: { win: true, ret: '+6.2%', video: true, dur: '0:28', seed: 4242 },
     replies: 27, reposts: 58, likes: 441, views: '19K', liked: false, reposted: false },
-  { name: 'Theo4', handle: '@theo4', av: '🦊', tint: AV_TINTS[0], time: '7h', type: 'thought', tag: 'NAS100',
-    text: 'NAS100 breadth divergence played out exactly as scripted. Third fade this month off the same setup — the market keeps paying the patient. 📉',
+  { name: 'Theo4', handle: '@theo4', av: 'T', tint: AV_TINTS[0], time: '7h', type: 'thought', tag: 'NAS100',
+    text: 'NAS100 breadth divergence played out exactly as scripted. Third fade this month off the same setup — the market keeps paying the patient.',
     replies: 48, reposts: 112, likes: 894, views: '41K', liked: false, reposted: false },
-  { name: 'fishalive', handle: '@fishalive', av: '🐹', tint: AV_TINTS[0], time: '9h', type: 'thought',
-    text: 'Win streak at 4. Not saying I’m him, but I’m also not not saying it 🐹',
+  { name: 'fishalive', handle: '@fishalive', av: 'F', tint: AV_TINTS[0], time: '9h', type: 'thought',
+    text: 'Win streak at 4. Not saying I’m him, but I’m also not not saying it',
     replies: 88, reposts: 61, likes: 1300, views: '52K', liked: false, reposted: false }
 ];
 
@@ -4027,7 +4007,7 @@ function fdEmbed(p) {
   }
   if (p.finish) {
     return `<div class="fd-embed" style="display:flex;align-items:center;gap:13px">
-      <span style="font-size:24px">🏆</span>
+      <span class="trophy-tile" style="width:34px;height:34px">${TROPHY_SVG.replace('__S__', '#fff')}</span>
       <div><b>Finished #${p.finish.rank}</b> in the ${p.finish.tour}
         <div class="fd-bt-meta" style="margin-top:3px">paid ${p.finish.prize} from the pool</div></div>
     </div>`;
@@ -4082,7 +4062,7 @@ function postCard(p) {
 }
 
 const FD_TYPES = { battles: ['battle-live', 'battle-open'], ideas: ['idea'], results: ['result', 'finish'] };
-const WTF = [['Theo4', '🦊', '70% win · 13.7K followers'], ['Fredi9999', '🐺', '57% win · 60.8K followers'], ['swisstony', '🐵', '62% win · 12.1K followers'], ['kch123', '🎯', '59% win · 33.9K followers']];
+const WTF = [['Theo4', 'T', '70% win · 13.7K followers'], ['Fredi9999', 'F', '57% win · 60.8K followers'], ['swisstony', 'S', '62% win · 12.1K followers'], ['kch123', 'K', '59% win · 33.9K followers']];
 const TRENDS = [
   ['Trending in markets', 'Gold · XAU/USD', '12.4K posts'],
   ['Live now', 'Non-Farm Payrolls', '8,120 posts'],
@@ -4127,11 +4107,11 @@ function renderFeed() {
   </div>`;
 }
 
-const CONTACTS = [['Theo4', '🦊', 'Rank #1 · 2026 WS champion'], ['Fredi9999', '🐺', 'Rank #2 · momentum'], ['swisstony', '🐵', 'Rank #3 · macro'], ['kch123', '🎯', 'Rank #4 · scalper'], ['RN1', '🚀', 'Rank #5 · swing'], ['mintblade', '⚔️', 'Rank #6 · gold bug'], ['fishalive', '🐹', 'Rank #7 · quant'], ['frostrizz', '❄️', 'Rank #8 · FX']];
+const CONTACTS = [['Theo4', 'T', 'Rank #1 · 2026 WS champion'], ['Fredi9999', 'F', 'Rank #2 · momentum'], ['swisstony', 'S', 'Rank #3 · macro'], ['kch123', 'K', 'Rank #4 · scalper'], ['RN1', 'R', 'Rank #5 · swing'], ['mintblade', 'M', 'Rank #6 · gold bug'], ['fishalive', 'F', 'Rank #7 · quant'], ['frostrizz', 'F', 'Rank #8 · FX']];
 
 const invites = [
-  { t: 'Q3 Championship — team invite', s: 'Theo4 invited you to join squad "Alpha Decay" · 33,680 already in', from: '🦊' },
-  { t: 'Arena battle challenge', s: 'swisstony challenged you · £5,000 pot · 1 week window · any market', from: '🐵' }
+  { t: 'Q3 Championship — team invite', s: 'Theo4 invited you to join squad "Alpha Decay" · 33,680 already in', from: 'P' },
+  { t: 'Arena battle challenge', s: 'swisstony challenged you · £5,000 pot · 1 week window · any market', from: 'P' }
 ];
 
 function renderSocial() {
@@ -4184,10 +4164,10 @@ function renderInbox() {
 }
 
 const STREAM_POOL = [
-  { name: 'delta_dan', handle: '@delta_dan', av: '📐', tint: AV_TINTS[5], tag: 'ETH', text: 'ETH exchange balances just printed another 5-year low. Supply squeeze thesis intact.' },
-  { name: 'wickwizard', handle: '@wickwizard', av: '🧙', tint: AV_TINTS[3], tag: 'NAS100', text: 'That 15m wick says everything. Someone big just got stopped out — I’m taking the other side.' },
-  { name: 'gilt_guy', handle: '@gilt_guy', av: '🎩', tint: AV_TINTS[1], tag: 'GBPJPY', text: 'Front end repricing after the wage print. GBPJPY carry math just changed.' },
-  { name: 'trendtina', handle: '@trendtina', av: '🌊', tint: AV_TINTS[4], tag: null, text: 'Weekly Open pool just crossed £62K. 2,500 in. The board is wide open this week.' }
+  { name: 'delta_dan', handle: '@delta_dan', av: 'D', tint: AV_TINTS[5], tag: 'ETH', text: 'ETH exchange balances just printed another 5-year low. Supply squeeze thesis intact.' },
+  { name: 'wickwizard', handle: '@wickwizard', av: 'W', tint: AV_TINTS[3], tag: 'NAS100', text: 'That 15m wick says everything. Someone big just got stopped out — I’m taking the other side.' },
+  { name: 'gilt_guy', handle: '@gilt_guy', av: 'G', tint: AV_TINTS[1], tag: 'GBPJPY', text: 'Front end repricing after the wage print. GBPJPY carry math just changed.' },
+  { name: 'trendtina', handle: '@trendtina', av: 'T', tint: AV_TINTS[4], tag: null, text: 'Weekly Open pool just crossed £62K. 2,500 in. The board is wide open this week.' }
 ];
 
 setInterval(() => {
@@ -4212,7 +4192,7 @@ function sendDM() {
   t.msgs.push(['me', inp.value.trim()]);
   inp.value = '';
   renderInbox();
-  const replies = ['Interesting…', 'Say more 👀', 'Agreed — same read here.', 'Ha! Fair.', 'Let’s make it happen.'];
+  const replies = ['Interesting…', 'Say more', 'Agreed — same read here.', 'Ha! Fair.', 'Let’s make it happen.'];
   setTimeout(() => {
     t.msgs.push(['them', replies[Math.floor(Math.random() * replies.length)]]);
     if (currentView === 'inbox' && inboxTab === 'messages') renderInbox();
@@ -4424,7 +4404,7 @@ function profilePost(name, av, tint, text, ago, likes, views) {
   </article>`;
 }
 
-const TRADER_AV = { Theo4: '🦊', Fredi9999: '🐺', swisstony: '🐵', mintblade: '⚔️', kch123: '🎯', RN1: '🚀', fishalive: '🐹', frostrizz: '❄️', GRIMDRIP: '💀', nattyG: '🌿', quantqueen: '👸', '0xmaverick': '🃏', delta_dan: '📐', macro_mia: '🌍', wickwizard: '🧙', fadefather: '🎩', pip_titan: '🗿', vol_king: '👑', goldenboy: '👑', delta_dora: '🦎', Rudy: '🎺', 'Sander Schouten': '🌷', 'Dion Trades': '🍝' };
+const TRADER_AV = { Theo4: 'T', Fredi9999: 'F', swisstony: 'S', mintblade: 'M', kch123: 'K', RN1: 'R', fishalive: 'F', frostrizz: 'F', GRIMDRIP: 'G', nattyG: 'N', quantqueen: 'Q', '0xmaverick': 'X', delta_dan: 'D', macro_mia: 'M', wickwizard: 'W', fadefather: 'F', pip_titan: 'P', vol_king: 'V', goldenboy: 'G', delta_dora: 'D', Rudy: 'R', 'Sander Schouten': 'S', 'Dion Trades': 'D' };
 const TRADER_BIOS = ['Swing trader. Process over outcome.', 'Momentum & breakouts. Risk first, always.', 'FX by day, crypto by night.', 'Mean reversion is my love language.', 'Macro-driven. Patient. Ruthless on entries.', 'Scalper — in and out before you blink.', 'Index futures specialist.', 'Here to win comps, not to gamble.'];
 
 function hashName(s) {
@@ -4532,14 +4512,14 @@ function scoreCardHTML(d) {
 }
 
 const BADGES_DEF = [
-  ['👑', 'Seven-Figure Club', '£1M+ banked profits', d => d.winnings >= 1e6],
-  ['💰', 'Six-Figure Club', '£100K+ banked profits', d => d.winnings >= 1e5],
-  ['🏆', 'Podium Regular', '5+ podium finishes', d => d.podiums >= 5],
-  ['⚔️', 'Gladiator', '25+ arena battle wins', d => d.wins >= 25],
-  ['🎯', 'Sharpshooter', '65%+ win rate', d => d.winRate >= 65],
-  ['🐋', 'Whale Hunter', 'A £250K+ single win', d => d.big >= 250000],
-  ['🛡️', 'Iron Discipline', '1,000+ trades logged', d => d.trades >= 1000],
-  ['🔥', 'Hot Streak', 'A 10-win streak', d => hashName(d.name + 'streak') % 3 === 0]
+  ['#f59e0b', 'Seven-Figure Club', '£1M+ banked profits', d => d.winnings >= 1e6],
+  ['#10b981', 'Six-Figure Club', '£100K+ banked profits', d => d.winnings >= 1e5],
+  ['#a855f7', 'Podium Regular', '5+ podium finishes', d => d.podiums >= 5],
+  ['#ef4444', 'Gladiator', '25+ arena battle wins', d => d.wins >= 25],
+  ['#0ea5e9', 'Sharpshooter', '65%+ win rate', d => d.winRate >= 65],
+  ['#6366f1', 'Whale Hunter', 'A £250K+ single win', d => d.big >= 250000],
+  ['#64748b', 'Iron Discipline', '1,000+ trades logged', d => d.trades >= 1000],
+  ['#f43f5e', 'Hot Streak', 'A 10-win streak', d => hashName(d.name + 'streak') % 3 === 0]
 ];
 
 const AWARD_FLOWER = 'M14.963 9.075c.787-3-.188-5.887-.188-5.887S12.488 5.175 11.7 8.175c-.787 3 .188 5.887.188 5.887s2.25-1.987 3.075-4.987m-4.5 1.987c.787 3-.188 5.888-.188 5.888S7.988 14.962 7.2 11.962c-.787-3 .188-5.887.188-5.887s2.287 1.987 3.075 4.987m.862 10.388s-.6-2.962-2.775-5.175C6.337 14.1 3.375 13.5 3.375 13.5s.6 2.962 2.775 5.175c2.213 2.175 5.175 2.775 5.175 2.775m3.3 3.413s-1.988-2.288-4.988-3.075-5.887.187-5.887.187 1.987 2.287 4.988 3.075c3 .787 5.887-.188 5.887-.188Zm6.75 0s1.988-2.288 4.988-3.075c3-.826 5.887.187 5.887.187s-1.988 2.287-4.988 3.075c-3 .787-5.887-.188-5.887-.188ZM32.625 13.5s-2.963.6-5.175 2.775c-2.213 2.213-2.775 5.175-2.775 5.175s2.962-.6 5.175-2.775c2.175-2.213 2.775-5.175 2.775-5.175M28.65 6.075s.975 2.887.188 5.887c-.826 3-3.076 4.988-3.076 4.988s-.974-2.888-.187-5.888c.788-3 3.075-4.987 3.075-4.987m-4.5 7.987s.975-2.887.188-5.887c-.788-3-3.076-4.988-3.076-4.988s-.974 2.888-.187 5.888c.788 3 3.075 4.988 3.075 4.988ZM18 26.1c.975-.225 3.113-.6 5.325 0 3 .788 5.063 3.038 5.063 3.038s-2.888.975-5.888.187a13 13 0 0 1-1.425-.525c.563.788 1.125 1.425 2.288 1.913l-.863 2.062c-2.063-.862-2.925-2.137-3.675-3.262-.262-.375-.525-.713-.787-1.05-.26.293-.465.586-.686.903l-.102.147-.048.068c-.775 1.108-1.643 2.35-3.627 3.194l-.862-2.062c1.162-.488 1.725-1.125 2.287-1.913-.45.225-.938.375-1.425.525-3 .788-5.887-.187-5.887-.187s1.987-2.288 4.987-3.075c2.212-.563 4.35-.188 5.325.037';
@@ -4594,7 +4574,7 @@ function tpBattlesHTML(d) {
   return `<div class="fame-card"><div class="fame-scroll"><table class="trades-table">
     <thead><tr class="mono"><th>RESULT</th><th>OPPONENT</th><th style="text-align:right">POT&nbsp;SWING</th><th style="text-align:right">WHEN</th></tr></thead>
     <tbody>${rows.length ? rows.map(a => `<tr data-duel="${d.name}|${a.market.replace('vs ', '')}|${a.amount * 2}" style="cursor:pointer">
-      <td><span class="obadge ${a.win ? 'target' : 'stopped'}">${a.win ? '⚔ Battle won' : '⚔ Battle lost'}</span></td>
+      <td><span class="obadge ${a.win ? 'target' : 'stopped'}">${a.win ? 'Battle won' : 'Battle lost'}</span></td>
       <td><b>${a.market.replace('vs ', '')}</b></td>
       <td style="text-align:right" class="${a.win ? 'up' : 'down'}"><b>${a.win ? '+' : '−'}£${a.amount.toLocaleString('en-GB')}</b></td>
       <td style="text-align:right;color:var(--text-faint)">${agoStr(a.ago)}</td>
@@ -4602,11 +4582,13 @@ function tpBattlesHTML(d) {
   </table></div></div>`;
 }
 
+const medalSVG = c => `<svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M12 2l8 3v6c0 4.8-3.4 8.6-8 11-4.6-2.4-8-6.2-8-11V5l8-3z" fill="${c}"/><path d="M12 7.2l1.3 2.6 2.9.4-2.1 2 .5 2.9-2.6-1.4-2.6 1.4.5-2.9-2.1-2 2.9-.4z" fill="rgba(255,255,255,.88)"/></svg>`;
+
 function tpSpecHTML(d) {
   const badges = BADGES_DEF.map(([e, name, req, fn]) => {
     const earned = fn(d);
     return `<div class="bdg ${earned ? 'earned' : 'locked'}">
-      <div class="bdg-emoji">${earned ? e : '🔒'}</div>
+      <div class="bdg-emoji"${earned ? '' : ' style="opacity:.3;filter:grayscale(1)"'}>${medalSVG(e)}</div>
       <div class="bdg-name">${name}</div>
       <div class="bdg-req">${req}</div>
     </div>`;
@@ -4699,12 +4681,12 @@ function renderTrader() {
           <div class="bk-title">How these winnings were built</div>
           <div class="bk-bar"><i style="width:${tourPct}%;background:linear-gradient(90deg,#fbbf24,#f59e0b)"></i><i style="width:${100 - tourPct}%;background:linear-gradient(90deg,#a855f7,#7c3aed)"></i></div>
           <div class="bk-row">
-            <span class="bk-ic" style="background:rgba(245,158,11,.15)">🏆</span>
+            <span class="bk-ic" style="background:rgba(245,158,11,.15);color:#f59e0b;font-weight:800">T</span>
             <span class="bk-tx"><span class="bk-t">Tournament prizes</span><span class="bk-s">${d.podiums} podium finishes</span></span>
             <span class="bk-v up">+£${kfmt(tour)}</span>
           </div>
           <div class="bk-row">
-            <span class="bk-ic" style="background:rgba(124,58,237,.12)">⚔️</span>
+            <span class="bk-ic" style="background:rgba(124,58,237,.12);color:#7c3aed;font-weight:800">A</span>
             <span class="bk-tx"><span class="bk-t">Arena battle winnings</span><span class="bk-s">${d.wins}–${d.losses} record</span></span>
             <span class="bk-v up">+£${kfmt(arena)}</span>
           </div>
@@ -4723,7 +4705,7 @@ function traderActivityHTML(d) {
   return `<table class="trades-table">
     <thead><tr class="mono"><th>RESULT</th><th>MARKET</th><th>SIDE</th><th style="text-align:right">AMOUNT</th><th style="text-align:right">WHEN</th></tr></thead>
     <tbody>${d.acts.map(a => `<tr>
-      <td><span class="obadge ${a.win ? 'target' : 'stopped'}">${a.battle ? (a.win ? '⚔ Battle won' : '⚔ Battle lost') : (a.win ? '◆ Win' : '✕ Loss')}</span></td>
+      <td><span class="obadge ${a.win ? 'target' : 'stopped'}">${a.battle ? (a.win ? 'Battle won' : 'Battle lost') : (a.win ? '◆ Win' : '✕ Loss')}</span></td>
       <td><b>${a.market}</b></td>
       <td class="${a.dir === 'Long' ? 'up' : 'down'}">${a.battle ? '—' : a.dir}</td>
       <td style="text-align:right" class="${a.win ? 'up' : 'down'}"><b>${a.win ? '+' : '−'}£${a.amount.toLocaleString('en-GB')}</b></td>
@@ -4755,7 +4737,7 @@ function openTrader(name) {
 
 /* ---------------- Leaderboard page ---------------- */
 
-const LB_NAMES = ['Rudy 🇺🇸', 'Sander Schouten 🇪🇸', 'Dion Trades 🇮🇹', 'Theo4 🇺🇸', 'swisstony 🇺🇸', 'Fredi9999 🇺🇸', 'GRIMDRIP 🇬🇧', 'nattyG 🇦🇺', 'pip_titan 🇩🇪', '0xmaverick 🇸🇬', 'vol_king 🇺🇸', 'mintblade 🇺🇸', 'jstone · you 🇬🇧', 'kch123 🇺🇸', 'RN1 🇺🇸', 'fishalive 🇺🇸', 'frostrizz 🇺🇸', 'delta_dan 🇨🇦', 'macro_mia 🇫🇷', 'quantqueen 🇳🇱', 'fadefather 🇧🇷', 'santiago_fx 🇦🇷', 'tokyodrift 🇯🇵', 'gilt_guy 🇬🇧', 'oiler 🇳🇴', 'basispoint 🇨🇭', 'ladderlad 🇮🇪', 'thetagang 🇺🇸', 'wickwizard 🇰🇷', 'chartchad 🇺🇸', 'pxl_pnl 🇸🇪', 'drawdown_dave 🇺🇸', 'meanrevert 🇮🇳', 'stoplosslou 🇲🇽', 'candleman 🇵🇱', 'fibfanatic 🇹🇷', 'gapfill_gal 🇩🇰', 'trendtina 🇿🇦', 'volvamp 🇵🇹', 'edgehunter 🇫🇮', 'riskitall 🇺🇸', 'alphaseek 🇬🇧', 'betabets 🇪🇸', 'gammagreg 🇮🇹', 'sigma_sam 🇺🇸', 'omegaops 🇳🇿', 'zenzero 🇦🇹', 'pipsqueek 🇧🇪', 'lotsize_larry 🇺🇸', 'margin_marge 🇬🇷'];
+const LB_NAMES = ['Rudy', 'Sander Schouten', 'Dion Trades', 'Theo4', 'swisstony', 'Fredi9999', 'GRIMDRIP', 'nattyG', 'pip_titan', '0xmaverick', 'vol_king', 'mintblade', 'jstone · you', 'kch123', 'RN1', 'fishalive', 'frostrizz', 'delta_dan', 'macro_mia', 'quantqueen', 'fadefather', 'santiago_fx', 'tokyodrift', 'gilt_guy', 'oiler', 'basispoint', 'ladderlad', 'thetagang', 'wickwizard', 'chartchad', 'pxl_pnl', 'drawdown_dave', 'meanrevert', 'stoplosslou', 'candleman', 'fibfanatic', 'gapfill_gal', 'trendtina', 'volvamp', 'edgehunter', 'riskitall', 'alphaseek', 'betabets', 'gammagreg', 'sigma_sam', 'omegaops', 'zenzero', 'pipsqueek', 'lotsize_larry', 'margin_marge'];
 
 let lbPage = 0, lbTour = 'Q3 CHAMPIONSHIP';
 const lbField = LB_NAMES.map((n, i) => ({
@@ -4785,9 +4767,9 @@ function renderLbPage() {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to Tournaments</button>
     <div class="lb-toolbar"><div class="chip-row" style="margin:0">${tourPills}</div></div>
     <div class="tile-row">
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(135deg,#f9a8d4,#a855f7)">🏆</span>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(135deg,#f9a8d4,#a855f7)">★</span>
         <div class="tile-tx"><div class="tile-label mono">PRIZE&nbsp;POOL</div><div class="tile-value">£${t.pool}</div></div></div>
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">👥</span>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">+</span>
         <div class="tile-tx"><div class="tile-label mono">PLAYERS&nbsp;IN</div><div class="tile-value">${t.entries.toLocaleString('en-GB')}</div></div></div>
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#34d399,#10b981)">◷</span>
         <div class="tile-tx"><div class="tile-label mono">CLOSES&nbsp;IN</div><div class="tile-value" style="font-size:16px">${formatCountdown(t.secondsLeft)}</div></div></div>
@@ -4809,10 +4791,10 @@ function renderLbPage() {
 /* ---------------- Arena ---------------- */
 
 const BATTLES = [
-  ['Theo4', '🦊', 'swisstony', '🐵', 1000000, '9.9K'],
-  ['Fredi9999', '🐺', 'mintblade', '⚔️', 100000, '4.4K'],
-  ['GRIMDRIP', '💀', 'nattyG', '🌿', 20000, '3.7K'],
-  ['pip_titan', '🗿', 'vol_king', '👑', 4000, '747']
+  ['Theo4', 'T', 'swisstony', 'S', 1000000, '9.9K'],
+  ['Fredi9999', 'F', 'mintblade', 'M', 100000, '4.4K'],
+  ['GRIMDRIP', 'G', 'nattyG', 'N', 20000, '3.7K'],
+  ['pip_titan', 'P', 'vol_king', 'V', 4000, '747']
 ];
 
 const arenaB = {
@@ -4857,7 +4839,7 @@ function payoffHTML() {
   const f = n => '£' + Math.abs(n).toLocaleString('en-GB');
   return `<div class="b-payoff">
     <div class="bp-card lose">
-      <div class="bp-k mono">💀 IF&nbsp;YOU&nbsp;LOSE</div>
+      <div class="bp-k mono">IF&nbsp;YOU&nbsp;LOSE</div>
       <div class="bp-v down">−${f(S)}</div>
       <div class="bp-s">your stake — gone to the victor</div>
     </div>
@@ -4867,7 +4849,7 @@ function payoffHTML() {
       <div class="bp-rake mono">5%&nbsp;RAKE&nbsp;·&nbsp;−${f(rake)}</div>
     </div>
     <div class="bp-card win">
-      <div class="bp-k mono">IF&nbsp;YOU&nbsp;WIN 🏆</div>
+      <div class="bp-k mono">IF&nbsp;YOU&nbsp;WIN</div>
       <div class="bp-v up">+${f(win)}</div>
       <div class="bp-s">${f(pays)} payout · straight to your balance</div>
     </div>
@@ -4877,11 +4859,11 @@ function payoffHTML() {
 
 let challenges = [
   { name: '0xmaverick', av: '🃏', market: 'Any market', window: '1 week', pot: 5000, mine: false },
-  { name: 'delta_dan', av: '📐', market: 'Crypto only', window: '48 hours', pot: 2500, mine: false },
-  { name: 'macro_mia', av: '🌍', market: 'FX majors', window: '1 month', pot: 10000, mine: false },
-  { name: 'wickwizard', av: '🧙', market: 'NAS100', window: '24 hours', pot: 1000, mine: false },
-  { name: 'quantqueen', av: '👸', market: 'Any market', window: '15 minutes', pot: 500, mine: false },
-  { name: 'fadefather', av: '🎩', market: 'Gold', window: '1 week', pot: 7500, mine: false }
+  { name: 'delta_dan', av: 'D', market: 'Crypto only', window: '48 hours', pot: 2500, mine: false },
+  { name: 'macro_mia', av: 'M', market: 'FX majors', window: '1 month', pot: 10000, mine: false },
+  { name: 'wickwizard', av: 'W', market: 'NAS100', window: '24 hours', pot: 1000, mine: false },
+  { name: 'quantqueen', av: 'Q', market: 'Any market', window: '15 minutes', pot: 500, mine: false },
+  { name: 'fadefather', av: 'F', market: 'Gold', window: '1 week', pot: 7500, mine: false }
 ];
 let myBattles = [];
 let battleSeq = 0;
@@ -4902,13 +4884,13 @@ function builderHTML() {
   const marketPills = B_MARKETS.map(v =>
     `<button class="pill-btn${arenaB.market === v ? ' on' : ''}" data-abmarket="${v}">${v}</button>`).join('');
   return `<div class="builder">
-    <div class="b-row"><div class="b-label">💷 Your stake — escrowed at kick-off</div>
+    <div class="b-row"><div class="b-label">Your stake — escrowed at kick-off</div>
       <div class="b-pills">${stakePills}</div></div>
-    <div class="b-row"><div class="b-label">⚖️ Odds — what your opponent must put up</div>
+    <div class="b-row"><div class="b-label">Odds — what your opponent must put up</div>
       <div class="b-pills">${oddsPills}</div></div>
-    <div class="b-row"><div class="b-label">📅 Battle starts</div>
+    <div class="b-row"><div class="b-label">Battle starts</div>
       <div class="b-pills">${startPills}</div></div>
-    <div class="b-row"><div class="b-label">📈 Market</div>
+    <div class="b-row"><div class="b-label">Market</div>
       <div class="b-pills">${marketPills}</div></div>
     <div id="bSum">${payoffHTML()}</div>
     <div class="b-foot">
@@ -4966,7 +4948,7 @@ function nationWarsHTML() {
           : aLeft > 0
             ? `<button class="btn-neu" data-njoin="${i}"><span class="pulse-dot tiny purple"></span>Join ${w.a[1]} · ${aLeft} spot${aLeft === 1 ? '' : 's'} left</button>`
             : `<button class="btn-neu" disabled style="opacity:.65">Squads full</button>`}
-        <button class="link-btn" data-nwopen="${i}" style="margin-top:0">▶ Spectate</button>
+        <button class="link-btn" data-nwopen="${i}" style="margin-top:0">Spectate →</button>
         <span class="nw-watch mono">● ${w.watching.toLocaleString('en-GB')} watching</span>
       </div>
     </article>`;
@@ -4987,28 +4969,11 @@ function nationWarsHTML() {
     </div>`;
   }).join('');
   return `<div class="section">
-    <div class="section-head"><div><h3 class="section-title">⚔️ Nation Wars</h3>
+    <div class="section-head"><div><h3 class="section-title">Nation Wars</h3>
       <p class="section-sub"><span class="mono">COUNTRY&nbsp;VS&nbsp;COUNTRY</span><span class="dot-sep">·</span><span>full squads battle for one pot — the side with the higher average return takes it all</span></p></div></div>
     <div class="nw-grid">${cards}</div>
-    <div class="section-head" style="margin-top:26px"><div><h3 class="section-title">🌍 Where the money's being won</h3>
+    <div class="section-head" style="margin-top:26px"><div><h3 class="section-title">Where the money's being won</h3>
       <p class="section-sub"><span class="mono">GLOBAL&nbsp;DENSITY</span><span class="dot-sep">·</span><span>total winnings banked by traders in each country, all-time</span></p></div></div>
-    <div class="globe-row">
-      <div class="panel-card globe-panel">
-        <canvas id="globeCv"></canvas>
-        <div class="globe-tip" id="globeTip"></div>
-        <div class="globe-cap mono">DRAG&nbsp;TO&nbsp;SPIN&nbsp;·&nbsp;MARKER&nbsp;HEAT&nbsp;=&nbsp;MONEY&nbsp;WON</div>
-      </div>
-      <div class="panel-card">
-        <div class="panel-title">🔥 Country heat ranking</div>
-        ${globeData().slice(0, 8).map((d, i) => `<div class="grank">
-          <span class="grank-n mono">${i + 1}</span>
-          ${flagHTML(d.c, true)}
-          <div class="grank-tx"><div class="grank-name">${d.name}</div>
-            <div class="grank-bar"><i style="width:${Math.max(6, d.won / globeData()[0].won * 100).toFixed(0)}%;background:${heatCol(1 - i / 7)}"></i></div></div>
-          <span class="grank-won">£${(d.won / 1e6).toFixed(1)}M</span>
-        </div>`).join('')}
-      </div>
-    </div>
     <div class="nat-acc">${rows}</div>
   </div>`;
 }
@@ -5031,114 +4996,9 @@ function myBattlesHTML() {
     </div>`;
   }).join('');
   return `<div class="section">
-    <div class="section-head"><div><h3 class="section-title">⚡ Your battles</h3>
+    <div class="section-head"><div><h3 class="section-title">Your battles</h3>
       <p class="section-sub"><span class="mono">${myBattles.length}&nbsp;LIVE</span><span class="dot-sep">·</span><span>higher return when the window closes takes the pot</span></p></div></div>
     ${rows}</div>`;
-}
-
-/* ---------------- Winnings globe — the world heat map, drawn by hand ---------------- */
-
-const COUNTRY_GEO = {
-  ch: [46.8, 8.2], gb: [54, -2], nl: [52.1, 5.3], se: [60.1, 18.6], de: [51.2, 10.4],
-  fr: [46.2, 2.2], it: [41.9, 12.6], es: [40.5, -3.7], us: [39.8, -98.6], ca: [56.1, -106.3],
-  br: [-14.2, -51.9], mx: [23.6, -102.5], ar: [-38.4, -63.6], cl: [-35.7, -71.5],
-  co: [4.6, -74.1], pe: [-9.2, -75], jp: [36.2, 138.3], sg: [1.35, 103.8], au: [-25.3, 133.8],
-  in: [20.6, 79], kr: [35.9, 127.8], hk: [22.3, 114.2], th: [15.9, 101], my: [4.2, 102],
-};
-const COUNTRY_NAME = {};
-
-function globeData() {
-  NATION_REGIONS.forEach(r => r.countries.forEach(([c, n]) => { COUNTRY_NAME[c] = n; }));
-  const rows = Object.keys(COUNTRY_GEO).filter(c => COUNTRY_NAME[c]).map(c => ({ c, name: COUNTRY_NAME[c], won: countryWon(c) }));
-  rows.sort((a, b) => b.won - a.won);
-  return rows;
-}
-
-const heatCol = (t, a = 1) => `rgba(${Math.round(56 + t * 161)},${Math.round(189 - t * 119)},${Math.round(248 - t * 9)},${a})`;
-
-function bindGlobe() {
-  const cv = document.getElementById('globeCv');
-  if (!cv) return;
-  if (window._globeRaf) cancelAnimationFrame(window._globeRaf);
-  const tip = document.getElementById('globeTip');
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const S = cv.clientWidth || 360;
-  cv.width = S * dpr; cv.height = S * dpr;
-  const ctx = cv.getContext('2d');
-  ctx.scale(dpr, dpr);
-  const R = S / 2 - 24;
-  const data = globeData();
-  const maxWon = data[0].won;
-  let rot = 0.9, dragging = false, lx = 0, marks = [];
-
-  const proj = (lat, lng) => {
-    const la = lat * Math.PI / 180, lo = lng * Math.PI / 180 + rot, tl = -0.38;
-    const x = Math.cos(la) * Math.sin(lo), y = Math.sin(la), z = Math.cos(la) * Math.cos(lo);
-    const y2 = y * Math.cos(tl) - z * Math.sin(tl), z2 = y * Math.sin(tl) + z * Math.cos(tl);
-    return { x: S / 2 + R * x, y: S / 2 - R * y2, z: z2 };
-  };
-
-  function frame() {
-    window._globeRaf = requestAnimationFrame(frame);
-    if (currentView !== 'arena' || !document.getElementById('globeCv')) return;
-    if (!dragging) rot += 0.0032;
-    const dark = document.body.classList.contains('dark');
-    ctx.clearRect(0, 0, S, S);
-    /* sphere ground */
-    const g = ctx.createRadialGradient(S / 2 - R * .3, S / 2 - R * .35, R * .2, S / 2, S / 2, R);
-    g.addColorStop(0, dark ? 'rgba(148,163,184,.10)' : 'rgba(255,255,255,.9)');
-    g.addColorStop(1, dark ? 'rgba(30,41,59,.35)' : 'rgba(203,213,225,.35)');
-    ctx.beginPath(); ctx.arc(S / 2, S / 2, R, 0, 7); ctx.fillStyle = g; ctx.fill();
-    ctx.strokeStyle = dark ? 'rgba(148,163,184,.18)' : 'rgba(100,116,139,.18)'; ctx.lineWidth = 1; ctx.stroke();
-    /* graticule dots */
-    ctx.fillStyle = dark ? 'rgba(148,163,184,.5)' : 'rgba(100,116,139,.45)';
-    for (let la = -75; la <= 75; la += 15) for (let lo = 0; lo < 360; lo += 15) {
-      const p = proj(la, lo);
-      if (p.z > 0.05) {
-        ctx.globalAlpha = 0.06 + 0.16 * p.z;
-        ctx.beginPath(); ctx.arc(p.x, p.y, 1.1, 0, 7); ctx.fill();
-      }
-    }
-    ctx.globalAlpha = 1;
-    /* heat markers, back to front */
-    marks = data.map((d, i) => {
-      const [lat, lng] = COUNTRY_GEO[d.c];
-      const p = proj(lat, lng);
-      return { ...d, ...p, r: 3.5 + 10 * Math.sqrt(d.won / maxWon), t: 1 - i / (data.length - 1), rank: i + 1 };
-    }).sort((a, b) => a.z - b.z);
-    marks.forEach(m => {
-      if (m.z < -0.12) return;
-      const a = Math.max(0.12, Math.min(1, 0.25 + m.z));
-      ctx.shadowColor = heatCol(m.t, .9); ctx.shadowBlur = m.z > 0 ? 14 * m.t + 4 : 0;
-      ctx.beginPath(); ctx.arc(m.x, m.y, m.r * (0.65 + 0.35 * Math.max(0, m.z)), 0, 7);
-      ctx.fillStyle = heatCol(m.t, a); ctx.fill();
-      ctx.shadowBlur = 0;
-    });
-    /* labels for the hottest front-facing countries */
-    ctx.font = '600 9px ui-monospace, Menlo, monospace';
-    ctx.textAlign = 'center';
-    marks.filter(m => m.z > 0.3 && m.rank <= 6).forEach(m => {
-      ctx.fillStyle = dark ? 'rgba(226,232,240,.85)' : 'rgba(51,65,85,.85)';
-      ctx.fillText(`${m.c.toUpperCase()} £${(m.won / 1e6).toFixed(0)}M`, m.x, m.y - m.r - 5);
-    });
-  }
-  frame();
-
-  cv.onpointerdown = e => { dragging = true; lx = e.clientX; cv.setPointerCapture(e.pointerId); };
-  cv.onpointermove = e => {
-    if (dragging) { rot += (e.clientX - lx) * 0.006; lx = e.clientX; return; }
-    const rc = cv.getBoundingClientRect();
-    const mx = (e.clientX - rc.left) * (S / rc.width), my = (e.clientY - rc.top) * (S / rc.height);
-    const hit = marks.filter(m => m.z > 0).find(m => Math.hypot(m.x - mx, m.y - my) < m.r + 6);
-    if (hit && tip) {
-      tip.innerHTML = `<b>${hit.name}</b>#${hit.rank} · £${(hit.won / 1e6).toFixed(1)}M won by profitable traders`;
-      tip.style.left = (hit.x / S * rc.width + 12) + 'px';
-      tip.style.top = (hit.y / S * rc.height - 12) + 'px';
-      tip.classList.add('on');
-    } else if (tip) tip.classList.remove('on');
-  };
-  cv.onpointerup = cv.onpointercancel = () => { dragging = false; };
-  cv.onpointerleave = () => { if (tip) tip.classList.remove('on'); };
 }
 
 /* ---------------- Spectate — watching battles is a sport of its own ---------------- */
@@ -5245,14 +5105,14 @@ function specSideCard(side) {
     ${p ? `
     <div class="spec-brief">${p.bio}</div>
     <div class="spec-mini mono">
-      <span>🎯 ${p.winRate}% WIN</span><span>👥 ${p.followers}</span><span>⭐ LV ${traderTier(p.winnings).lv} ${traderTier(p.winnings).name.toUpperCase()}</span><span>📈 ${p.trades.toLocaleString('en-GB')} TRADES</span>
+      <span>${p.winRate}% WIN</span><span>${p.followers} FOLLOWERS</span><span>LV ${traderTier(p.winnings).lv} ${traderTier(p.winnings).name.toUpperCase()}</span><span>${p.trades.toLocaleString('en-GB')} TRADES</span>
     </div>` : `
     <div class="spec-brief">${spec.size}-trader squad · higher average return when the window closes takes the pot for the whole nation.</div>
     <table class="trades-table spec-squad"><thead><tr class="mono"><th>TOP&nbsp;MOVERS</th><th style="text-align:right">RETURN</th></tr></thead>
-      <tbody>${squad.map(m => `<tr data-trader="${m.name}" style="cursor:pointer"><td><b>${TRADER_AV[m.name] || ''} ${m.name}</b></td>
+      <tbody>${squad.map(m => `<tr data-trader="${m.name}" style="cursor:pointer"><td><b>${m.name}</b></td>
         <td style="text-align:right" class="${m.ret >= 0 ? 'up' : 'down'}"><b>${fmtRet(m.ret)}</b></td></tr>`).join('')}</tbody></table>`}
     <div class="spec-load">
-      <div class="spec-load-t mono">⚙️ LOADOUT · WHERE&nbsp;THE&nbsp;RISK&nbsp;SITS</div>
+      <div class="spec-load-t mono">LOADOUT · WHERE&nbsp;THE&nbsp;RISK&nbsp;SITS</div>
       ${load.map(([k, v]) => `<div class="spec-load-row"><span class="asset-ic" style="background:${INSTR[k].tint};width:20px;height:20px;border-radius:7px;font-size:9px">${INSTR[k].ic}</span>
         <span class="spec-load-sym">${k}</span>
         <span class="spec-load-bar"><i style="width:${v}%;background:${col}"></i></span>
@@ -5273,13 +5133,13 @@ function renderSpectate() {
         <div class="spec-vs">${specFaceHTML('a', '#10b981')}<span class="nw-vs mono">VS</span>${specFaceHTML('b', '#a855f7')}</div>
         <div class="spec-meta mono">
           <span class="live-tag"><span class="pulse-dot tiny"></span>LIVE</span>
-          <span>💰 ${odoHTML('specPot', '£' + spec.pot.toLocaleString('en-GB'))}&nbsp;pot</span>
-          <span>👁 ${odoHTML('specWatch', spec.watching.toLocaleString('en-GB'))}&nbsp;watching</span>
-          <span>⏱ ends ${spec.ends}</span>
+          <span>${odoHTML('specPot', '£' + spec.pot.toLocaleString('en-GB'))}&nbsp;pot</span>
+          <span>${odoHTML('specWatch', spec.watching.toLocaleString('en-GB'))}&nbsp;watching</span>
+          <span>ends ${spec.ends}</span>
         </div>
       </div>
       <div class="nw-bar" style="margin:14px 0 6px"><span id="specLead" style="width:${lead.toFixed(0)}%"></span><i></i></div>
-      <div class="spec-leadtxt mono" id="specLeadTxt">🏆 ${leader}&nbsp;LEADS</div>
+      <div class="spec-leadtxt mono" id="specLeadTxt">${leader}&nbsp;LEADS</div>
       <div class="spec-chart" id="specChart">${specChartSVG()}</div>
       <div class="spec-legend mono">
         <span><i style="background:#10b981"></i>${spec.a.name}</span>
@@ -5317,9 +5177,9 @@ function tournamentsSectionHTML() {
         </div>
         <div class="hero-social">
           <div class="avatar-stack">
-            <span class="stack-avatar" style="background:linear-gradient(135deg,#fcd9a0,#e8935a)">🦊</span>
-            <span class="stack-avatar" style="background:linear-gradient(135deg,#c9d4e2,#8fa3bd)">🐺</span>
-            <span class="stack-avatar" style="background:linear-gradient(135deg,#d9c2ef,#a184c8)">🐵</span>
+            <span class="stack-avatar" style="background:linear-gradient(135deg,#fcd9a0,#e8935a)">T</span>
+            <span class="stack-avatar" style="background:linear-gradient(135deg,#c9d4e2,#8fa3bd)">F</span>
+            <span class="stack-avatar" style="background:linear-gradient(135deg,#d9c2ef,#a184c8)">S</span>
           </div>
           <p class="hero-social-text"><strong>@Theo4</strong>, <strong>@swisstony</strong> &amp; <strong>12.6K</strong> others competing — tap anyone to scout them</p>
         </div>
@@ -5333,7 +5193,7 @@ function tournamentsSectionHTML() {
     </div>
   </section>
   <div class="section">
-    <div class="section-head"><div><h3 class="section-title">🎟️ Active tournaments</h3>
+    <div class="section-head"><div><h3 class="section-title">Active tournaments</h3>
       <p class="section-sub"><span class="mono">5&nbsp;RUNNING</span><span class="dot-sep">·</span><span>tap a card to view its board — pools grow live with every entry</span></p></div>
       <div class="section-head-right">
         <div class="feed-switch">
@@ -5347,7 +5207,7 @@ function tournamentsSectionHTML() {
     <div class="tournament-grid" id="tournaments"></div>
   </div>
   <div class="section">
-    <div class="section-head"><div><h3 class="section-title">🏆 Hall of Fame</h3>
+    <div class="section-head"><div><h3 class="section-title">Hall of Fame</h3>
       <p class="section-sub">Biggest wins all-time — £25 in, life-changing out. Tap anyone to see how they did it.</p></div>
       <div class="section-head-right">
         <input id="fame-search" class="neu-input" type="text" placeholder="Search player…" aria-label="Search Hall of Fame">
@@ -5356,7 +5216,7 @@ function tournamentsSectionHTML() {
     <div class="fame-card"><div id="fame-body"></div></div>
   </div>
   <div class="section">
-    <div class="section-head"><h3 class="section-title">📍 Past tournaments</h3>
+    <div class="section-head"><h3 class="section-title">Past tournaments</h3>
       <div class="pager">
         <button class="icon-btn round" aria-label="Previous" onclick="cyclePast(-1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
         <button class="icon-btn round" aria-label="Next" onclick="cyclePast(1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
@@ -5388,19 +5248,19 @@ function renderArena() {
     return `
     <article class="challenge-card">
       <div class="challenge-head"${c.mine ? '' : ` data-trader="${c.name}" style="cursor:pointer"`}><span class="thread-av" style="background:${AV_TINTS[i % 6]}">${c.av}</span>
-        <div><div class="challenge-name">${c.name}${c.mine ? ' <span class="mine-tag">YOURS</span>' : ` <span class="tier-chip">⭐ LV ${tier.lv} ${tier.name.toUpperCase()}</span>`}</div>
+        <div><div class="challenge-name">${c.name}${c.mine ? ' <span class="mine-tag">YOURS</span>' : ` <span class="tier-chip">LV ${tier.lv} ${tier.name.toUpperCase()}</span>`}</div>
           <div class="challenge-sub">${c.mine ? 'waiting for an opponent' : 'set the terms · take the other side'}</div></div></div>
       ${p ? `<div class="ch-bio">${p.bio}</div>
       <div class="ch-stats mono">
-        <span>🎯 ${p.winRate}%&nbsp;WIN</span>
-        <span>⚔️ ${p.wins}–${p.losses}</span>
-        <span>👥 ${p.followers}</span>
-        <span>🏆 ${p.podiums}&nbsp;PODIUMS</span>
+        <span>${p.winRate}%&nbsp;WIN</span>
+        <span>${p.wins}–${p.losses}&nbsp;RECORD</span>
+        <span>${p.followers}&nbsp;FOLLOWERS</span>
+        <span>${p.podiums}&nbsp;PODIUMS</span>
       </div>` : ''}
       <div class="challenge-terms">
-        <div class="term-cell"><div class="k">📊 Market</div><div class="v" style="font-size:12.5px">${c.market}</div></div>
-        <div class="term-cell"><div class="k">${c.mine ? '🚀 Starts' : '⏱ Window'}</div><div class="v" style="font-size:12.5px">${c.mine ? c.start : c.window}</div></div>
-        <div class="term-cell"><div class="k">💰 Pot</div><div class="v">£${c.pot.toLocaleString('en-GB')}</div></div>
+        <div class="term-cell"><div class="k">Market</div><div class="v" style="font-size:12.5px">${c.market}</div></div>
+        <div class="term-cell"><div class="k">${c.mine ? 'Starts' : 'Window'}</div><div class="v" style="font-size:12.5px">${c.mine ? c.start : c.window}</div></div>
+        <div class="term-cell"><div class="k">Pot</div><div class="v">£${c.pot.toLocaleString('en-GB')}</div></div>
       </div>
       ${c.mine
         ? `<button class="btn-neu enter" data-abcancel="${i}">Cancel challenge</button>`
@@ -5427,9 +5287,9 @@ function renderArena() {
           </div>
           <div class="hero-social">
             <div class="avatar-stack">
-              <span class="stack-avatar" style="background:${AV_TINTS[0]}">🦊</span>
-              <span class="stack-avatar" style="background:${AV_TINTS[2]}">🐵</span>
-              <span class="stack-avatar" style="background:${AV_TINTS[4]}">💀</span>
+              <span class="stack-avatar" style="background:${AV_TINTS[0]}">T</span>
+              <span class="stack-avatar" style="background:${AV_TINTS[2]}">S</span>
+              <span class="stack-avatar" style="background:${AV_TINTS[4]}">G</span>
             </div>
             <p class="hero-social-text"><strong>@Theo4</strong>, <strong>@swisstony</strong> &amp; 2.5K traders dueling right now</p>
           </div>
@@ -5446,11 +5306,10 @@ function renderArena() {
     ${myBattlesHTML()}
     ${nationWarsHTML()}
     <div class="section">
-      <div class="section-head"><div><h3 class="section-title">🎯 Open challenges</h3>
+      <div class="section-head"><div><h3 class="section-title">Open challenges</h3>
         <p class="section-sub"><span class="mono">${challenges.length}&nbsp;OPEN</span><span class="dot-sep">·</span><span>someone set the terms — take the other side and it locks in at kick-off</span></p></div></div>
       <div class="challenge-grid">${cards}</div>
     </div>`;
-  bindGlobe();
 }
 
 /* ---------------- Partner ---------------- */
@@ -5463,7 +5322,7 @@ function renderPartner() {
   const payouts = [['Jul 2026', 2140, 'Pending'], ['Jun 2026', 1890, 'Paid'], ['May 2026', 1655, 'Paid'], ['Apr 2026', 1420, 'Paid']];
   viewEl('partner').innerHTML = `
     <div class="tile-row">
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">👆</span>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">↗</span>
         <div class="tile-tx"><div class="tile-label mono">LINK&nbsp;CLICKS</div><div class="tile-value">${partner.clicks.toLocaleString('en-GB')}</div></div></div>
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#34d399,#10b981)">✓</span>
         <div class="tile-tx"><div class="tile-label mono">SIGNUPS</div><div class="tile-value">${partner.signups.toLocaleString('en-GB')}</div></div></div>
@@ -5526,7 +5385,7 @@ function showReward(pot, opp) {
   const veil = document.createElement('div');
   veil.className = 'reward-veil';
   veil.innerHTML = `<div class="reward-card">
-    <div class="reward-gift">🎁</div>
+    <div class="reward-gift">${TROPHY_SVG.replace('__S__', '#f59e0b')}</div>
     <div class="reward-title">You won the battle!</div>
     <div class="reward-sub">Your return beat <b>${opp}</b> when the window closed.<br>The escrowed pot is yours.</div>
     <div class="slide-track" id="slideTrack">
@@ -5569,14 +5428,14 @@ function unlockReward(pot, opp) {
   card.querySelector('.slide-track').outerHTML = `<div class="claim-strip" data-rclaim>
     <span><span class="claim-amt">+£${pot.toLocaleString('en-GB')} claimed</span>
       <span class="claim-sub" style="display:block">settled to your balance · tap to continue</span></span>
-    <span class="claim-ic">🏆</span>
+    <span class="claim-ic">${TROPHY_SVG.replace('__S__', '#f59e0b')}</span>
   </div>`;
   const skip = card.querySelector('.reward-skip');
   if (skip) skip.remove();
   card.querySelector('.reward-title').textContent = 'GG — pot secured';
-  card.querySelector('.reward-gift').textContent = '🏆';
+  
   term.bal += pot;
-  addNotif('🏆', 'Battle won — pot claimed', `+£${pot.toLocaleString('en-GB')} — you beat ${opp} and the escrow settled to your balance.`);
+  addNotif('W', 'Battle won — pot claimed', `+£${pot.toLocaleString('en-GB')} — you beat ${opp} and the escrow settled to your balance.`);
   fireConfetti();
 }
 
@@ -5651,8 +5510,8 @@ document.addEventListener('click', e => {
     const name = el.dataset.fdaccept;
     const p = POSTS.find(x => x.name === name && x.open);
     const side = p ? parseFloat(p.open.pot.replace(/[£,]/g, '')) * (p.open.pot.includes('K') ? 1000 : 1) : 4000;
-    myBattles.unshift({ id: battleSeq++, opp: name, av: p ? p.av : '⚔️', tint: p ? p.tint : AV_TINTS[0], market: 'Any market', window: p ? p.open.window : '1 week', pot: side * 2, my: 0, op: 0, watching: 12 + Math.floor(Math.random() * 240) });
-    addNotif('⚔️', 'Battle locked in', `You accepted ${name}’s open challenge — stakes escrowed.`);
+    myBattles.unshift({ id: battleSeq++, opp: name, av: p ? p.av : name.charAt(0).toUpperCase(), tint: p ? p.tint : AV_TINTS[0], market: 'Any market', window: p ? p.open.window : '1 week', pot: side * 2, my: 0, op: 0, watching: 12 + Math.floor(Math.random() * 240) });
+    addNotif('VS', 'Battle locked in', `You accepted ${name}’s open challenge — stakes escrowed.`);
     navigate('arena');
     return toast(`Battle vs ${name} locked in — live under Your battles`);
   }
@@ -5770,7 +5629,7 @@ document.addEventListener('click', e => {
     const iv = invites[+el.dataset.invAcc];
     invites.splice(+el.dataset.invAcc, 1);
     toast('Invite accepted — see you on the board');
-    if (iv) addNotif('✅', 'Invite accepted', iv.t);
+    if (iv) addNotif('OK', 'Invite accepted', iv.t);
     return renderInbox();
   }
   if ((el = q('[data-inv-dec]'))) { invites.splice(+el.dataset.invDec, 1); toast('Invite declined'); return renderInbox(); }
@@ -5806,7 +5665,7 @@ document.addEventListener('click', e => {
     });
     arenaB.open = false;
     toast(`Challenge posted — £${arenaB.stake.toLocaleString('en-GB')} at ${oddsLabel()}, kick-off ${startLabel()}`);
-    addNotif('⚔️', 'Challenge posted to the open board', `£${arenaB.stake.toLocaleString('en-GB')} at ${oddsLabel()} · ${arenaB.market} · kick-off ${startLabel()}.`);
+    addNotif('VS', 'Challenge posted to the open board', `£${arenaB.stake.toLocaleString('en-GB')} at ${oddsLabel()} · ${arenaB.market} · kick-off ${startLabel()}.`);
     return renderArena();
   }
   if ((el = q('[data-abcancel]'))) {
@@ -5820,7 +5679,7 @@ document.addEventListener('click', e => {
     w.aIn++;
     w.joined = true;
     toast(`You're in — ${w.a[1]} squad, ${w.size}v${w.size} vs ${w.b[1]}. Trade well for your flag.`);
-    addNotif('🏴', `Joined the ${w.a[1]} squad`, `${w.size}v${w.size} nation war vs ${w.b[1]} · £${w.pot.toLocaleString('en-GB')} pot · ends ${w.ends}. Your return now counts toward the squad average.`);
+    addNotif('NW', `Joined the ${w.a[1]} squad`, `${w.size}v${w.size} nation war vs ${w.b[1]} · £${w.pot.toLocaleString('en-GB')} pot · ends ${w.ends}. Your return now counts toward the squad average.`);
     return renderArena();
   }
   if ((el = q('[data-spectate]'))) {
@@ -5857,7 +5716,7 @@ document.addEventListener('click', e => {
       my: 0, op: 0, watching: 12 + Math.floor(Math.random() * 240)
     });
     toast(`Battle vs ${c.name} locked in — stakes escrowed, higher return takes £${(c.pot * 2).toLocaleString('en-GB')}`);
-    addNotif('⚔️', `Battle vs ${c.name} is live`, `£${(c.pot * 2).toLocaleString('en-GB')} pot · ${c.window} window · higher return takes it.`);
+    addNotif('VS', `Battle vs ${c.name} is live`, `£${(c.pot * 2).toLocaleString('en-GB')} pot · ${c.window} window · higher return takes it.`);
     return renderArena();
   }
   if ((el = q('[data-watch]'))) {
@@ -5937,7 +5796,7 @@ document.addEventListener('click', e => {
     prizePool += entryCount * 25;
     activePlayers += 1;
     toast(`Entered with ${entryCount} ${entryCount === 1 ? 'entry' : 'entries'} — £${(entryCount * 25).toLocaleString('en-GB')} added to the pool`);
-    addNotif('🎟️', 'Tournament entry confirmed', `${entryCount} ${entryCount === 1 ? 'entry' : 'entries'} · £${(entryCount * 25).toLocaleString('en-GB')} added to the prize pool.`);
+    addNotif('T', 'Tournament entry confirmed', `${entryCount} ${entryCount === 1 ? 'entry' : 'entries'} · £${(entryCount * 25).toLocaleString('en-GB')} added to the prize pool.`);
     return;
   }
 });
