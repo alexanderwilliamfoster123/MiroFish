@@ -2611,6 +2611,37 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .thread-av::after, .stack-avatar::after, .fame-avatar::after, .tpc-avatar::after, .user-avatar-inner::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(120% 90% at 28% 18%, rgba(255, 255, 255, .38), transparent 55%); pointer-events: none; }
 .user-avatar-inner img, .tpc-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
+/* ---------------- Bottom dock navigation ---------------- */
+.sidebar { display: none !important; }
+.main, .content { margin-left: 0 !important; }
+#views { padding-bottom: 130px; }
+.dock { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 90; }
+.dock ul { display: flex; align-items: flex-end; gap: 5px; margin: 0; padding: 9px 11px; list-style: none; border-radius: 24px; background: var(--card); box-shadow: 10px 14px 34px var(--shadow-dark), -8px -8px 22px var(--shadow-light); }
+.dk { --sz: 52px; position: relative; width: var(--sz); height: var(--sz); transition: width .16s cubic-bezier(.25, 1, .5, 1), height .16s cubic-bezier(.25, 1, .5, 1); }
+.dk:hover { width: calc(var(--sz) * 1.5); height: calc(var(--sz) * 1.5); }
+.dk:hover + .dk, .dk:has(+ .dk:hover) { width: calc(var(--sz) * 1.3); height: calc(var(--sz) * 1.3); }
+.dk:hover + .dk + .dk, .dk:has(+ .dk + .dk:hover) { width: calc(var(--sz) * 1.14); height: calc(var(--sz) * 1.14); }
+.dk-sep { width: 1px; align-self: stretch; margin: 8px 5px; background: var(--surface); }
+.dk button { width: 100%; height: 100%; border: 0; cursor: pointer; border-radius: 17px; background: var(--surface); box-shadow: var(--neu-out-sm); color: var(--text-soft); display: flex; align-items: center; justify-content: center; padding: 0; font: inherit; }
+.dk button svg { width: 44%; height: 44%; }
+.dk.active button { color: var(--accent-a); box-shadow: var(--neu-in-sm); }
+.dk.active::after { content: ''; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: var(--accent-a); }
+.dk.locked button { opacity: .4; cursor: not-allowed; }
+.dk-av { width: 62%; height: 62%; border-radius: 50%; background: linear-gradient(135deg, var(--accent-a), var(--accent-b)); color: #fff; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.dk-tip { position: absolute; left: 50%; top: -34px; transform: translateX(-50%); background: var(--card); box-shadow: var(--neu-out-sm); border-radius: 10px; padding: 5px 11px; font-size: 11px; font-weight: 600; color: var(--text); white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .18s ease; }
+.dk:hover .dk-tip { opacity: 1; }
+
+/* globe row */
+.globe-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 18px; }
+.globe-panel { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.globe-panel canvas { width: 100%; max-width: 380px; aspect-ratio: 1; cursor: grab; touch-action: none; }
+.globe-panel canvas:active { cursor: grabbing; }
+.globe-cap { font-size: 9.5px; letter-spacing: .12em; color: var(--text-faint); margin-top: 8px; }
+.globe-tip { position: absolute; pointer-events: none; background: var(--card); box-shadow: var(--neu-out-sm); border-radius: 12px; padding: 8px 12px; font-size: 11px; opacity: 0; transition: opacity .15s ease; z-index: 5; white-space: nowrap; }
+.globe-tip.on { opacity: 1; }
+.globe-tip b { display: block; font-size: 12px; }
+@media (max-width: 980px) { .globe-row { grid-template-columns: 1fr; } }
+
 /* ---------------- Locked nav (coming soon) ---------------- */
 .nav-item.locked { opacity: .45; cursor: not-allowed; }
 .nav-item.locked:hover { transform: none; }
@@ -2644,6 +2675,8 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 
 .ch-kick { display: flex; align-items: center; gap: 8px; font-size: 9.5px; letter-spacing: .1em; color: var(--text-faint); margin-bottom: 12px; }
 .ch-kick .ch-eye { margin-left: auto; letter-spacing: .05em; }
+
+.co-canvas { width: 100%; border-radius: 18px; box-shadow: var(--neu-out-sm); display: block; margin-bottom: 4px; }
 
 /* ---------------- Live battles hub ---------------- */
 .lb-hero { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px 26px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -2730,7 +2763,7 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 #clanLadder .fame-row .btn-neu { flex: none; }
 
 /* ---------------- Spectate ---------------- */
-.spec-hero { padding: 24px 26px; }
+.spec-hero { padding: 24px 26px; position: relative; }
 .spec-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
 .spec-vs { display: flex; align-items: center; gap: 14px; }
 .spec-face { display: inline-flex; align-items: center; gap: 9px; font-size: 15.5px; font-weight: 800; }
@@ -2739,6 +2772,11 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .spec-leadtxt { font-size: 10.5px; letter-spacing: .12em; color: var(--text-faint); margin-bottom: 10px; }
 .spec-chart { border-radius: 16px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; }
 .spec-chart svg { display: block; width: 100%; height: 250px; color: var(--text); }
+.spec-tip { position: absolute; bottom: 100px; min-width: 158px; background: #1c1d24; color: #fff; border-radius: 12px; padding: 10px 13px; box-shadow: 0 14px 34px rgba(10, 12, 20, .4); opacity: 0; pointer-events: none; transition: opacity .15s ease; z-index: 6; }
+.spec-tip.on { opacity: 1; }
+.spt-r { display: flex; align-items: center; gap: 7px; font-size: 11.5px; padding: 2px 0; color: rgba(255, 255, 255, .8); }
+.spt-r i { width: 8px; height: 8px; border-radius: 3px; flex: none; }
+.spt-r b { margin-left: auto; font-variant-numeric: tabular-nums; color: #fff; }
 .spec-legend { display: flex; align-items: center; gap: 18px; margin-top: 12px; font-size: 10.5px; color: var(--text-faint); }
 .spec-legend i { display: inline-block; width: 16px; height: 4px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
 .spec-side-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -2896,6 +2934,8 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 
 <div class="toast" id="toast"></div>
 
+<nav class="dock" aria-label="Main navigation"><ul id="dockList"></ul></nav>
+
 <script>
 /* ---------------- Data ---------------- */
 
@@ -2971,6 +3011,32 @@ function renderNav() {
       <span class="nav-label">${item.label}</span>
     </button>`;
   }).join('');
+  renderDock(v);
+}
+
+const DOCK_SVGS = {
+  profile: '',
+  arena: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>',
+};
+
+function renderDock(v) {
+  const list = document.getElementById('dockList');
+  if (!list) return;
+  let prof;
+  try { prof = myProfile; } catch (e) { return; } /* first paint runs before profile state exists */
+  const item = (label, view, icon, opts = {}) => `
+    <li class="dk${opts.locked ? ' locked' : ''}${!opts.locked && (opts.match || [view]).includes(v) ? ' active' : ''}">
+      <button ${opts.locked ? 'data-locknav' : opts.trader ? `data-trader="${view}"` : `data-nav="${view}"`} aria-label="${label}">
+        ${icon}
+        <span class="dk-tip">${label}${opts.locked ? ' · soon' : ''}</span>
+      </button>
+    </li>`;
+  list.innerHTML =
+    item('Your profile', 'jstone', `<span class="dk-av user-avatar-inner">${prof.avatar ? `<img src="${prof.avatar}" alt="">` : (prof.name[0] || 'J').toUpperCase()}</span>`, { trader: true, match: [] })
+    + '<li class="dk-sep"></li>'
+    + navItems.map(it => item(it.label, it.view, it.locked
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'
+      : it.icon, it)).join('');
 }
 
 function renderLeaderboard(tickedName) {
@@ -5279,6 +5345,103 @@ function renderInvite() {
 
 function closeInvite() { document.getElementById('invVeil')?.remove(); }
 
+/* ---------------- Call-out card — the badge you post to call them out ---------------- */
+
+function drawCallout(cv) {
+  const W = 1080, H = 1350;
+  cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  /* ground */
+  x.fillStyle = '#15161b'; x.fillRect(0, 0, W, H);
+  let g = x.createRadialGradient(W * 0.85, 0, 60, W * 0.85, 0, 900);
+  g.addColorStop(0, 'rgba(217,70,239,.34)'); g.addColorStop(1, 'transparent');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  g = x.createRadialGradient(0, H, 60, 0, H, 1000);
+  g.addColorStop(0, 'rgba(124,58,237,.30)'); g.addColorStop(1, 'transparent');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  /* dot texture */
+  x.fillStyle = 'rgba(255,255,255,.05)';
+  for (let dy = 60; dy < H; dy += 46) for (let dx = 60; dx < W; dx += 46) { x.beginPath(); x.arc(dx, dy, 2, 0, 7); x.fill(); }
+  /* header */
+  x.textAlign = 'center';
+  x.fillStyle = 'rgba(255,255,255,.92)';
+  x.font = '800 54px -apple-system, "Segoe UI", sans-serif';
+  x.fillText('PAKTOS', W / 2, 120);
+  x.fillStyle = '#d946ef';
+  x.font = '700 30px ui-monospace, Menlo, monospace';
+  x.fillText('C A L L - O U T', W / 2, 178);
+  /* faces */
+  const face = (cx2, name, tint1, tint2) => {
+    const fg = x.createLinearGradient(cx2 - 110, 380, cx2 + 110, 600);
+    fg.addColorStop(0, tint1); fg.addColorStop(1, tint2);
+    x.fillStyle = fg;
+    x.beginPath(); x.arc(cx2, 490, 110, 0, 7); x.fill();
+    x.fillStyle = '#fff';
+    x.font = '800 92px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(name.charAt(0).toUpperCase(), cx2, 524);
+    x.font = '800 44px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(name, cx2, 680);
+  };
+  face(W * 0.28, myProfile.name, '#7c3aed', '#d946ef');
+  face(W * 0.72, inv.to, '#f59e0b', '#ef4444');
+  x.fillStyle = 'rgba(255,255,255,.55)';
+  x.font = '800 40px ui-monospace, Menlo, monospace';
+  x.fillText('VS', W / 2, 505);
+  /* headline */
+  x.fillStyle = 'rgba(255,255,255,.96)';
+  x.font = '800 58px -apple-system, "Segoe UI", sans-serif';
+  x.fillText(`${myProfile.name} just called out ${inv.to}`, W / 2, 800);
+  x.fillStyle = 'rgba(255,255,255,.55)';
+  x.font = '400 32px -apple-system, "Segoe UI", sans-serif';
+  x.fillText('Higher return when the window closes takes the pot.', W / 2, 852);
+  /* terms */
+  const terms = [
+    ['STAKE', '£' + inv.stake.toLocaleString('en-GB')],
+    ['ODDS', inv.odds + ':1'],
+    ['POT', '£' + (inv.stake * (1 + inv.odds)).toLocaleString('en-GB')],
+    ['KICK-OFF', inv.start.toUpperCase()],
+  ];
+  const bw = 226, gap2 = 18, x0 = (W - bw * 4 - gap2 * 3) / 2;
+  terms.forEach(([k, v], i2) => {
+    const bx = x0 + i2 * (bw + gap2);
+    x.fillStyle = 'rgba(255,255,255,.06)';
+    x.beginPath(); x.roundRect(bx, 910, bw, 150, 22); x.fill();
+    x.strokeStyle = 'rgba(255,255,255,.12)'; x.stroke();
+    x.fillStyle = 'rgba(255,255,255,.45)';
+    x.font = '700 20px ui-monospace, Menlo, monospace';
+    x.fillText(k, bx + bw / 2, 962);
+    x.fillStyle = i2 === 2 ? '#34d399' : 'rgba(255,255,255,.95)';
+    x.font = '800 40px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(v, bx + bw / 2, 1022);
+  });
+  /* footer */
+  x.fillStyle = 'rgba(255,255,255,.85)';
+  x.font = '700 34px -apple-system, "Segoe UI", sans-serif';
+  x.fillText('Think they can take it?', W / 2, 1170);
+  x.fillStyle = '#d946ef';
+  x.font = '700 30px ui-monospace, Menlo, monospace';
+  x.fillText(partner.link, W / 2, 1225);
+}
+
+function showCallout() {
+  if (!document.getElementById('coVeil')) {
+    const v = document.createElement('div'); v.className = 'pk-veil'; v.id = 'coVeil';
+    document.body.appendChild(v);
+  }
+  const veil = document.getElementById('coVeil');
+  veil.innerHTML = `<div class="pk-modal" style="width:min(430px,92vw)">
+    <div class="pk-modal-h">Call-out sent — now make it public</div>
+    <div class="pk-modal-s">Post the card to your story so everyone knows ${inv.to} is on the clock.</div>
+    <canvas id="coCanvas" class="co-canvas"></canvas>
+    <div class="pk-actions">
+      <button class="btn-primary" style="flex:1;justify-content:center" data-codl>Download card</button>
+      <button class="btn-neu" data-cox>Share on X</button>
+      <button class="btn-neu" data-coclose>Done</button>
+    </div>
+  </div>`;
+  drawCallout(document.getElementById('coCanvas'));
+}
+
 function openTrader(name) {
   const clean = name.replace('· you', '').replace(/[\u{1F1E6}-\u{1F1FF}]/gu, '').trim();
   traderId = clean;
@@ -5526,7 +5689,14 @@ function nationWarsHTML() {
     <div class="nw-grid">${cards}</div>` : ''}
     <div class="section-head" ${FEATURE_NATION_WARS ? 'style="margin-top:26px"' : ''}><div><h3 class="section-title">Global leaderboard</h3>
       <p class="section-sub"><span class="mono">WHERE&nbsp;THE&nbsp;MONEY'S&nbsp;BEING&nbsp;WON</span><span class="dot-sep">·</span><span>total winnings banked by traders in every country, ranked all-time</span></p></div></div>
-    <div class="nat-acc" style="padding:8px 26px">${rows}</div>
+    <div class="globe-row">
+      <div class="panel-card globe-panel">
+        <canvas id="globeCv"></canvas>
+        <div class="globe-tip" id="globeTip"></div>
+        <div class="globe-cap mono">DRAG&nbsp;TO&nbsp;SPIN&nbsp;·&nbsp;MARKER&nbsp;HEAT&nbsp;=&nbsp;MONEY&nbsp;WON</div>
+      </div>
+      <div class="nat-acc" style="padding:8px 26px">${rows}</div>
+    </div>
   </div>`;
 }
 
@@ -5820,6 +5990,104 @@ function openClanWarObj(w, i) {
   navigate('spectate');
 }
 
+/* ---------------- Winnings globe — spins inside the global leaderboard ---------------- */
+
+const COUNTRY_GEO = {
+  ch: [46.8, 8.2], gb: [54, -2], nl: [52.1, 5.3], se: [60.1, 18.6], de: [51.2, 10.4],
+  fr: [46.2, 2.2], it: [41.9, 12.6], es: [40.5, -3.7], us: [39.8, -98.6], ca: [56.1, -106.3],
+  br: [-14.2, -51.9], mx: [23.6, -102.5], ar: [-38.4, -63.6], cl: [-35.7, -71.5],
+  co: [4.6, -74.1], pe: [-9.2, -75], jp: [36.2, 138.3], sg: [1.35, 103.8], au: [-25.3, 133.8],
+  in: [20.6, 79], kr: [35.9, 127.8], hk: [22.3, 114.2], th: [15.9, 101], my: [4.2, 102],
+};
+const heatCol = (t, a = 1) => `rgba(${Math.round(56 + t * 161)},${Math.round(189 - t * 119)},${Math.round(248 - t * 9)},${a})`;
+
+function bindGlobe() {
+  const cv = document.getElementById('globeCv');
+  if (!cv) return;
+  if (window._globeRaf) cancelAnimationFrame(window._globeRaf);
+  const tip = document.getElementById('globeTip');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const S = cv.clientWidth || 360;
+  cv.width = S * dpr; cv.height = S * dpr;
+  const ctx = cv.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const R = S / 2 - 26;
+  const names = {};
+  NATION_REGIONS.forEach(r => r.countries.forEach(([c, n]) => { names[c] = n; }));
+  const data = Object.keys(COUNTRY_GEO).filter(c => names[c]).map(c => ({ c, name: names[c], won: countryWon(c) }));
+  data.sort((a, b) => b.won - a.won);
+  const maxWon = data[0].won;
+  let rot = 0.9, dragging = false, lx = 0, marks = [], fr = 0;
+
+  const proj = (lat, lng) => {
+    const la = lat * Math.PI / 180, lo = lng * Math.PI / 180 + rot, tl = -0.38;
+    const px = Math.cos(la) * Math.sin(lo), py = Math.sin(la), pz = Math.cos(la) * Math.cos(lo);
+    const y2 = py * Math.cos(tl) - pz * Math.sin(tl), z2 = py * Math.sin(tl) + pz * Math.cos(tl);
+    return { x: S / 2 + R * px, y: S / 2 - R * y2, z: z2 };
+  };
+
+  function frame() {
+    window._globeRaf = requestAnimationFrame(frame);
+    if (currentView !== 'arena' || !document.getElementById('globeCv')) return;
+    fr++;
+    if (!dragging) rot += 0.0032;
+    const dark = document.body.classList.contains('dark');
+    ctx.clearRect(0, 0, S, S);
+    ctx.fillStyle = dark ? 'rgba(148,163,184,.6)' : 'rgba(100,116,139,.55)';
+    for (let la = -80; la <= 80; la += 10) for (let lo = 0; lo < 360; lo += 10) {
+      const p = proj(la, lo);
+      if (p.z > 0.05) { ctx.globalAlpha = 0.07 + 0.2 * p.z; ctx.beginPath(); ctx.arc(p.x, p.y, 1.1, 0, 7); ctx.fill(); }
+    }
+    ctx.globalAlpha = 1;
+    marks = data.map((d, i) => {
+      const [lat, lng] = COUNTRY_GEO[d.c];
+      return { ...d, ...proj(lat, lng), r: 3.5 + 10 * Math.sqrt(d.won / maxWon), t: 1 - i / (data.length - 1), rank: i + 1 };
+    }).sort((a, b) => a.z - b.z);
+    marks.forEach(m => {
+      if (m.z < -0.12) return;
+      const a = Math.max(0.12, Math.min(1, 0.25 + m.z));
+      ctx.shadowColor = heatCol(m.t, .9); ctx.shadowBlur = m.z > 0 ? 14 * m.t + 4 : 0;
+      ctx.beginPath(); ctx.arc(m.x, m.y, m.r * (0.65 + 0.35 * Math.max(0, m.z)), 0, 7);
+      ctx.fillStyle = heatCol(m.t, a); ctx.fill();
+      ctx.shadowBlur = 0;
+    });
+    /* LIVE chips on the top 3 front-facing money markets */
+    marks.filter(m => m.z > 0.25 && m.rank <= 3).forEach(m => {
+      const watching = (12000 + m.rank * 3100 + Math.floor(fr / 12) % 900);
+      const label = 'LIVE · ' + (watching / 1000).toFixed(1) + 'K';
+      ctx.font = '700 9px ui-monospace, Menlo, monospace';
+      const tw = ctx.measureText(label).width + 26;
+      const bx = m.x - tw / 2, by = m.y - m.r - 26;
+      ctx.fillStyle = 'rgba(20,21,26,.92)';
+      ctx.beginPath(); ctx.roundRect(bx, by, tw, 18, 9); ctx.fill();
+      const pulse = 0.55 + 0.45 * Math.sin(fr / 9);
+      ctx.fillStyle = `rgba(255,59,48,${pulse.toFixed(2)})`;
+      ctx.beginPath(); ctx.arc(bx + 11, by + 9, 3, 0, 7); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,.92)';
+      ctx.textAlign = 'left';
+      ctx.fillText(label, bx + 19, by + 12.5);
+      ctx.textAlign = 'center';
+    });
+  }
+  frame();
+
+  cv.onpointerdown = e => { dragging = true; lx = e.clientX; cv.setPointerCapture(e.pointerId); };
+  cv.onpointermove = e => {
+    if (dragging) { rot += (e.clientX - lx) * 0.006; lx = e.clientX; return; }
+    const rc = cv.getBoundingClientRect();
+    const mx = (e.clientX - rc.left) * (S / rc.width), my = (e.clientY - rc.top) * (S / rc.height);
+    const hit = marks.filter(m => m.z > 0).find(m => Math.hypot(m.x - mx, m.y - my) < m.r + 6);
+    if (hit && tip) {
+      tip.innerHTML = `<b>${hit.name}</b>#${hit.rank} · £${(hit.won / 1e6).toFixed(1)}M won by profitable traders`;
+      tip.style.left = (hit.x / S * rc.width + 12) + 'px';
+      tip.style.top = (hit.y / S * rc.height - 12) + 'px';
+      tip.classList.add('on');
+    } else if (tip) tip.classList.remove('on');
+  };
+  cv.onpointerup = cv.onpointercancel = () => { dragging = false; };
+  cv.onpointerleave = () => { if (tip) tip.classList.remove('on'); };
+}
+
 /* ---------------- Spectate — watching battles is a sport of its own ---------------- */
 
 let spec = null;
@@ -5885,23 +6153,72 @@ function openNation(i) {
 }
 
 function specChartSVG() {
-  const W = 920, H = 250, pad = 18;
+  const W = 920, H = 250, padL = 48, padR = 20, padT = 18, padB = 28;
+  const iw = W - padL - padR, ih = H - padT - padB;
   const all = spec.sa.concat(spec.sb);
-  const min = Math.min(...all, 0), max = Math.max(...all, 0.1), rng = max - min || 1;
-  const X = (i, n) => pad + i / (n - 1) * (W - pad * 2);
-  const Y = v => H - pad - (v - min) / rng * (H - pad * 2);
-  const path = s => s.map((v, i) => `${i ? 'L' : 'M'}${X(i, s.length).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
-  const grid = [0.25, 0.5, 0.75].map(f => `<line x1="${pad}" x2="${W - pad}" y1="${(pad + (H - pad * 2) * f).toFixed(1)}" y2="${(pad + (H - pad * 2) * f).toFixed(1)}" stroke="currentColor" opacity=".07" stroke-dasharray="3 5"/>`).join('');
-  const zero = `<line x1="${pad}" x2="${W - pad}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}" stroke="currentColor" opacity=".14" stroke-dasharray="2 4"/>`;
-  const dot = (s, col) => `<circle cx="${X(s.length - 1, s.length).toFixed(1)}" cy="${Y(s[s.length - 1]).toFixed(1)}" r="4.5" fill="${col}" stroke="var(--card)" stroke-width="2"/>`;
+  const min = Math.min(...all), max = Math.max(...all);
+  const pad = (max - min) * 0.12 || 1;
+  const lo = min - pad, hi = max + pad, rng = hi - lo;
+  const X = (i2, n) => padL + i2 / (n - 1) * iw;
+  const Y = v => padT + (1 - (v - lo) / rng) * ih;
+  const path = sr => sr.map((v, i2) => `${i2 ? 'L' : 'M'}${X(i2, sr.length).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+  const A = '#10b981', B = '#a855f7';
+  let grid = '';
+  for (let g = 0; g <= 4; g++) {
+    const v = lo + rng * g / 4, y = Y(v).toFixed(1);
+    grid += `<line x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="currentColor" opacity=".08" stroke-dasharray="4 12"/>`
+      + `<text x="${padL - 10}" y="${+y + 3}" text-anchor="end" fill="currentColor" opacity=".38" font-size="9" font-family="ui-monospace,Menlo,monospace">${v.toFixed(1)}%</text>`;
+  }
+  const area = (sr, col, id) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${col}" stop-opacity=".16"/><stop offset="100%" stop-color="${col}" stop-opacity="0"/></linearGradient></defs>
+    <path d="${path(sr)} L${(W - padR).toFixed(1)},${(H - padB).toFixed(1)} L${padL},${(H - padB).toFixed(1)} Z" fill="url(#${id})"/>`;
+  const endDot = (sr, col) => `<circle cx="${X(sr.length - 1, sr.length).toFixed(1)}" cy="${Y(sr[sr.length - 1]).toFixed(1)}" r="5" fill="${col}" stroke="#fff" stroke-width="2" filter="url(#spDot)"/>`;
+  let hover = '';
+  if (spec.hov != null) {
+    const n = spec.sa.length;
+    const idx = Math.max(0, Math.min(n - 1, spec.hov));
+    const hx = X(idx, n).toFixed(1);
+    hover = `<line x1="${hx}" x2="${hx}" y1="${padT}" y2="${H - padB}" stroke="currentColor" opacity=".22"/>`
+      + `<circle cx="${hx}" cy="${Y(spec.sa[idx]).toFixed(1)}" r="5" fill="${A}" stroke="#fff" stroke-width="2" filter="url(#spDot)"/>`
+      + `<circle cx="${hx}" cy="${Y(spec.sb[Math.min(idx, spec.sb.length - 1)]).toFixed(1)}" r="5" fill="${B}" stroke="#fff" stroke-width="2" filter="url(#spDot)"/>`;
+  }
   return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-    ${grid}${zero}
-    <path d="${path(spec.sa)} L${(W - pad)},${H} L${pad},${H} Z" fill="#10b981" opacity=".07"/>
-    <path d="${path(spec.sb)} L${(W - pad)},${H} L${pad},${H} Z" fill="#a855f7" opacity=".07"/>
-    <path d="${path(spec.sa)}" fill="none" stroke="#10b981" stroke-width="2.6" stroke-linejoin="round"/>
-    <path d="${path(spec.sb)}" fill="none" stroke="#a855f7" stroke-width="2.6" stroke-linejoin="round"/>
-    ${dot(spec.sa, '#10b981')}${dot(spec.sb, '#a855f7')}
+    <defs><filter id="spDot" x="-60%" y="-60%" width="220%" height="220%"><feDropShadow dx="1" dy="2" stdDeviation="2.4" flood-color="rgba(0,0,0,.35)"/></filter></defs>
+    ${grid}
+    ${area(spec.sa, A, 'spgA')}${area(spec.sb, B, 'spgB')}
+    <path d="${path(spec.sa)}" fill="none" stroke="${A}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="${path(spec.sb)}" fill="none" stroke="${B}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+    ${endDot(spec.sa, A)}${endDot(spec.sb, B)}
+    ${hover}
+    <text x="${padL}" y="${H - 8}" fill="currentColor" opacity=".35" font-size="8.5" font-family="ui-monospace,Menlo,monospace">KICK-OFF</text>
+    <text x="${W - padR}" y="${H - 8}" text-anchor="end" fill="currentColor" opacity=".35" font-size="8.5" font-family="ui-monospace,Menlo,monospace">NOW</text>
   </svg>`;
+}
+
+function bindSpecChart() {
+  const box = document.getElementById('specChart');
+  if (!box) return;
+  box.onpointermove = e => {
+    if (!spec) return;
+    const r = box.getBoundingClientRect();
+    const frac = ((e.clientX - r.left) / r.width * 920 - 48) / (920 - 68);
+    spec.hov = Math.max(0, Math.min(spec.sa.length - 1, Math.round(frac * (spec.sa.length - 1))));
+    box.innerHTML = specChartSVG();
+    const tip = document.getElementById('specTip');
+    if (tip) {
+      const i2 = spec.hov;
+      tip.innerHTML = `<div class="spt-r"><i style="background:#10b981"></i>${spec.a.name}<b>${fmtRet(spec.sa[i2])}</b></div>
+        <div class="spt-r"><i style="background:#a855f7"></i>${spec.b.name}<b>${fmtRet(spec.sb[Math.min(i2, spec.sb.length - 1)])}</b></div>`;
+      const px = (48 + frac * (920 - 68)) / 920 * r.width;
+      tip.style.left = Math.min(Math.max(8, px + 14), r.width - 160) + 'px';
+      tip.classList.add('on');
+    }
+  };
+  box.onpointerleave = () => {
+    if (spec) spec.hov = null;
+    box.innerHTML = specChartSVG();
+    document.getElementById('specTip')?.classList.remove('on');
+  };
 }
 
 function specFaceHTML(side, col) {
@@ -6007,7 +6324,7 @@ syncUserCard();
       </div>
       <div class="nw-bar" style="margin:14px 0 6px"><span id="specLead" style="width:${lead.toFixed(0)}%"></span><i></i></div>
       <div class="spec-leadtxt mono" id="specLeadTxt">${leader}&nbsp;LEADS</div>
-      <div class="spec-chart" id="specChart">${specChartSVG()}</div>
+      <div class="spec-chart" id="specChart">${specChartSVG()}</div><div class="spec-tip" id="specTip"></div>
       <div class="spec-legend mono">
         <span><i style="background:#10b981"></i>${spec.a.name}</span>
         <span><i style="background:#a855f7"></i>${spec.b.name}</span>
@@ -6027,6 +6344,7 @@ syncUserCard();
         <button class="btn-primary" style="padding:11px 22px;font-size:13px" data-sayspec>Send</button>
       </div>
     </div>`;
+  bindSpecChart();
 }
 
 /* ---------------- Live Battles hub — the spectator sport, end to end ---------------- */
@@ -6301,6 +6619,7 @@ function renderArena() {
         <p class="section-sub"><span class="mono">${challenges.length}&nbsp;OPEN</span><span class="dot-sep">·</span><span>someone set the terms — take the other side and it locks in at kick-off</span></p></div></div>
       <div class="challenge-grid">${cards}</div>
     </div>`;
+  bindGlobe();
 }
 
 /* ---------------- Partner — the full portal ---------------- */
@@ -6822,12 +7141,27 @@ document.addEventListener('click', e => {
     addNotif('OK', `Invite sent to ${el.dataset.invping}`, 'They can join Paktos with your referral link — 20% lifetime revenue share on everything they do.');
     return;
   }
+  if ((el = q('[data-codl]'))) {
+    const cv = document.getElementById('coCanvas');
+    if (!cv) return;
+    const a = document.createElement('a');
+    a.href = cv.toDataURL('image/png');
+    a.download = `paktos-callout-${inv.to}.png`;
+    a.click();
+    return toast('Call-out card downloaded — post it everywhere');
+  }
+  if ((el = q('[data-cox]'))) {
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(`I just called out ${inv.to} on Paktos — £${(inv.stake * (1 + inv.odds)).toLocaleString('en-GB')} pot, kick-off ${inv.start}. Come watch them fold: https://${partner.link}`), '_blank');
+    return toast('Opening X — attach the downloaded card for the full flex');
+  }
+  if ((el = q('[data-coclose]'))) return document.getElementById('coVeil')?.remove();
   if ((el = q('[data-invsend]'))) {
     challenges.unshift({
       name: 'jstone', av: '👱‍♂️', market: inv.market, start: inv.start,
       stake: inv.stake, odds: inv.odds, pot: inv.stake * (1 + inv.odds), mine: true
     });
     closeInvite();
+    showCallout();
     toast(`Duel invite sent to ${inv.to} — £${(inv.stake * (1 + inv.odds)).toLocaleString('en-GB')} pot at ${inv.odds}:1, kick-off ${inv.start}`);
     addNotif('VS', `Duel invite sent to ${inv.to}`, `£${inv.stake.toLocaleString('en-GB')} vs £${(inv.stake * inv.odds).toLocaleString('en-GB')} · ${inv.market} · kick-off ${inv.start}. You'll be notified when they accept.`);
     if (currentView === 'arena') renderArena();
