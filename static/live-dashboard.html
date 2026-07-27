@@ -2642,6 +2642,34 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .sc-input { display: flex; gap: 10px; }
 .sc-input input { flex: 1; border: 0; font: inherit; font-size: 13px; color: var(--text); background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 13px; padding: 11px 15px; outline: none; }
 
+/* ---------------- Partner portal ---------------- */
+.pt-hero { display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 26px; padding: 26px 28px; margin-bottom: 18px; }
+.pt-eyebrow { font-size: 9.5px; letter-spacing: .18em; color: var(--accent-a); margin-bottom: 10px; }
+.pt-title { font-size: 26px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 8px; }
+.pt-desc { font-size: 13px; color: var(--text-soft); line-height: 1.6; max-width: 560px; }
+.pt-desc b { color: var(--text); }
+.pt-rate { border-radius: 20px; background: linear-gradient(160deg, rgba(124, 58, 237, .1), rgba(217, 70, 239, .07)); box-shadow: var(--neu-in-sm); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; padding: 20px; }
+.pt-rate b { font-size: 44px; font-weight: 800; letter-spacing: -.03em; background: linear-gradient(135deg, var(--accent-a), var(--accent-b)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.pt-rate span { font-size: 11.5px; color: var(--text-soft); }
+.pt-rate .mono { font-size: 8.5px; letter-spacing: .12em; color: var(--text-faint); }
+.pt-sub { font-size: 9.5px; letter-spacing: .08em; color: var(--text-faint); margin-top: 3px; }
+.pt-status { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 16px; }
+.pt-status > div, .pt-pstat > div { background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 14px; padding: 13px; text-align: center; }
+.pt-status b, .pt-pstat b { display: block; font-size: 18px; font-weight: 800; }
+.pt-status span, .pt-pstat span { display: block; font-size: 8.5px; letter-spacing: .1em; color: var(--text-faint); margin-top: 4px; }
+.pt-pstat { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.pf-row { display: flex; align-items: center; gap: 12px; margin-bottom: 11px; }
+.pf-l { width: 64px; flex: none; font-size: 9.5px; letter-spacing: .1em; color: var(--text-faint); }
+.pf-bar { flex: 1; height: 26px; border-radius: 999px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; }
+.pf-bar i { display: flex; align-items: center; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent-a), var(--accent-b)); padding-left: 12px; min-width: 54px; }
+.pf-bar b { font-size: 11px; color: #fff; font-style: normal; font-variant-numeric: tabular-nums; }
+.pf-pc { width: 36px; text-align: right; font-size: 10px; color: var(--text-faint); }
+.pa-row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--text-soft); padding: 7px 0; }
+.pa-row + .pa-row { border-top: 1px solid var(--surface); }
+.pa-ago { margin-left: auto; font-size: 10px; color: var(--text-faint); }
+.pt-fine { margin-top: 22px; font-size: 10.5px; color: var(--text-faint); line-height: 1.6; text-align: center; }
+@media (max-width: 860px) { .pt-hero { grid-template-columns: 1fr; } }
+
 /* ---------------- Battle the machines ---------------- */
 .mach-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
 .mach-card { background: var(--card); border-radius: 24px; box-shadow: var(--neu-out); padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
@@ -3233,7 +3261,7 @@ const TITLES = {
   terminal: ['Trade', '<span class="mono">TR-1001</span><span class="dot-sep">·</span><span>£100k competition balance</span>'],
   social: ['Social', '<span class="mono">FEED</span><span class="dot-sep">·</span><span>what 177K traders are saying right now</span>'],
   performance: ['Performance', '<span class="mono">ALL&nbsp;ACCOUNTS</span><span class="dot-sep">·</span><span>verified live track record</span>'],
-  partner: ['Partner', '<span class="mono">AFFILIATE</span><span class="dot-sep">·</span><span>earn 30% lifetime on every referral</span>'],
+  partner: ['Partner', '<span class="mono">PARTNER&nbsp;PROGRAMME</span><span class="dot-sep">·</span><span>earn 20% for the lifetime of every client</span>'],
   inbox: ['Messages', '<span class="mono">INBOX</span><span class="dot-sep">·</span><span>messages, contacts &amp; invites</span>'],
   spectate: ['Spectate', '<span class="mono">LIVE&nbsp;FEED</span><span class="dot-sep">·</span><span>watching the battle unfold in real time</span>'],
   trader: ['Trader', '<span class="mono">PROFILE</span><span class="dot-sep">·</span><span>verified live track record</span>']
@@ -5167,7 +5195,7 @@ function renderInvite() {
       <button class="btn-neu" data-invclose>Cancel</button>
     </div>`;
   const std = `
-    <div class="inv-row"><div class="b-label mono">YOUR&nbsp;INVITE&nbsp;LINK&nbsp;—&nbsp;30%&nbsp;LIFETIME&nbsp;ON&nbsp;EVERY&nbsp;REFERRAL</div>
+    <div class="inv-row"><div class="b-label mono">YOUR&nbsp;INVITE&nbsp;LINK&nbsp;—&nbsp;20%&nbsp;LIFETIME&nbsp;ON&nbsp;EVERY&nbsp;REFERRAL</div>
       <div class="inv-link"><b>${partner.link}</b><button class="btn-neu" style="padding:8px 15px;font-size:12px;margin-left:auto" data-copyref>Copy</button></div></div>
     <div class="inv-row"><div class="b-label mono">OR&nbsp;PING&nbsp;YOUR&nbsp;CREW&nbsp;DIRECTLY</div>
       <div class="inv-chips">${CONTACTS.map(c => `<button class="pill-btn" data-invping="${c[0]}">${c[0]}</button>`).join('')}</div></div>
@@ -5416,28 +5444,25 @@ function nationWarsHTML() {
       </div>
     </article>`;
   }).join('');
-  const maxWon = Math.max(...NATION_REGIONS.flatMap(r => r.countries.map(c => countryWon(c[0]))));
-  const rows = NATION_REGIONS.map(r => {
-    const sorted = [...r.countries].sort((a, b) => countryWon(b[0]) - countryWon(a[0]));
-    const pill = c => `<div class="cpill">${flagHTML(c[0], true)}
-      <div class="cpill-tx"><div class="cpill-name">${c[1]}</div><div class="cpill-won">£${(countryWon(c[0]) / 1e6).toFixed(1)}M won</div>
-      <div class="cheat"><span style="width:${Math.max(6, countryWon(c[0]) / maxWon * 100).toFixed(0)}%"></span></div></div></div>`;
-    return `<div class="nrow">
-      <span class="nrow-label mono">${r.label}</span>
-      <div class="nrow-body">
-        <div class="cgrid">${sorted.slice(0, 4).map(pill).join('')}</div>
-        <div class="cgrid nrow-more" data-nmore="${r.id}">${sorted.slice(4).map(pill).join('')}</div>
-      </div>
-      <button class="nrow-toggle" data-nreg="${r.id}"><span>Show all</span><b>+</b></button>
-    </div>`;
-  }).join('');
+  const world = NATION_REGIONS.flatMap(r => r.countries).map(([c, n]) => ({ c, n, won: countryWon(c) })).sort((a, b) => b.won - a.won);
+  const maxW = world[0].won;
+  const wRow = (d, i2) => `<div class="fame-row" style="cursor:default">
+    <span class="fame-rank mono">${i2 + 1}</span>
+    ${flagHTML(d.c, true)}
+    <div class="fame-tx"><b>${d.n}</b>
+      <div class="cheat" style="max-width:460px;margin-top:6px"><span style="width:${Math.max(5, d.won / maxW * 100).toFixed(0)}%"></span></div></div>
+    <div class="fame-win"><b>£${(d.won / 1e6).toFixed(1)}M</b><span>won all-time</span></div>
+  </div>`;
+  const rows = world.slice(0, 10).map(wRow).join('')
+    + `<div id="worldMore" style="display:none">${world.slice(10).map((d, k) => wRow(d, k + 10)).join('')}</div>
+    <button class="nrow-toggle" data-worldall style="padding:14px 0 8px;width:100%;justify-content:center"><span>Show all ${world.length} countries</span><b>+</b></button>`;
   return `<div class="section">
     ${FEATURE_NATION_WARS ? `<div class="section-head"><div><h3 class="section-title">Nation Wars</h3>
       <p class="section-sub"><span class="mono">COUNTRY&nbsp;VS&nbsp;COUNTRY</span><span class="dot-sep">·</span><span>full squads battle for one pot — the side with the higher average return takes it all</span></p></div></div>
     <div class="nw-grid">${cards}</div>` : ''}
-    <div class="section-head" ${FEATURE_NATION_WARS ? 'style="margin-top:26px"' : ''}><div><h3 class="section-title">Where the money's being won</h3>
-      <p class="section-sub"><span class="mono">GLOBAL&nbsp;DENSITY</span><span class="dot-sep">·</span><span>total winnings banked by traders in each country, all-time</span></p></div></div>
-    <div class="nat-acc">${rows}</div>
+    <div class="section-head" ${FEATURE_NATION_WARS ? 'style="margin-top:26px"' : ''}><div><h3 class="section-title">Global leaderboard</h3>
+      <p class="section-sub"><span class="mono">WHERE&nbsp;THE&nbsp;MONEY'S&nbsp;BEING&nbsp;WON</span><span class="dot-sep">·</span><span>total winnings banked by traders in every country, ranked all-time</span></p></div></div>
+    <div class="nat-acc" style="padding:8px 26px">${rows}</div>
   </div>`;
 }
 
@@ -5992,67 +6017,182 @@ function renderArena() {
     </div>`;
 }
 
-/* ---------------- Partner ---------------- */
+/* ---------------- Partner — the full portal ---------------- */
 
-const partner = { clicks: 12480, signups: 1392, earnings: 8940, link: 'https://paktos.app/r/jstone' };
+const partner = {
+  link: 'paktos.app/r/jstone', code: 'JSTONE',
+  lifetime: 18510, month: 2050, pending: 2230, paidOut: 16280,
+  players: 412, active: 84, trial: 38, dormant: 120, churned: 29,
+  clicks: 3428, signups: 412, funded: 271,
+  theirWinnings: 52300, revenue: 92100,
+  rank: 7, streak: '18d',
+  months: [260, 340, 320, 420, 480, 610, 690, 760, 880, 1420, 1760, 2050],
+};
+
+const P_CLIENTS = [
+  ['qu****x7', 'UK', '3d ago', 'Active', 142, 1820, 640, 128, '2h'],
+  ['da****19', 'Nigeria', '6d ago', 'Active', 208, 980, 1180, 236, '40m'],
+  ['mi****fx', 'India', '11d ago', 'Trial', 18, 0, 75, 15, '1d'],
+  ['le****08', 'UK', '14d ago', 'Active', 176, 2240, 920, 184, '5h'],
+  ['sa****qz', 'Philippines', '19d ago', 'Active', 301, 4110, 1530, 306, '18m'],
+  ['jo****tt', 'Brazil', '23d ago', 'Churned', 44, 120, 300, 60, '12d'],
+  ['ka****b3', 'Egypt', '28d ago', 'Active', 97, 640, 760, 152, '3h'],
+  ['ro****pl', 'UK', '41d ago', 'Active', 412, 5180, 2140, 428, '1h'],
+  ['em****9k', 'South Africa', '52d ago', 'Active', 124, 1330, 880, 176, '6h'],
+];
+
+const P_SUBS = [['mb****41', 31, 6100, 305], ['cr****22', 18, 3200, 160], ['tk****90', 9, 1450, 73]];
+
+const P_PAYOUTS = [['1 Jul 2026', 'Bank · GBP', 1960, 'Pending'], ['1 Jun 2026', 'Bank · GBP', 1760, 'Paid'], ['1 May 2026', 'Bank · GBP', 1510, 'Paid'], ['1 Apr 2026', 'Bank · GBP', 1320, 'Paid'], ['1 Mar 2026', 'USDC', 1180, 'Paid']];
+
+const P_ACTIVITY = [['New signup from Nigeria', '8m'], ['qu****x7 funded their first account', '2h'], ['ro****pl won £1,114 in the Monthly', '5h'], ['June payout £1,760 paid to your bank', '1d'], ['mb****41 joined as a sub-affiliate', '2d'], ['3 new signups from India', '3d']];
 
 function renderPartner() {
-  const conv = (partner.signups / partner.clicks * 100).toFixed(1);
-  const months = ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
-  const payouts = [['Jul 2026', 2140, 'Pending'], ['Jun 2026', 1890, 'Paid'], ['May 2026', 1655, 'Paid'], ['Apr 2026', 1420, 'Paid']];
+  const funnel = [['Clicks', partner.clicks, 100, ''], ['Signups', partner.signups, partner.signups / partner.clicks * 100, (partner.signups / partner.clicks * 100).toFixed(0) + '%'], ['Funded', partner.funded, partner.funded / partner.clicks * 100, Math.round(partner.funded / partner.signups * 100) + '%'], ['Active', partner.active, partner.active / partner.clicks * 100, Math.round(partner.active / partner.funded * 100) + '%']];
+  const milestone = 25000, toGo = milestone - partner.lifetime;
+  const stTile = (label, val, sub, col) => `<div class="tile"><div class="tile-tx"><div class="tile-label mono">${label}</div>
+    <div class="tile-value"${col ? ` style="color:${col}"` : ''}>${val}</div><div class="pt-sub mono">${sub}</div></div></div>`;
   viewEl('partner').innerHTML = `
-    <div class="tile-row">
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">↗</span>
-        <div class="tile-tx"><div class="tile-label mono">LINK&nbsp;CLICKS</div><div class="tile-value">${partner.clicks.toLocaleString('en-GB')}</div></div></div>
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#34d399,#10b981)">✓</span>
-        <div class="tile-tx"><div class="tile-label mono">SIGNUPS</div><div class="tile-value">${partner.signups.toLocaleString('en-GB')}</div></div></div>
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9a7cff,#7c5cff)">%</span>
-        <div class="tile-tx"><div class="tile-label mono">CONVERSION</div><div class="tile-value">${conv}%</div>
-          <div class="tile-bar"><span style="width:${conv}%"></span></div></div></div>
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#ffc24b,#f59e0b)">£</span>
-        <div class="tile-tx"><div class="tile-label mono">LIFETIME&nbsp;EARNINGS</div><div class="tile-value">${gbp0(partner.earnings)}</div></div></div>
-    </div>
-    <div class="ref-row">
-      <div class="ref-box"><span class="pulse-dot purple"></span><span class="ref-url">${partner.link}</span>
-        <button class="btn-neu" style="padding:11px 22px;font-size:13.5px" data-copyref>Copy link</button></div>
-      <button class="btn-primary" data-copyref><span class="pulse-dot small light"></span>Invite traders</button>
-    </div>
-    <div class="two-col">
-      <div class="panel-card"><div class="panel-title">Monthly earnings</div><canvas class="chart-sm" id="affChart"></canvas></div>
-      <div class="panel-card">
-        <div class="panel-title">Payouts</div>
-        <table class="trades-table">
-          <thead><tr class="mono"><th>PERIOD</th><th style="text-align:right">AMOUNT</th><th style="text-align:right">STATUS</th></tr></thead>
-          <tbody>${payouts.map(p => `<tr><td>${p[0]}</td><td style="text-align:right"><b>${gbp0(p[1])}</b></td>
-            <td style="text-align:right" class="${p[2] === 'Paid' ? 'up' : ''}">${p[2]}</td></tr>`).join('')}</tbody>
-        </table>
-        <div style="margin-top:20px">
-          <div class="tier-row"><span><b style="color:var(--text)">Gold tier</b> · 30% lifetime</span><span>108 signups to Platinum (40%)</span></div>
-          <div class="tier-bar"><span style="width:72%"></span></div>
+    <div class="panel-card pt-hero">
+      <div class="pt-hero-l">
+        <div class="mono pt-eyebrow">PARTNER&nbsp;PROGRAMME</div>
+        <h2 class="pt-title">Earn 20% — for the lifetime of every client</h2>
+        <p class="pt-desc">Share your link. When someone you refer joins Paktos, you earn <b>20% of Paktos' net revenue</b> from them — for as long as they keep competing. One flat rate, no tiers, paid every month.</p>
+        <div class="ref-box" style="margin:16px 0 12px"><span class="pulse-dot purple"></span><span class="ref-url">${partner.link}</span>
+          <button class="btn-primary" style="padding:10px 20px;font-size:13px" data-copyref>Copy link</button></div>
+        <div class="inv-chips">
+          <button class="pill-btn" data-ptx>Share on X</button>
+          <button class="pill-btn" data-ptwa>WhatsApp</button>
+          <button class="pill-btn" data-ptcode>Copy code · ${partner.code}</button>
         </div>
       </div>
-    </div>`;
+      <div class="pt-rate">
+        <b>20%</b>
+        <span>flat lifetime revenue share</span>
+        <span class="mono">PAID&nbsp;MONTHLY&nbsp;·&nbsp;GBP&nbsp;OR&nbsp;USDC</span>
+      </div>
+    </div>
+    <div class="tile-row" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+      ${stTile('LIFETIME&nbsp;EARNINGS', odoHTML('ptLife', gbp0(partner.lifetime)), 'flat 20%', 'var(--green)')}
+      ${stTile('THIS&nbsp;MONTH', odoHTML('ptMonth', gbp0(partner.month)), '+11% vs last')}
+      ${stTile('PENDING&nbsp;PAYOUT', gbp0(partner.pending), 'next: 1 Aug 2026')}
+      ${stTile('ACTIVE&nbsp;PLAYERS', odoHTML('ptActive', String(partner.active)), 'of ' + partner.players + ' signed up')}
+    </div>
+    <div class="tile-row" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+      ${stTile('THEIR&nbsp;WINNINGS', gbp0(partner.theirWinnings), 'won in comps', 'var(--green)')}
+      ${stTile('REVENUE&nbsp;GENERATED', gbp0(partner.revenue), 'net to Paktos')}
+      ${stTile('CONVERSION', (partner.signups / partner.clicks * 100).toFixed(1) + '%', partner.clicks.toLocaleString('en-GB') + ' clicks')}
+      ${stTile('CHURNED', String(partner.churned), 'win them back', '#e5484d')}
+    </div>
+    <div class="two-col">
+      <div class="panel-card"><div class="panel-title">Earnings</div><canvas class="chart-sm" id="affChart" style="height:230px"></canvas></div>
+      <div class="panel-card">
+        <div class="panel-title" style="display:flex;align-items:center">Partner status<span class="past-chip" style="position:static;margin-left:auto">Rank #${partner.rank}</span></div>
+        <div class="pt-status">
+          <div><b>#${partner.rank}</b><span class="mono">OF&nbsp;1,240</span></div>
+          <div><b>${partner.streak}</b><span class="mono">ACTIVE&nbsp;STREAK</span></div>
+          <div><b>${gbp0(partner.lifetime)}</b><span class="mono">EARNED</span></div>
+        </div>
+        <div class="tier-row"><span><b style="color:var(--text)">Next milestone</b> · £25k club</span><span>${gbp0(toGo)} to go</span></div>
+        <div class="tier-bar"><span style="width:${(partner.lifetime / milestone * 100).toFixed(0)}%"></span></div>
+        <div class="inv-chips" style="margin-top:14px">
+          <span class="pill-btn on" style="cursor:default">✓ First £10k</span>
+          <span class="pill-btn on" style="cursor:default">✓ 100 signups</span>
+          <span class="pill-btn on" style="cursor:default">✓ Top 5% partner</span>
+          <span class="pill-btn" style="cursor:default">6-month streak</span>
+        </div>
+      </div>
+    </div>
+    <div class="two-col" style="margin-top:22px">
+      <div class="panel-card">
+        <div class="panel-title">Conversion funnel</div>
+        ${funnel.map(([l, v, w, pc]) => `<div class="pf-row"><span class="pf-l mono">${l.toUpperCase()}</span>
+          <span class="pf-bar"><i style="width:${Math.max(6, w).toFixed(1)}%"><b>${v.toLocaleString('en-GB')}</b></i></span>
+          <span class="pf-pc mono">${pc}</span></div>`).join('')}
+      </div>
+      <div class="panel-card">
+        <div class="panel-title">Player status</div>
+        <div class="pt-pstat">
+          <div style="color:#10b981"><b>${partner.active}</b><span class="mono">ACTIVE</span></div>
+          <div style="color:#f59e0b"><b>${partner.trial}</b><span class="mono">TRIAL</span></div>
+          <div><b>${partner.dormant}</b><span class="mono">DORMANT</span></div>
+          <div style="color:#e5484d"><b>${partner.churned}</b><span class="mono">CHURNED</span></div>
+        </div>
+        <div class="panel-title" style="margin-top:18px">Recent activity <span class="live-tag" style="margin-left:auto"><span class="pulse-dot tiny"></span><span class="mono">LIVE</span></span></div>
+        <div id="ptActivity">${P_ACTIVITY.map(([t, ago]) => `<div class="pa-row"><span class="pulse-dot tiny purple"></span><span>${t}</span><span class="pa-ago mono">${ago}</span></div>`).join('')}</div>
+      </div>
+    </div>
+    <div class="section" style="margin-top:22px">
+      <div class="section-head"><div><h3 class="section-title">Referred clients</h3>
+        <p class="section-sub"><span class="mono">${P_CLIENTS.length}&nbsp;SHOWN</span><span class="dot-sep">·</span><span>every client you brought in, and your 20% on each</span></p></div>
+        <div class="section-head-right"><button class="btn-neu" style="padding:9px 18px;font-size:12.5px" data-ptcsv>Export CSV</button></div></div>
+      <div class="fame-card"><div class="fame-scroll"><table class="trades-table" style="min-width:860px">
+        <thead><tr class="mono"><th>CLIENT</th><th>REGION</th><th>JOINED</th><th>STATUS</th><th style="text-align:right">TRADES</th><th style="text-align:right">THEIR&nbsp;WINNINGS</th><th style="text-align:right">LIFETIME&nbsp;SPEND</th><th style="text-align:right">YOUR&nbsp;20%</th><th style="text-align:right">LAST&nbsp;ACTIVE</th></tr></thead>
+        <tbody>${P_CLIENTS.map(c => `<tr>
+          <td class="mono-num"><b>${c[0]}</b></td><td>${c[1]}</td><td style="color:var(--text-faint)">${c[2]}</td>
+          <td><span class="obadge ${c[3] === 'Active' ? 'target' : c[3] === 'Trial' ? 'manual' : 'stopped'}">${c[3]}</span></td>
+          <td style="text-align:right">${c[4]}</td><td style="text-align:right" class="up"><b>£${c[5].toLocaleString('en-GB')}</b></td>
+          <td style="text-align:right">£${c[6].toLocaleString('en-GB')}</td><td style="text-align:right" style="color:var(--accent-a)"><b>£${c[7].toLocaleString('en-GB')}</b></td>
+          <td style="text-align:right;color:var(--text-faint)">${c[8]}</td></tr>`).join('')}</tbody>
+      </table></div></div>
+    </div>
+    <div class="two-col" style="margin-top:22px">
+      <div class="panel-card">
+        <div class="panel-title">Top players under you</div>
+        <table class="trades-table"><thead><tr class="mono"><th>PLAYER</th><th>REGION</th><th style="text-align:right">WON</th><th style="text-align:right">SPEND</th></tr></thead>
+        <tbody>${P_CLIENTS.filter(c => c[5] > 900).sort((a, b) => b[5] - a[5]).slice(0, 5).map(c => `<tr>
+          <td class="mono-num"><b>${c[0]}</b></td><td>${c[1]}</td>
+          <td style="text-align:right" class="up"><b>£${c[5].toLocaleString('en-GB')}</b></td>
+          <td style="text-align:right">£${c[6].toLocaleString('en-GB')}</td></tr>`).join('')}</tbody></table>
+      </div>
+      <div class="panel-card">
+        <div class="panel-title" style="display:flex">Sub-affiliates<span class="mono" style="margin-left:auto;font-size:9.5px;color:var(--text-faint)">5%&nbsp;OVERRIDE</span></div>
+        <table class="trades-table"><thead><tr class="mono"><th>PARTNER</th><th style="text-align:right">CLIENTS</th><th style="text-align:right">THEY&nbsp;EARNED</th><th style="text-align:right">YOUR&nbsp;5%</th></tr></thead>
+        <tbody>${P_SUBS.map(x => `<tr><td class="mono-num"><b>${x[0]}</b></td><td style="text-align:right">${x[1]}</td>
+          <td style="text-align:right">£${x[2].toLocaleString('en-GB')}</td><td style="text-align:right" class="up"><b>£${x[3].toLocaleString('en-GB')}</b></td></tr>`).join('')}</tbody></table>
+        <button class="btn-neu" style="margin-top:14px;padding:10px 18px;font-size:12.5px" data-ptsub>Invite sub-affiliates</button>
+      </div>
+    </div>
+    <div class="section" style="margin-top:22px">
+      <div class="section-head"><div><h3 class="section-title">Payouts</h3>
+        <p class="section-sub"><span class="mono">MONTHLY&nbsp;·&nbsp;1ST</span><span class="dot-sep">·</span><span>20% flat · Bank GBP (•••• 4471) · £50 minimum</span></p></div>
+        <div class="section-head-right"><button class="btn-invite" style="padding:11px 22px;font-size:13px" data-ptwd>Withdraw ${gbp0(partner.pending)}</button></div></div>
+      <div class="fame-card"><table class="trades-table">
+        <thead><tr class="mono"><th>DATE</th><th>METHOD</th><th style="text-align:right">AMOUNT</th><th style="text-align:right">STATUS</th></tr></thead>
+        <tbody>${P_PAYOUTS.map(p => `<tr><td>${p[0]}</td><td>${p[1]}</td><td style="text-align:right"><b>${gbp0(p[2])}</b></td>
+          <td style="text-align:right"><span class="obadge ${p[3] === 'Paid' ? 'target' : 'manual'}">${p[3]}</span></td></tr>`).join('')}</tbody>
+      </table></div>
+    </div>
+    <p class="pt-fine">Commission is a flat 20% of Paktos' net revenue per referred client, paid monthly while active. Promoting Paktos means following our Partner Terms and financial-promotion rules — figures shown are a demo on a virtual account.</p>`;
   const c = document.getElementById('affChart');
   if (c) {
     const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = c.clientHeight;
     c.width = w * dpr; c.height = h * dpr;
     const ctx = c.getContext('2d'); ctx.scale(dpr, dpr);
-    const vals = [980, 1230, 1420, 1655, 1890, 2140], max = Math.max(...vals);
+    const vals = partner.months, max = Math.max(...vals);
+    const ml = 'JASONDJFMAMJ'.split('');
     const bw = (w - 40) / vals.length;
+    ctx.beginPath();
     vals.forEach((v, i) => {
-      const bh = (v / max) * (h - 46);
-      const x = 20 + i * bw + bw * 0.18, y = h - 26 - bh;
+      const bh = (v / max) * (h - 52);
+      const x = 20 + i * bw + bw * 0.2, y = h - 26 - bh;
       const g = ctx.createLinearGradient(0, y, 0, h - 26);
       g.addColorStop(0, '#d946ef'); g.addColorStop(1, '#7c3aed');
       ctx.fillStyle = g;
       ctx.beginPath();
-      ctx.roundRect(x, y, bw * 0.64, bh, 7);
+      ctx.roundRect(x, y, bw * 0.55, bh, 5);
       ctx.fill();
       ctx.fillStyle = cssVar('--text-faint');
-      ctx.font = '10px ui-monospace, Menlo, monospace';
+      ctx.font = '9px ui-monospace, Menlo, monospace';
       ctx.textAlign = 'center';
-      ctx.fillText(months[i], x + bw * 0.32, h - 8);
+      ctx.fillText(ml[i], x + bw * 0.28, h - 10);
     });
+    ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2; ctx.beginPath();
+    vals.forEach((v, i) => {
+      const x = 20 + i * bw + bw * 0.475, y = h - 28 - (v / max) * (h - 52);
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    });
+    ctx.stroke();
   }
 }
 
@@ -6393,7 +6533,7 @@ document.addEventListener('click', e => {
   if ((el = q('[data-invmarket]'))) { inv.market = el.dataset.invmarket; return renderInvite(); }
   if ((el = q('[data-invping]'))) {
     toast(`Invite sent to ${el.dataset.invping} — they'll get your link`);
-    addNotif('OK', `Invite sent to ${el.dataset.invping}`, 'They can join Paktos with your referral link — 30% lifetime on everything they do.');
+    addNotif('OK', `Invite sent to ${el.dataset.invping}`, 'They can join Paktos with your referral link — 20% lifetime revenue share on everything they do.');
     return;
   }
   if ((el = q('[data-invsend]'))) {
@@ -6516,6 +6656,15 @@ document.addEventListener('click', e => {
     const [a, b, pot] = el.dataset.duel.split('|');
     return openDuel(a, b, +pot || 5000);
   }
+  if ((el = q('[data-worldall]'))) {
+    const m = document.getElementById('worldMore');
+    if (!m) return;
+    const open = m.style.display === 'none';
+    m.style.display = open ? 'block' : 'none';
+    el.querySelector('span').textContent = open ? 'Show less' : 'Show all countries';
+    el.classList.toggle('open', open);
+    return;
+  }
   if ((el = q('[data-nreg]'))) {
     const more = document.querySelector(`[data-nmore="${el.dataset.nreg}"]`);
     if (!more) return;
@@ -6541,6 +6690,29 @@ document.addEventListener('click', e => {
   if ((el = q('[data-watch]'))) {
     const b = BATTLES[0];
     return openDuel(b[0], b[2], b[4], Math.round(parseFloat(b[5]) * 1000));
+  }
+  if ((el = q('[data-ptx]'))) return toast('Opening X with your referral card — 20% on every trader you bring');
+  if ((el = q('[data-ptwa]'))) return toast('WhatsApp share ready — your link is in the message');
+  if ((el = q('[data-ptcode]'))) {
+    try { navigator.clipboard.writeText(partner.code); } catch (e) { }
+    return toast('Code JSTONE copied — works at signup');
+  }
+  if ((el = q('[data-ptsub]'))) {
+    addNotif('PA', 'Sub-affiliate invites sent', 'Anyone who joins as a partner under you earns you a 5% override on their earnings.');
+    return toast('Sub-affiliate invite link copied — 5% override on their earnings');
+  }
+  if ((el = q('[data-ptwd]'))) {
+    addNotif('PA', `Withdrawal requested — ${gbp0(partner.pending)}`, 'Paid to Bank · GBP (•••• 4471) with the 1 Aug payout run.');
+    return toast(`Withdrawal of ${gbp0(partner.pending)} requested — lands with the next payout run`);
+  }
+  if ((el = q('[data-ptcsv]'))) {
+    const csv = 'client,region,joined,status,trades,their_winnings,lifetime_spend,your_20pct,last_active\n'
+      + P_CLIENTS.map(c => c.join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = 'paktos-referred-clients.csv';
+    a.click();
+    return toast('Referred clients exported — CSV downloading');
   }
   /* partner */
   if ((el = q('[data-copyref]'))) {
