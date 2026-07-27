@@ -2502,7 +2502,8 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .nw-foot .btn-neu { padding: 10px 16px; font-size: 12.5px; }
 .nw-watch { margin-left: auto; font-size: 11px; color: var(--text-faint); }
 .flagc { position: relative; width: 30px; height: 30px; border-radius: 50%; overflow: hidden; flex: none; box-shadow: var(--neu-out-sm); background: var(--surface); }
-.flagc .flag-fb { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 9.5px; font-weight: 800; letter-spacing: .04em; color: var(--text-soft); }
+.flagc .flag-fb { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 17px; line-height: 1; }
+.flagc.sm .flag-fb { font-size: 13px; }
 .flagc img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .flagc.sm { width: 22px; height: 22px; }
 
@@ -2588,7 +2589,7 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .inv-sum { font-size: 12px; color: var(--text-faint); background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 13px; padding: 10px 14px; margin-top: 4px; }
 .inv-sum b { color: var(--text); }
 .flagc.xs { width: 17px; height: 17px; }
-.flagc.xs .flag-fb { font-size: 7px; }
+.flagc.xs .flag-fb { font-size: 10px; }
 
 /* avatar polish — every player picture gets depth */
 .thread-av, .stack-avatar, .fame-avatar, .tpc-avatar, .user-avatar-inner { position: relative; overflow: hidden; }
@@ -5108,8 +5109,10 @@ const NATION_REGIONS = [
 
 const countryWon = code => 400000 + (hashName(code + 'won') % 24000000);
 
+const flagEmoji = c => c.toUpperCase().replace(/./g, ch => String.fromCodePoint(127397 + ch.charCodeAt(0)));
+
 function flagHTML(code, sm) {
-  return `<span class="flagc${sm === true ? ' sm' : sm ? ' ' + sm : ''}"><b class="flag-fb">${code.toUpperCase()}</b><img src="https://flagcdn.com/${code}.svg" alt="" loading="lazy" onerror="this.remove()"></span>`;
+  return `<span class="flagc${sm === true ? ' sm' : sm ? ' ' + sm : ''}"><b class="flag-fb">${flagEmoji(code)}</b><img src="https://flagcdn.com/${code}.svg" alt="" loading="lazy" onerror="this.remove()"></span>`;
 }
 
 function nationWarsHTML() {
