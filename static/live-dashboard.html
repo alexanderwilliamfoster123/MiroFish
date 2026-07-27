@@ -2611,6 +2611,11 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .thread-av::after, .stack-avatar::after, .fame-avatar::after, .tpc-avatar::after, .user-avatar-inner::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(120% 90% at 28% 18%, rgba(255, 255, 255, .38), transparent 55%); pointer-events: none; }
 .user-avatar-inner img, .tpc-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
+/* ---------------- Locked nav (coming soon) ---------------- */
+.nav-item.locked { opacity: .45; cursor: not-allowed; }
+.nav-item.locked:hover { transform: none; }
+.soon-chip { display: inline-block; margin-left: 7px; font-size: 8px; letter-spacing: .12em; padding: 2.5px 6px; border-radius: 999px; background: var(--surface); box-shadow: var(--neu-in-sm); color: var(--text-faint); vertical-align: 2px; }
+
 /* ---------------- Account toggle (terminal) ---------------- */
 .acct-toggle { position: relative; display: inline-grid; grid-template-columns: repeat(3, minmax(150px, 1fr)); background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 17px; padding: 5px; margin-bottom: 18px; }
 .acct-toggle .at-thumb { position: absolute; top: 5px; bottom: 5px; left: 5px; width: calc((100% - 10px) / 3); border-radius: 13px; background: var(--card); box-shadow: var(--neu-out-sm); transition: transform .35s cubic-bezier(.16, 1, .3, 1); }
@@ -2806,7 +2811,7 @@ const TROPHY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="__S__" stroke-w
 
 const navItems = [
   { label: 'Arena', view: 'arena', match: ['arena', 'trader', 'spectate'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>' },
-  { label: 'Tournaments', view: 'tournaments', match: ['tournaments', 'leaderboard'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5"/></svg>' },
+  { label: 'Tournaments', view: 'tournaments', locked: true, match: ['tournaments', 'leaderboard'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5"/></svg>' },
   { label: 'Social', view: 'social', match: ['social'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' },
   { label: 'Messages', view: 'inbox', match: ['inbox'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>' },
   { label: 'Ideas', view: 'ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' },
@@ -2862,6 +2867,11 @@ function renderNav() {
   const v = typeof currentView !== 'undefined' ? currentView : 'tournaments';
   document.getElementById('nav').innerHTML = navItems.map(item => {
     const on = (item.match || [item.view]).includes(v);
+    if (item.locked) return `
+    <button class="nav-item locked" data-locknav aria-disabled="true">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <span class="nav-label">${item.label}<span class="soon-chip mono">SOON</span></span>
+    </button>`;
     return `
     <button class="nav-item${on ? ' active' : ''}" data-nav="${item.view}">
       <span class="nav-icon">${item.icon}</span>
@@ -3178,6 +3188,7 @@ function toast(msg) {
 function viewEl(v) { return document.querySelector(`#views > .view[data-view="${v}"]`); }
 
 function navigate(v) {
+  if (v === 'tournaments' || v === 'leaderboard') return toast('Tournaments are coming soon — stay sharp in the Arena');
   currentView = v;
   document.querySelectorAll('#views > .view').forEach(el => el.classList.toggle('on', el.dataset.view === v));
   const t = TITLES[v] || TITLES.arena;
@@ -6005,6 +6016,7 @@ document.addEventListener('click', e => {
   }
   /* counter + enter handled by their own listener */
   if (q('[data-cnt]') || q('[data-enter]')) return;
+  if ((el = q('[data-locknav]'))) return toast('Tournaments are coming soon — stay sharp in the Arena');
   if ((el = q('[data-collapse]'))) return document.body.classList.toggle('side-collapsed');
   if ((el = q('[data-bell]'))) {
     notifOpen = !notifOpen;
