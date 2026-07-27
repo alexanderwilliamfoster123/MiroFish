@@ -2563,6 +2563,38 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .fame-win b i { font-style: normal; color: var(--text-faint); font-weight: 400; padding: 0 2px; }
 .fame-win > span { display: block; font-size: 11px; font-weight: 700; color: var(--green); margin-top: 2px; }
 
+/* ---------------- Modals (edit profile, invite) ---------------- */
+.pk-veil { position: fixed; inset: 0; z-index: 120; display: flex; align-items: center; justify-content: center; background: rgba(120, 128, 148, .28); backdrop-filter: blur(10px); zoom: 1.176; }
+.pk-modal { width: min(560px, 92vw); max-height: 88vh; overflow-y: auto; background: var(--card); border-radius: 26px; box-shadow: 0 30px 80px rgba(15, 18, 28, .28); padding: 24px 26px; }
+.pk-modal-h { font-size: 17px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 4px; }
+.pk-modal-s { font-size: 12px; color: var(--text-faint); margin-bottom: 18px; }
+.ep-cover { position: relative; height: 110px; border-radius: 18px; overflow: hidden; background: linear-gradient(120deg, #ede9fe, #fdf4ff 55%, #e0f2fe); background-size: cover; background-position: center; margin-bottom: 0; }
+.ep-cover button, .ep-avwrap button { position: absolute; bottom: 10px; right: 10px; }
+.ep-avwrap { position: relative; width: 84px; height: 84px; margin: -38px 0 10px 22px; }
+.ep-avatar { width: 84px; height: 84px; border-radius: 50%; border: 4px solid var(--card); background: linear-gradient(135deg, var(--accent-a), var(--accent-b)); color: #fff; font-size: 30px; font-weight: 800; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.ep-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.ep-avwrap button { bottom: -6px; right: -46px; }
+.ep-field { margin-bottom: 14px; }
+.ep-field label { display: block; font-size: 10px; letter-spacing: .12em; color: var(--text-faint); margin-bottom: 6px; }
+.ep-field input, .ep-field textarea { width: 100%; border: 0; font: inherit; font-size: 13.5px; color: var(--text); background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 13px; padding: 11px 14px; outline: none; resize: vertical; }
+.pk-actions { display: flex; gap: 10px; margin-top: 18px; }
+.pk-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.inv-row { margin-bottom: 13px; }
+.inv-row .b-label { font-size: 10px; letter-spacing: .12em; color: var(--text-faint); margin-bottom: 7px; }
+.inv-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.inv-chips .pill-btn { padding: 8px 13px; font-size: 12px; }
+.inv-link { display: flex; align-items: center; gap: 10px; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 14px; padding: 11px 14px; font-size: 12.5px; color: var(--text-soft); margin-bottom: 14px; overflow: hidden; }
+.inv-link b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+.inv-sum { font-size: 12px; color: var(--text-faint); background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 13px; padding: 10px 14px; margin-top: 4px; }
+.inv-sum b { color: var(--text); }
+.flagc.xs { width: 17px; height: 17px; }
+.flagc.xs .flag-fb { font-size: 7px; }
+
+/* avatar polish — every player picture gets depth */
+.thread-av, .stack-avatar, .fame-avatar, .tpc-avatar, .user-avatar-inner { position: relative; overflow: hidden; }
+.thread-av::after, .stack-avatar::after, .fame-avatar::after, .tpc-avatar::after, .user-avatar-inner::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(120% 90% at 28% 18%, rgba(255, 255, 255, .38), transparent 55%); pointer-events: none; }
+.user-avatar-inner img, .tpc-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
 /* ---------------- Spectate ---------------- */
 .spec-hero { padding: 24px 26px; }
 .spec-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
@@ -2640,7 +2672,7 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
   <nav class="nav" id="nav"></nav>
 
   <div class="sidebar-bottom">
-    <div class="user-card" data-nav="performance" style="cursor:pointer" title="View performance">
+    <div class="user-card" data-trader="jstone" style="cursor:pointer" title="Your profile">
       <span class="user-avatar"><span class="user-avatar-inner">J</span></span>
       <div class="user-meta">
         <span class="user-name">jstone</span>
@@ -2807,7 +2839,7 @@ function renderLeaderboard(tickedName) {
     <li class="leaderboard-row${row.you ? ' me' : ''}" data-trader="${row.name}" style="cursor:pointer">
       <span class="row-rank mono">${String(i + 1).padStart(2, '0')}</span>
       <span class="row-avatar">${row.name.charAt(0).toUpperCase()}</span>
-      <span class="row-name">${row.name}${row.you ? ' <span class="row-you">· you</span>' : ''}</span>
+      <span class="row-name">${row.name}${row.you ? ' <span class="row-you">· you</span>' : ''}&nbsp;${flagHTML(traderFlag(row.name), 'xs')}</span>
       <span class="row-value mono-num${row.name === tickedName ? ' ticked' : ''}">£${fmt(row.value)}</span>
     </li>`).join('');
 }
@@ -2843,7 +2875,7 @@ function renderFame(query = '') {
       <span class="fame-rank mono">${row.rank}</span>
       <span class="fame-avatar" style="${row.emoji ? `background:${row.tint}` : ''}">${row.emoji || row.player.charAt(0).toUpperCase()}</span>
       <div class="fame-tx">
-        <b>${row.player}</b>
+        <b>${row.player} ${flagHTML(traderFlag(row.player), 'xs')}</b>
         <span>${row.tournament} · ${row.place} · £${row.pool} pool</span>
       </div>
       <div class="fame-win">
@@ -3130,9 +3162,15 @@ Object.keys(INSTR).forEach(k => {
   a.series = a.series.map(v => v * scale);
 });
 
+const ACCTS = [
+  { id: 'TR-1001', label: 'Monthly comp', bal: 100000, pos: null },
+  { id: 'TR-1002', label: 'Weekly comp', bal: 25000, pos: null },
+  { id: 'PRACTICE', label: 'Practice', bal: 10000, pos: null },
+];
+
 const term = {
   asset: 'BTC', tf: '5m', mode: 'day', risk: 5, rr: 2,
-  bal: 100000, pos: null
+  acct: 0, bal: 100000, pos: null
 };
 
 /* Trade history — every fill stamped with time, source and how it closed */
@@ -3177,7 +3215,7 @@ function tradeRow(t) {
     <td class="mono-num">${fx(t.entry)} → ${fx(t.exit)}</td>
     <td>${t.riskPct}%<span class="tsrc">${gbp0(t.riskAmt)}</span></td>
     <td>1:${t.rr}</td>
-    <td><span class="obadge ${cls}">${label}</span><span class="tsrc">via ${t.src}</span></td>
+    <td><span class="obadge ${cls}">${label}</span><span class="tsrc">via ${t.src} · ${t.acct || 'TR-1001'}</span></td>
     <td style="text-align:right" class="${t.pnl >= 0 ? 'up' : 'down'}"><b>${t.pnl >= 0 ? '+' : '−'}${gbp(t.pnl)}</b></td>
   </tr>`;
 }
@@ -3285,9 +3323,12 @@ function renderTerminal() {
     `<span class="hist-pill ${h.pnl >= 0 ? 'up' : 'down'}">${h.pnl >= 0 ? '+' : '−'}${gbp(h.pnl)}</span>`).join('');
 
   viewEl('terminal').innerHTML = `
+    <div class="chip-row" style="margin-bottom:16px">${ACCTS.map((ac, i) => `
+      <button class="pill-btn${i === term.acct ? ' on' : ''}" data-tacct="${i}">${ac.id}<small>${ac.label} · £${Math.round(i === term.acct ? term.bal : ac.bal).toLocaleString('en-GB')}</small></button>`).join('')}
+    </div>
     <div class="tile-row">
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#34d399,#10b981)">£</span>
-        <div class="tile-tx"><div class="tile-label mono">PRACTICE&nbsp;BALANCE</div><div class="tile-value" id="tileBal">${gbp0(term.bal)}</div></div></div>
+        <div class="tile-tx"><div class="tile-label mono">${ACCTS[term.acct].id}&nbsp;BALANCE</div><div class="tile-value" id="tileBal">${gbp0(term.bal)}</div></div></div>
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#ffc24b,#f59e0b)">★</span>
         <div class="tile-tx"><div class="tile-label mono">BEST&nbsp;RANK</div><div class="tile-value">#13</div></div></div>
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9a7cff,#7c5cff)">S</span>
@@ -3387,6 +3428,7 @@ function closePos(pnl, outcome = 'manual') {
   if (Math.abs(pnl) < 1) { pnl = 0; outcome = 'breakeven'; }
   term.bal += pnl;
   tradeLog.unshift({
+    acct: ACCTS[term.acct].id,
     sym: pos.sym, dir: pos.dir, entry: pos.entry, exit: INSTR[pos.sym].px,
     riskAmt: pos.risk, riskPct: pos.riskPct || term.risk, rr: pos.rr, pnl,
     outcome, src: pos.src || 'terminal',
@@ -4638,25 +4680,34 @@ function renderTrader() {
     traderTab === 'media' ? tpMediaHTML(d) :
     traderTab === 'likes' ? tpLikesHTML(d) :
     tpPostsHTML(d);
+  const own = d.name === 'jstone';
+  const covHue = hashName(d.name + 'cov') % 360;
+  const covDark = document.body.classList.contains('dark');
+  const coverStyle = own && myProfile.cover
+    ? `background-image:url('${myProfile.cover}');background-size:cover;background-position:center`
+    : `background:radial-gradient(75% 160% at 85% 0%, hsla(${(covHue + 45) % 360},72%,${covDark ? 46 : 72}%,.36), transparent 55%),radial-gradient(70% 150% at 12% 25%, hsla(${covHue},66%,${covDark ? 40 : 62}%,.32), transparent 60%),linear-gradient(120deg, hsl(${covHue},${covDark ? 28 : 48}%,${covDark ? 20 : 90}%), hsl(${(covHue + 55) % 360},${covDark ? 30 : 50}%,${covDark ? 23 : 93}%))`;
+  const dispName = own ? myProfile.name : d.name;
+  const dispBio = own ? myProfile.bio : d.bio;
   viewEl('trader').innerHTML = `
     <button class="back-btn" data-nav="${traderBack}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back</button>
     <div class="tp-grid" style="grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);margin-bottom:24px">
       <div class="tpc">
-        <div class="tpc-cover">
+        <div class="tpc-cover" style="${coverStyle}">
           <span class="past-chip" data-tst="Public results page — shareable when live">Public results ↗</span>
         </div>
         <div class="tpc-body">
           <div class="tpc-avrow">
-            <span class="tpc-avatar" style="background:${d.tint}">${d.av}</span>
+            <span class="tpc-avatar" style="background:${d.tint}">${own && myProfile.avatar ? `<img src="${myProfile.avatar}" alt="">` : own ? (myProfile.name[0] || 'J').toUpperCase() : d.av}</span>
             <span class="tpc-actions">
+              ${own ? `<button class="btn-neu" style="padding:8px 16px;font-size:12.5px" data-editprof>Edit profile</button>` : `
               <button class="fr-follow${following.has(d.name) ? ' on' : ''}" data-follow="${d.name}">${following.has(d.name) ? 'Following' : 'Follow'}</button>
-              <button class="btn-neu" style="padding:8px 16px;font-size:12.5px" data-dm="${d.name}">Message</button>
+              <button class="btn-neu" style="padding:8px 16px;font-size:12.5px" data-dm="${d.name}">Message</button>`}
             </span>
           </div>
-          <div class="tpc-name">${d.name}${BADGE}</div>
-          <div class="tpc-handle">@${d.name.toLowerCase().replace(/\s+/g, '')}</div>
-          <div class="tpc-bio">${d.bio}</div>
+          <div class="tpc-name">${dispName}${BADGE} ${flagHTML(traderFlag(d.name), 'xs')}</div>
+          <div class="tpc-handle">@${dispName.toLowerCase().replace(/\s+/g, '')}</div>
+          <div class="tpc-bio">${dispBio}</div>
           <div class="tpc-meta">Joined ${d.joined} · ${d.views} views · Rank #${d.rank}</div>
           <div class="tpc-follows"><span><b>${d.followers}</b> followers</span><span><b>${d.following}</b> following</span></div>
           <div class="tp-level">
@@ -4726,9 +4777,147 @@ function traderPositionsHTML(d) {
     </tr>`).join('')}</tbody></table>`;
 }
 
+/* ---------------- Player countries — flags only where geography lives ---------------- */
+
+const FLAG_OVERRIDES = { Rudy: 'us', 'Sander Schouten': 'es', 'Dion Trades': 'it', jstone: 'gb', Theo4: 'us', swisstony: 'ch', Fredi9999: 'us', GRIMDRIP: 'de', nattyG: 'au', quantqueen: 'sg', '0xmaverick': 'us', mintblade: 'jp', kch123: 'de', RN1: 'ca', fishalive: 'gb', frostrizz: 'se', pip_titan: 'br', vol_king: 'fr', macro_mia: 'it', delta_dan: 'nl', wickwizard: 'gb', fadefather: 'us' };
+const FLAG_POOL = ['us', 'gb', 'de', 'fr', 'es', 'it', 'nl', 'se', 'ch', 'ca', 'br', 'mx', 'ar', 'jp', 'sg', 'au', 'in', 'kr'];
+const traderFlag = n => FLAG_OVERRIDES[n] || FLAG_POOL[hashName(n + 'geo') % FLAG_POOL.length];
+
+/* ---------------- Your profile — editable, stored locally ---------------- */
+
+let myProfile = { name: 'jstone', bio: 'Building the stack one clean R at a time.', avatar: null, cover: null };
+try { Object.assign(myProfile, JSON.parse(localStorage.getItem('pkProfile') || '{}')); } catch (e) { }
+
+function saveProfile() {
+  try { localStorage.setItem('pkProfile', JSON.stringify(myProfile)); } catch (e) { }
+  syncUserCard();
+}
+
+function syncUserCard() {
+  const av = document.querySelector('.user-avatar-inner');
+  const nm = document.querySelector('.user-name');
+  if (av) av.innerHTML = myProfile.avatar ? `<img src="${myProfile.avatar}" alt="">` : (myProfile.name[0] || 'J').toUpperCase();
+  if (nm) nm.textContent = myProfile.name;
+}
+
+function pickImage(maxW, cb) {
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = 'image/*';
+  inp.onchange = () => {
+    const f = inp.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const k = Math.min(1, maxW / img.width);
+        const cv = document.createElement('canvas');
+        cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+        cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+        cb(cv.toDataURL('image/jpeg', 0.82));
+      };
+      img.src = r.result;
+    };
+    r.readAsDataURL(f);
+  };
+  inp.click();
+}
+
+let epDraft = null;
+
+function openEditProfile() {
+  epDraft = { ...myProfile };
+  const veil = document.createElement('div');
+  veil.className = 'pk-veil'; veil.id = 'epVeil';
+  document.body.appendChild(veil);
+  renderEditProfile();
+}
+
+function renderEditProfile() {
+  const veil = document.getElementById('epVeil');
+  if (!veil) return;
+  veil.innerHTML = `<div class="pk-modal">
+    <div class="pk-modal-h">Edit profile</div>
+    <div class="pk-modal-s">Your picture, cover and bio — shown everywhere you compete.</div>
+    <div class="ep-cover" ${epDraft.cover ? `style="background-image:url('${epDraft.cover}')"` : ''}>
+      <button class="btn-neu" style="padding:7px 13px;font-size:11.5px" data-epcover>Change cover</button>
+    </div>
+    <div class="ep-avwrap">
+      <span class="ep-avatar">${epDraft.avatar ? `<img src="${epDraft.avatar}" alt="">` : (epDraft.name[0] || 'J').toUpperCase()}</span>
+      <button class="btn-neu" style="padding:7px 13px;font-size:11.5px" data-epavatar>Change photo</button>
+    </div>
+    <div class="ep-field"><label class="mono">DISPLAY&nbsp;NAME</label><input id="epName" maxlength="24" value="${epDraft.name.replace(/"/g, '&quot;')}"></div>
+    <div class="ep-field"><label class="mono">BIO</label><textarea id="epBio" rows="3" maxlength="160">${epDraft.bio}</textarea></div>
+    <div class="pk-actions">
+      <button class="btn-primary" style="flex:1;justify-content:center" data-epsave>Save profile</button>
+      <button class="btn-neu" data-epcancel>Cancel</button>
+    </div>
+  </div>`;
+}
+
+function closeEditProfile() { document.getElementById('epVeil')?.remove(); }
+
+/* ---------------- Invite friends — bring them in, or call them out ---------------- */
+
+const INV_STAKES = [100, 250, 500, 1000, 2500];
+const INV_ODDS = [1, 2, 3, 5];
+const INV_STARTS = ['Now', 'Tonight 20:00', 'Tomorrow 09:00', 'Sat 18:00'];
+const INV_MARKETS = ['Any market', 'Crypto', 'FX majors', 'NAS100', 'Gold'];
+let inv = { mode: 'duel', to: 'Theo4', stake: 500, odds: 1, start: 'Now', market: 'Any market' };
+
+function openInvite(mode) {
+  if (mode) inv.mode = mode;
+  if (!document.getElementById('invVeil')) {
+    const veil = document.createElement('div');
+    veil.className = 'pk-veil'; veil.id = 'invVeil';
+    document.body.appendChild(veil);
+  }
+  renderInvite();
+}
+
+function renderInvite() {
+  const veil = document.getElementById('invVeil');
+  if (!veil) return;
+  const chips = (arr, cur, attr, fmt) => arr.map(v =>
+    `<button class="pill-btn${v === cur ? ' on' : ''}" data-${attr}="${v}">${fmt ? fmt(v) : v}</button>`).join('');
+  const duel = `
+    <div class="inv-row"><div class="b-label mono">WHO&nbsp;ARE&nbsp;YOU&nbsp;CALLING&nbsp;OUT</div>
+      <div class="inv-chips">${CONTACTS.map(c => `<button class="pill-btn${c[0] === inv.to ? ' on' : ''}" data-invto="${c[0]}">${c[0]}</button>`).join('')}</div></div>
+    <div class="inv-row"><div class="b-label mono">MONEY&nbsp;—&nbsp;YOUR&nbsp;STAKE</div>
+      <div class="inv-chips">${chips(INV_STAKES, inv.stake, 'invstake', v => '£' + v.toLocaleString('en-GB'))}</div></div>
+    <div class="inv-row"><div class="b-label mono">ODDS&nbsp;—&nbsp;WHAT&nbsp;THEY&nbsp;PUT&nbsp;UP</div>
+      <div class="inv-chips">${chips(INV_ODDS, inv.odds, 'invodds', v => v + ':1')}</div></div>
+    <div class="inv-row"><div class="b-label mono">TIME&nbsp;—&nbsp;KICK-OFF</div>
+      <div class="inv-chips">${chips(INV_STARTS, inv.start, 'invstart')}</div></div>
+    <div class="inv-row"><div class="b-label mono">PLACE&nbsp;—&nbsp;THE&nbsp;MARKET</div>
+      <div class="inv-chips">${chips(INV_MARKETS, inv.market, 'invmarket')}</div></div>
+    <div class="inv-sum">You put up <b>£${inv.stake.toLocaleString('en-GB')}</b> · ${inv.to} puts up <b>£${(inv.stake * inv.odds).toLocaleString('en-GB')}</b> · pot <b>£${(inv.stake * (1 + inv.odds)).toLocaleString('en-GB')}</b> · ${inv.market} · kick-off <b>${inv.start}</b></div>
+    <div class="pk-actions">
+      <button class="btn-primary" style="flex:1;justify-content:center" data-invsend>Send duel invite</button>
+      <button class="btn-neu" data-invclose>Cancel</button>
+    </div>`;
+  const std = `
+    <div class="inv-row"><div class="b-label mono">YOUR&nbsp;INVITE&nbsp;LINK&nbsp;—&nbsp;30%&nbsp;LIFETIME&nbsp;ON&nbsp;EVERY&nbsp;REFERRAL</div>
+      <div class="inv-link"><b>${partner.link}</b><button class="btn-neu" style="padding:8px 15px;font-size:12px;margin-left:auto" data-copyref>Copy</button></div></div>
+    <div class="inv-row"><div class="b-label mono">OR&nbsp;PING&nbsp;YOUR&nbsp;CREW&nbsp;DIRECTLY</div>
+      <div class="inv-chips">${CONTACTS.map(c => `<button class="pill-btn" data-invping="${c[0]}">${c[0]}</button>`).join('')}</div></div>
+    <div class="pk-actions">
+      <button class="btn-neu" data-invclose style="margin-left:auto">Done</button>
+    </div>`;
+  veil.innerHTML = `<div class="pk-modal">
+    <div class="pk-modal-h">Invite friends to compete</div>
+    <div class="pk-modal-s">Bring them onto Paktos — or call them straight into a duel with the terms set.</div>
+    <div class="pk-tabs">
+      <button class="pill-btn${inv.mode === 'std' ? ' on' : ''}" data-invtab="std">Invite to Paktos</button>
+      <button class="pill-btn${inv.mode === 'duel' ? ' on' : ''}" data-invtab="duel">Challenge to a duel</button>
+    </div>
+    ${inv.mode === 'duel' ? duel : std}
+  </div>`;
+}
+
+function closeInvite() { document.getElementById('invVeil')?.remove(); }
+
 function openTrader(name) {
   const clean = name.replace('· you', '').replace(/[\u{1F1E6}-\u{1F1FF}]/gu, '').trim();
-  if (clean === 'jstone') return navigate('performance');
   traderId = clean;
   traderBack = currentView;
   traderTab = 'activity';
@@ -4758,7 +4947,7 @@ function renderLbPage() {
     return `<tr class="${r.you ? 'lb-me' : ''}" data-trader="${r.name}" style="cursor:pointer">
       <td class="col-rank mono rank-num">${String(rank).padStart(2, '0')}</td>
       <td><span class="fame-player"><span class="fame-avatar">${r.name.charAt(0).toUpperCase()}</span>
-        <span class="fame-name">${r.name.replace('· you', '<span class="row-you">· you</span>')}</span></span></td>
+        <span class="fame-name">${r.name.replace('· you', '<span class="row-you">· you</span>')} ${flagHTML(traderFlag(r.name.replace(' · you', '')), 'xs')}</span></span></td>
       <td class="col-pool">£25</td>
       <td style="text-align:right"><b class="mono-num">£${r.value.toLocaleString('en-GB')}</b></td>
     </tr>`;
@@ -4920,7 +5109,7 @@ const NATION_REGIONS = [
 const countryWon = code => 400000 + (hashName(code + 'won') % 24000000);
 
 function flagHTML(code, sm) {
-  return `<span class="flagc${sm ? ' sm' : ''}"><b class="flag-fb">${code.toUpperCase()}</b><img src="https://flagcdn.com/${code}.svg" alt="" loading="lazy" onerror="this.remove()"></span>`;
+  return `<span class="flagc${sm === true ? ' sm' : sm ? ' ' + sm : ''}"><b class="flag-fb">${code.toUpperCase()}</b><img src="https://flagcdn.com/${code}.svg" alt="" loading="lazy" onerror="this.remove()"></span>`;
 }
 
 function nationWarsHTML() {
@@ -5124,6 +5313,7 @@ function specSideCard(side) {
 
 function renderSpectate() {
   if (!spec) return navigate('arena');
+syncUserCard();
   const lead = Math.max(6, Math.min(94, 50 + (spec.ra - spec.rb) * 9));
   const leader = spec.ra >= spec.rb ? spec.a.name : spec.b.name;
   viewEl('spectate').innerHTML = `
@@ -5174,7 +5364,7 @@ function tournamentsSectionHTML() {
             <button class="cnt-btn" data-cnt="1" aria-label="More entries">+</button>
           </div>
           <button class="btn-primary" data-enter><span class="pulse-dot small light"></span><span id="enterLabel">Enter Now · £${(entryCount * 25).toLocaleString('en-GB')}</span></button>
-          <button class="btn-invite" data-nav="social">Invite friends to compete →</button>
+          <button class="btn-invite" data-invopen="std">Invite friends to compete →</button>
         </div>
         <div class="hero-social">
           <div class="avatar-stack">
@@ -5286,7 +5476,7 @@ function renderArena() {
           </div>
           <div class="hero-actions">
             <button class="btn-primary" data-abopen><span class="pulse-dot small light"></span>Start a battle</button>
-            <button class="btn-neu" data-nav="social">Challenge a friend</button>
+            <button class="btn-neu" data-invopen="duel">Challenge a friend</button>
           </div>
           <div class="hero-social">
             <div class="avatar-stack">
@@ -5676,6 +5866,51 @@ document.addEventListener('click', e => {
     challenges.splice(+el.dataset.abcancel, 1);
     toast('Challenge cancelled — stake released from escrow');
     return renderArena();
+  }
+  if ((el = q('[data-tacct]'))) {
+    ACCTS[term.acct].bal = term.bal;
+    ACCTS[term.acct].pos = term.pos;
+    term.acct = +el.dataset.tacct;
+    term.bal = ACCTS[term.acct].bal;
+    term.pos = ACCTS[term.acct].pos;
+    renderTerminal();
+    return toast(`Switched to ${ACCTS[term.acct].id} — ${ACCTS[term.acct].label}`);
+  }
+  if ((el = q('[data-editprof]'))) return openEditProfile();
+  if ((el = q('[data-epcover]'))) return pickImage(1280, url => { epDraft.cover = url; renderEditProfile(); });
+  if ((el = q('[data-epavatar]'))) return pickImage(280, url => { epDraft.avatar = url; renderEditProfile(); });
+  if ((el = q('[data-epsave]'))) {
+    epDraft.name = (document.getElementById('epName')?.value || 'jstone').trim() || 'jstone';
+    epDraft.bio = document.getElementById('epBio')?.value || '';
+    myProfile = epDraft;
+    saveProfile();
+    closeEditProfile();
+    if (currentView === 'trader') renderTrader();
+    return toast('Profile saved — looking sharp');
+  }
+  if ((el = q('[data-epcancel]'))) return closeEditProfile();
+  if ((el = q('[data-invopen]'))) return openInvite(el.dataset.invopen);
+  if ((el = q('[data-invtab]'))) { inv.mode = el.dataset.invtab; return renderInvite(); }
+  if ((el = q('[data-invto]'))) { inv.to = el.dataset.invto; return renderInvite(); }
+  if ((el = q('[data-invstake]'))) { inv.stake = +el.dataset.invstake; return renderInvite(); }
+  if ((el = q('[data-invodds]'))) { inv.odds = +el.dataset.invodds; return renderInvite(); }
+  if ((el = q('[data-invstart]'))) { inv.start = el.dataset.invstart; return renderInvite(); }
+  if ((el = q('[data-invmarket]'))) { inv.market = el.dataset.invmarket; return renderInvite(); }
+  if ((el = q('[data-invping]'))) {
+    toast(`Invite sent to ${el.dataset.invping} — they'll get your link`);
+    addNotif('OK', `Invite sent to ${el.dataset.invping}`, 'They can join Paktos with your referral link — 30% lifetime on everything they do.');
+    return;
+  }
+  if ((el = q('[data-invsend]'))) {
+    challenges.unshift({
+      name: 'jstone', av: 'J', market: inv.market, start: inv.start,
+      stake: inv.stake, odds: inv.odds, pot: inv.stake * (1 + inv.odds), mine: true
+    });
+    closeInvite();
+    toast(`Duel invite sent to ${inv.to} — £${(inv.stake * (1 + inv.odds)).toLocaleString('en-GB')} pot at ${inv.odds}:1, kick-off ${inv.start}`);
+    addNotif('VS', `Duel invite sent to ${inv.to}`, `£${inv.stake.toLocaleString('en-GB')} vs £${(inv.stake * inv.odds).toLocaleString('en-GB')} · ${inv.market} · kick-off ${inv.start}. You'll be notified when they accept.`);
+    if (currentView === 'arena') renderArena();
+    return;
   }
   if ((el = q('[data-njoin]'))) {
     const w = NATION_WARS[+el.dataset.njoin];
