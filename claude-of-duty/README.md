@@ -9,24 +9,26 @@ sound effect, and animation is **generated procedurally at runtime**. Three.js
 
 ![gameplay](https://img.shields.io/badge/engine-three.js%20r180-black) ![no assets](https://img.shields.io/badge/art%20assets-0-brightgreen)
 
-## Play it
+## Play it — the easy way (no install, no server)
 
-ES modules can't be loaded from `file://`, so serve the folder over http:
+Open **[`claude-of-duty.html`](./claude-of-duty.html)** — it's the entire game
+bundled into a single self-contained file (Three.js embedded and all). Just
+**download it and double-click it** to open in your browser. No internet, no
+Node, no server needed.
+
+> Rebuild it after changing the source with: `node build-single-file.mjs`
+
+Click **DEPLOY**, then click the game area to lock your mouse (`Esc` releases it).
+
+## Play it — from source (developers)
+
+The `src/` files use ES modules, which browsers refuse to load from `file://`,
+so serve the folder over http:
 
 ```bash
-# from the repo root
-npx serve claude-of-duty
-# then open the printed URL (e.g. http://localhost:3000)
+npx serve claude-of-duty            # then open the printed URL
+# or:  cd claude-of-duty && python3 -m http.server 8000
 ```
-
-or with Python:
-
-```bash
-cd claude-of-duty && python3 -m http.server 8000
-# open http://localhost:8000
-```
-
-Click **DEPLOY**, then click the canvas to lock the mouse.
 
 ## Controls
 
