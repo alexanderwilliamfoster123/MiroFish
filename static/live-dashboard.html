@@ -2625,6 +2625,23 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .acct-toggle button.on { color: var(--text); }
 .acct-toggle button.on b { color: var(--accent-a); }
 
+/* ---------------- Spectate ringside ---------------- */
+.spec-cheer { display: flex; gap: 12px; margin-top: 16px; }
+.cheer-btn { flex: 1; border: 0; cursor: pointer; border-radius: 14px; padding: 13px; font: inherit; font-size: 13px; font-weight: 700; background: var(--card); box-shadow: var(--neu-out-sm); color: var(--text); display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: transform .15s ease; }
+.cheer-btn:active { transform: scale(.97); }
+.cheer-btn.a { color: #10b981; }
+.cheer-btn.b { color: #a855f7; }
+.sf-list { display: flex; flex-direction: column; gap: 7px; }
+.sf-row { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+.sf-sym { flex: 1; color: var(--text-soft); }
+.sf-amt { font-weight: 800; font-variant-numeric: tabular-nums; }
+.sc-list { display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; margin-bottom: 14px; }
+.sc-row { display: flex; align-items: flex-start; gap: 9px; }
+.sc-tx { font-size: 12.5px; color: var(--text-soft); line-height: 1.45; padding-top: 3px; }
+.sc-tx b { color: var(--text); margin-right: 4px; }
+.sc-input { display: flex; gap: 10px; }
+.sc-input input { flex: 1; border: 0; font: inherit; font-size: 13px; color: var(--text); background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 13px; padding: 11px 15px; outline: none; }
+
 /* ---------------- Battle the machines ---------------- */
 .mach-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
 .mach-card { background: var(--card); border-radius: 24px; box-shadow: var(--neu-out); padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
@@ -3132,6 +3149,34 @@ function tickLiveNumbers() {
     if (ld) ld.style.width = Math.max(6, Math.min(94, 50 + (spec.ra - spec.rb) * 9)).toFixed(0) + '%';
     const lt = document.getElementById('specLeadTxt');
     if (lt) lt.textContent = (spec.ra >= spec.rb ? spec.a.name : spec.b.name) + ' LEADS';
+    /* ringside keeps moving — chat, tape, cheers, xp */
+    if (spec.x) {
+      const x = spec.x;
+      x.cheersA += Math.floor(Math.random() * 22); x.cheersB += Math.floor(Math.random() * 22);
+      x.xpA += Math.floor(Math.random() * 60); x.xpB += Math.floor(Math.random() * 60);
+      setOdo('specChA', x.cheersA.toLocaleString('en-GB'));
+      setOdo('specChB', x.cheersB.toLocaleString('en-GB'));
+      setOdo('specXpa', x.xpA.toLocaleString('en-GB'));
+      setOdo('specXpb', x.xpB.toLocaleString('en-GB'));
+      setOdo('specWatch2', spec.watching.toLocaleString('en-GB'));
+      if (Math.random() < 0.45) {
+        const who = Object.keys(TRADER_AV)[Math.floor(Math.random() * 20)];
+        const c = [who, SPEC_HYPE[Math.floor(Math.random() * SPEC_HYPE.length)]];
+        x.comments.unshift(c);
+        if (x.comments.length > 40) x.comments.pop();
+        const list = document.getElementById('specComments');
+        if (list) { list.insertAdjacentHTML('afterbegin', specCommentRow(c)); while (list.children.length > 40) list.lastChild.remove(); }
+      }
+      if (Math.random() < 0.35) {
+        const sideA = Math.random() < 0.5;
+        const t = specTrade(sideA ? spec.ra >= spec.rb : spec.rb > spec.ra);
+        (sideA ? x.feedA : x.feedB).unshift(t);
+        if (sideA) { x.trA++; t.win ? x.stA++ : x.stA = 0; } else { x.trB++; t.win ? x.stB++ : x.stB = 0; }
+        setOdo(sideA ? 'specTra' : 'specTrb', String(sideA ? x.trA : x.trB));
+        const fl = document.getElementById(sideA ? 'specFeeda' : 'specFeedb');
+        if (fl) { fl.insertAdjacentHTML('afterbegin', specFillRow(t)); while (fl.children.length > 6) fl.lastChild.remove(); }
+      }
+    }
   }
   /* arena hero counters — always climbing */
   battlesLiveN += Math.floor(Math.random() * 6);
@@ -5684,6 +5729,15 @@ function specSideCard(side) {
     <table class="trades-table spec-squad"><thead><tr class="mono"><th>TOP&nbsp;MOVERS</th><th style="text-align:right">RETURN</th></tr></thead>
       <tbody>${squad.map(m => `<tr data-trader="${m.name}" style="cursor:pointer"><td><b>${m.name}</b></td>
         <td style="text-align:right" class="${m.ret >= 0 ? 'up' : 'down'}"><b>${fmtRet(m.ret)}</b></td></tr>`).join('')}</tbody></table>`}
+    <div class="spec-mini mono" style="margin-bottom:12px">
+      <span>STREAK&nbsp;W${side === 'a' ? spec.x.stA : spec.x.stB}</span>
+      <span>TRADES&nbsp;${odoHTML('specTr' + side, String(side === 'a' ? spec.x.trA : spec.x.trB))}</span>
+      <span>XP&nbsp;${odoHTML('specXp' + side, (side === 'a' ? spec.x.xpA : spec.x.xpB).toLocaleString('en-GB'))}</span>
+    </div>
+    <div class="spec-load" style="border-top:0;padding-top:0;margin-bottom:13px">
+      <div class="spec-load-t mono">LIVE&nbsp;TAPE · CLOSED&nbsp;TRADES</div>
+      <div class="sf-list" id="specFeed${side}">${(side === 'a' ? spec.x.feedA : spec.x.feedB).map(specFillRow).join('')}</div>
+    </div>
     <div class="spec-load">
       <div class="spec-load-t mono">LOADOUT · WHERE&nbsp;THE&nbsp;RISK&nbsp;SITS</div>
       ${load.map(([k, v]) => `<div class="spec-load-row"><span class="asset-ic" style="background:${INSTR[k].tint};width:20px;height:20px;border-radius:7px;font-size:9px">${INSTR[k].ic}</span>
@@ -5694,8 +5748,46 @@ function specSideCard(side) {
   </div>`;
 }
 
+const SPEC_HYPE = ['let him cook', 'green not giving up', 'what a battle', 'this is closer than the chart says', 'stop hunting incoming, watch', 'size down champ', 'that fill was criminal', 'refresh, REFRESH', 'pot is life-changing money', 'called this last week', 'both playing it safe rn', 'someone send it already', 'volatility about to pick a winner', 'imagine fumbling this lead', 'textbook risk management honestly'];
+
+function specTrade(lead) {
+  const syms = Object.keys(INSTR);
+  const sym = syms[Math.floor(Math.random() * syms.length)];
+  const win = Math.random() < (lead ? 0.62 : 0.45);
+  const amt = Math.round((20 + Math.random() * 480) * (win ? 1 : -0.6));
+  return { sym, dir: Math.random() < 0.5 ? 'Long' : 'Short', win, amt, ago: 'now' };
+}
+
+function initSpecExtras() {
+  if (spec.x) return;
+  const seedC = [];
+  for (let i = 0; i < 6; i++) {
+    const who = Object.keys(TRADER_AV)[Math.floor(Math.random() * 12)];
+    seedC.push([who, SPEC_HYPE[Math.floor(Math.random() * SPEC_HYPE.length)]]);
+  }
+  spec.x = {
+    cheersA: 800 + Math.floor(Math.random() * 4000), cheersB: 800 + Math.floor(Math.random() * 4000),
+    xpA: 12400 + Math.floor(Math.random() * 9000), xpB: 12400 + Math.floor(Math.random() * 9000),
+    trA: 14 + Math.floor(Math.random() * 30), trB: 14 + Math.floor(Math.random() * 30),
+    stA: 1 + Math.floor(Math.random() * 5), stB: 1 + Math.floor(Math.random() * 5),
+    comments: seedC,
+    feedA: Array.from({ length: 4 }, () => specTrade(true)),
+    feedB: Array.from({ length: 4 }, () => specTrade(false)),
+  };
+}
+
+const specFillRow = t => `<div class="sf-row">
+  <span class="obadge ${t.win ? 'target' : 'stopped'}">${t.win ? 'Win' : 'Loss'}</span>
+  <span class="sf-sym"><b>${t.sym}</b> · ${t.dir}</span>
+  <span class="sf-amt ${t.amt >= 0 ? 'up' : 'down'}">${t.amt >= 0 ? '+' : '−'}£${Math.abs(t.amt).toLocaleString('en-GB')}</span>
+</div>`;
+
+const specCommentRow = ([who, tx]) => `<div class="sc-row">${avatarHTML(who, 'thread-av', `data-trader="${who}"`, 'width:26px;height:26px;cursor:pointer')}
+  <span class="sc-tx"><b data-trader="${who}" style="cursor:pointer">${who}</b> ${tx}</span></div>`;
+
 function renderSpectate() {
   if (!spec) return navigate('arena');
+  initSpecExtras();
 syncUserCard();
   const lead = Math.max(6, Math.min(94, 50 + (spec.ra - spec.rb) * 9));
   const leader = spec.ra >= spec.rb ? spec.a.name : spec.b.name;
@@ -5721,7 +5813,19 @@ syncUserCard();
         <span style="margin-left:auto">EQUITY&nbsp;·&nbsp;%&nbsp;RETURN&nbsp;SINCE&nbsp;KICK-OFF</span>
       </div>
     </div>
-    <div class="two-col" style="margin-top:22px">${specSideCard('a')}${specSideCard('b')}</div>`;
+    <div class="spec-cheer">
+      <button class="cheer-btn a" data-cheer="a">▲ Cheer ${spec.a.name} · ${odoHTML('specChA', spec.x.cheersA.toLocaleString('en-GB'))}</button>
+      <button class="cheer-btn b" data-cheer="b">▲ Cheer ${spec.b.name} · ${odoHTML('specChB', spec.x.cheersB.toLocaleString('en-GB'))}</button>
+    </div>
+    <div class="two-col" style="margin-top:22px">${specSideCard('a')}${specSideCard('b')}</div>
+    <div class="panel-card" style="margin-top:22px">
+      <div class="spec-load-t mono" style="margin-bottom:12px">RINGSIDE&nbsp;·&nbsp;${odoHTML('specWatch2', spec.watching.toLocaleString('en-GB'))}&nbsp;WATCHING&nbsp;LIVE</div>
+      <div class="sc-list" id="specComments">${spec.x.comments.map(specCommentRow).join('')}</div>
+      <div class="sc-input">
+        <input id="specSay" placeholder="Say something ringside…" maxlength="120">
+        <button class="btn-primary" style="padding:11px 22px;font-size:13px" data-sayspec>Send</button>
+      </div>
+    </div>`;
 }
 
 /* Tournaments live inside the Arena — one competitive home */
@@ -6371,6 +6475,22 @@ document.addEventListener('click', e => {
     addNotif('CL', `Clan war: ${mine.id} vs ${opp.id}`, `£${pot.toLocaleString('en-GB')} pot · 24h window · squad average return takes it. Rally the crew.`);
     return renderArena();
   }
+  if ((el = q('[data-cheer]'))) {
+    if (!spec || !spec.x) return;
+    const a = el.dataset.cheer === 'a';
+    if (a) spec.x.cheersA += 25; else spec.x.cheersB += 25;
+    setOdo(a ? 'specChA' : 'specChB', (a ? spec.x.cheersA : spec.x.cheersB).toLocaleString('en-GB'));
+    return;
+  }
+  if ((el = q('[data-sayspec]'))) {
+    const inp = document.getElementById('specSay');
+    if (!inp || !inp.value.trim() || !spec?.x) return;
+    const c = [myProfile.name, inp.value.trim()];
+    spec.x.comments.unshift(c);
+    inp.value = '';
+    document.getElementById('specComments')?.insertAdjacentHTML('afterbegin', specCommentRow(c));
+    return;
+  }
   if ((el = q('[data-cwspec]'))) return openClanWar(+el.dataset.cwspec);
   if ((el = q('[data-njoin]'))) {
     const w = NATION_WARS[+el.dataset.njoin];
@@ -6435,6 +6555,10 @@ document.addEventListener('click', e => {
   if ((el = q('[data-trrange]'))) { traderRange = el.dataset.trrange; return renderTrader(); }
   /* trader rows — fall-through so buttons inside rows keep priority */
   if ((el = q('[data-trader]'))) return openTrader(el.dataset.trader);
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.id === 'specSay') document.querySelector('[data-sayspec]')?.click();
 });
 
 document.addEventListener('input', e => {
