@@ -1459,22 +1459,54 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 
 /* Social feed (X-style) */
 
-.feed-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) 300px; gap: 20px; align-items: start; }
-.feed-col { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
-
-.composer { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 18px; display: flex; gap: 13px; }
-.composer-body { flex: 1; min-width: 0; }
-.composer textarea {
-  width: 100%; min-height: 64px; resize: none; border: none;
-  padding: 13px 16px; border-radius: 14px;
-  background: var(--surface); color: var(--text);
-  font-family: inherit; font-size: 14px; line-height: 1.5;
-  box-shadow: var(--neu-in-sm);
+.xfeed {
+  max-width: 680px; margin: 0 auto;
+  background: var(--card); border-radius: 22px;
+  box-shadow: var(--neu-out-sm); overflow: hidden;
 }
-.composer textarea:focus { outline: none; }
-.composer textarea::placeholder { color: var(--text-faint); }
-.composer-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 11px; }
-.composer-hint { font-size: 11px; color: var(--text-faint); }
+.xtabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); }
+.xtab {
+  position: relative; border: none; background: none; cursor: pointer;
+  padding: 16px 0 14px; font-family: inherit;
+  font-size: 14px; font-weight: 600; color: var(--text-faint);
+  transition: color 0.2s ease;
+}
+.xtab:hover { background: var(--surface); }
+.xtab.on { color: var(--text); }
+.xtab.on::after {
+  content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 58px; height: 4px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
+}
+
+.xcomposer { display: flex; gap: 12px; padding: 16px 18px 12px; border-bottom: 1px solid var(--line); }
+.xcomposer-body { flex: 1; min-width: 0; }
+.xcomposer textarea {
+  width: 100%; min-height: 46px; resize: none; border: none;
+  background: transparent; color: var(--text);
+  font-family: inherit; font-size: 17px; line-height: 1.45; padding: 9px 0 4px;
+}
+.xcomposer textarea:focus { outline: none; }
+.xcomposer textarea::placeholder { color: var(--text-faint); }
+.xcomposer-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+.xicons { display: flex; gap: 2px; margin-left: -8px; }
+.xicon {
+  width: 34px; height: 34px; border: none; background: none; border-radius: 10px;
+  color: var(--accent-a); display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.2s ease;
+}
+.xicon svg { width: 17px; height: 17px; }
+.xicon:hover { background: var(--surface); }
+
+.xshow {
+  display: block; width: 100%; border: none; background: none;
+  padding: 14px; cursor: pointer; font-family: inherit;
+  font-size: 13.5px; font-weight: 600; color: var(--accent-a);
+  border-bottom: 1px solid var(--line); transition: background 0.2s ease;
+}
+.xshow:hover { background: var(--surface); }
+
+.xempty { padding: 44px 30px; text-align: center; color: var(--text-faint); font-size: 13.5px; line-height: 1.6; }
 .post-btn {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 10px 24px; border: none; border-radius: 12px;
@@ -1487,12 +1519,23 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .post-btn:hover { transform: translateY(-1px); }
 .post-btn:active { transform: translateY(1px); }
 
-.post { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 18px; display: flex; gap: 13px; animation: viewfade 0.35s ease; }
+.post { display: flex; gap: 12px; padding: 16px 18px 12px; border-bottom: 1px solid var(--line); animation: viewfade 0.35s ease; }
+.post:last-child { border-bottom: none; }
 .post-body { flex: 1; min-width: 0; }
-.post-head { display: flex; align-items: baseline; gap: 7px; flex-wrap: wrap; }
-.post-name { font-size: 14px; font-weight: 700; }
-.post-handle { font-size: 12px; color: var(--text-faint); }
-.post-time { font-size: 12px; color: var(--text-faint); margin-left: auto; font-variant-numeric: tabular-nums; }
+.post-head { display: flex; align-items: center; gap: 5px; min-width: 0; }
+.post-name { font-size: 14px; font-weight: 700; white-space: nowrap; }
+.post-badge { width: 15px; height: 15px; color: #2f6bff; flex: 0 0 auto; }
+.post-handle { font-size: 12.5px; color: var(--text-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.post-time { font-size: 12.5px; color: var(--text-faint); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.post-time::before { content: '· '; }
+.post-menu {
+  margin-left: auto; border: none; background: none; cursor: pointer;
+  width: 28px; height: 28px; border-radius: 9px; color: var(--text-faint);
+  font-size: 15px; font-weight: 700; letter-spacing: 1px;
+  display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
+  transition: background 0.2s ease;
+}
+.post-menu:hover { background: var(--surface); color: var(--text); }
 .post-text { font-size: 14px; line-height: 1.55; margin: 6px 0 10px; overflow-wrap: break-word; }
 .post-tag {
   display: inline-flex; align-items: center; gap: 7px;
@@ -1503,7 +1546,11 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
   font-variant-numeric: tabular-nums;
 }
 .post-tag .asset-ic { width: 18px; height: 18px; border-radius: 6px; font-size: 8.5px; }
-.post-actions { display: flex; gap: 8px; margin-left: -8px; }
+.post-actions { display: flex; align-items: center; margin-left: -10px; }
+.post-actions .grow { display: flex; flex: 1; justify-content: space-between; max-width: 420px; }
+.post-actions .side { display: flex; gap: 2px; margin-left: auto; }
+.pact.bm.on { color: #2f6bff; }
+.pact.bm.on svg { fill: currentColor; }
 .pact {
   display: inline-flex; align-items: center; gap: 7px;
   border: none; background: none; cursor: pointer;
@@ -1518,29 +1565,6 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .pact.like:hover, .pact.like.on { color: #db2777; }
 .pact.views { margin-left: auto; cursor: default; }
 .pact.views:hover { background: none; color: var(--text-faint); }
-
-.rail { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 20px; }
-.rail-card { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 18px 20px; }
-.rail-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
-.trend-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
-.trend-row:last-child { border-bottom: none; padding-bottom: 2px; }
-.trend-sym { font-size: 12.5px; font-weight: 700; flex: 1; }
-.trend-sym small { display: block; font-weight: 500; font-size: 10.5px; color: var(--text-faint); }
-.trend-px { font-size: 12px; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
-.trend-px small { display: block; font-size: 10.5px; }
-.follow-row { display: flex; align-items: center; gap: 11px; padding: 9px 0; border-bottom: 1px solid var(--line); }
-.follow-row:last-child { border-bottom: none; padding-bottom: 2px; }
-.follow-row .thread-av { width: 34px; height: 34px; font-size: 16px; }
-.follow-tx { flex: 1; min-width: 0; }
-.follow-name { display: block; font-size: 12.5px; font-weight: 700; }
-.follow-sub { display: block; font-size: 10.5px; color: var(--text-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.follow-btn { padding: 7px 14px; font-size: 11.5px; }
-.follow-btn.on { color: var(--green); }
-
-@media (max-width: 1180px) {
-  .feed-grid { grid-template-columns: 1fr; }
-  .rail { position: static; }
-}
 
 /* Responsive for new pages */
 
@@ -2420,62 +2444,81 @@ const POSTS = [
     replies: 88, reposts: 61, likes: 1300, views: '52K', liked: false, reposted: false }
 ];
 
-const following = new Set(['Theo4']);
+const following = new Set(['Theo4', 'swisstony', 'GRIMDRIP']);
 const kfmt = n => n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K' : String(n);
 
-function postCard(p, i) {
+const VERIFIED = new Set(['Theo4', 'swisstony', 'GRIMDRIP', 'Fredi9999', 'quantqueen', 'jstone']);
+const BADGE = '<svg class="post-badge" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5l2.6 2 3.2-.4 1.2 3 3 1.2-.4 3.2 2 2.6-2 2.6.4 3.2-3 1.2-1.2 3-3.2-.4-2.6 2-2.6-2-3.2.4-1.2-3-3-1.2.4-3.2-2-2.6 2-2.6-.4-3.2 3-1.2 1.2-3 3.2.4L12 1.5z"/><path d="M8.5 12.2l2.4 2.4 4.6-4.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+let feedTab = 'foryou', postId = 0, pendingPosts = [];
+POSTS.forEach(p => { p.id = postId++; p.bm = false; });
+
+function postCard(p) {
   const tag = p.tag ? `<div><span class="post-tag"><span class="asset-ic" style="background:${INSTR[p.tag].tint}">${INSTR[p.tag].ic}</span>${p.tag}&nbsp;·&nbsp;<span data-ptag="${p.tag}">${fmtPx(p.tag)}</span></span></div>` : '';
   return `
   <article class="post">
     <span class="thread-av" style="background:${p.tint}">${p.av}</span>
     <div class="post-body">
-      <div class="post-head"><span class="post-name">${p.name}</span><span class="post-handle">${p.handle}</span><span class="post-time">${p.time}</span></div>
+      <div class="post-head">
+        <span class="post-name">${p.name}</span>${VERIFIED.has(p.name) ? BADGE : ''}
+        <span class="post-handle">${p.handle}</span><span class="post-time">${p.time}</span>
+        <button class="post-menu" data-pmenu aria-label="More">···</button>
+      </div>
       <p class="post-text">${p.text}</p>
       ${tag}
       <div class="post-actions">
-        <button class="pact reply" data-preply="${i}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>${kfmt(p.replies)}</button>
-        <button class="pact rt${p.reposted ? ' on' : ''}" data-prt="${i}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4M21 6H8a4 4 0 0 0-4 4v1M7 22l-4-4 4-4M3 18h13a4 4 0 0 0 4-4v-1"/></svg>${kfmt(p.reposts)}</button>
-        <button class="pact like${p.liked ? ' on' : ''}" data-plike="${i}">
-          <svg viewBox="0 0 24 24" fill="${p.liked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-9.8-9.2C.7 8.6 2.7 5 6.2 5c2.2 0 3.6 1.2 4.3 2.4L12 9l1.5-1.6C14.2 6.2 15.6 5 17.8 5c3.5 0 5.5 3.6 4 6.8C19.5 16.4 12 21 12 21z"/></svg>${kfmt(p.likes)}</button>
-        <span class="pact views">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>${p.views}</span>
+        <span class="grow">
+          <button class="pact reply" data-preply="${p.id}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>${p.replies ? kfmt(p.replies) : ''}</button>
+          <button class="pact rt${p.reposted ? ' on' : ''}" data-prt="${p.id}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4M21 6H8a4 4 0 0 0-4 4v1M7 22l-4-4 4-4M3 18h13a4 4 0 0 0 4-4v-1"/></svg>${p.reposts ? kfmt(p.reposts) : ''}</button>
+          <button class="pact like${p.liked ? ' on' : ''}" data-plike="${p.id}">
+            <svg viewBox="0 0 24 24" fill="${p.liked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-9.8-9.2C.7 8.6 2.7 5 6.2 5c2.2 0 3.6 1.2 4.3 2.4L12 9l1.5-1.6C14.2 6.2 15.6 5 17.8 5c3.5 0 5.5 3.6 4 6.8C19.5 16.4 12 21 12 21z"/></svg>${p.likes ? kfmt(p.likes) : ''}</button>
+          <span class="pact views">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>${p.views}</span>
+        </span>
+        <span class="side">
+          <button class="pact bm${p.bm ? ' on' : ''}" data-pbm="${p.id}" aria-label="Bookmark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-6-4.5L6 21V3z"/></svg></button>
+          <button class="pact" data-pshare aria-label="Share">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg></button>
+        </span>
       </div>
     </div>
   </article>`;
 }
 
 function renderFeed() {
-  const trends = Object.keys(INSTR).slice(0, 5).map(k => {
-    const a = INSTR[k], chg = (a.px - a.open) / a.open * 100;
-    return `<div class="trend-row">
-      <span class="asset-ic" style="background:${a.tint};width:26px;height:26px;border-radius:8px;font-size:10px">${a.ic}</span>
-      <span class="trend-sym">${k}<small>${a.name}</small></span>
-      <span class="trend-px">${fmtPx(k)}<small class="${chg >= 0 ? 'up' : 'down'}">${chg >= 0 ? '+' : ''}${chg.toFixed(2)}%</small></span>
-    </div>`;
-  }).join('');
-  const follows = CONTACTS.slice(0, 5).map(([n, e], i) => `
-    <div class="follow-row"><span class="thread-av" style="background:${AV_TINTS[i % 6]}">${e}</span>
-      <span class="follow-tx"><span class="follow-name">${n}</span><span class="follow-sub">@${n}</span></span>
-      <button class="pill-btn follow-btn${following.has(n) ? ' on' : ''}" data-follow="${n}">${following.has(n) ? 'Following' : 'Follow'}</button>
-    </div>`).join('');
-  return `<div class="feed-grid">
-    <div class="feed-col">
-      <div class="composer">
-        <span class="thread-av" style="background:linear-gradient(135deg,var(--accent-b),var(--accent-a));color:#fff;font-size:15px;font-weight:700">J</span>
-        <div class="composer-body">
-          <textarea id="composeIn" placeholder="What’s happening in the markets?"></textarea>
-          <div class="composer-foot"><span class="composer-hint">Posting as <b>@jstone</b> · visible to everyone</span>
-            <button class="post-btn" data-postbtn><span class="pulse-dot small light"></span>Post</button></div>
+  const list = feedTab === 'following'
+    ? POSTS.filter(p => following.has(p.name) || p.name === 'jstone')
+    : POSTS;
+  const icons = [
+    ['Media', '<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/>'],
+    ['GIF', '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M8.5 10.5H7a1.5 1.5 0 0 0 0 3h1.5v-1.6M12 9.8v4.4M15 14.2V9.8h3M15 12h2.4"/>'],
+    ['Poll', '<path d="M5 20V9M12 20V4M19 20v-7"/>'],
+    ['Emoji', '<circle cx="12" cy="12" r="8.5"/><circle cx="9" cy="10" r="0.5" fill="currentColor"/><circle cx="15" cy="10" r="0.5" fill="currentColor"/><path d="M8.5 14a4.5 4.5 0 0 0 7 0"/>'],
+    ['Schedule', '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 3v4M16 3v4"/>'],
+    ['Location', '<path d="M12 21s-6-5.1-6-10a6 6 0 1 1 12 0c0 4.9-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/>']
+  ].map(([l, path]) =>
+    `<button class="xicon" data-xicon="${l}" aria-label="${l}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${path}</svg></button>`).join('');
+  return `<div class="xfeed">
+    <div class="xtabs">
+      <button class="xtab${feedTab === 'foryou' ? ' on' : ''}" data-ftab="foryou">For you</button>
+      <button class="xtab${feedTab === 'following' ? ' on' : ''}" data-ftab="following">Following</button>
+    </div>
+    <div class="xcomposer">
+      <span class="thread-av" style="background:linear-gradient(135deg,var(--accent-b),var(--accent-a));color:#fff;font-size:15px;font-weight:700">J</span>
+      <div class="xcomposer-body">
+        <textarea id="composeIn" placeholder="What’s happening?"></textarea>
+        <div class="xcomposer-foot">
+          <span class="xicons">${icons}</span>
+          <button class="post-btn" data-postbtn>Post</button>
         </div>
       </div>
-      <div class="feed-col" id="feedList">${POSTS.map(postCard).join('')}</div>
     </div>
-    <div class="rail">
-      <div class="rail-card"><div class="rail-title">Trending markets</div>${trends}</div>
-      <div class="rail-card"><div class="rail-title">Who to follow</div>${follows}</div>
-    </div>
+    ${pendingPosts.length ? `<button class="xshow" data-showposts>Show ${pendingPosts.length} post${pendingPosts.length > 1 ? 's' : ''}</button>` : ''}
+    <div id="feedList">${list.length ? list.map(postCard).join('') :
+      `<div class="xempty">Nothing here yet — you follow ${following.size} traders and none have posted.<br>Switch to <b>For you</b> to see the whole tape.</div>`}</div>
   </div>`;
 }
 
@@ -2530,6 +2573,28 @@ function renderSocial() {
   const sc = document.getElementById('chatScroll');
   if (sc) sc.scrollTop = sc.scrollHeight;
 }
+
+const STREAM_POOL = [
+  { name: 'delta_dan', handle: '@delta_dan', av: '📐', tint: AV_TINTS[5], tag: 'ETH', text: 'ETH exchange balances just printed another 5-year low. Supply squeeze thesis intact.' },
+  { name: 'wickwizard', handle: '@wickwizard', av: '🧙', tint: AV_TINTS[3], tag: 'NAS100', text: 'That 15m wick says everything. Someone big just got stopped out — I’m taking the other side.' },
+  { name: 'gilt_guy', handle: '@gilt_guy', av: '🎩', tint: AV_TINTS[1], tag: 'GBPJPY', text: 'Front end repricing after the wage print. GBPJPY carry math just changed.' },
+  { name: 'trendtina', handle: '@trendtina', av: '🌊', tint: AV_TINTS[4], tag: null, text: 'Weekly Open pool just crossed £62K. 2,500 in. The board is wide open this week.' }
+];
+
+setInterval(() => {
+  if (!feedLive) return;
+  const src = STREAM_POOL[Math.floor(Math.random() * STREAM_POOL.length)];
+  pendingPosts.push({ ...src, id: postId++, time: 'now', replies: 0, reposts: Math.floor(Math.random() * 20), likes: Math.floor(Math.random() * 90), views: kfmt(200 + Math.floor(Math.random() * 4000)), liked: false, reposted: false, bm: false });
+  if (currentView === 'social' && socialTab === 'feed' && feedTab === 'foryou') {
+    const btn = document.querySelector('.xshow');
+    const label = `Show ${pendingPosts.length} post${pendingPosts.length > 1 ? 's' : ''}`;
+    if (btn) btn.textContent = label;
+    else {
+      const comp = document.querySelector('.xcomposer');
+      if (comp) comp.insertAdjacentHTML('afterend', `<button class="xshow" data-showposts>${label}</button>`);
+    }
+  }
+}, 14000);
 
 function sendDM() {
   const inp = document.getElementById('dmInput');
@@ -2893,35 +2958,46 @@ document.addEventListener('click', e => {
   if ((el = q('[data-ihz]'))) { ideaHz = el.dataset.ihz; return renderIdeas(); }
   if ((el = q('[data-itrade]'))) { term.asset = el.dataset.itrade; navigate('terminal'); return toast(`${el.dataset.itrade} loaded in the terminal`); }
   /* social feed */
+  if ((el = q('[data-ftab]'))) { feedTab = el.dataset.ftab; return renderSocial(); }
+  if ((el = q('[data-showposts]'))) {
+    POSTS.unshift(...pendingPosts);
+    pendingPosts = [];
+    return renderSocial();
+  }
   if ((el = q('[data-postbtn]'))) {
     const inp = document.getElementById('composeIn');
     if (!inp || !inp.value.trim()) return toast('Write something first');
-    POSTS.unshift({ name: 'jstone', handle: '@jstone', av: 'J', tint: 'linear-gradient(135deg,var(--accent-b),var(--accent-a))', time: 'now', tag: null, text: inp.value.trim(), replies: 0, reposts: 0, likes: 0, views: '1', liked: false, reposted: false });
+    POSTS.unshift({ id: postId++, name: 'jstone', handle: '@jstone', av: 'J', tint: 'linear-gradient(135deg,var(--accent-b),var(--accent-a))', time: 'now', tag: null, text: inp.value.trim(), replies: 0, reposts: 0, likes: 0, views: '1', liked: false, reposted: false, bm: false });
     renderSocial();
     return toast('Posted to your followers');
   }
   if ((el = q('[data-plike]'))) {
-    const p = POSTS[+el.dataset.plike];
-    p.liked = !p.liked; p.likes += p.liked ? 1 : -1;
-    return renderSocial();
+    const p = POSTS.find(x => x.id === +el.dataset.plike);
+    if (p) { p.liked = !p.liked; p.likes += p.liked ? 1 : -1; renderSocial(); }
+    return;
   }
   if ((el = q('[data-prt]'))) {
-    const p = POSTS[+el.dataset.prt];
-    p.reposted = !p.reposted; p.reposts += p.reposted ? 1 : -1;
-    toast(p.reposted ? 'Reposted to your followers' : 'Repost removed');
-    return renderSocial();
+    const p = POSTS.find(x => x.id === +el.dataset.prt);
+    if (p) {
+      p.reposted = !p.reposted; p.reposts += p.reposted ? 1 : -1;
+      toast(p.reposted ? 'Reposted to your followers' : 'Repost removed');
+      renderSocial();
+    }
+    return;
   }
+  if ((el = q('[data-pbm]'))) {
+    const p = POSTS.find(x => x.id === +el.dataset.pbm);
+    if (p) { p.bm = !p.bm; toast(p.bm ? 'Added to your Bookmarks' : 'Removed from Bookmarks'); renderSocial(); }
+    return;
+  }
+  if ((el = q('[data-pshare]'))) return toast('Post link copied');
+  if ((el = q('[data-pmenu]'))) return toast('Post options are a demo');
+  if ((el = q('[data-xicon]'))) return toast(`${el.dataset.xicon} attachments are a demo`);
   if ((el = q('[data-preply]'))) {
-    const p = POSTS[+el.dataset.preply];
-    const i = threads.findIndex(t => t.name === p.name);
+    const p = POSTS.find(x => x.id === +el.dataset.preply);
+    const i = p ? threads.findIndex(t => t.name === p.name) : -1;
     if (i >= 0) { socialTab = 'messages'; activeThread = i; threads[i].unread = false; return renderSocial(); }
     return toast('Replies open a DM — this trader has DMs closed');
-  }
-  if ((el = q('[data-follow]'))) {
-    const n = el.dataset.follow;
-    following.has(n) ? following.delete(n) : following.add(n);
-    toast(following.has(n) ? `Following ${n}` : `Unfollowed ${n}`);
-    return renderSocial();
   }
   /* social */
   if ((el = q('[data-stab]'))) { socialTab = el.dataset.stab; return renderSocial(); }
