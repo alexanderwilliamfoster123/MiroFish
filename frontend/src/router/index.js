@@ -5,12 +5,18 @@ import SimulationView from '../views/SimulationView.vue'
 import SimulationRunView from '../views/SimulationRunView.vue'
 import ReportView from '../views/ReportView.vue'
 import InteractionView from '../views/InteractionView.vue'
+import AdReactionView from '../views/AdReactionView.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/ad-reaction',
+    name: 'AdReaction',
+    component: AdReactionView
   },
   {
     path: '/process/:projectId',
