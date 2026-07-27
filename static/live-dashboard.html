@@ -1086,6 +1086,390 @@ button { font-family: inherit; }
 @media (max-width: 560px) {
   .tournament-grid { grid-template-columns: 1fr; }
 }
+
+/* ==================================================================
+   Multi-page app additions
+   ================================================================== */
+
+.view { display: none; }
+.view.on { display: block; animation: viewfade 0.35s ease; }
+@keyframes viewfade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translate(-50%, 20px);
+  background: linear-gradient(160deg, #24262c, #0c0d10);
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s ease;
+  z-index: 100;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px 9px 14px;
+  border: none;
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--neu-out-sm);
+  color: var(--text-soft);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 22px;
+  transition: all 0.25s ease;
+}
+.back-btn svg { width: 15px; height: 15px; }
+.back-btn:hover { color: var(--text); }
+.back-btn:active { box-shadow: var(--neu-in-sm); }
+
+/* Stat tiles (terminal / performance / partner) */
+
+.tile-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 26px;
+}
+.tile {
+  background: var(--card);
+  border-radius: 18px;
+  box-shadow: var(--neu-out-sm);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.tile-ic {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 17px;
+  flex: 0 0 auto;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.14);
+}
+.tile-tx { min-width: 0; }
+.tile-label { font-size: 10.5px; color: var(--text-faint); margin-bottom: 4px; }
+.tile-value { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tile-bar { margin-top: 7px; height: 6px; border-radius: 3px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; width: 110px; }
+.tile-bar span { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent-a), var(--accent-b)); }
+
+/* Pills & segments */
+
+.pill-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 11px;
+  background: var(--surface);
+  box-shadow: var(--neu-out-sm);
+  color: var(--text-faint);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  white-space: nowrap;
+}
+.pill-btn:hover { color: var(--text); }
+.pill-btn.on { box-shadow: var(--neu-in-sm); color: var(--accent-a); }
+.pill-btn small { display: block; font-size: 10px; color: var(--text-faint); font-weight: 500; margin-top: 2px; }
+
+.chip-row { display: flex; gap: 9px; flex-wrap: wrap; margin-bottom: 18px; }
+
+/* Terminal */
+
+.asset-row { display: flex; gap: 11px; flex-wrap: wrap; margin-bottom: 18px; }
+.asset-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px 8px 9px;
+  border: none;
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: var(--neu-out-sm);
+  cursor: pointer;
+  transition: all 0.22s ease;
+  color: var(--text);
+}
+.asset-chip.on { box-shadow: var(--neu-in-sm); background: var(--surface); }
+.asset-ic {
+  width: 30px; height: 30px; border-radius: 10px; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+}
+.asset-tx { text-align: left; }
+.asset-sym { font-size: 12.5px; font-weight: 700; display: block; }
+.asset-px { font-size: 10.5px; color: var(--text-faint); font-variant-numeric: tabular-nums; }
+
+.term-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.85fr);
+  gap: 22px;
+  margin-bottom: 26px;
+  align-items: start;
+}
+
+.chart-card { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 22px; }
+.chart-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.chart-sym { font-weight: 700; font-size: 17px; }
+.chart-sym span { color: var(--text-faint); font-weight: 500; font-size: 13px; margin-left: 6px; }
+.chart-px { font-size: 25px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; text-align: right; }
+.chart-chg { font-size: 12.5px; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+.tf-row { display: flex; gap: 8px; margin: 16px 0 12px; flex-wrap: wrap; }
+canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; }
+
+.up { color: var(--green); }
+.down { color: #e5484d; }
+
+.ticket { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+.t-label { font-size: 10.5px; color: var(--text-faint); display: flex; justify-content: space-between; align-items: baseline; }
+.t-label b { color: var(--text-soft); font-variant-numeric: tabular-nums; letter-spacing: 0; }
+.seg-grid { display: grid; gap: 8px; }
+.seg-grid.c3 { grid-template-columns: repeat(3, 1fr); }
+.seg-grid.c4 { grid-template-columns: repeat(4, 1fr); }
+.rr-wrap input[type="range"] { width: 100%; accent-color: var(--accent-a); margin-top: 8px; }
+.rr-plain { font-size: 12.5px; color: var(--text-soft); margin-top: 6px; }
+.rr-plain b { color: var(--text); }
+.dir-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.dir-btn {
+  padding: 15px 10px; border: none; border-radius: 15px;
+  font-weight: 700; font-size: 15px; cursor: pointer; color: #fff;
+  letter-spacing: -0.01em; transition: transform 0.2s ease;
+}
+.dir-btn:hover { transform: translateY(-1px); }
+.dir-btn:active { transform: translateY(1px); }
+.dir-btn small { display: block; font-weight: 500; font-size: 10.5px; opacity: 0.85; margin-top: 2px; }
+.dir-btn.buy { background: linear-gradient(160deg, #34d399, #059669); box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); }
+.dir-btn.sell { background: linear-gradient(160deg, #f87171, #dc2626); box-shadow: 0 10px 20px rgba(220, 38, 38, 0.26); }
+
+.pos-card { background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 16px; padding: 16px 18px; }
+.pos-head { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; font-weight: 700; margin-bottom: 8px; }
+.pos-pnl { font-size: 27px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.pos-sub { font-size: 11.5px; color: var(--text-faint); margin-top: 3px; font-variant-numeric: tabular-nums; }
+.pos-act { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+
+.hist-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.hist-pill {
+  padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
+  box-shadow: var(--neu-out-sm); background: var(--card); font-variant-numeric: tabular-nums;
+}
+.hist-label { font-size: 10.5px; color: var(--text-faint); margin-right: 4px; }
+
+/* Ideas */
+
+.wire {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 18px; border-radius: 14px;
+  background: var(--card); box-shadow: var(--neu-out-sm);
+  margin-bottom: 18px; font-size: 12.5px; color: var(--text-soft);
+}
+.wire .mono { font-size: 10.5px; color: var(--text-faint); margin-left: auto; }
+
+.idea-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.idea-card {
+  background: var(--card); border-radius: 18px; box-shadow: var(--neu-out-sm);
+  padding: 18px; display: flex; flex-direction: column; gap: 12px;
+  animation: viewfade 0.4s ease;
+}
+.idea-top { display: flex; align-items: center; gap: 9px; }
+.idea-cat {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent-a); background: rgba(124, 58, 237, 0.09);
+  padding: 4px 9px; border-radius: 999px;
+}
+.idea-age { font-size: 11px; color: var(--text-faint); margin-left: auto; font-variant-numeric: tabular-nums; }
+.idea-head { font-size: 14.5px; font-weight: 600; line-height: 1.45; flex: 1; }
+.idea-meta { display: flex; align-items: center; gap: 9px; font-size: 11.5px; color: var(--text-faint); }
+.idea-meta .asset-ic { width: 24px; height: 24px; border-radius: 8px; font-size: 10px; }
+.conf-wrap { flex: 1; }
+.conf-bar { height: 5px; border-radius: 3px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; }
+.conf-bar span { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent-a), var(--accent-b)); }
+.idea-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.idea-actions .dir-btn { padding: 10px; font-size: 13px; border-radius: 12px; }
+
+/* Social / inbox */
+
+.split { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 20px; align-items: start; }
+.thread-list { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 10px; }
+.thread {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  padding: 12px; border: none; border-radius: 14px; background: transparent;
+  cursor: pointer; text-align: left; color: var(--text); transition: all 0.2s ease;
+}
+.thread:hover { background: var(--surface); }
+.thread.on { background: var(--surface); box-shadow: var(--neu-in-sm); }
+.thread-av {
+  width: 40px; height: 40px; border-radius: 50%; flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center; font-size: 19px;
+}
+.thread-tx { display: block; min-width: 0; flex: 1; }
+.thread-name { display: block; font-size: 13.5px; font-weight: 700; }
+.thread-last { display: block; font-size: 12px; color: var(--text-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.thread-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-b); flex: 0 0 auto; }
+
+.chat-panel { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 20px; display: flex; flex-direction: column; height: 560px; }
+.chat-scroll { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 4px 4px 14px; }
+.bubble {
+  max-width: 72%; padding: 10px 15px; border-radius: 16px;
+  font-size: 13.5px; line-height: 1.5; animation: viewfade 0.3s ease;
+}
+.bubble.me { align-self: flex-end; background: linear-gradient(160deg, #24262c, #0c0d10); color: #fff; border-bottom-right-radius: 5px; }
+.bubble.them { align-self: flex-start; background: var(--surface); box-shadow: var(--neu-in-sm); border-bottom-left-radius: 5px; }
+.chat-inrow { display: flex; gap: 10px; margin-top: 12px; }
+.chat-inrow .neu-input { flex: 1; width: auto; }
+
+.contact-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.contact-card {
+  background: var(--card); border-radius: 18px; box-shadow: var(--neu-out-sm);
+  padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 9px; text-align: center;
+}
+.contact-av { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 25px; }
+.contact-name { font-size: 14px; font-weight: 700; }
+.contact-sub { font-size: 11px; color: var(--text-faint); }
+
+.invite-card {
+  background: var(--card); border-radius: 18px; box-shadow: var(--neu-out-sm);
+  padding: 18px 20px; display: flex; align-items: center; gap: 14px; margin-bottom: 14px;
+}
+.invite-tx { flex: 1; min-width: 0; }
+.invite-t { font-size: 14px; font-weight: 600; }
+.invite-s { font-size: 12px; color: var(--text-faint); margin-top: 3px; }
+.invite-act { display: flex; gap: 9px; }
+
+/* Assistant */
+
+.asst { max-width: 780px; margin: 0 auto; padding-top: 26px; }
+.asst-h {
+  font-size: clamp(30px, 3.4vw, 42px); font-weight: 600; letter-spacing: -0.03em;
+  text-align: center; margin-bottom: 26px;
+}
+.asst-h span {
+  background: linear-gradient(92deg, var(--accent-a) 10%, var(--accent-b) 90%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.asst-box { position: relative; margin-bottom: 16px; }
+.asst-box textarea {
+  width: 100%; min-height: 92px; resize: none; border: none;
+  padding: 18px 60px 18px 20px; border-radius: 18px;
+  background: var(--surface); color: var(--text);
+  font-family: inherit; font-size: 14.5px; line-height: 1.5;
+  box-shadow: var(--neu-in-sm);
+}
+.asst-box textarea:focus { outline: none; }
+.asst-box textarea::placeholder { color: var(--text-faint); }
+.asst-send {
+  position: absolute; right: 14px; bottom: 14px;
+  width: 38px; height: 38px; border: none; border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
+  color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 16px rgba(124, 58, 237, 0.35);
+}
+.asst-send svg { width: 17px; height: 17px; }
+.asst-chips { display: flex; gap: 9px; flex-wrap: wrap; justify-content: center; margin-bottom: 34px; }
+.asst-chat { display: flex; flex-direction: column; gap: 10px; margin-bottom: 26px; }
+.prod-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.prod-card {
+  background: var(--card); border-radius: 18px; box-shadow: var(--neu-out-sm);
+  padding: 18px; text-align: left; border: none; cursor: pointer;
+  color: var(--text); transition: all 0.25s ease;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.prod-card:hover { transform: translateY(-2px); box-shadow: var(--neu-out); }
+.prod-t { font-size: 14px; font-weight: 700; }
+.prod-s { font-size: 11.5px; color: var(--text-faint); line-height: 1.5; }
+
+/* Performance */
+
+.stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+.sg-cell { background: var(--card); border-radius: 14px; box-shadow: var(--neu-out-sm); padding: 14px 16px; }
+.sg-l { font-size: 10.5px; color: var(--text-faint); margin-bottom: 5px; }
+.sg-v { font-size: 15.5px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+
+.perf-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+.perf-name { font-size: 19px; font-weight: 700; }
+.perf-hash { font-size: 10.5px; color: var(--text-faint); }
+
+.trades-table { width: 100%; border-collapse: collapse; }
+.trades-table th { text-align: left; padding: 13px 12px 11px; font-size: 10.5px; color: var(--text-faint); font-weight: 500; border-bottom: 1px solid var(--line); }
+.trades-table td { padding: 12px; font-size: 13.5px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.trades-table tr:last-child td { border-bottom: none; }
+
+/* Leaderboard page */
+
+.lb-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+.lb-table-card { background: var(--card); border-radius: 22px; box-shadow: var(--neu-out-sm); padding: 8px 26px; margin-bottom: 18px; }
+.lb-foot { display: flex; align-items: center; justify-content: space-between; }
+.lb-page { font-size: 12px; color: var(--text-faint); }
+tr.lb-me td { background: var(--surface); }
+tr.lb-me td:first-child { border-radius: 12px 0 0 12px; }
+tr.lb-me td:last-child { border-radius: 0 12px 12px 0; }
+
+/* Arena */
+
+.vs-pair { display: flex; }
+.vs-pair .thread-av { width: 30px; height: 30px; font-size: 14px; border: 2.5px solid var(--surface-raised); }
+.vs-pair .thread-av + .thread-av { margin-left: -8px; }
+.watching { font-size: 10.5px; color: var(--text-faint); display: block; margin-top: 2px; }
+
+.challenge-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.challenge-card {
+  background: var(--card); border-radius: 18px; box-shadow: var(--neu-out-sm);
+  padding: 18px; display: flex; flex-direction: column; gap: 12px;
+}
+.challenge-head { display: flex; align-items: center; gap: 11px; }
+.challenge-name { font-size: 14px; font-weight: 700; }
+.challenge-sub { font-size: 11px; color: var(--text-faint); margin-top: 2px; }
+.challenge-terms { display: flex; gap: 10px; }
+.term-cell { flex: 1; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 12px; padding: 10px 12px; }
+.term-cell .k { font-size: 9.5px; color: var(--text-faint); letter-spacing: 0.1em; text-transform: uppercase; }
+.term-cell .v { font-size: 14px; font-weight: 700; margin-top: 3px; font-variant-numeric: tabular-nums; }
+
+/* Partner */
+
+.ref-row { display: flex; gap: 12px; align-items: stretch; margin-bottom: 26px; flex-wrap: wrap; }
+.ref-box {
+  flex: 1; min-width: 260px; display: flex; align-items: center; gap: 12px;
+  background: var(--surface); box-shadow: var(--neu-in-sm);
+  border-radius: 14px; padding: 6px 8px 6px 18px;
+}
+.ref-url { flex: 1; font-family: 'SF Mono', ui-monospace, Menlo, monospace; font-size: 13px; color: var(--text-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.two-col { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(300px, 1fr); gap: 22px; align-items: start; margin-bottom: 26px; }
+.panel-card { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 22px; }
+.panel-title { font-size: 14px; font-weight: 700; margin-bottom: 14px; }
+canvas.chart-sm { width: 100%; height: 220px; display: block; }
+
+.tier-row { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--text-faint); margin-bottom: 8px; }
+.tier-bar { height: 10px; border-radius: 5px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; }
+.tier-bar span { display: block; height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--accent-a), var(--accent-b)); }
+
+/* Responsive for new pages */
+
+@media (max-width: 1180px) {
+  .term-grid, .two-col { grid-template-columns: 1fr; }
+  .idea-grid, .challenge-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .contact-grid, .prod-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .split { grid-template-columns: 1fr; }
+  .tile-row, .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .idea-grid, .challenge-grid, .contact-grid, .prod-grid, .tile-row, .stats-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
@@ -1113,7 +1497,7 @@ button { font-family: inherit; }
   <nav class="nav" id="nav"></nav>
 
   <div class="sidebar-bottom">
-    <div class="user-card">
+    <div class="user-card" data-nav="performance" style="cursor:pointer" title="View performance">
       <span class="user-avatar"><span class="user-avatar-inner">J</span></span>
       <div class="user-meta">
         <span class="user-name">jstone</span>
@@ -1129,8 +1513,8 @@ button { font-family: inherit; }
 
     <header class="topbar">
       <div class="topbar-left">
-        <h1 class="page-title">Tournaments</h1>
-        <p class="page-sub">
+        <h1 class="page-title" id="pageTitle">Tournaments</h1>
+        <p class="page-sub" id="pageSub">
           <span class="mono">3&nbsp;ACCOUNTS</span>
           <span class="dot-sep">·</span>
           <span>active TR-1001 (Monthly)</span>
@@ -1181,15 +1565,15 @@ button { font-family: inherit; }
       </div>
     </header>
 
-    <div class="tabs">
-      <button class="tab active">
+    <div class="tabs" id="mainTabs">
+      <button class="tab active" id="tabTournaments" data-nav="tournaments">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z" />
           <path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5" />
         </svg>
         <span>Tournaments</span>
       </button>
-      <button class="tab">
+      <button class="tab" id="tabArena" data-nav="arena">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5" />
         </svg>
@@ -1197,6 +1581,9 @@ button { font-family: inherit; }
         <span class="tab-count">·&nbsp;3</span>
       </button>
     </div>
+
+    <div id="views">
+    <div class="view on" data-view="tournaments">
 
     <!-- ============ HERO ============ -->
     <section class="hero">
@@ -1251,7 +1638,7 @@ button { font-family: inherit; }
             <span class="mono leaderboard-title">LIVE&nbsp;LEADERBOARD</span>
           </div>
           <ul class="leaderboard-list" id="leaderboard"></ul>
-          <button class="link-btn">
+          <button class="link-btn" data-nav="leaderboard">
             View leaderboard
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 12h15M13 6l6 6-6 6" />
@@ -1283,7 +1670,7 @@ button { font-family: inherit; }
               </label>
             </div>
           </div>
-          <button class="link-btn">
+          <button class="link-btn" data-nav="leaderboard">
             View leaderboard
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 12h15M13 6l6 6-6 6" />
@@ -1354,8 +1741,21 @@ button { font-family: inherit; }
       <div class="past-grid" id="past-grid"></div>
     </section>
 
+    </div><!-- /tournaments -->
+    <div class="view" data-view="arena"></div>
+    <div class="view" data-view="leaderboard"></div>
+    <div class="view" data-view="ideas"></div>
+    <div class="view" data-view="terminal"></div>
+    <div class="view" data-view="social"></div>
+    <div class="view" data-view="assistant"></div>
+    <div class="view" data-view="performance"></div>
+    <div class="view" data-view="partner"></div>
+    </div><!-- /views -->
+
   </div>
 </main>
+
+<div class="toast" id="toast"></div>
 
 <script>
 /* ---------------- Data ---------------- */
@@ -1365,10 +1765,11 @@ const MARK_SVG = '<svg viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/
 const TROPHY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="__S__" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5"/></svg>';
 
 const navItems = [
-  { label: 'Tournaments', icon: TROPHY_SVG.replace('__S__', 'currentColor') },
-  { label: 'Social', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' },
-  { label: 'Ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' },
-  { label: 'Trades', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 15v-4M12 15V8M17 15v-6"/></svg>' }
+  { label: 'Tournaments', view: 'tournaments', match: ['tournaments', 'arena', 'leaderboard'], icon: TROPHY_SVG.replace('__S__', 'currentColor') },
+  { label: 'Social', view: 'social', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' },
+  { label: 'Ideas', view: 'ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' },
+  { label: 'Trades', view: 'terminal', match: ['terminal', 'performance'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 15v-4M12 15V8M17 15v-6"/></svg>' },
+  { label: 'Assistant', view: 'assistant', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="9" cy="10.5" r="0.6" fill="currentColor"/><circle cx="15" cy="10.5" r="0.6" fill="currentColor"/><path d="M9 14.5c.8.9 2 1.4 3 1.4s2.2-.5 3-1.4"/></svg>' }
 ];
 
 let prizePool = 4420000;
@@ -1415,16 +1816,15 @@ let feedLive = true;
 const fmt = n => Math.round(n).toLocaleString('en-GB');
 
 function renderNav() {
-  document.getElementById('nav').innerHTML = navItems.map((item, i) => `
-    <button class="nav-item${i === 0 ? ' active' : ''}" onclick="setNav(this)">
+  const v = typeof currentView !== 'undefined' ? currentView : 'tournaments';
+  document.getElementById('nav').innerHTML = navItems.map(item => {
+    const on = (item.match || [item.view]).includes(v);
+    return `
+    <button class="nav-item${on ? ' active' : ''}" data-nav="${item.view}">
       <span class="nav-icon">${item.icon}</span>
       <span class="nav-label">${item.label}</span>
-    </button>`).join('');
-}
-
-function setNav(btn) {
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+    </button>`;
+  }).join('');
 }
 
 function renderLeaderboard(tickedName) {
@@ -1570,6 +1970,819 @@ tickCountdowns();
 
 setInterval(tickCountdowns, 1000);
 setInterval(tickLiveNumbers, 2600);
+
+/* ==================================================================
+   Multi-page app — router, terminal, ideas, social, assistant,
+   performance, leaderboard, arena, partner
+   ================================================================== */
+
+var currentView = 'tournaments';
+
+const TITLES = {
+  tournaments: ['Tournaments', '<span class="mono">3&nbsp;ACCOUNTS</span><span class="dot-sep">·</span><span>active TR-1001 (Monthly)</span>'],
+  arena: ['Tournaments', '<span class="mono">ARENA</span><span class="dot-sep">·</span><span>head-to-head trade battles</span>'],
+  leaderboard: ['Tournaments', '<span class="mono">LEADERBOARD</span><span class="dot-sep">·</span><span>live standings, resorted in real time</span>'],
+  ideas: ['Trade Ideas', '<span class="mono">LIVE&nbsp;WIRE</span><span class="dot-sep">·</span><span>signals streaming from every market</span>'],
+  terminal: ['Trade', '<span class="mono">TR-1001</span><span class="dot-sep">·</span><span>£100k competition balance</span>'],
+  social: ['Social', '<span class="mono">INBOX</span><span class="dot-sep">·</span><span>messages, contacts &amp; invites</span>'],
+  assistant: ['Assistant', '<span class="mono">AI</span><span class="dot-sep">·</span><span>your trading copilot</span>'],
+  performance: ['Performance', '<span class="mono">ALL&nbsp;ACCOUNTS</span><span class="dot-sep">·</span><span>verified live track record</span>'],
+  partner: ['Partner', '<span class="mono">AFFILIATE</span><span class="dot-sep">·</span><span>earn 30% lifetime on every referral</span>']
+};
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._h);
+  t._h = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function viewEl(v) { return document.querySelector(`#views > .view[data-view="${v}"]`); }
+
+function navigate(v) {
+  currentView = v;
+  document.querySelectorAll('#views > .view').forEach(el => el.classList.toggle('on', el.dataset.view === v));
+  const tabs = document.getElementById('mainTabs');
+  tabs.style.display = (v === 'tournaments' || v === 'arena') ? 'flex' : 'none';
+  document.getElementById('tabTournaments').classList.toggle('active', v === 'tournaments');
+  document.getElementById('tabArena').classList.toggle('active', v === 'arena');
+  const t = TITLES[v] || TITLES.tournaments;
+  document.getElementById('pageTitle').textContent = t[0];
+  document.getElementById('pageSub').innerHTML = t[1];
+  const seg = document.querySelector('.segmented-state');
+  if (seg) seg.checked = (v === 'partner');
+  renderNav();
+  if (RENDER[v]) RENDER[v]();
+  window.scrollTo({ top: 0 });
+}
+
+/* ---------------- Terminal (Trades) ---------------- */
+
+const INSTR = {
+  BTC: { name: 'Bitcoin', px: 118432, dp: 0, tint: 'linear-gradient(135deg,#fbbf24,#f59e0b)', ic: '₿' },
+  ETH: { name: 'Ethereum', px: 4212.5, dp: 1, tint: 'linear-gradient(135deg,#a5b4fc,#6366f1)', ic: 'Ξ' },
+  NAS100: { name: 'Nasdaq 100', px: 23841.2, dp: 1, tint: 'linear-gradient(135deg,#67e8f9,#0891b2)', ic: 'N' },
+  XAUUSD: { name: 'Gold', px: 3392.4, dp: 1, tint: 'linear-gradient(135deg,#fde68a,#d97706)', ic: 'Au' },
+  EURUSD: { name: 'Euro / Dollar', px: 1.17432, dp: 5, tint: 'linear-gradient(135deg,#93c5fd,#2563eb)', ic: '€' },
+  GBPJPY: { name: 'Pound / Yen', px: 199.842, dp: 3, tint: 'linear-gradient(135deg,#f9a8d4,#db2777)', ic: '£' }
+};
+
+Object.keys(INSTR).forEach(k => {
+  const a = INSTR[k];
+  a.open = a.px * (1 + (Math.random() - 0.5) * 0.01);
+  a.series = [];
+  let p = a.px;
+  for (let i = 0; i < 120; i++) {
+    p += p * (Math.random() - 0.495) * 0.0012;
+    a.series.push(p);
+  }
+  const scale = a.px / a.series[a.series.length - 1];
+  a.series = a.series.map(v => v * scale);
+});
+
+const term = {
+  asset: 'BTC', tf: '5m', mode: 'day', risk: 5, rr: 2,
+  bal: 100000, pos: null,
+  hist: [{ w: 1, a: 1240 }, { w: 1, a: 860 }, { w: 0, a: 512 }, { w: 1, a: 2120 }, { w: 0, a: 1035 }, { w: 1, a: 745 }]
+};
+
+const TMODES = {
+  scalp: { lbl: 'Scalp', sub: 'minutes', stop: 0.0015 },
+  day: { lbl: 'Intraday', sub: 'hours', stop: 0.004 },
+  swing: { lbl: 'Swing', sub: 'days', stop: 0.012 }
+};
+
+const fmtPx = k => {
+  const a = INSTR[k];
+  return a.px.toLocaleString('en-GB', { minimumFractionDigits: a.dp, maximumFractionDigits: a.dp });
+};
+const gbp = n => '£' + Math.abs(n).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const gbp0 = n => '£' + Math.round(n).toLocaleString('en-GB');
+
+function cssVar(name) { return getComputedStyle(document.body).getPropertyValue(name).trim(); }
+
+function drawSeries(canvas, series, opts = {}) {
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (!w || !h) return;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+  const min = Math.min(...series), max = Math.max(...series), rng = (max - min) || 1;
+  const pad = 12;
+  const X = i => pad + (i / (series.length - 1)) * (w - pad * 2);
+  const Y = v => pad + (1 - (v - min) / rng) * (h - pad * 2);
+  const up = series[series.length - 1] >= series[0];
+  const col = opts.color || (up ? '#16a34a' : '#e5484d');
+  const grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, col + '33');
+  grad.addColorStop(1, col + '00');
+  ctx.beginPath();
+  series.forEach((v, i) => i ? ctx.lineTo(X(i), Y(v)) : ctx.moveTo(X(i), Y(v)));
+  ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.stroke();
+  ctx.lineTo(X(series.length - 1), h); ctx.lineTo(X(0), h); ctx.closePath();
+  ctx.fillStyle = grad; ctx.fill();
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(pad, Y(series[series.length - 1]));
+  ctx.lineTo(w - pad, Y(series[series.length - 1]));
+  ctx.strokeStyle = cssVar('--text-faint'); ctx.lineWidth = 1; ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function renderTerminal() {
+  const a = INSTR[term.asset];
+  const chg = (a.px - a.open) / a.open * 100;
+  const riskAmt = term.bal * term.risk / 100;
+  const chips = Object.keys(INSTR).map(k => `
+    <button class="asset-chip${k === term.asset ? ' on' : ''}" data-tasset="${k}">
+      <span class="asset-ic" style="background:${INSTR[k].tint}">${INSTR[k].ic}</span>
+      <span class="asset-tx"><span class="asset-sym">${k}</span><span class="asset-px" data-tpx="${k}">${fmtPx(k)}</span></span>
+    </button>`).join('');
+  const tfs = ['1m', '5m', '15m', '1H', '1D'].map(tf =>
+    `<button class="pill-btn${tf === term.tf ? ' on' : ''}" data-ttf="${tf}">${tf}</button>`).join('');
+  const modes = Object.keys(TMODES).map(m =>
+    `<button class="pill-btn${m === term.mode ? ' on' : ''}" data-tmode="${m}">${TMODES[m].lbl}<small>${TMODES[m].sub}</small></button>`).join('');
+  const risks = [1, 5, 10, 25].map(r =>
+    `<button class="pill-btn${r === term.risk ? ' on' : ''}" data-trisk="${r}">${r}%<small>${gbp0(term.bal * r / 100)}</small></button>`).join('');
+  const pos = term.pos;
+  const posHtml = pos ? `
+    <div class="pos-card">
+      <div class="pos-head"><span>${pos.sym} <span class="${pos.dir === 'up' ? 'up' : 'down'}">${pos.dir === 'up' ? 'Buy' : 'Sell'}</span></span>
+        <span class="live-tag"><span class="pulse-dot tiny"></span><span class="mono">LIVE</span></span></div>
+      <div class="pos-pnl" id="posPnl">£0.00</div>
+      <div class="pos-sub">entry ${pos.entry.toLocaleString('en-GB', { maximumFractionDigits: INSTR[pos.sym].dp })} · risking ${gbp0(pos.risk)} to win ${gbp0(pos.risk * pos.rr)}</div>
+      <div class="pos-act"><button class="btn-neu enter" data-tbe${pos.be ? ' disabled' : ''}>${pos.be ? 'At breakeven ✓' : 'Breakeven'}</button>
+        <button class="btn-neu enter" data-tclose>Close now</button></div>
+    </div>` : '';
+  const hist = term.hist.map(h =>
+    `<span class="hist-pill ${h.w ? 'up' : 'down'}">${h.w ? '+' : '−'}${gbp(h.a)}</span>`).join('');
+
+  viewEl('terminal').innerHTML = `
+    <div class="tile-row">
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#34d399,#10b981)">£</span>
+        <div class="tile-tx"><div class="tile-label mono">PRACTICE&nbsp;BALANCE</div><div class="tile-value" id="tileBal">${gbp0(term.bal)}</div></div></div>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#ffc24b,#f59e0b)">★</span>
+        <div class="tile-tx"><div class="tile-label mono">BEST&nbsp;RANK</div><div class="tile-value">#13</div></div></div>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9a7cff,#7c5cff)">⚡</span>
+        <div class="tile-tx"><div class="tile-label mono">WIN&nbsp;STREAK</div><div class="tile-value" id="tileStreak">${term.hist.filter(h => h.w).length}</div></div></div>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">▲</span>
+        <div class="tile-tx"><div class="tile-label mono">TOTAL&nbsp;WINNINGS</div><div class="tile-value">£121,300</div></div></div>
+    </div>
+    <div class="asset-row">${chips}</div>
+    <div class="term-grid">
+      <div class="chart-card">
+        <div class="chart-head">
+          <div class="chart-sym">${term.asset}<span>${a.name}</span></div>
+          <div><div class="chart-px" id="bigPx">${fmtPx(term.asset)}</div>
+            <div class="chart-chg ${chg >= 0 ? 'up' : 'down'}" id="bigChg">${chg >= 0 ? '+' : ''}${chg.toFixed(2)}%</div></div>
+        </div>
+        <div class="tf-row">${tfs}</div>
+        <canvas class="chart" id="termChart"></canvas>
+      </div>
+      <div class="ticket">
+        <div><div class="t-label mono"><span>STYLE</span><span>stop ±${(TMODES[term.mode].stop * 100).toFixed(2)}%</span></div>
+          <div class="seg-grid c3" style="margin-top:8px">${modes}</div></div>
+        <div><div class="t-label mono"><span>HOW&nbsp;MUCH&nbsp;TO&nbsp;RISK</span><b>${gbp0(riskAmt)}</b></div>
+          <div class="seg-grid c4" style="margin-top:8px">${risks}</div></div>
+        <div class="rr-wrap"><div class="t-label mono"><span>REWARD&nbsp;TARGET</span><b id="rrLabel">1 : ${term.rr.toFixed(1)}</b></div>
+          <input type="range" id="rrSlider" min="1" max="5" step="0.5" value="${term.rr}">
+          <div class="rr-plain" id="rrPlain">Risk <b>${gbp0(riskAmt)}</b> to win <b>${gbp0(riskAmt * term.rr)}</b></div></div>
+        ${pos ? posHtml : `
+        <div class="dir-row">
+          <button class="dir-btn buy" data-tdir="up">▲ BUY<small>go long</small></button>
+          <button class="dir-btn sell" data-tdir="down">▼ SELL<small>go short</small></button>
+        </div>`}
+        <div class="hist-row"><span class="hist-label mono">RECENT</span>${hist}</div>
+      </div>
+    </div>`;
+  drawSeries(document.getElementById('termChart'), a.series);
+}
+
+function tickPrices() {
+  if (!feedLive) return;
+  Object.keys(INSTR).forEach(k => {
+    const a = INSTR[k];
+    a.px += a.px * (Math.random() - 0.497) * 0.0011;
+    a.series.push(a.px);
+    if (a.series.length > 120) a.series.shift();
+  });
+  if (currentView !== 'terminal') return;
+  Object.keys(INSTR).forEach(k => {
+    const el = document.querySelector(`[data-tpx="${k}"]`);
+    if (el) el.textContent = fmtPx(k);
+  });
+  const a = INSTR[term.asset];
+  const bigPx = document.getElementById('bigPx');
+  if (bigPx) {
+    bigPx.textContent = fmtPx(term.asset);
+    const chg = (a.px - a.open) / a.open * 100;
+    const bigChg = document.getElementById('bigChg');
+    bigChg.textContent = (chg >= 0 ? '+' : '') + chg.toFixed(2) + '%';
+    bigChg.className = 'chart-chg ' + (chg >= 0 ? 'up' : 'down');
+  }
+  drawSeries(document.getElementById('termChart'), a.series);
+  if (term.pos) updatePos();
+}
+
+function updatePos() {
+  const pos = term.pos;
+  const a = INSTR[pos.sym];
+  const stop = TMODES[pos.mode].stop;
+  const move = (a.px - pos.entry) / pos.entry * (pos.dir === 'up' ? 1 : -1);
+  let pnl = pos.risk * (move / stop);
+  const floor = pos.be ? 0 : -pos.risk;
+  if (pnl <= floor) return closePos(floor);
+  if (pnl >= pos.risk * pos.rr) return closePos(pos.risk * pos.rr);
+  const el = document.getElementById('posPnl');
+  if (el) {
+    el.textContent = (pnl >= 0 ? '+' : '−') + gbp(pnl);
+    el.className = 'pos-pnl ' + (pnl >= 0 ? 'up' : 'down');
+  }
+}
+
+function closePos(pnl) {
+  term.bal += pnl;
+  term.hist.unshift({ w: pnl >= 0 ? 1 : 0, a: Math.abs(pnl) });
+  term.hist = term.hist.slice(0, 8);
+  term.pos = null;
+  toast((pnl >= 0 ? 'Trade won +' : 'Trade closed −') + gbp(pnl));
+  renderTerminal();
+}
+
+setInterval(tickPrices, 1000);
+
+/* ---------------- Ideas ---------------- */
+
+const IDEA_CATS = ['All', 'Macro', 'Central bank', 'Technical', 'Quant', 'On-chain', 'Positioning'];
+const IDEA_HEADLINES = [
+  ['BTC', 'Spot ETF inflows hit a 3-week high while funding stays flat — squeeze setup building', 'On-chain', 'up'],
+  ['ETH', 'Staking withdrawals slow to a trickle; exchange balances at 5-year lows', 'On-chain', 'up'],
+  ['NAS100', 'Mega-cap earnings beat but breadth is the worst since April — fade the pop', 'Technical', 'down'],
+  ['XAUUSD', 'Real yields roll over as CPI prints soft; gold breaks a 6-week range', 'Macro', 'up'],
+  ['EURUSD', 'ECB minutes lean hawkish while Fed pricing adds a cut — rate gap narrowing', 'Central bank', 'up'],
+  ['GBPJPY', 'BoJ sources hint at October hike; carry unwind risk building fast', 'Central bank', 'down'],
+  ['BTC', 'CME basis blew out overnight — quant desk flags a mean-revert window', 'Quant', 'down'],
+  ['NAS100', 'COT shows leveraged funds max short tech futures — positioning is a coiled spring', 'Positioning', 'up'],
+  ['XAUUSD', 'Central bank buying streak extends to 14 months; dips remain shallow', 'Macro', 'up'],
+  ['ETH', 'Options skew flips call-heavy into the upgrade window', 'Quant', 'up'],
+  ['EURUSD', 'Momentum divergence on the 4H at major resistance — third rejection', 'Technical', 'down'],
+  ['GBPJPY', 'UK wage growth stays hot; Gilt curve reprices front end', 'Macro', 'up']
+];
+const HZS = [['scalp', 'Scalp', 'minutes'], ['intraday', 'Intraday', 'hours'], ['swing', 'Swing', 'days']];
+
+let ideaCat = 'All', ideaHz = 'all', ideaFeed = [];
+
+function seedIdeas() {
+  if (ideaFeed.length) return;
+  IDEA_HEADLINES.forEach(([sym, head, cat, dir], i) => {
+    ideaFeed.push({
+      sym, head, cat, dir,
+      hz: HZS[i % 3][0],
+      age: 2 + Math.floor(Math.random() * 110),
+      conf: 55 + Math.floor(Math.random() * 40)
+    });
+  });
+}
+
+function renderIdeas() {
+  seedIdeas();
+  const cats = IDEA_CATS.map(c =>
+    `<button class="pill-btn${c === ideaCat ? ' on' : ''}" data-icat="${c}">${c}</button>`).join('');
+  const hzs = [['all', 'All', 'everything live'], ...HZS].map(([k, l, s]) =>
+    `<button class="pill-btn${k === ideaHz ? ' on' : ''}" data-ihz="${k}">${l}<small>${s}</small></button>`).join('');
+  const cards = ideaFeed
+    .filter(c => (ideaCat === 'All' || c.cat === ideaCat) && (ideaHz === 'all' || c.hz === ideaHz))
+    .map(c => `
+    <article class="idea-card">
+      <div class="idea-top"><span class="idea-cat">${c.cat}</span>
+        <span class="idea-age">${c.age < 60 ? c.age + 'm' : Math.round(c.age / 60) + 'h'} ago</span></div>
+      <p class="idea-head">${c.head}</p>
+      <div class="idea-meta">
+        <span class="asset-ic" style="background:${INSTR[c.sym].tint}">${INSTR[c.sym].ic}</span>
+        <span><b>${c.sym}</b> · ${HZS.find(h => h[0] === c.hz)[1]}</span>
+        <div class="conf-wrap"><div class="conf-bar"><span style="width:${c.conf}%"></span></div></div>
+        <span class="mono" style="font-size:9.5px">${c.conf}%</span>
+      </div>
+      <div class="idea-actions">
+        <button class="dir-btn buy" data-itrade="${c.sym}" data-idir="up">▲ Buy</button>
+        <button class="dir-btn sell" data-itrade="${c.sym}" data-idir="down">▼ Sell</button>
+      </div>
+    </article>`).join('');
+  viewEl('ideas').innerHTML = `
+    <div class="wire"><span class="pulse-dot"></span><span><b>Live market wire</b> — every entry adds to the tape</span>
+      <span class="mono" id="wireCount">${ideaFeed.length}&nbsp;SIGNALS&nbsp;STREAMING</span></div>
+    <div class="chip-row">${hzs}</div>
+    <div class="chip-row">${cats}</div>
+    <div class="idea-grid">${cards || '<p style="color:var(--text-faint);font-size:13.5px">No live signals match this filter — they stream in continuously.</p>'}</div>
+    <p style="margin-top:22px;font-size:11px;color:var(--text-faint);text-align:center">Streaming from Reuters · Bloomberg · Fed &amp; ECB wires · CFTC COT · Glassnode · Paktos quant &amp; TA engines</p>`;
+}
+
+setInterval(() => {
+  if (!feedLive || !ideaFeed.length) return;
+  ideaFeed.forEach(c => c.age++);
+  const src = IDEA_HEADLINES[Math.floor(Math.random() * IDEA_HEADLINES.length)];
+  ideaFeed.unshift({ sym: src[0], head: src[1], cat: src[2], dir: src[3], hz: HZS[Math.floor(Math.random() * 3)][0], age: 0, conf: 55 + Math.floor(Math.random() * 40) });
+  ideaFeed = ideaFeed.slice(0, 15);
+  if (currentView === 'ideas') renderIdeas();
+}, 9000);
+
+/* ---------------- Social ---------------- */
+
+const AV_TINTS = ['linear-gradient(135deg,#fcd9a0,#e8935a)', 'linear-gradient(135deg,#c9d4e2,#8fa3bd)', 'linear-gradient(135deg,#d9c2ef,#a184c8)', 'linear-gradient(135deg,#a7f3d0,#34d399)', 'linear-gradient(135deg,#fecaca,#f87171)', 'linear-gradient(135deg,#bfdbfe,#60a5fa)'];
+
+const threads = [
+  { name: 'Theo4', av: '🦊', tint: AV_TINTS[0], unread: true, msgs: [['them', 'That NAS100 fade printed beautifully 🔥'], ['me', 'Called it off the breadth divergence — third time this month'], ['them', 'Teach me your ways. You entering the Q3 Championship?']] },
+  { name: 'swisstony', av: '🐵', tint: AV_TINTS[2], unread: true, msgs: [['them', 'Arena battle, £5k pot, 1 week window. You in?'], ['me', 'Terms?'], ['them', 'Any market, higher return takes the pot. Escrowed.']] },
+  { name: 'Fredi9999', av: '🐺', tint: AV_TINTS[1], unread: false, msgs: [['them', 'gg on the sprint yesterday'], ['me', 'You had me until the last hour 😅']] },
+  { name: 'mintblade', av: '⚔️', tint: AV_TINTS[3], unread: false, msgs: [['them', 'Sharing my gold thesis in Ideas — would love your take']] },
+  { name: 'kch123', av: '🎯', tint: AV_TINTS[4], unread: false, msgs: [['them', 'How do you size into scalps without blowing daily DD?'], ['me', '1% risk, 1:2 minimum, never add to losers.']] },
+  { name: 'RN1', av: '🚀', tint: AV_TINTS[5], unread: false, msgs: [['them', 'World Series grind starts Monday. Good luck out there']] }
+];
+
+let socialTab = 'messages', activeThread = 0;
+
+const CONTACTS = [['Theo4', '🦊', 'Rank #1 · 2026 WS champion'], ['Fredi9999', '🐺', 'Rank #2 · momentum'], ['swisstony', '🐵', 'Rank #3 · macro'], ['kch123', '🎯', 'Rank #4 · scalper'], ['RN1', '🚀', 'Rank #5 · swing'], ['mintblade', '⚔️', 'Rank #6 · gold bug'], ['fishalive', '🐹', 'Rank #7 · quant'], ['frostrizz', '❄️', 'Rank #8 · FX']];
+
+const invites = [
+  { t: 'Q3 Championship — team invite', s: 'Theo4 invited you to join squad "Alpha Decay" · 33,680 already in', from: '🦊' },
+  { t: 'Arena battle challenge', s: 'swisstony challenged you · £5,000 pot · 1 week window · any market', from: '🐵' }
+];
+
+function renderSocial() {
+  const tabs = [['messages', 'Messages'], ['contacts', 'Contacts'], ['invites', 'Invites']].map(([k, l]) =>
+    `<button class="pill-btn${socialTab === k ? ' on' : ''}" data-stab="${k}">${l}${k === 'messages' && threads.some(t => t.unread) ? ' ·' : ''}${k === 'invites' && invites.length ? ' · ' + invites.length : ''}</button>`).join('');
+  let body = '';
+  if (socialTab === 'contacts') {
+    body = `<div class="contact-grid">${CONTACTS.map(([n, e, s], i) => `
+      <div class="contact-card"><span class="contact-av" style="background:${AV_TINTS[i % 6]}">${e}</span>
+        <span class="contact-name">${n}</span><span class="contact-sub">${s}</span>
+        <button class="btn-neu enter" data-dm="${n}">Message</button></div>`).join('')}</div>`;
+  } else if (socialTab === 'invites') {
+    body = invites.length ? invites.map((iv, i) => `
+      <div class="invite-card"><span class="contact-av" style="background:${AV_TINTS[i % 6]}">${iv.from}</span>
+        <div class="invite-tx"><div class="invite-t">${iv.t}</div><div class="invite-s">${iv.s}</div></div>
+        <div class="invite-act"><button class="btn-neu enter" data-inv-acc="${i}">Accept</button>
+          <button class="pill-btn" data-inv-dec="${i}">Decline</button></div></div>`).join('')
+      : '<p style="color:var(--text-faint);font-size:13.5px;padding:30px;text-align:center">No pending invites.</p>';
+  } else {
+    const t = threads[activeThread];
+    body = `<div class="split">
+      <div class="thread-list">${threads.map((th, i) => `
+        <button class="thread${i === activeThread ? ' on' : ''}" data-thread="${i}">
+          <span class="thread-av" style="background:${th.tint}">${th.av}</span>
+          <span class="thread-tx"><span class="thread-name">${th.name}</span>
+            <span class="thread-last">${th.msgs[th.msgs.length - 1][1]}</span></span>
+          ${th.unread ? '<span class="thread-dot"></span>' : ''}
+        </button>`).join('')}</div>
+      <div class="chat-panel">
+        <div class="pos-head" style="margin-bottom:12px"><span style="display:flex;align-items:center;gap:10px">
+          <span class="thread-av" style="background:${t.tint};width:34px;height:34px;font-size:16px">${t.av}</span>${t.name}</span>
+          <span class="live-tag"><span class="pulse-dot tiny"></span><span class="mono">ONLINE</span></span></div>
+        <div class="chat-scroll" id="chatScroll">${t.msgs.map(([who, tx]) => `<div class="bubble ${who}">${tx}</div>`).join('')}</div>
+        <div class="chat-inrow">
+          <input class="neu-input" id="dmInput" type="text" placeholder="Message ${t.name}…">
+          <button class="btn-neu" data-dmsend style="padding:12px 20px">Send</button>
+        </div>
+      </div>
+    </div>`;
+  }
+  viewEl('social').innerHTML = `<div class="chip-row">${tabs}</div>${body}`;
+  const sc = document.getElementById('chatScroll');
+  if (sc) sc.scrollTop = sc.scrollHeight;
+}
+
+function sendDM() {
+  const inp = document.getElementById('dmInput');
+  if (!inp || !inp.value.trim()) return;
+  const t = threads[activeThread];
+  t.msgs.push(['me', inp.value.trim()]);
+  inp.value = '';
+  renderSocial();
+  const replies = ['Interesting…', 'Say more 👀', 'Agreed — same read here.', 'Ha! Fair.', 'Let’s make it happen.'];
+  setTimeout(() => {
+    t.msgs.push(['them', replies[Math.floor(Math.random() * replies.length)]]);
+    if (currentView === 'social' && socialTab === 'messages') renderSocial();
+  }, 1400);
+}
+
+/* ---------------- Assistant ---------------- */
+
+let chat = [];
+const AI_REPLIES = [
+  'Looking at your last 30 trades: your win rate is 58%, but your average winner (£1,240) is 1.9× your average loser — that asymmetry is doing the heavy lifting. Your edge concentrates in Intraday NAS100 shorts; your scalps on FX pairs are roughly breakeven after costs.',
+  'Your biggest leak is revenge sizing: after a loss, your next position averages 2.3× normal risk and wins only 41% of the time. Cap risk at your standard 5% for the first trade after any loss and your expectancy improves ~18%.',
+  'Risk management looks solid overall — max drawdown 4.1% against a 10% tournament limit, and you’ve never breached daily loss caps. One flag: you move stops to breakeven too early on swing trades, cutting your average winner by ~0.4R.',
+  'Your best setups share three traits: entered within 2 hours of a macro catalyst, aligned with the daily trend, and held at least 4 hours. Trades matching all three are 71% winners at 2.1R average.'
+];
+
+function renderAssistant() {
+  const hr = new Date().getHours();
+  const greet = hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
+  const chips = ['Analyze my trading performance', 'What patterns do you see?', 'How is my risk management?', 'What are my best trades?'];
+  viewEl('assistant').innerHTML = `
+    <div class="asst">
+      <h2 class="asst-h">${greet}, <span>jstone</span></h2>
+      ${chat.length ? `<div class="asst-chat">${chat.map(([who, tx]) => `<div class="bubble ${who}" style="max-width:100%">${tx}</div>`).join('')}</div>` : ''}
+      <div class="asst-box">
+        <textarea id="askIn" placeholder="How can I help you today?"></textarea>
+        <button class="asst-send" data-asksend aria-label="Send">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <div class="asst-chips">${chips.map(c => `<button class="pill-btn" data-ask="${c}">${c}</button>`).join('')}</div>
+      <div class="section-head" style="margin-bottom:14px"><h3 class="section-title" style="font-size:16px">Our products</h3></div>
+      <div class="prod-grid">
+        <button class="prod-card" data-nav="performance"><span class="prod-t">Performance</span><span class="prod-s">Share your track record live or as a snapshot.</span></button>
+        <button class="prod-card" data-nav="tournaments"><span class="prod-t">Tournaments</span><span class="prod-s">Compete with traders worldwide and climb the ranks.</span></button>
+        <button class="prod-card" data-nav="terminal"><span class="prod-t">Trade</span><span class="prod-s">One-tap terminal with risk built in from the start.</span></button>
+        <button class="prod-card" data-nav="ideas"><span class="prod-t">Ideas</span><span class="prod-s">Live signal wire across every market that moves.</span></button>
+      </div>
+    </div>`;
+}
+
+function askAI(q) {
+  chat.push(['me', q]);
+  renderAssistant();
+  setTimeout(() => {
+    chat.push(['them', AI_REPLIES[(chat.filter(c => c[0] === 'them').length) % AI_REPLIES.length]]);
+    if (currentView === 'assistant') renderAssistant();
+  }, 900);
+}
+
+/* ---------------- Performance ---------------- */
+
+let perfRange = 'max', perfTab = 'overview';
+const perfSeries = (() => {
+  const s = [100000];
+  for (let i = 1; i < 200; i++) s.push(s[i - 1] * (1 + (Math.random() - 0.44) * 0.012));
+  return s;
+})();
+const PRANGES = { '1w': 7, '1m': 30, '6m': 120, 'ytd': 150, '1y': 180, 'max': 200 };
+
+const perfTrades = Array.from({ length: 30 }, (_, i) => {
+  const sym = Object.keys(INSTR)[i % 6];
+  const win = Math.random() > 0.42;
+  return { sym, dir: Math.random() > 0.5 ? 'Buy' : 'Sell', pnl: (win ? 1 : -1) * Math.round(300 + Math.random() * 2200), when: `${1 + (i % 27)} Jul` };
+});
+
+const sPct = v => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(1) + '%';
+const sMoney = v => (v >= 0 ? '+' : '−') + gbp0(Math.abs(v));
+
+function renderPerformance() {
+  const s = perfSeries.slice(-PRANGES[perfRange]);
+  const eq = s[s.length - 1], start = perfSeries[0];
+  const ret = (eq - start) / start * 100;
+  const wins = perfTrades.filter(t => t.pnl > 0);
+  const wr = wins.length / perfTrades.length * 100;
+  let peak = -Infinity, dd = 0;
+  perfSeries.forEach(v => { peak = Math.max(peak, v); dd = Math.max(dd, (peak - v) / peak * 100); });
+  const ranges = Object.keys(PRANGES).map(r =>
+    `<button class="pill-btn${r === perfRange ? ' on' : ''}" data-prange="${r}">${r.toUpperCase()}</button>`).join('');
+  const tabs = [['overview', 'Overview'], ['trades', 'Trades']].map(([k, l]) =>
+    `<button class="pill-btn${k === perfTab ? ' on' : ''}" data-ptab="${k}">${l}</button>`).join('');
+  const body = perfTab === 'trades' ? `
+    <div class="fame-card"><div class="fame-scroll"><table class="trades-table">
+      <thead><tr class="mono"><th>DATE</th><th>MARKET</th><th>SIDE</th><th style="text-align:right">P&amp;L</th></tr></thead>
+      <tbody>${perfTrades.map(t => `<tr><td>${t.when}</td><td><b>${t.sym}</b></td>
+        <td class="${t.dir === 'Buy' ? 'up' : 'down'}">${t.dir}</td>
+        <td style="text-align:right" class="${t.pnl >= 0 ? 'up' : 'down'}"><b>${t.pnl >= 0 ? '+' : '−'}${gbp(t.pnl)}</b></td></tr>`).join('')}</tbody>
+    </table></div></div>` : `
+    <div class="chart-card"><canvas class="chart" id="perfChart"></canvas></div>
+    <div class="stats-grid">
+      <div class="sg-cell"><div class="sg-l mono">YTD&nbsp;RETURN</div><div class="sg-v ${ret >= 0 ? 'up' : 'down'}">${sPct(ret * 0.7)}</div></div>
+      <div class="sg-cell"><div class="sg-l mono">AVG&nbsp;MONTHLY</div><div class="sg-v">${sPct(ret / 7)}</div></div>
+      <div class="sg-cell"><div class="sg-l mono">TOTAL&nbsp;PROFIT</div><div class="sg-v ${eq >= start ? 'up' : 'down'}">${sMoney(eq - start)}</div></div>
+      <div class="sg-cell"><div class="sg-l mono">AL&nbsp;SCORE</div><div class="sg-v">${Math.min(99, 50 + ret * 0.5 - dd * 0.6).toFixed(1)}</div></div>
+      <div class="sg-cell"><div class="sg-l mono">BALANCE</div><div class="sg-v">${gbp0(eq)}</div></div>
+      <div class="sg-cell"><div class="sg-l mono">TRADES</div><div class="sg-v">${perfTrades.length * 8}</div></div>
+      <div class="sg-cell"><div class="sg-l mono">CURRENCY</div><div class="sg-v">GBP</div></div>
+      <div class="sg-cell"><div class="sg-l mono">BROKER</div><div class="sg-v">Paktos Markets</div></div>
+    </div>`;
+  viewEl('performance').innerHTML = `
+    <button class="back-btn" data-nav="terminal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to Trade</button>
+    <div class="perf-head">
+      <div><div class="perf-name">jstone · All tournaments</div><span class="perf-hash mono">SHA&nbsp;a91f…c04e&nbsp;·&nbsp;VERIFIED&nbsp;LIVE</span></div>
+      <div style="display:flex;gap:9px;flex-wrap:wrap">${tabs}<span style="width:10px"></span>${ranges}
+        <button class="btn-neu" style="padding:9px 18px;font-size:13px" data-shareperf>↗ Share profile</button></div>
+    </div>
+    <div class="tile-row">
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#34d399,#10b981)">↗</span>
+        <div class="tile-tx"><div class="tile-label mono">OVERALL&nbsp;RETURN</div><div class="tile-value ${ret >= 0 ? 'up' : 'down'}">${sPct(ret)}</div></div></div>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">◎</span>
+        <div class="tile-tx"><div class="tile-label mono">WIN&nbsp;RATE</div><div class="tile-value">${wr.toFixed(1)}%</div>
+          <div class="tile-bar"><span style="width:${wr}%"></span></div></div></div>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#f87171,#e5484d)">▼</span>
+        <div class="tile-tx"><div class="tile-label mono">MAX&nbsp;DRAWDOWN</div><div class="tile-value down">−${dd.toFixed(1)}%</div></div></div>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9a7cff,#7c5cff)">σ</span>
+        <div class="tile-tx"><div class="tile-label mono">SHARPE</div><div class="tile-value">2.14</div></div></div>
+    </div>
+    ${body}`;
+  drawSeries(document.getElementById('perfChart'), s, { color: '#7c3aed' });
+}
+
+/* ---------------- Leaderboard page ---------------- */
+
+const LB_NAMES = ['Rudy 🇺🇸', 'Sander Schouten 🇪🇸', 'Dion Trades 🇮🇹', 'Theo4 🇺🇸', 'swisstony 🇺🇸', 'Fredi9999 🇺🇸', 'GRIMDRIP 🇬🇧', 'nattyG 🇦🇺', 'pip_titan 🇩🇪', '0xmaverick 🇸🇬', 'vol_king 🇺🇸', 'mintblade 🇺🇸', 'jstone · you 🇬🇧', 'kch123 🇺🇸', 'RN1 🇺🇸', 'fishalive 🇺🇸', 'frostrizz 🇺🇸', 'delta_dan 🇨🇦', 'macro_mia 🇫🇷', 'quantqueen 🇳🇱', 'fadefather 🇧🇷', 'santiago_fx 🇦🇷', 'tokyodrift 🇯🇵', 'gilt_guy 🇬🇧', 'oiler 🇳🇴', 'basispoint 🇨🇭', 'ladderlad 🇮🇪', 'thetagang 🇺🇸', 'wickwizard 🇰🇷', 'chartchad 🇺🇸', 'pxl_pnl 🇸🇪', 'drawdown_dave 🇺🇸', 'meanrevert 🇮🇳', 'stoplosslou 🇲🇽', 'candleman 🇵🇱', 'fibfanatic 🇹🇷', 'gapfill_gal 🇩🇰', 'trendtina 🇿🇦', 'volvamp 🇵🇹', 'edgehunter 🇫🇮', 'riskitall 🇺🇸', 'alphaseek 🇬🇧', 'betabets 🇪🇸', 'gammagreg 🇮🇹', 'sigma_sam 🇺🇸', 'omegaops 🇳🇿', 'zenzero 🇦🇹', 'pipsqueek 🇧🇪', 'lotsize_larry 🇺🇸', 'margin_marge 🇬🇷'];
+
+let lbPage = 0, lbTour = 'Q3 CHAMPIONSHIP';
+const lbField = LB_NAMES.map((n, i) => ({
+  name: n, you: n.includes('jstone'),
+  value: i === 0 ? 1147695 : Math.round(160000 * Math.pow(0.94, i) + Math.random() * 4000)
+}));
+lbField[12].value = 121300;
+
+function renderLbPage() {
+  const per = 10, pages = Math.ceil(lbField.length / per);
+  lbPage = Math.max(0, Math.min(lbPage, pages - 1));
+  const t = tournaments.find(x => x.name === lbTour) || tournaments[3];
+  const tourPills = tournaments.map(x =>
+    `<button class="pill-btn${x.name === lbTour ? ' on' : ''}" data-lbtour="${x.name}">${x.name}</button>`).join('');
+  const rows = lbField.slice(lbPage * per, lbPage * per + per).map((r, i) => {
+    const rank = lbPage * per + i + 1;
+    return `<tr class="${r.you ? 'lb-me' : ''}">
+      <td class="col-rank mono rank-num">${String(rank).padStart(2, '0')}</td>
+      <td><span class="fame-player"><span class="fame-avatar">${r.name.charAt(0).toUpperCase()}</span>
+        <span class="fame-name">${r.name.replace('· you', '<span class="row-you">· you</span>')}</span></span></td>
+      <td class="col-pool">£25</td>
+      <td style="text-align:right"><b class="mono-num">£${r.value.toLocaleString('en-GB')}</b></td>
+    </tr>`;
+  }).join('');
+  viewEl('leaderboard').innerHTML = `
+    <button class="back-btn" data-nav="tournaments">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to Tournaments</button>
+    <div class="lb-toolbar"><div class="chip-row" style="margin:0">${tourPills}</div></div>
+    <div class="tile-row">
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(135deg,#f9a8d4,#a855f7)">🏆</span>
+        <div class="tile-tx"><div class="tile-label mono">PRIZE&nbsp;POOL</div><div class="tile-value">£${t.pool}</div></div></div>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">👥</span>
+        <div class="tile-tx"><div class="tile-label mono">PLAYERS&nbsp;IN</div><div class="tile-value">${t.entries.toLocaleString('en-GB')}</div></div></div>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#34d399,#10b981)">◷</span>
+        <div class="tile-tx"><div class="tile-label mono">CLOSES&nbsp;IN</div><div class="tile-value" style="font-size:16px">${formatCountdown(t.secondsLeft)}</div></div></div>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9a7cff,#7c5cff)">★</span>
+        <div class="tile-tx"><div class="tile-label mono">YOUR&nbsp;RANK</div><div class="tile-value">#13</div></div></div>
+    </div>
+    <div class="lb-table-card"><div class="fame-scroll"><table class="fame-table">
+      <thead><tr class="mono"><th class="col-rank">#</th><th>PLAYER</th><th>ENTRY</th><th style="text-align:right">EQUITY</th></tr></thead>
+      <tbody>${rows}</tbody></table></div></div>
+    <div class="lb-foot">
+      <span class="lb-page mono">PAGE&nbsp;${lbPage + 1}&nbsp;/&nbsp;${pages}&nbsp;·&nbsp;${lbField.length}&nbsp;TRADERS</span>
+      <div class="pager">
+        <button class="icon-btn round" data-lbpage="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <button class="icon-btn round" data-lbpage="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+      </div>
+    </div>`;
+}
+
+/* ---------------- Arena ---------------- */
+
+const BATTLES = [
+  ['Theo4', '🦊', 'swisstony', '🐵', 1000000, '9.9K'],
+  ['Fredi9999', '🐺', 'mintblade', '⚔️', 100000, '4.4K'],
+  ['GRIMDRIP', '💀', 'nattyG', '🌿', 20000, '3.7K'],
+  ['pip_titan', '🗿', 'vol_king', '👑', 4000, '747']
+];
+
+const CHALLENGES = [
+  ['0xmaverick', '🃏', 'Any market', '1 week', 5000],
+  ['delta_dan', '📐', 'Crypto only', '48 hours', 2500],
+  ['macro_mia', '🌍', 'FX majors', '1 month', 10000],
+  ['wickwizard', '🧙', 'NAS100', '24 hours', 1000],
+  ['quantqueen', '👸', 'Any market', '15 minutes', 500],
+  ['fadefather', '🎩', 'Gold', '1 week', 7500]
+];
+
+function renderArena() {
+  const battleRows = BATTLES.map((b, i) => `
+    <li class="leaderboard-row">
+      <span class="row-rank mono">${String(i + 1).padStart(2, '0')}</span>
+      <span class="vs-pair"><span class="thread-av" style="background:${AV_TINTS[i % 6]}">${b[1]}</span>
+        <span class="thread-av" style="background:${AV_TINTS[(i + 3) % 6]}">${b[3]}</span></span>
+      <span class="row-name">${b[0]} v ${b[2]}<span class="watching">● ${b[5]} watching</span></span>
+      <span class="row-value mono-num">£${b[4].toLocaleString('en-GB')}</span>
+    </li>`).join('');
+  const cards = CHALLENGES.map((c, i) => `
+    <article class="challenge-card">
+      <div class="challenge-head"><span class="thread-av" style="background:${AV_TINTS[i % 6]}">${c[1]}</span>
+        <div><div class="challenge-name">${c[0]}</div><div class="challenge-sub">set the terms · take the other side</div></div></div>
+      <div class="challenge-terms">
+        <div class="term-cell"><div class="k">Market</div><div class="v" style="font-size:12.5px">${c[2]}</div></div>
+        <div class="term-cell"><div class="k">Window</div><div class="v" style="font-size:12.5px">${c[3]}</div></div>
+        <div class="term-cell"><div class="k">Pot</div><div class="v">£${c[4].toLocaleString('en-GB')}</div></div>
+      </div>
+      <button class="btn-neu enter" data-accept="${c[0]}"><span class="pulse-dot tiny purple"></span>Accept battle</button>
+    </article>`).join('');
+  viewEl('arena').innerHTML = `
+    <section class="hero">
+      <div class="hero-glow"></div>
+      <div class="hero-content">
+        <div class="hero-left">
+          <div class="live-badge"><span class="pulse-dot"></span><span class="mono">LIVE&nbsp;NOW</span></div>
+          <h2 class="hero-title">The <span class="hero-title-accent">Arena</span></h2>
+          <p class="hero-desc">Head-to-head trade-offs. Challenge anyone, pick the window — 15 minutes to a full year — and the higher return takes the escrowed pot, up to £1,000,000.</p>
+          <div class="hero-stats">
+            <div class="stat"><span class="stat-label mono">BATTLES&nbsp;LIVE&nbsp;NOW</span><span class="stat-value">1,284</span></div>
+            <div class="stat"><span class="stat-label mono">TRADERS&nbsp;IN&nbsp;BATTLE</span><span class="stat-value">2,568</span></div>
+            <div class="stat"><span class="stat-label mono">ESCROWED&nbsp;VOLUME</span><span class="stat-value">£42.6M</span></div>
+          </div>
+          <div class="hero-actions">
+            <button class="btn-primary" data-startbattle><span class="pulse-dot small light"></span>Start a battle</button>
+            <button class="btn-neu" data-nav="social">Challenge a friend</button>
+          </div>
+          <div class="hero-social">
+            <div class="avatar-stack">
+              <span class="stack-avatar" style="background:${AV_TINTS[0]}">🦊</span>
+              <span class="stack-avatar" style="background:${AV_TINTS[2]}">🐵</span>
+              <span class="stack-avatar" style="background:${AV_TINTS[4]}">💀</span>
+            </div>
+            <p class="hero-social-text"><strong>@Theo4</strong>, <strong>@swisstony</strong> &amp; 2.5K traders dueling right now</p>
+          </div>
+        </div>
+        <div class="leaderboard">
+          <div class="leaderboard-head"><span class="pulse-dot purple"></span><span class="mono leaderboard-title">BIGGEST&nbsp;BATTLES&nbsp;LIVE</span></div>
+          <ul class="leaderboard-list">${battleRows}</ul>
+          <button class="link-btn" data-watch>Watch the £1M battle
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+    </section>
+    <div class="section">
+      <div class="section-head"><div><h3 class="section-title">Open challenges</h3>
+        <p class="section-sub"><span class="mono">${CHALLENGES.length}&nbsp;OPEN</span><span class="dot-sep">·</span><span>someone set the terms — take the other side and it locks in at kick-off</span></p></div></div>
+      <div class="challenge-grid">${cards}</div>
+    </div>`;
+}
+
+/* ---------------- Partner ---------------- */
+
+const partner = { clicks: 12480, signups: 1392, earnings: 8940, link: 'https://paktos.app/r/jstone' };
+
+function renderPartner() {
+  const conv = (partner.signups / partner.clicks * 100).toFixed(1);
+  const months = ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
+  const payouts = [['Jul 2026', 2140, 'Pending'], ['Jun 2026', 1890, 'Paid'], ['May 2026', 1655, 'Paid'], ['Apr 2026', 1420, 'Paid']];
+  viewEl('partner').innerHTML = `
+    <div class="tile-row">
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">👆</span>
+        <div class="tile-tx"><div class="tile-label mono">LINK&nbsp;CLICKS</div><div class="tile-value">${partner.clicks.toLocaleString('en-GB')}</div></div></div>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#34d399,#10b981)">✓</span>
+        <div class="tile-tx"><div class="tile-label mono">SIGNUPS</div><div class="tile-value">${partner.signups.toLocaleString('en-GB')}</div></div></div>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9a7cff,#7c5cff)">%</span>
+        <div class="tile-tx"><div class="tile-label mono">CONVERSION</div><div class="tile-value">${conv}%</div>
+          <div class="tile-bar"><span style="width:${conv}%"></span></div></div></div>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#ffc24b,#f59e0b)">£</span>
+        <div class="tile-tx"><div class="tile-label mono">LIFETIME&nbsp;EARNINGS</div><div class="tile-value">${gbp0(partner.earnings)}</div></div></div>
+    </div>
+    <div class="ref-row">
+      <div class="ref-box"><span class="pulse-dot purple"></span><span class="ref-url">${partner.link}</span>
+        <button class="btn-neu" style="padding:11px 22px;font-size:13.5px" data-copyref>Copy link</button></div>
+      <button class="btn-primary" data-copyref><span class="pulse-dot small light"></span>Invite traders</button>
+    </div>
+    <div class="two-col">
+      <div class="panel-card"><div class="panel-title">Monthly earnings</div><canvas class="chart-sm" id="affChart"></canvas></div>
+      <div class="panel-card">
+        <div class="panel-title">Payouts</div>
+        <table class="trades-table">
+          <thead><tr class="mono"><th>PERIOD</th><th style="text-align:right">AMOUNT</th><th style="text-align:right">STATUS</th></tr></thead>
+          <tbody>${payouts.map(p => `<tr><td>${p[0]}</td><td style="text-align:right"><b>${gbp0(p[1])}</b></td>
+            <td style="text-align:right" class="${p[2] === 'Paid' ? 'up' : ''}">${p[2]}</td></tr>`).join('')}</tbody>
+        </table>
+        <div style="margin-top:20px">
+          <div class="tier-row"><span><b style="color:var(--text)">Gold tier</b> · 30% lifetime</span><span>108 signups to Platinum (40%)</span></div>
+          <div class="tier-bar"><span style="width:72%"></span></div>
+        </div>
+      </div>
+    </div>`;
+  const c = document.getElementById('affChart');
+  if (c) {
+    const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = c.clientHeight;
+    c.width = w * dpr; c.height = h * dpr;
+    const ctx = c.getContext('2d'); ctx.scale(dpr, dpr);
+    const vals = [980, 1230, 1420, 1655, 1890, 2140], max = Math.max(...vals);
+    const bw = (w - 40) / vals.length;
+    vals.forEach((v, i) => {
+      const bh = (v / max) * (h - 46);
+      const x = 20 + i * bw + bw * 0.18, y = h - 26 - bh;
+      const g = ctx.createLinearGradient(0, y, 0, h - 26);
+      g.addColorStop(0, '#d946ef'); g.addColorStop(1, '#7c3aed');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.roundRect(x, y, bw * 0.64, bh, 7);
+      ctx.fill();
+      ctx.fillStyle = cssVar('--text-faint');
+      ctx.font = '10px ui-monospace, Menlo, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(months[i], x + bw * 0.32, h - 8);
+    });
+  }
+}
+
+/* ---------------- Router wiring ---------------- */
+
+const RENDER = {
+  terminal: renderTerminal, ideas: renderIdeas, social: renderSocial,
+  assistant: renderAssistant, performance: renderPerformance,
+  leaderboard: renderLbPage, arena: renderArena, partner: renderPartner
+};
+
+document.addEventListener('click', e => {
+  const q = sel => e.target.closest(sel);
+  let el;
+  if ((el = q('[data-nav]'))) return navigate(el.dataset.nav);
+  /* terminal */
+  if ((el = q('[data-tasset]'))) { term.asset = el.dataset.tasset; return renderTerminal(); }
+  if ((el = q('[data-ttf]'))) { term.tf = el.dataset.ttf; return renderTerminal(); }
+  if ((el = q('[data-tmode]'))) { term.mode = el.dataset.tmode; return renderTerminal(); }
+  if ((el = q('[data-trisk]'))) { term.risk = +el.dataset.trisk; return renderTerminal(); }
+  if ((el = q('[data-tdir]'))) {
+    const a = INSTR[term.asset];
+    term.pos = { sym: term.asset, dir: el.dataset.tdir, entry: a.px, risk: term.bal * term.risk / 100, rr: term.rr, mode: term.mode, be: false };
+    toast(`${el.dataset.tdir === 'up' ? 'Bought' : 'Sold'} ${term.asset} · risking ${gbp0(term.pos.risk)}`);
+    return renderTerminal();
+  }
+  if ((el = q('[data-tbe]'))) { if (term.pos) { term.pos.be = true; toast('Stop moved to breakeven'); renderTerminal(); } return; }
+  if ((el = q('[data-tclose]'))) {
+    if (!term.pos) return;
+    const pos = term.pos, a = INSTR[pos.sym];
+    const move = (a.px - pos.entry) / pos.entry * (pos.dir === 'up' ? 1 : -1);
+    let pnl = Math.max(pos.be ? 0 : -pos.risk, Math.min(pos.risk * pos.rr, pos.risk * (move / TMODES[pos.mode].stop)));
+    return closePos(pnl);
+  }
+  /* ideas */
+  if ((el = q('[data-icat]'))) { ideaCat = el.dataset.icat; return renderIdeas(); }
+  if ((el = q('[data-ihz]'))) { ideaHz = el.dataset.ihz; return renderIdeas(); }
+  if ((el = q('[data-itrade]'))) { term.asset = el.dataset.itrade; navigate('terminal'); return toast(`${el.dataset.itrade} loaded in the terminal`); }
+  /* social */
+  if ((el = q('[data-stab]'))) { socialTab = el.dataset.stab; return renderSocial(); }
+  if ((el = q('[data-thread]'))) { activeThread = +el.dataset.thread; threads[activeThread].unread = false; return renderSocial(); }
+  if ((el = q('[data-dmsend]'))) return sendDM();
+  if ((el = q('[data-dm]'))) {
+    const i = threads.findIndex(t => t.name === el.dataset.dm);
+    socialTab = 'messages';
+    if (i >= 0) activeThread = i;
+    return renderSocial();
+  }
+  if ((el = q('[data-inv-acc]'))) { invites.splice(+el.dataset.invAcc, 1); toast('Invite accepted — see you on the board'); return renderSocial(); }
+  if ((el = q('[data-inv-dec]'))) { invites.splice(+el.dataset.invDec, 1); toast('Invite declined'); return renderSocial(); }
+  /* assistant */
+  if ((el = q('[data-ask]'))) return askAI(el.dataset.ask);
+  if ((el = q('[data-asksend]'))) {
+    const inp = document.getElementById('askIn');
+    if (inp && inp.value.trim()) askAI(inp.value.trim());
+    return;
+  }
+  /* performance */
+  if ((el = q('[data-prange]'))) { perfRange = el.dataset.prange; return renderPerformance(); }
+  if ((el = q('[data-ptab]'))) { perfTab = el.dataset.ptab; return renderPerformance(); }
+  if ((el = q('[data-shareperf]'))) return toast('Share link copied — live performance page');
+  /* leaderboard */
+  if ((el = q('[data-lbpage]'))) { lbPage += +el.dataset.lbpage; return renderLbPage(); }
+  if ((el = q('[data-lbtour]'))) { lbTour = el.dataset.lbtour; return renderLbPage(); }
+  /* arena */
+  if ((el = q('[data-accept]'))) return toast(`Battle vs ${el.dataset.accept} locked in — starts at kick-off`);
+  if ((el = q('[data-startbattle]'))) return toast('Battle builder is a demo — challenge a friend from Social');
+  if ((el = q('[data-watch]'))) return toast('Spectator mode is a demo');
+  /* partner */
+  if ((el = q('[data-copyref]'))) {
+    try { navigator.clipboard.writeText(partner.link); } catch (_e) {}
+    return toast('Referral link copied');
+  }
+});
+
+document.addEventListener('input', e => {
+  if (e.target.id !== 'rrSlider') return;
+  term.rr = +e.target.value;
+  const riskAmt = term.bal * term.risk / 100;
+  const lbl = document.getElementById('rrLabel');
+  if (lbl) lbl.textContent = `1 : ${term.rr.toFixed(1)}`;
+  const plain = document.getElementById('rrPlain');
+  if (plain) plain.innerHTML = `Risk <b>${gbp0(riskAmt)}</b> to win <b>${gbp0(riskAmt * term.rr)}</b>`;
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  if (e.target.id === 'dmInput') { e.preventDefault(); sendDM(); }
+  if (e.target.id === 'askIn' && !e.shiftKey) {
+    e.preventDefault();
+    if (e.target.value.trim()) askAI(e.target.value.trim());
+  }
+});
+
+/* Partner mode toggle */
+document.querySelector('.segmented-state').addEventListener('change', e => {
+  navigate(e.target.checked ? 'partner' : 'tournaments');
+});
+
+/* Redraw charts on theme change */
+document.getElementById('theme-state').addEventListener('change', () => {
+  setTimeout(() => { if (RENDER[currentView]) RENDER[currentView](); }, 60);
+});
+
+renderNav();
 </script>
 </body>
 </html>
