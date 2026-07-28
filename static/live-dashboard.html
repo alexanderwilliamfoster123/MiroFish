@@ -2896,7 +2896,9 @@ body.dark .lbh-chip.down b { color: #f87171; }
 .auth-sso button { flex: 1; height: 46px; border: 0; cursor: pointer; border-radius: 13px; background: var(--surface); box-shadow: var(--neu-out-sm); display: flex; align-items: center; justify-content: center; color: var(--text); transition: transform 0.15s ease; }
 .auth-sso button:active { transform: scale(0.96); }
 .auth-sso svg { width: 19px; height: 19px; }
-.auth-foot { margin-top: 16px; font-size: 9px; letter-spacing: 0.08em; color: var(--text-faint); }
+.auth-foot { margin-top: 12px; font-size: 9px; letter-spacing: 0.08em; color: var(--text-faint); }
+.auth-skip { margin-top: 16px; border: 0; background: none; cursor: pointer; font: inherit; font-size: 11.5px; font-weight: 600; color: var(--text-soft); }
+.auth-skip:hover { color: var(--text); }
 .ep-signout { margin-top: 12px; text-align: center; }
 .ep-signout button { border: 0; background: none; cursor: pointer; font: inherit; font-size: 11.5px; color: #c9383d; font-weight: 600; }
 
@@ -3170,6 +3172,7 @@ body.dark .lbh-chip.down b { color: #f87171; }
       <button data-sso="Apple" aria-label="Sign in with Apple"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.7 12.9c0-2.5 2-3.7 2.1-3.75-1.15-1.68-2.94-1.9-3.57-1.93-1.52-.15-2.97.9-3.74.9-.77 0-1.96-.88-3.23-.85-1.66.02-3.19.96-4.04 2.44-1.72 2.99-.44 7.41 1.24 9.83.82 1.19 1.8 2.52 3.08 2.47 1.24-.05 1.7-.8 3.2-.8 1.5 0 1.92.8 3.22.77 1.33-.02 2.18-1.2 3-2.4a10.7 10.7 0 0 0 1.35-2.77c-.03-.01-2.6-1-2.62-3.94zM14.2 5.6c.68-.83 1.14-1.98 1.02-3.13-.98.04-2.17.65-2.88 1.48-.63.73-1.19 1.9-1.04 3.02 1.1.09 2.21-.55 2.9-1.37z"/></svg></button>
       <button data-sso="X" aria-label="Sign in with X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-6.77 7.74L23.2 22h-6.23l-4.88-6.38L6.5 22H3.37l7.24-8.28L1.2 2h6.39l4.41 5.83L18.9 2zm-1.1 18.13h1.73L7.7 3.77H5.85l11.95 16.36z"/></svg></button>
     </div>
+    <button class="auth-skip" data-authskip>Continue without signing in →</button>
     <div class="auth-foot mono">ESCROW-BACKED&nbsp;·&nbsp;VERIFIED&nbsp;RETURNS&nbsp;·&nbsp;18+&nbsp;PLAY&nbsp;RESPONSIBLY</div>
   </div>
 </div>
@@ -5692,9 +5695,6 @@ try { Object.assign(myProfile, JSON.parse(localStorage.getItem('pkProfile') || '
 
 let pkAuth = null;
 try { pkAuth = JSON.parse(localStorage.getItem('pkAuth') || 'null'); } catch (e) { }
-document.addEventListener('DOMContentLoaded', () => {
-  if (!pkAuth) { const v = document.getElementById('authVeil'); if (v) v.hidden = false; }
-});
 
 let myPosts = [];
 try { myPosts = JSON.parse(localStorage.getItem('pkPosts') || '[]'); } catch (e) { myPosts = []; }
@@ -6040,7 +6040,7 @@ function payoffHTML() {
   return `<div class="b-payoff">
     <div class="bp-card lose">
       <div class="bp-k mono">IF&nbsp;YOU&nbsp;LOSE</div>
-      <div class="bp-v down">−${f(S)}</div>
+      <div class="bp-v">−${f(S)}</div>
       <div class="bp-s">your stake — gone to the victor</div>
     </div>
     <div class="bp-mid">
@@ -7854,6 +7854,7 @@ document.addEventListener('click', e => {
     return toast(`Signed in with ${el.dataset.sso} — welcome back, ${myProfile.name}`);
   }
   if ((el = q('[data-forgot]'))) return toast('Reset link sent — check your inbox');
+  if ((el = q('[data-authskip]'))) { const v = document.getElementById('authVeil'); if (v) v.hidden = true; return; }
   if ((el = q('[data-appstore]'))) return toast('The iOS app is almost here — you\u2019re on the early list');
   if ((el = q('[data-signout]'))) {
     try { localStorage.removeItem('pkAuth'); } catch (e2) { }
