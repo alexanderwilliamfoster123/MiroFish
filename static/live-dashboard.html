@@ -3249,6 +3249,24 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
 .spec-lg2-it { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
 .spec-lg2-it i { width: 9px; height: 9px; border-radius: 50%; }
 .spec-lg2-it b { font-variant-numeric: tabular-nums; font-weight: 800; }
+
+/* ---- polymarket-style battle history ---- */
+.pmh-table tbody tr:nth-child(odd) td { background: var(--surface); }
+.pmh-table tbody tr:first-child td:first-child { border-top-left-radius: 12px; }
+.pmh-table tbody tr:first-child td:last-child { border-top-right-radius: 12px; }
+.pmh-res { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; }
+.pmh-res.won { color: #10b981; }
+.pmh-res.won svg { background: #10b981; color: #fff; border-radius: 50%; padding: 2.5px; }
+.pmh-res.lost { color: var(--text-faint); }
+.pmh-res.lost svg { background: var(--lbBsoft); color: var(--text-soft); border-radius: 50%; padding: 3px; }
+.pmh-mkt { display: inline-flex; align-items: center; gap: 11px; }
+.pmh-tx b { display: block; font-size: 12.5px; font-weight: 700; }
+.pmh-tx small { display: block; font-size: 10px; color: var(--text-faint); margin-top: 2px; }
+.pmh-won b { display: block; font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.pmh-won small { display: block; font-size: 10.5px; color: var(--text-faint); font-variant-numeric: tabular-nums; margin-top: 1px; }
+.pmh-won small.up { color: #10b981; }
+.pmh-share { border: 0; cursor: pointer; background: none; color: var(--text-faint); padding: 6px; border-radius: 8px; }
+.pmh-share:hover { color: var(--text); background: var(--surface); }
 .spec-legend i { display: inline-block; width: 16px; height: 4px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
 .spec-side-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .spec-ret { font-size: 22px; font-weight: 800; letter-spacing: -.4px; }
@@ -5723,14 +5741,27 @@ function tpPostsHTML(d) {
 
 function tpBattlesHTML(d) {
   const rows = d.acts.filter(a => a.battle);
-  return `<div class="fame-card"><div class="fame-scroll"><table class="trades-table">
-    <thead><tr class="mono"><th>RESULT</th><th>OPPONENT</th><th style="text-align:right">POT&nbsp;SWING</th><th style="text-align:right">WHEN</th></tr></thead>
-    <tbody>${rows.length ? rows.map(a => `<tr data-duel="${d.name}|${a.market.replace('vs ', '')}|${a.amount * 2}" style="cursor:pointer">
-      <td><span class="obadge ${a.win ? 'target' : 'stopped'}">${a.win ? 'Battle won' : 'Battle lost'}</span></td>
-      <td><b>${a.market.replace('vs ', '')}</b></td>
-      <td style="text-align:right" class="${a.win ? 'up' : 'down'}"><b>${a.win ? '+' : '−'}£${a.amount.toLocaleString('en-GB')}</b></td>
-      <td style="text-align:right;color:var(--text-faint)">${agoStr(a.ago)}</td>
-    </tr>`).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--text-faint);padding:26px">No settled battles yet.</td></tr>'}</tbody>
+  const row = a => {
+    const opp = a.market.replace('vs ', '');
+    const stake = a.amount, pot = stake * 2, take = Math.round(pot * 0.9);
+    const profit = a.win ? take - stake : -stake;
+    const pct = Math.round(Math.abs(profit) / stake * 100);
+    return `<tr data-duel="${d.name}|${opp}|${pot}" style="cursor:pointer">
+      <td><span class="pmh-res ${a.win ? 'won' : 'lost'}">${a.win
+        ? '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5L19.5 7"/></svg>Won'
+        : '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Lost'}</span></td>
+      <td><span class="pmh-mkt">${avatarHTML(opp, 'thread-av')}
+        <span class="pmh-tx"><b>vs ${opp}</b><small>£${stake.toLocaleString('en-GB')} staked · even money · settled ${agoStr(a.ago)}</small></span></span></td>
+      <td style="text-align:right" class="mono-num">£${pot.toLocaleString('en-GB')}</td>
+      <td style="text-align:right"><span class="pmh-won"><b>${a.win ? '£' + take.toLocaleString('en-GB') : '£0'}</b>
+        <small class="${a.win ? 'up' : ''}">${a.win ? '+' : '−'}£${Math.abs(profit).toLocaleString('en-GB')} (${pct}%)</small></span></td>
+      <td style="text-align:right"><button class="pmh-share" data-histshare="${d.name}|${opp}|${pot}|${a.win ? 1 : 0}" aria-label="Share result">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg></button></td>
+    </tr>`;
+  };
+  return `<div class="fame-card"><div class="fame-scroll"><table class="trades-table lbb-table pmh-table" style="min-width:640px">
+    <thead><tr class="mono"><th>RESULT</th><th>BATTLE</th><th style="text-align:right">TOTAL&nbsp;POT</th><th style="text-align:right">AMOUNT&nbsp;WON</th><th></th></tr></thead>
+    <tbody>${rows.length ? rows.map(row).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text-faint);padding:26px">No settled battles yet.</td></tr>'}</tbody>
   </table></div></div>`;
 }
 
@@ -9446,6 +9477,14 @@ document.addEventListener('click', e => {
     return;
   }
   if ((el = q('[data-nwopen]'))) return openNation(+el.dataset.nwopen);
+  if ((el = q('[data-histshare]'))) {
+    const [who, opp, pot, won] = el.dataset.histshare.split('|');
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(
+      +won
+        ? `${who} took £${(+pot * 0.9).toLocaleString('en-GB')} off @${opp} in a Paktos battle — £${(+pot).toLocaleString('en-GB')} pot, settled on verified returns. https://${partner.link}`
+        : `${who} vs @${opp} on Paktos — £${(+pot).toLocaleString('en-GB')} pot settled on verified returns. Run it back: https://${partner.link}`), '_blank');
+    return toast('Opening X — result ready to post');
+  }
   if ((el = q('[data-duel]'))) {
     const [a, b, pot] = el.dataset.duel.split('|');
     return openDuel(a, b, +pot || 5000);
