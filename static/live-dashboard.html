@@ -3128,17 +3128,17 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .lbb-add { padding: 7px 14px; font-size: 11.5px; }
 .lbb-spark svg { display: block; opacity: .9; }
 
-/* ---- explore — swipe the trader deck ---- */
-.ex-wrap { display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 8px 0 40px; }
-.ex-stack { position: relative; width: min(370px, 88vw); height: 520px; perspective: 900px; transform-style: preserve-3d; touch-action: none; }
-.ex-card { position: absolute; inset: 0; background: var(--card); border-radius: 26px; box-shadow: var(--neu-out); overflow: hidden; cursor: grab; will-change: transform;
-  transform: translateZ(calc(var(--i) * -16px)) translateY(calc(var(--i) * 11px)) translateX(var(--sx, 0px)) rotate(var(--sr, 0deg));
-  transition: transform .3s ease, opacity .3s ease; }
-.ex-card:active { cursor: grabbing; }
+/* ---- explore — the trader fan (same system as Flick) ---- */
+.ex-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 0 34px; }
+.exfan-wrap { position: relative; height: 600px; width: 100%; margin: 0; }
+.exfan-wrap .fan-card { width: min(380px, 88vw); top: 16px; }
+.ex-card { background: var(--card); border-radius: 26px; box-shadow: var(--neu-out); overflow: hidden; touch-action: none; }
+.fan-card.ctr .ex-card { cursor: grab; }
+.fan-card.ctr .ex-card:active { cursor: grabbing; }
 .ex-hero { height: 168px; display: flex; align-items: center; justify-content: center; position: relative; }
 .ex-hero > span:first-child { font-size: 74px; filter: drop-shadow(0 6px 14px rgba(20, 16, 50, .25)); }
 .ex-club { position: absolute; top: 14px; right: 14px; font-size: 8px; letter-spacing: .09em; font-weight: 800; padding: 4px 10px; border-radius: 999px; border: 1px solid; }
-.ex-body { padding: 18px 20px 16px; display: flex; flex-direction: column; gap: 12px; }
+.ex-body { padding: 18px 20px 18px; display: flex; flex-direction: column; gap: 12px; }
 .ex-name { display: flex; align-items: center; gap: 7px; font-size: 18px; font-weight: 800; letter-spacing: -.01em; cursor: pointer; }
 .ex-view { margin-left: auto; font-size: 8px; letter-spacing: .1em; color: var(--lbA); font-weight: 700; }
 .ex-bio { font-size: 12.5px; color: var(--text-soft); line-height: 1.5; min-height: 38px; margin: 0; }
@@ -3147,11 +3147,14 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .ex-tiles span { display: block; font-size: 7.5px; letter-spacing: .1em; color: var(--text-faint); font-weight: 700; }
 .ex-tiles b { display: block; font-size: 14.5px; font-weight: 800; margin-top: 2px; font-variant-numeric: tabular-nums; }
 .ex-spark svg { width: 100%; height: 44px; display: block; }
-.ex-hint { font-size: 7.5px; letter-spacing: .12em; color: var(--text-faint); text-align: center; }
+.ex-nav { display: flex; gap: 12px; margin: 2px 0 14px; }
 .ex-actions { display: flex; align-items: center; gap: 16px; }
-.ex-btn { width: 56px; height: 56px; border-radius: 50%; border: 0; cursor: pointer; background: var(--card); box-shadow: var(--neu-out-sm); color: var(--text-soft); display: flex; align-items: center; justify-content: center; transition: transform .15s ease; }
+.ex-btn { width: 60px; height: 60px; border-radius: 50%; border: 0; cursor: pointer; background: var(--card); box-shadow: var(--neu-out-sm); display: flex; align-items: center; justify-content: center; transition: transform .15s ease; }
 .ex-btn:hover { transform: translateY(-2px); }
-.ex-btn.on { color: var(--lbA); }
+.ex-btn:active { box-shadow: var(--neu-in-sm); }
+.ex-btn.no { color: #e5484d; }
+.ex-btn.yes { color: #10b981; }
+.ex-hint { font-size: 8px; letter-spacing: .12em; color: var(--text-faint); margin-top: 14px; }
 .ex-duel { border-radius: 999px; padding: 15px 30px; font-size: 14px; }
 @media (max-width: 1100px) { .tw-pill { display: none; } }
 
@@ -3242,6 +3245,10 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
 .spt-r i { width: 8px; height: 8px; border-radius: 3px; flex: none; }
 .spt-r b { margin-left: auto; font-variant-numeric: tabular-nums; color: #fff; }
 .spec-legend { display: flex; align-items: center; gap: 18px; margin-top: 12px; font-size: 10.5px; color: var(--text-faint); }
+.spec-lg2 { display: flex; align-items: center; gap: 22px; margin: 16px 0 8px; }
+.spec-lg2-it { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
+.spec-lg2-it i { width: 9px; height: 9px; border-radius: 50%; }
+.spec-lg2-it b { font-variant-numeric: tabular-nums; font-weight: 800; }
 .spec-legend i { display: inline-block; width: 16px; height: 4px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
 .spec-side-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .spec-ret { font-size: 22px; font-weight: 800; letter-spacing: -.4px; }
@@ -3814,6 +3821,9 @@ function tickLiveNumbers() {
     const ra = document.getElementById('specRa'), rb = document.getElementById('specRb');
     if (ra) { setOdo(ra, fmtRet(spec.ra)); ra.className = 'spec-ret odo ' + (spec.ra >= 0 ? 'up' : 'down'); }
     if (rb) { setOdo(rb, fmtRet(spec.rb)); rb.className = 'spec-ret odo ' + (spec.rb >= 0 ? 'up' : 'down'); }
+    const lga = document.getElementById('specLga'), lgb = document.getElementById('specLgb');
+    if (lga) lga.textContent = fmtRet(spec.ra);
+    if (lgb) lgb.textContent = fmtRet(spec.rb);
     setOdo('specWatch', spec.watching.toLocaleString('en-GB'));
     const ld = document.getElementById('specLead');
     if (ld) ld.style.width = Math.max(6, Math.min(94, 50 + (spec.ra - spec.rb) * 9)).toFixed(0) + '%';
@@ -7227,13 +7237,13 @@ function lbbTableHTML() {
   </table></div></div>`;
 }
 
-/* ---- explore — swipe-to-follow trader deck ---- */
-let exOrder = null;
+/* ---- explore — swipe-to-follow trader fan (same system as Flick) ---- */
+let exOrder = null, exPos = 0;
 
-function exCardHTML(n, i) {
+function exCardHTML(n) {
   const p = traderProfile(n);
   const club = clubFor(p.winnings);
-  return `<article class="ex-card" style="--i:${i};z-index:${9 - i}">
+  return `<article class="ex-card">
     <div class="ex-hero" style="background:${p.tint}"><span>${p.av}</span>
       <span class="ex-club" style="background:${club.bg};color:${club.tx};border-color:${club.edge}">${club.name.toUpperCase()}</span></div>
     <div class="ex-body">
@@ -7246,71 +7256,113 @@ function exCardHTML(n, i) {
         <div><span class="mono">FOLLOWERS</span><b>${p.followers}</b></div>
       </div>
       <div class="ex-spark">${lbbSpark(p.series)}</div>
-      <div class="ex-hint mono">SWIPE&nbsp;RIGHT&nbsp;TO&nbsp;FOLLOW&nbsp;·&nbsp;LEFT&nbsp;TO&nbsp;SKIP</div>
     </div>
   </article>`;
 }
 
+function exApplyFan() {
+  const wrap = document.getElementById('exFan');
+  if (!wrap) return;
+  const len = exOrder.length;
+  const mult = wrap.clientWidth < 620 ? 0.42 : 1;
+  wrap.querySelectorAll('.fan-card').forEach(el => {
+    const i = +el.dataset.xi;
+    let dd = ((i - exPos) % len + len) % len;
+    if (dd > len / 2) dd -= len;
+    const slot = dd + 3;
+    if (slot < 0 || slot > 6) {
+      el.style.transform = 'translateX(-50%) translateY(2rem) scale(0.3)';
+      el.style.opacity = 0; el.style.zIndex = 0; el.style.pointerEvents = 'none';
+      el.classList.remove('ctr'); el.removeAttribute('data-exgo');
+      return;
+    }
+    const p2 = FAN_POS[slot];
+    const t = `translateX(calc(-50% + ${(p2.x * mult).toFixed(1)}rem)) translateY(${(p2.y * 0.9).toFixed(1)}rem) rotate(${p2.rot}deg) scale(${p2.scale})`;
+    el.dataset.t = t;
+    el.style.transform = t;
+    el.style.opacity = 1;
+    el.style.zIndex = p2.z;
+    el.style.pointerEvents = 'auto';
+    el.classList.toggle('ctr', slot === 3);
+    if (slot === 3) el.removeAttribute('data-exgo'); else el.setAttribute('data-exgo', i);
+  });
+  const duel = document.querySelector('[data-exduel]');
+  if (duel) duel.textContent = `Challenge ${exOrder[exPos]} — set the date →`;
+}
+
 function renderExplore() {
   if (!exOrder) exOrder = Object.keys(TRADER_AV).sort((a, b) => hashName(a + 'x') - hashName(b + 'x'));
-  const topN = exOrder[0];
   viewEl('explore').innerHTML = `<div class="ex-wrap">
-    <div class="ex-stack" id="exStack">${exOrder.slice(0, 4).map((n, i) => exCardHTML(n, i)).join('')}</div>
-    <div class="ex-actions">
-      <button class="ex-btn" data-exskip aria-label="Skip"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-      <button class="btn-mach ex-duel" data-exduel>Challenge ${topN} — set the date →</button>
-      <button class="ex-btn${following.has(topN) ? ' on' : ''}" data-exfollow aria-label="Follow"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+    <div class="exfan-wrap" id="exFan">${exOrder.map((n, i) => `<div class="fan-card" data-xi="${i}">${exCardHTML(n)}</div>`).join('')}</div>
+    <div class="ex-nav">
+      <button class="fan-arrow" data-exprev aria-label="Previous trader"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <button class="fan-arrow" data-exnext aria-label="Next trader"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
     </div>
+    <div class="ex-actions">
+      <button class="ex-btn no" data-exskip aria-label="Skip"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <button class="btn-mach ex-duel" data-exduel>Challenge ${exOrder[exPos]} — set the date →</button>
+      <button class="ex-btn yes" data-exfollow aria-label="Follow"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5L19.5 7"/></svg></button>
+    </div>
+    <div class="ex-hint mono">SWIPE&nbsp;RIGHT&nbsp;TO&nbsp;FOLLOW&nbsp;·&nbsp;LEFT&nbsp;TO&nbsp;SKIP&nbsp;·&nbsp;OR&nbsp;USE&nbsp;THE&nbsp;BUTTONS</div>
   </div>`;
+  exApplyFan();
   exBind();
 }
 
 function exBind() {
-  const stack = document.getElementById('exStack');
-  if (!stack) return;
-  let live = false, sx = 0, dx = 0;
-  const top = () => stack.querySelector('.ex-card');
-  stack.onpointerdown = e => {
+  const wrap = document.getElementById('exFan');
+  if (!wrap) return;
+  let live = false, sx = 0, dx = 0, card = null;
+  wrap.onpointerdown = e => {
+    card = e.target.closest('.fan-card.ctr');
+    if (!card) return;
     live = true; dx = 0; sx = e.clientX;
-    const c = top(); if (c) c.style.transition = 'none';
+    card.style.transition = 'none';
   };
-  stack.onpointermove = e => {
-    if (!live) return;
+  wrap.onpointermove = e => {
+    if (!live || !card) return;
     dx = e.clientX - sx;
-    const c = top(); if (!c) return;
-    c.style.setProperty('--sx', dx + 'px');
-    c.style.setProperty('--sr', (dx * 0.06).toFixed(2) + 'deg');
-    c.style.opacity = String(1 - Math.min(Math.abs(dx) / 320, 0.45));
+    card.style.transform = `${card.dataset.t} translateX(${dx}px) rotate(${(dx * 0.05).toFixed(2)}deg)`;
+    card.style.opacity = String(1 - Math.min(Math.abs(dx) / 340, 0.4));
   };
   const finish = () => {
-    if (!live) return;
+    if (!live || !card) { live = false; return; }
     live = false;
-    const c = top(); if (!c) return;
-    c.style.transition = '';
+    card.style.transition = '';
     if (Math.abs(dx) > 70) {
-      stack.addEventListener('click', ev => { ev.stopPropagation(); ev.preventDefault(); }, { capture: true, once: true });
-      exFly(Math.sign(dx));
+      wrap.addEventListener('click', ev => { ev.stopPropagation(); ev.preventDefault(); }, { capture: true, once: true });
+      exDecide(Math.sign(dx));
     } else {
-      c.style.setProperty('--sx', '0px'); c.style.setProperty('--sr', '0deg'); c.style.opacity = '1';
+      card.style.transform = card.dataset.t;
+      card.style.opacity = 1;
     }
-    dx = 0;
+    dx = 0; card = null;
   };
-  stack.onpointerup = finish;
-  stack.onpointercancel = finish;
-  stack.onpointerleave = finish;
+  wrap.onpointerup = finish;
+  wrap.onpointercancel = finish;
+  wrap.onpointerleave = finish;
 }
 
-function exFly(dir) {
-  const stack = document.getElementById('exStack');
-  const c = stack?.querySelector('.ex-card');
-  if (!c) return;
-  const n = exOrder[0];
-  c.style.transition = '';
-  c.style.setProperty('--sx', dir * 480 + 'px');
-  c.style.setProperty('--sr', dir * 16 + 'deg');
-  c.style.opacity = '0';
+function exDecide(dir) {
+  const wrap = document.getElementById('exFan');
+  const ctr = wrap?.querySelector('.fan-card.ctr');
+  const n = exOrder[exPos];
   if (dir > 0 && !following.has(n)) { following.add(n); toast(`Following ${n} — their calls hit your feed`); }
-  setTimeout(() => { exOrder.push(exOrder.shift()); if (currentView === 'explore') renderExplore(); }, 300);
+  if (ctr) {
+    ctr.style.transition = 'transform .28s ease, opacity .28s ease';
+    ctr.style.transform = `${ctr.dataset.t} translateX(${dir * 440}px) rotate(${dir * 14}deg)`;
+    ctr.style.opacity = 0;
+  }
+  setTimeout(() => {
+    exPos = (exPos + 1) % exOrder.length;
+    if (currentView === 'explore') renderExplore();
+  }, 280);
+}
+
+function exGo(target) {
+  const len = exOrder.length;
+  exPos = ((target % len) + len) % len;
+  exApplyFan();
 }
 
 function renderBoard() {
@@ -7714,11 +7766,11 @@ function openNation(i) {
 
 function specChartSVG() {
   const box = document.getElementById('specChart');
-  const W = Math.max(560, box ? box.clientWidth : 920), H = 250, padL = 48, padR = 20, padT = 18, padB = 28;
+  const W = Math.max(560, box ? box.clientWidth : 920), H = 262, padL = 16, padR = 64, padT = 20, padB = 30;
   const iw = W - padL - padR, ih = H - padT - padB;
   const all = spec.sa.concat(spec.sb);
   const min = Math.min(...all), max = Math.max(...all);
-  const pad = (max - min) * 0.12 || 1;
+  const pad = (max - min) * 0.14 || 1;
   const lo = min - pad, hi = max + pad, rng = hi - lo;
   const X = (i2, n) => padL + i2 / (n - 1) * iw;
   const Y = v => padT + (1 - (v - lo) / rng) * ih;
@@ -7727,26 +7779,39 @@ function specChartSVG() {
   let grid = '';
   for (let g = 0; g <= 4; g++) {
     const v = lo + rng * g / 4, y = Y(v).toFixed(1);
-    grid += `<line x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="currentColor" opacity=".08" stroke-dasharray="4 12"/>`
-      + `<text x="${padL - 10}" y="${+y + 3}" text-anchor="end" fill="currentColor" opacity=".38" font-size="9" font-family="ui-monospace,Menlo,monospace">${v.toFixed(1)}%</text>`;
+    grid += `<line x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="currentColor" opacity=".07" stroke-dasharray="2 7"/>`
+      + `<text x="${W - padR + 10}" y="${+y + 3}" text-anchor="start" fill="currentColor" opacity=".4" font-size="9.5" font-family="ui-monospace,Menlo,monospace">${v.toFixed(1)}%</text>`;
   }
-  const endDot = (sr, col) => `<circle cx="${X(sr.length - 1, sr.length).toFixed(1)}" cy="${Y(sr[sr.length - 1]).toFixed(1)}" r="5" fill="${col}" stroke="#fff" stroke-width="2" filter="url(#spDot)"/>`;
+  /* name + live return pills pinned to the line ends — polymarket style */
+  let ya = Y(spec.sa[spec.sa.length - 1]), yb = Y(spec.sb[Math.min(spec.sa.length, spec.sb.length) - 1]);
+  if (Math.abs(ya - yb) < 26) { const mid = (ya + yb) / 2, d2 = ya <= yb ? 1 : -1; ya = mid - 13 * d2; yb = mid + 13 * d2; }
+  const pill = (name, v, y, col) => {
+    const label = `${name} ${fmtRet(v)}`;
+    const w2 = label.length * 6.6 + 30;
+    const x2 = W - padR - 16 - w2;
+    const yy = Math.max(padT + 11, Math.min(H - padB - 11, y));
+    return `<g><rect x="${x2.toFixed(1)}" y="${(yy - 11.5).toFixed(1)}" width="${w2.toFixed(1)}" height="23" rx="11.5" fill="var(--card)" stroke="currentColor" stroke-opacity=".13" filter="url(#spDot)"/>
+      <rect x="${(x2 + 10).toFixed(1)}" y="${(yy - 5.5).toFixed(1)}" width="3.5" height="11" rx="1.75" fill="${col}"/>
+      <text x="${(x2 + 20).toFixed(1)}" y="${(yy + 3.6).toFixed(1)}" font-size="10.5" font-weight="700" fill="currentColor" font-family="inherit">${label}</text></g>`;
+  };
+  const endDot = (sr, col) => `<circle cx="${X(sr.length - 1, sr.length).toFixed(1)}" cy="${Y(sr[sr.length - 1]).toFixed(1)}" r="4.5" fill="${col}" stroke="#fff" stroke-width="2" filter="url(#spDot)"/>`;
   let hover = '';
   if (spec.hov != null) {
     const n = spec.sa.length;
     const idx = Math.max(0, Math.min(n - 1, spec.hov));
     const hx = X(idx, n).toFixed(1);
-    hover = `<line x1="${hx}" x2="${hx}" y1="${padT}" y2="${H - padB}" stroke="currentColor" opacity=".22"/>`
-      + `<circle cx="${hx}" cy="${Y(spec.sa[idx]).toFixed(1)}" r="5" fill="${A}" stroke="#fff" stroke-width="2" filter="url(#spDot)"/>`
-      + `<circle cx="${hx}" cy="${Y(spec.sb[Math.min(idx, spec.sb.length - 1)]).toFixed(1)}" r="5" fill="${B}" stroke="#fff" stroke-width="2" filter="url(#spDot)"/>`;
+    hover = `<line x1="${hx}" x2="${hx}" y1="${padT}" y2="${H - padB}" stroke="currentColor" opacity=".2"/>`
+      + `<circle cx="${hx}" cy="${Y(spec.sa[idx]).toFixed(1)}" r="4.5" fill="${A}" stroke="#fff" stroke-width="2" filter="url(#spDot)"/>`
+      + `<circle cx="${hx}" cy="${Y(spec.sb[Math.min(idx, spec.sb.length - 1)]).toFixed(1)}" r="4.5" fill="${B}" stroke="#fff" stroke-width="2" filter="url(#spDot)"/>`;
   }
-  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-    <defs><filter id="spDot" x="-60%" y="-60%" width="220%" height="220%"><feDropShadow dx="1" dy="2" stdDeviation="2.4" flood-color="rgba(0,0,0,.35)"/></filter></defs>
+  return `<svg viewBox="0 0 ${W} ${H}">
+    <defs><filter id="spDot" x="-60%" y="-60%" width="220%" height="220%"><feDropShadow dx="1" dy="2" stdDeviation="2.4" flood-color="rgba(0,0,0,.3)"/></filter></defs>
     ${grid}
-    <path d="${path(spec.sa)}" fill="none" stroke="${A}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
-    <path d="${path(spec.sb)}" fill="none" stroke="${B}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="${path(spec.sa)}" fill="none" stroke="${A}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="${path(spec.sb)}" fill="none" stroke="${B}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
     ${endDot(spec.sa, A)}${endDot(spec.sb, B)}
     ${hover}
+    ${pill(spec.a.name, spec.ra, ya, A)}${pill(spec.b.name, spec.rb, yb, B)}
     <text x="${padL}" y="${H - 8}" fill="currentColor" opacity=".35" font-size="8.5" font-family="ui-monospace,Menlo,monospace">KICK-OFF</text>
     <text x="${W - padR}" y="${H - 8}" text-anchor="end" fill="currentColor" opacity=".35" font-size="8.5" font-family="ui-monospace,Menlo,monospace">NOW</text>
   </svg>`;
@@ -7880,14 +7945,12 @@ syncUserCard();
           <span>ends ${spec.ends}</span>
         </div>
       </div>
-      <div class="nw-bar" style="margin:14px 0 6px"><span id="specLead" style="width:${lead.toFixed(0)}%"></span><i></i></div>
-      <div class="spec-leadtxt mono" id="specLeadTxt">${leader}&nbsp;LEADS</div>
-      <div class="spec-chart" id="specChart">${specChartSVG()}</div><div class="spec-tip" id="specTip"></div>
-      <div class="spec-legend mono">
-        <span><i style="background:${lbCol('a')}"></i>${spec.a.name}</span>
-        <span><i style="background:${lbCol('b')}"></i>${spec.b.name}</span>
-        <span style="margin-left:auto">EQUITY&nbsp;·&nbsp;%&nbsp;RETURN&nbsp;SINCE&nbsp;KICK-OFF</span>
+      <div class="spec-lg2">
+        <span class="spec-lg2-it"><i style="background:${lbCol('a')}"></i>${spec.a.name}<b id="specLga">${fmtRet(spec.ra)}</b></span>
+        <span class="spec-lg2-it"><i style="background:${lbCol('b')}"></i>${spec.b.name}<b id="specLgb">${fmtRet(spec.rb)}</b></span>
+        <span class="spec-leadtxt mono" id="specLeadTxt" style="margin:0 0 0 auto">${leader}&nbsp;LEADS</span>
       </div>
+      <div class="spec-chart" id="specChart">${specChartSVG()}</div><div class="spec-tip" id="specTip"></div>
     </div>
     <div class="spec-cheer">
       <button class="cheer-btn a" data-cheer="a">▲ Cheer ${spec.a.name} · ${odoHTML('specChA', spec.x.cheersA.toLocaleString('en-GB'))}</button>
@@ -9085,9 +9148,12 @@ document.addEventListener('click', e => {
     return toast(`Switched to ${ACCTS[i].id} — ${ACCTS[i].label}`);
   }
   if (e.target && e.target.id === 'btVeil') { btFlow = null; return e.target.remove(); }
-  if ((el = q('[data-exskip]'))) return exFly(-1);
-  if ((el = q('[data-exfollow]'))) return exFly(1);
-  if ((el = q('[data-exduel]'))) { inv.to = exOrder[0]; openInvite('duel'); return; }
+  if ((el = q('[data-exskip]'))) return exDecide(-1);
+  if ((el = q('[data-exfollow]'))) return exDecide(1);
+  if ((el = q('[data-exprev]'))) return exGo(exPos - 1);
+  if ((el = q('[data-exnext]'))) return exGo(exPos + 1);
+  if ((el = q('[data-exgo]'))) return exGo(+el.dataset.exgo);
+  if ((el = q('[data-exduel]'))) { inv.to = exOrder[exPos]; openInvite('duel'); return; }
   if ((el = q('[data-btclose]'))) { btFlow = null; return document.getElementById('btVeil')?.remove(); }
   if ((el = q('[data-btback]'))) { if (btFlow) openTerms(btFlow); return; }
   if ((el = q('[data-btpm]'))) { if (el.classList.contains('off')) return; btPm = el.dataset.btpm; return openPay(); }
