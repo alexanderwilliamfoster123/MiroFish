@@ -3128,6 +3128,19 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .lbb-add { padding: 7px 14px; font-size: 11.5px; }
 .lbb-spark svg { display: block; opacity: .9; }
 
+/* ---- leaderboard hero — the globe of live escrow routes ---- */
+.bd-hero { position: relative; overflow: hidden; background: var(--card); border-radius: 24px; box-shadow: var(--neu-out-sm); padding: 34px 38px; margin-bottom: 22px; min-height: 310px; display: flex; align-items: center; --wm-dot: rgba(24, 26, 34, .17); }
+body.dark .bd-hero { --wm-dot: rgba(255, 255, 255, .19); }
+.bd-map { position: absolute; inset: 0; display: flex; align-items: center; justify-content: flex-end; padding-right: 22px; pointer-events: none; }
+.bd-map svg { height: 92%; width: auto; max-width: none; }
+.bd-fade { position: absolute; inset: 0; background: linear-gradient(90deg, var(--card) 26%, rgba(255, 255, 255, 0) 62%); pointer-events: none; }
+body.dark .bd-fade { background: linear-gradient(90deg, var(--card) 26%, rgba(0, 0, 0, 0) 62%); }
+.bd-hero-tx { position: relative; z-index: 2; max-width: 480px; }
+.bd-stats { display: flex; gap: 34px; }
+.bd-stats b { display: block; font-size: 24px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.bd-stats span { font-size: 8px; letter-spacing: .12em; color: var(--text-faint); }
+@media (max-width: 900px) { .bd-map { opacity: .35; } }
+
 /* ---- explore — the trader fan (same system as Flick) ---- */
 .ex-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 0 34px; }
 .exfan-wrap { position: relative; height: 600px; width: 100%; margin: 0; }
@@ -7397,9 +7410,26 @@ function exGo(target) {
 }
 
 function renderBoard() {
+  const all = lbbList();
+  const total = all.reduce((a, r) => a + r.p.winnings, 0);
+  const countries = new Set(all.map(r => traderFlag(r.n))).size;
   viewEl('board').innerHTML = `
     <button class="back-btn" data-nav="arena">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to Arena</button>
+    <div class="bd-hero">
+      <div class="bd-map" aria-hidden="true">${wmSVG()}</div>
+      <div class="bd-fade" aria-hidden="true"></div>
+      <div class="bd-hero-tx">
+        <span class="live-tag"><span class="pulse-dot tiny"></span><span class="mono">LIVE&nbsp;ESCROW&nbsp;ROUTES</span></span>
+        <h2 class="pt-title" style="margin:10px 0 4px">Battles across the globe</h2>
+        <p class="section-sub" style="margin:0 0 20px">stakes moving between traders on every continent — settled through one escrow, ranked on one board</p>
+        <div class="bd-stats mono">
+          <div><b>${all.length}</b><span>TRADERS&nbsp;RANKED</span></div>
+          <div><b>£${(total / 1e6).toFixed(1)}M</b><span>BANKED&nbsp;ALL-TIME</span></div>
+          <div><b>${countries}</b><span>COUNTRIES</span></div>
+        </div>
+      </div>
+    </div>
     ${lbBoardHTML()}`;
 }
 
@@ -8345,9 +8375,6 @@ function renderLive() {
       </div>
     </div>
     ${board}
-    <div class="section-head" style="margin-top:30px"><div><h3 class="section-title">Battles across the globe</h3>
-      <p class="section-sub"><span class="mono">LIVE&nbsp;ESCROW&nbsp;ROUTES</span><span class="dot-sep">·</span><span>stakes moving between traders on every continent, settled through one escrow</span></p></div></div>
-    <div class="wm-card">${wmSVG()}</div>
     <div class="lb-tip" id="lbTip"></div>`;
   document.querySelectorAll('[data-lbchart]').forEach(el => {
     const b = LIVE_B[+el.dataset.lbchart];
