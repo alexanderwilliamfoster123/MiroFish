@@ -1518,12 +1518,15 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
 }
 @keyframes rewardPop { from { transform: scale(0.7) translateY(30px); opacity: 0; } to { transform: none; opacity: 1; } }
 .reward-gift {
+  position: relative; z-index: 0;
   width: 88px; height: 88px; margin: 0 auto 16px;
   border-radius: 50%;
   background: var(--surface); box-shadow: var(--neu-in-sm);
   display: flex; align-items: center; justify-content: center;
   font-size: 40px;
 }
+.reward-gift::before { content: ''; position: absolute; inset: -5px; border-radius: 50%; background: var(--brandGrad); opacity: 0.35; filter: blur(12px); z-index: -1; }
+.rg-emoji { font-size: 46px; line-height: 1; filter: drop-shadow(0 8px 14px rgba(150, 110, 30, 0.35)); animation: rewardPop 0.6s cubic-bezier(0.22, 1.4, 0.36, 1); }
 .reward-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
 .reward-sub { font-size: 13px; color: var(--text-soft); line-height: 1.55; margin-top: 8px; }
 .slide-track {
@@ -1582,7 +1585,22 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
 
 .award-badge { display: inline-block; width: 260px; max-width: 100%; cursor: pointer; }
 .award-tilt { transition: transform 0.2s ease-out; transform: perspective(700px); will-change: transform; }
-.award-badge svg { width: 100%; height: auto; display: block; border-radius: 10px; box-shadow: 0 10px 26px rgba(180, 140, 40, 0.28); }
+.award-badge svg { width: 100%; height: auto; display: block; border-radius: 10px; box-shadow: 0 10px 26px rgba(120, 110, 90, 0.26); }
+.award-badge.locked { filter: grayscale(0.85); opacity: 0.42; cursor: default; }
+.award-badge.locked .award-tilt { transform: none !important; }
+.tp-club { margin-top: 14px; }
+.tp-club .award-badge { width: 100%; max-width: 300px; }
+.club-card { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 18px 20px; align-self: start; }
+.club-sub { font-size: 11px; color: var(--text-faint); margin: 0 0 14px; }
+.club-prog { margin-bottom: 16px; }
+.club-prog-t { display: flex; justify-content: space-between; font-size: 9px; letter-spacing: 0.08em; color: var(--text-faint); margin-bottom: 7px; }
+.club-bar { height: 7px; border-radius: 999px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; }
+.club-bar span { display: block; height: 100%; background: var(--brandGrad); border-radius: 999px; }
+.club-ladder { display: flex; flex-direction: column; gap: 12px; }
+.club-ladder .award-badge { width: 100%; }
+.club-row { display: flex; flex-direction: column; gap: 5px; }
+.club-meta { display: flex; justify-content: space-between; font-size: 9px; letter-spacing: 0.08em; color: var(--text-faint); padding: 0 3px; }
+.club-st.in { color: var(--lbA); font-weight: 700; }
 .holo { transform-origin: center center; will-change: transform; }
 .hg1 { animation: holo1 5s infinite; }
 .hg2 { animation: holo2 5s infinite; }
@@ -1761,7 +1779,7 @@ body.dark .tpc-cover::before { background-image: radial-gradient(rgba(196, 181, 
 
 .lb-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
 .lb-table-card { background: var(--card); border-radius: 22px; box-shadow: var(--neu-out-sm); padding: 8px 26px; margin-bottom: 18px; }
-.lb-mini { height: 84px; border-radius: 12px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; color: var(--text); }
+.lb-mini { height: 150px; border-radius: 14px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; color: var(--text); cursor: crosshair; }
 .lb-mini svg { display: block; width: 100%; height: 100%; }
 .lb-foot { display: flex; align-items: center; justify-content: space-between; }
 .lb-page { font-size: 12px; color: var(--text-faint); }
@@ -2643,10 +2661,7 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 #views { padding-bottom: 130px; }
 .dock { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 90; }
 .dock ul { display: flex; align-items: flex-end; gap: 5px; margin: 0; padding: 9px 11px; list-style: none; border-radius: 24px; background: var(--card); box-shadow: 10px 14px 34px var(--shadow-dark), -8px -8px 22px var(--shadow-light); }
-.dk { --sz: 52px; position: relative; width: var(--sz); height: var(--sz); transition: width .16s cubic-bezier(.25, 1, .5, 1), height .16s cubic-bezier(.25, 1, .5, 1); }
-.dk:hover { width: calc(var(--sz) * 1.5); height: calc(var(--sz) * 1.5); }
-.dk:hover + .dk, .dk:has(+ .dk:hover) { width: calc(var(--sz) * 1.3); height: calc(var(--sz) * 1.3); }
-.dk:hover + .dk + .dk, .dk:has(+ .dk + .dk:hover) { width: calc(var(--sz) * 1.14); height: calc(var(--sz) * 1.14); }
+.dk { --sz: 52px; position: relative; width: var(--sz); height: var(--sz); will-change: width, height; }
 .dk-sep { width: 1px; align-self: stretch; margin: 8px 5px; background: var(--surface); }
 .dk button { width: 100%; height: 100%; border: 0; cursor: pointer; border-radius: 17px; background: var(--surface); box-shadow: var(--neu-out-sm); color: var(--text-soft); display: flex; align-items: center; justify-content: center; padding: 0; font: inherit; }
 .dk button svg { width: 44%; height: 44%; }
@@ -2675,8 +2690,9 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .spec-cheer { display: flex; gap: 12px; margin-top: 16px; }
 .cheer-btn { flex: 1; border: 0; cursor: pointer; border-radius: 14px; padding: 13px; font: inherit; font-size: 13px; font-weight: 700; background: var(--card); box-shadow: var(--neu-out-sm); color: var(--text); display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: transform .15s ease; }
 .cheer-btn:active { transform: scale(.97); }
-.cheer-btn.a { color: #10b981; }
-.cheer-btn.b { color: #a855f7; }
+.cheer-btn.a { color: var(--lbA); }
+.cheer-btn.b { color: #61606C; }
+body.dark .cheer-btn.b { color: #94939F; }
 .sf-list { display: flex; flex-direction: column; gap: 7px; }
 .sf-row { display: flex; align-items: center; gap: 10px; font-size: 12px; }
 .sf-sym { flex: 1; color: var(--text-soft); }
@@ -2706,9 +2722,9 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .lb-card:hover { transform: translateY(-2px); box-shadow: var(--neu-out); }
 .lb-top { display: flex; align-items: center; gap: 7px; font-size: 9px; letter-spacing: .1em; }
 .lb-kind { padding: 3.5px 8px; border-radius: 999px; background: var(--surface); box-shadow: var(--neu-in-sm); color: var(--text-soft); font-weight: 800; }
-.lb-kind.clan { color: var(--accent-a); }
-.hot-chip { padding: 3.5px 8px; border-radius: 999px; background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; font-weight: 800; }
-.nn-chip { padding: 3.5px 8px; border-radius: 999px; background: linear-gradient(135deg, var(--accent-a), var(--accent-b)); color: #fff; font-weight: 800; }
+.lb-kind.clan { color: var(--lbA); }
+.hot-chip { padding: 3.5px 8px; border-radius: 999px; background: var(--brandGrad); color: #fff; font-weight: 800; text-shadow: 0 1px 2px rgba(0, 0, 0, .18); }
+.nn-chip { padding: 3.5px 8px; border-radius: 999px; background: #6A2E9E; color: #fff; font-weight: 800; }
 .lb-watching { margin-left: auto; color: var(--text-faint); letter-spacing: .06em; }
 .lb-face-row { display: grid; grid-template-columns: 1fr auto auto auto 1fr; align-items: center; gap: 9px; }
 .lb-face { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; min-width: 0; }
@@ -2717,7 +2733,45 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .lb-ret { font-size: 13.5px; font-weight: 800; }
 .lb-foot { display: flex; align-items: center; gap: 12px; font-size: 10px; letter-spacing: .06em; color: var(--text-faint); }
 .lb-foot b { color: var(--text); font-size: 12px; letter-spacing: 0; }
-.lb-go { margin-left: auto; color: var(--accent-a); font-weight: 700; letter-spacing: 0; font-size: 11.5px; }
+.lb-go { margin-left: auto; color: var(--lbA); font-weight: 700; letter-spacing: 0; font-size: 11.5px; }
+
+/* Paktos brand tokens — plum for weight, lavender on dark, neutrals for restraint */
+:root { --lbA: #6A2E9E; --lbB: #94939F; --lbBsoft: #C9C9CF; --brandGrad: linear-gradient(120deg, #F0DCFF, #FF8E94 38%, #D95DDF 66%, #9081DF); }
+body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
+
+.lb-hero { position: relative; overflow: hidden; }
+.lb-hero::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--brandGrad); }
+.lb-card .nw-bar > span, .lb-tbar > span, .spec-hero .nw-bar > span { background: var(--lbA); }
+.lb-card .nw-bar > i, .lb-tbar > i, .spec-hero .nw-bar > i { background: var(--lbBsoft); }
+.lb-sdot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.lb-leadtxt { font-size: 9px; letter-spacing: .1em; color: var(--text-faint); }
+.lb-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.lb-stats span { background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 11px; padding: 8px 10px; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.lb-stats i { font-style: normal; font-size: 8px; letter-spacing: .08em; color: var(--text-faint); white-space: nowrap; }
+.lb-stats b { font-size: 12.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lb-viewtog { display: inline-flex; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 12px; padding: 3px; gap: 2px; }
+.lb-viewtog button { border: none; background: transparent; cursor: pointer; padding: 6px 13px; border-radius: 9px; color: var(--text-faint); display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; font-family: inherit; }
+.lb-viewtog button.on { background: var(--card); box-shadow: var(--neu-out-sm); color: var(--text); }
+.lb-viewtog svg { width: 13px; height: 13px; }
+.lb-table { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 4px 8px; overflow-x: auto; }
+.lb-table table { width: 100%; border-collapse: collapse; min-width: 980px; }
+.lb-table th { font-size: 9px; letter-spacing: .09em; color: var(--text-faint); text-align: left; padding: 13px 12px 9px; border-bottom: 1px solid var(--line); font-weight: 600; }
+.lb-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); font-size: 12.5px; vertical-align: middle; }
+.lb-table tbody tr:last-child td { border-bottom: none; }
+.lb-table tbody tr { cursor: pointer; transition: background .15s ease; }
+.lb-table tbody tr:hover { background: var(--surface); }
+.lb-tmatch { display: inline-flex; align-items: center; gap: 8px; }
+.lb-spark { display: inline-block; width: 120px; height: 34px; color: var(--text); }
+.lb-spark svg { width: 100%; height: 100%; display: block; }
+.lb-tbar { width: 90px; height: 7px; display: inline-flex; border-radius: 999px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; }
+.lb-tbar > span { height: 100%; border-radius: 999px 0 0 999px; transition: width 1.1s cubic-bezier(.16, 1, .3, 1); }
+.lb-tbar > i { flex: 1; height: 100%; border-radius: 0 999px 999px 0; }
+.lb-tip { position: fixed; z-index: 130; min-width: 150px; background: #18181B; color: #fff; border-radius: 10px; padding: 8px 11px; pointer-events: none; opacity: 0; transition: opacity .12s ease; box-shadow: 0 10px 26px rgba(0, 0, 0, .3); }
+.lb-tip.on { opacity: 1; }
+
+/* Topbar profile avatar */
+.icon-btn.avatar-btn { display: inline-flex; align-items: center; justify-content: center; }
+.tb-av { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
 
 /* ---------------- Partner portal ---------------- */
 .pt-hero { display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 26px; padding: 26px 28px; margin-bottom: 18px; }
@@ -2911,6 +2965,9 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
           </div>
         </label>
 
+        <button class="icon-btn avatar-btn" aria-label="Your profile" data-trader="jstone" title="Your profile">
+          <span class="user-avatar-inner tb-av" id="tbAv">J</span>
+        </button>
         <button class="icon-btn" aria-label="Messages" data-nav="inbox">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
             <rect x="3" y="5" width="18" height="14" rx="3" />
@@ -2959,11 +3016,10 @@ const MARK_SVG = '<svg viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/
 const TROPHY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="__S__" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5"/></svg>';
 
 const navItems = [
-  { label: 'Arena', view: 'arena', match: ['arena', 'trader', 'spectate', 'live', 'clan'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>' },
-  { label: 'Tournaments', view: 'tournaments', locked: true, match: ['tournaments', 'leaderboard'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5"/></svg>' },
-  { label: 'Social', view: 'social', match: ['social'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' },
-  { label: 'Ideas', view: 'ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' },
-  { label: 'Trades', view: 'terminal', match: ['terminal', 'performance'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 15v-4M12 15V8M17 15v-6"/></svg>' }
+  { label: 'Arena', view: 'arena', match: ['arena', 'trader', 'spectate', 'live', 'clan', 'tournaments', 'leaderboard'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>' },
+  { label: 'Feed', view: 'social', match: ['social'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' },
+  { label: 'Trade', view: 'terminal', match: ['terminal', 'performance'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 15v-4M12 15V8M17 15v-6"/></svg>' },
+  { label: 'Ideas', view: 'ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' }
 ];
 
 let prizePool = 4420000;
@@ -3034,6 +3090,35 @@ const DOCK_SVGS = {
   arena: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>',
 };
 
+/* AnimatedDock port — cursor-distance magnification with spring physics, no libraries */
+let dockMouseX = Infinity, dockRAF = 0;
+
+function dockLoop() {
+  const items = document.querySelectorAll('#dockList .dk');
+  let settled = true;
+  items.forEach(li => {
+    const r = li.getBoundingClientRect();
+    const dist = dockMouseX === Infinity ? Infinity : dockMouseX - (r.left + r.width / 2);
+    const target = dist === Infinity ? 52 : 52 + 30 * Math.max(0, 1 - Math.abs(dist) / 150);
+    const cur = parseFloat(li.dataset.w || '52');
+    const vel = (parseFloat(li.dataset.v || '0') + (target - cur) * 0.24) * 0.62;
+    const nw = cur + vel;
+    li.dataset.w = nw; li.dataset.v = vel;
+    li.style.width = li.style.height = nw.toFixed(2) + 'px';
+    if (Math.abs(vel) > 0.02 || Math.abs(target - nw) > 0.15) settled = false;
+  });
+  dockRAF = settled ? 0 : requestAnimationFrame(dockLoop);
+}
+
+function wakeDock() { if (!dockRAF) dockRAF = requestAnimationFrame(dockLoop); }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const dock = document.querySelector('.dock');
+  if (!dock) return;
+  dock.addEventListener('pointermove', e => { dockMouseX = e.clientX; wakeDock(); });
+  dock.addEventListener('pointerleave', () => { dockMouseX = Infinity; wakeDock(); });
+});
+
 function renderDock(v) {
   const list = document.getElementById('dockList');
   if (!list) return;
@@ -3046,10 +3131,9 @@ function renderDock(v) {
         <span class="dk-tip">${label}${opts.locked ? ' · soon' : ''}</span>
       </button>
     </li>`;
-  list.innerHTML =
-    item('Your profile', 'jstone', `<span class="dk-av user-avatar-inner">${prof.avatar ? `<img src="${prof.avatar}" alt="">` : (prof.name[0] || 'J').toUpperCase()}</span>`, { trader: true, match: [] })
-    + '<li class="dk-sep"></li>'
-    + navItems.map(it => item(it.label, it.view, it.locked
+  const tb = document.getElementById('tbAv');
+  if (tb) tb.innerHTML = prof.avatar ? `<img src="${prof.avatar}" alt="">` : (prof.name[0] || 'J').toUpperCase();
+  list.innerHTML = navItems.map(it => item(it.label, it.view, it.locked
       ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'
       : it.icon, it)).join('');
 }
@@ -3334,12 +3418,25 @@ function tickLiveNumbers() {
     const bb = document.querySelector(`[data-lbb="${i}"]`);
     const bar = document.querySelector(`[data-lbbar="${i}"]`);
     const w = document.querySelector(`[data-lbw="${i}"]`);
-    if (a) { setOdo(a, fmtRet(b.ra)); a.style.color = b.ra >= 0 ? 'var(--green)' : '#e5484d'; }
-    if (bb) { setOdo(bb, fmtRet(b.rb)); bb.style.color = b.rb >= 0 ? 'var(--green)' : '#e5484d'; }
+    if (a) { setOdo(a, fmtRet(b.ra)); a.style.color = b.ra >= b.rb ? 'var(--text)' : 'var(--text-faint)'; }
+    if (bb) { setOdo(bb, fmtRet(b.rb)); bb.style.color = b.rb > b.ra ? 'var(--text)' : 'var(--text-faint)'; }
     if (bar) bar.style.width = Math.max(8, Math.min(92, 50 + (b.ra - b.rb) * 9)).toFixed(0) + '%';
     if (w) w.textContent = '● ' + b.watching.toLocaleString('en-GB') + ' watching';
+    const lt = document.querySelector(`[data-lblead="${i}"]`);
+    if (lt) lt.textContent = lbName(b, b.ra >= b.rb ? 'a' : 'b').toUpperCase() + ' LEADS';
+    const en = document.querySelector(`[data-lbends="${i}"]`);
+    if (en) en.textContent = lbEnds(b.endsMin);
+    if (b.sa) {
+      const st = lbStats(b);
+      const pk = document.querySelector(`[data-lbpeak="${i}"]`);
+      if (pk) pk.textContent = st.peak.toFixed(1) + 'pts';
+      const fl = document.querySelector(`[data-lbflips="${i}"]`);
+      if (fl) fl.textContent = String(st.flips);
+    }
     const mc = document.querySelector(`[data-lbchart="${i}"]`);
     if (mc && b.sa) mc.innerHTML = lbMiniSVG({ ...b, i });
+    const sp = document.querySelector(`[data-lbspark="${i}"]`);
+    if (sp && b.sa) sp.innerHTML = lbSparkSVG(b);
   });
   if (currentView === 'live') {
     setOdo('lbCount', String(LIVE_B.length));
@@ -3404,7 +3501,7 @@ const TITLES = {
   leaderboard: ['Arena', '<span class="mono">LEADERBOARD</span><span class="dot-sep">·</span><span>live standings, resorted in real time</span>'],
   ideas: ['Trade Ideas', '<span class="mono">LIVE&nbsp;WIRE</span><span class="dot-sep">·</span><span>signals streaming from every market</span>'],
   terminal: ['Trade', '<span class="mono">TR-1001</span><span class="dot-sep">·</span><span>£100k competition balance</span>'],
-  social: ['Social', '<span class="mono">FEED</span><span class="dot-sep">·</span><span>what 177K traders are saying right now</span>'],
+  social: ['Feed', '<span class="mono">FEED</span><span class="dot-sep">·</span><span>what 177K traders are saying right now</span>'],
   performance: ['Performance', '<span class="mono">ALL&nbsp;ACCOUNTS</span><span class="dot-sep">·</span><span>verified live track record</span>'],
   partner: ['Partner', '<span class="mono">PARTNER&nbsp;PROGRAMME</span><span class="dot-sep">·</span><span>earn 20% for the lifetime of every client</span>'],
   inbox: ['Messages', '<span class="mono">INBOX</span><span class="dot-sep">·</span><span>messages, contacts &amp; invites</span>'],
@@ -4984,38 +5081,49 @@ const BADGES_DEF = [
 
 const AWARD_FLOWER = 'M14.963 9.075c.787-3-.188-5.887-.188-5.887S12.488 5.175 11.7 8.175c-.787 3 .188 5.887.188 5.887s2.25-1.987 3.075-4.987m-4.5 1.987c.787 3-.188 5.888-.188 5.888S7.988 14.962 7.2 11.962c-.787-3 .188-5.887.188-5.887s2.287 1.987 3.075 4.987m.862 10.388s-.6-2.962-2.775-5.175C6.337 14.1 3.375 13.5 3.375 13.5s.6 2.962 2.775 5.175c2.213 2.175 5.175 2.775 5.175 2.775m3.3 3.413s-1.988-2.288-4.988-3.075-5.887.187-5.887.187 1.987 2.287 4.988 3.075c3 .787 5.887-.188 5.887-.188Zm6.75 0s1.988-2.288 4.988-3.075c3-.826 5.887.187 5.887.187s-1.988 2.287-4.988 3.075c-3 .787-5.887-.188-5.887-.188ZM32.625 13.5s-2.963.6-5.175 2.775c-2.213 2.213-2.775 5.175-2.775 5.175s2.962-.6 5.175-2.775c2.175-2.213 2.775-5.175 2.775-5.175M28.65 6.075s.975 2.887.188 5.887c-.826 3-3.076 4.988-3.076 4.988s-.974-2.888-.187-5.888c.788-3 3.075-4.987 3.075-4.987m-4.5 7.987s.975-2.887.188-5.887c-.788-3-3.076-4.988-3.076-4.988s-.974 2.888-.187 5.888c.788 3 3.075 4.988 3.075 4.988ZM18 26.1c.975-.225 3.113-.6 5.325 0 3 .788 5.063 3.038 5.063 3.038s-2.888.975-5.888.187a13 13 0 0 1-1.425-.525c.563.788 1.125 1.425 2.288 1.913l-.863 2.062c-2.063-.862-2.925-2.137-3.675-3.262-.262-.375-.525-.713-.787-1.05-.26.293-.465.586-.686.903l-.102.147-.048.068c-.775 1.108-1.643 2.35-3.627 3.194l-.862-2.062c1.162-.488 1.725-1.125 2.287-1.913-.45.225-.938.375-1.425.525-3 .788-5.887-.187-5.887-.187s1.987-2.288 4.987-3.075c2.212-.563 4.35-.188 5.325.037';
 
-function awardBadgeHTML() {
+const CLUBS = [
+  { key: 'onyx', name: 'Eight-Figure Club', min: 1e7, sub: '£10,000,000+ banked profits', bg: '#2b2833', edge: '#57515f', tx: '#d8d0e8', label: '#9a91ad' },
+  { key: 'gold', name: 'Seven-Figure Club', min: 1e6, sub: '£1,000,000+ banked profits', bg: '#f3e3ac', edge: '#bbb', tx: '#666', label: '#666' },
+  { key: 'silver', name: 'Six-Figure Club', min: 1e5, sub: '£100,000+ banked profits', bg: '#e9ebf1', edge: '#b6bac4', tx: '#586070', label: '#7d8494' },
+  { key: 'bronze', name: 'Five-Figure Club', min: 1e4, sub: '£10,000+ banked profits', bg: '#eacfae', edge: '#c49a6c', tx: '#6f4a26', label: '#8a6a4a' },
+  { key: 'steel', name: 'Rising Club', min: 0, sub: 'first banked profits on the board', bg: '#e2e6ec', edge: '#bcc3cd', tx: '#5d6675', label: '#8b93a3' }
+];
+const clubFor = w => CLUBS.find(c => w >= c.min) || CLUBS[CLUBS.length - 1];
+
+let AW_UID = 0;
+function awardBadgeHTML(club, opts = {}) {
+  const uid = 'aw' + (++AW_UID);
   const holos = ['hsl(358,100%,62%)', 'hsl(30,100%,50%)', 'hsl(60,100%,50%)', 'hsl(96,100%,50%)', 'hsl(233,85%,47%)', 'white'].map((c, i) =>
-    `<g class="holo hg${i + 1}"><polygon points="0,0 260,54 260,0 0,54" fill="${c}" filter="url(#awb)" opacity="0.5"/></g>`).join('');
-  return `<span class="award-badge" id="awardBadge" data-tst="Seven-Figure Club — £1,000,000+ banked profits" title="Seven-Figure Club">
+    `<g class="holo hg${i + 1}"><polygon points="0,0 260,54 260,0 0,54" fill="${c}" filter="url(#${uid}b)" opacity="0.5"/></g>`).join('');
+  return `<span class="award-badge${opts.locked ? ' locked' : ''}" data-tst="${club.name} — ${club.sub}" title="${club.name}">
     <span class="award-tilt" style="display:block">
       <svg viewBox="0 0 260 54" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <filter id="awb"><feGaussianBlur in="SourceGraphic" stdDeviation="3"/></filter>
-          <mask id="awm"><rect width="260" height="54" fill="white" rx="10"/></mask>
+          <filter id="${uid}b"><feGaussianBlur in="SourceGraphic" stdDeviation="3"/></filter>
+          <mask id="${uid}m"><rect width="260" height="54" fill="white" rx="10"/></mask>
         </defs>
-        <rect width="260" height="54" rx="10" fill="#f3e3ac"/>
-        <rect x="4" y="4" width="252" height="46" rx="8" fill="transparent" stroke="#bbb" stroke-width="1"/>
-        <text font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#666" x="53" y="20">PAKTOS AWARDS</text>
-        <text font-family="Helvetica, Arial, sans-serif" font-size="16" font-weight="bold" fill="#666" x="52" y="40">Seven-Figure Club</text>
-        <g transform="translate(8, 9)"><path fill="#666" d="${AWARD_FLOWER}"/></g>
-        <g style="mix-blend-mode:overlay" mask="url(#awm)">${holos}</g>
+        <rect width="260" height="54" rx="10" fill="${club.bg}"/>
+        <rect x="4" y="4" width="252" height="46" rx="8" fill="transparent" stroke="${club.edge}" stroke-width="1"/>
+        <text font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="${club.label}" x="53" y="20">PAKTOS AWARDS</text>
+        <text font-family="Helvetica, Arial, sans-serif" font-size="16" font-weight="bold" fill="${club.tx}" x="52" y="40">${club.name}</text>
+        <g transform="translate(8, 9)"><path fill="${club.tx}" d="${AWARD_FLOWER}"/></g>
+        ${opts.locked ? '' : `<g style="mix-blend-mode:overlay" mask="url(#${uid}m)">${holos}</g>`}
       </svg>
     </span>
   </span>`;
 }
 
 function bindAwardTilt() {
-  const el = document.getElementById('awardBadge');
-  if (!el) return;
-  const tilt = el.querySelector('.award-tilt');
-  el.addEventListener('pointermove', e => {
-    const r = el.getBoundingClientRect();
-    const rx = ((e.clientY - r.top) / r.height - 0.5) * -16;
-    const ry = ((e.clientX - r.left) / r.width - 0.5) * 18;
-    tilt.style.transform = `perspective(700px) rotateX(${rx.toFixed(1)}deg) rotateY(${ry.toFixed(1)}deg) scale(0.985)`;
+  document.querySelectorAll('.award-badge:not(.locked)').forEach(el => {
+    const tilt = el.querySelector('.award-tilt');
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect();
+      const rx = ((e.clientY - r.top) / r.height - 0.5) * -16;
+      const ry = ((e.clientX - r.left) / r.width - 0.5) * 18;
+      tilt.style.transform = `perspective(700px) rotateX(${rx.toFixed(1)}deg) rotateY(${ry.toFixed(1)}deg) scale(0.985)`;
+    });
+    el.addEventListener('pointerleave', () => { tilt.style.transform = 'perspective(700px)'; });
   });
-  el.addEventListener('pointerleave', () => { tilt.style.transform = 'perspective(700px)'; });
 }
 
 function tpPostsHTML(d) {
@@ -5066,13 +5174,32 @@ function tpSpecHTML(d) {
       <div class="bdg-req">${req}</div>
     </div>`;
   }).join('');
-  return `${d.winnings >= 1e6 ? `<div style="margin-bottom:20px">${awardBadgeHTML()}</div>` : ''}
-    <div class="tp-grid" style="grid-template-columns:minmax(0,1.35fr) 380px">
+  const myClub = clubFor(d.winnings);
+  const next = CLUBS[CLUBS.indexOf(myClub) - 1];
+  const ladder = CLUBS.map(c => {
+    const earned = d.winnings >= c.min;
+    return `<div class="club-row">
+      ${awardBadgeHTML(c, { locked: !earned })}
+      <div class="club-meta mono">
+        ${earned ? '<span class="club-st in">MEMBER</span>' : `<span class="club-st">${fmtM(c.min - d.winnings)}&nbsp;TO&nbsp;GO</span>`}
+        <span>${c.min ? fmtM(c.min) + '+' : 'EVERYONE&nbsp;STARTS&nbsp;HERE'}</span>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="tp-grid" style="grid-template-columns:minmax(0,1.35fr) 380px">
       <div>
         <div class="badge-grid">${badges}</div>
         <p style="font-size:11px;color:var(--text-faint);margin-top:14px">${BADGES_DEF.filter(([, , , fn]) => fn(d)).length} of ${BADGES_DEF.length} badges earned · every badge is verified from live results</p>
       </div>
-      
+      <div class="club-card">
+        <div class="bk-title" style="margin-bottom:2px">Paktos Clubs</div>
+        <p class="club-sub">bank more, climb clubs — every plaque is stamped from verified winnings</p>
+        ${next ? `<div class="club-prog">
+          <div class="club-prog-t"><span>NEXT&nbsp;·&nbsp;${next.name.toUpperCase().replace(/ /g, '&nbsp;')}</span><span>${fmtM(Math.max(0, next.min - d.winnings))}&nbsp;TO&nbsp;GO</span></div>
+          <div class="club-bar"><span style="width:${Math.min(100, d.winnings / next.min * 100).toFixed(0)}%"></span></div>
+        </div>` : '<div class="club-prog-t" style="margin-bottom:12px">TOP&nbsp;CLUB&nbsp;·&nbsp;NOWHERE&nbsp;LEFT&nbsp;TO&nbsp;CLIMB</div>'}
+        <div class="club-ladder">${ladder}</div>
+      </div>
     </div>`;
 }
 
@@ -5154,6 +5281,7 @@ function renderTrader() {
             <span class="tp-ss"><b>£${kfmt(d.big)}</b><span>Biggest win</span></span>
             <span class="tp-ss"><b>${d.trades.toLocaleString('en-GB')}</b><span>Trades</span></span>
           </div>
+          <div class="tp-club">${awardBadgeHTML(clubFor(d.winnings))}</div>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:16px">
@@ -5664,6 +5792,7 @@ function builderHTML() {
 /* ---------------- Nation Wars — country vs country, full squads ---------------- */
 
 const FEATURE_NATION_WARS = false; /* back-pocket — flip to true to relaunch Nation Wars */
+const FEATURE_CLANS = false; /* back-pocket — flip to true to relaunch Clans */
 
 let battlesLiveN = 1284, escrowVol = 42.6, bigPotLive = 1000000, duelingN = 2547;
 
@@ -6104,7 +6233,7 @@ function specChartSVG() {
   const X = (i2, n) => padL + i2 / (n - 1) * iw;
   const Y = v => padT + (1 - (v - lo) / rng) * ih;
   const path = sr => sr.map((v, i2) => `${i2 ? 'L' : 'M'}${X(i2, sr.length).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
-  const A = '#10b981', B = '#a855f7';
+  const A = lbCol('a'), B = lbCol('b');
   let grid = '';
   for (let g = 0; g <= 4; g++) {
     const v = lo + rng * g / 4, y = Y(v).toFixed(1);
@@ -6149,8 +6278,8 @@ function bindSpecChart() {
     const tip = document.getElementById('specTip');
     if (tip) {
       const i2 = spec.hov;
-      tip.innerHTML = `<div class="spt-r"><i style="background:#10b981"></i>${spec.a.name}<b>${fmtRet(spec.sa[i2])}</b></div>
-        <div class="spt-r"><i style="background:#a855f7"></i>${spec.b.name}<b>${fmtRet(spec.sb[Math.min(i2, spec.sb.length - 1)])}</b></div>`;
+      tip.innerHTML = `<div class="spt-r"><i style="background:${lbCol('a')}"></i>${spec.a.name}<b>${fmtRet(spec.sa[i2])}</b></div>
+        <div class="spt-r"><i style="background:${lbCol('b')}"></i>${spec.b.name}<b>${fmtRet(spec.sb[Math.min(i2, spec.sb.length - 1)])}</b></div>`;
       const px = (48 + frac * (920 - 68)) / 920 * r.width;
       tip.style.left = Math.min(Math.max(8, px + 14), r.width - 160) + 'px';
       tip.classList.add('on');
@@ -6172,7 +6301,7 @@ function specFaceHTML(side, col) {
 }
 
 function specSideCard(side) {
-  const col = side === 'a' ? '#10b981' : '#a855f7';
+  const col = lbCol(side);
   const s = spec[side], ret = side === 'a' ? spec.ra : spec.rb;
   const load = side === 'a' ? spec.loadA : spec.loadB;
   const squad = side === 'a' ? spec.squadA : spec.squadB;
@@ -6256,7 +6385,7 @@ syncUserCard();
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to Arena</button>
     <div class="panel-card spec-hero">
       <div class="spec-top">
-        <div class="spec-vs">${specFaceHTML('a', '#10b981')}<span class="nw-vs mono">VS</span>${specFaceHTML('b', '#a855f7')}</div>
+        <div class="spec-vs">${specFaceHTML('a', lbCol('a'))}<span class="nw-vs mono">VS</span>${specFaceHTML('b', lbCol('b'))}</div>
         <div class="spec-meta mono">
           <span class="live-tag"><span class="pulse-dot tiny"></span>LIVE</span>
           <span>${odoHTML('specPot', '£' + spec.pot.toLocaleString('en-GB'))}&nbsp;pot</span>
@@ -6268,8 +6397,8 @@ syncUserCard();
       <div class="spec-leadtxt mono" id="specLeadTxt">${leader}&nbsp;LEADS</div>
       <div class="spec-chart" id="specChart">${specChartSVG()}</div><div class="spec-tip" id="specTip"></div>
       <div class="spec-legend mono">
-        <span><i style="background:#10b981"></i>${spec.a.name}</span>
-        <span><i style="background:#a855f7"></i>${spec.b.name}</span>
+        <span><i style="background:${lbCol('a')}"></i>${spec.a.name}</span>
+        <span><i style="background:${lbCol('b')}"></i>${spec.b.name}</span>
         <span style="margin-left:auto">EQUITY&nbsp;·&nbsp;%&nbsp;RETURN&nbsp;SINCE&nbsp;KICK-OFF</span>
       </div>
     </div>
@@ -6325,23 +6454,48 @@ function genLiveBattle(kind) {
 const LIVE_B = [
   ...BATTLES.map(x => lbSeed({ kind: '1v1', a: x[0], b: x[2], pot: x[4], window: '1d', windowMin: 1440, endsMin: 200 + Math.floor(Math.random() * 800), ra: +((Math.random()) * 5).toFixed(2), rb: +((Math.random()) * 5).toFixed(2), watching: Math.round(parseFloat(x[5]) * 1000) })),
   ...Array.from({ length: 18 }, () => genLiveBattle('1v1')),
-  ...Array.from({ length: 6 }, () => genLiveBattle('clan')),
+  ...(FEATURE_CLANS ? Array.from({ length: 6 }, () => genLiveBattle('clan')) : []),
 ];
 
-let lbf = { kind: 'all', pot: 'any', dur: 'any', sort: 'pot' };
+let lbf = { kind: 'all', pot: 'any', dur: 'any', sort: 'pot', view: 'grid' };
 
 const LB_POT_BANDS = { any: [0, 1e12], small: [0, 1000], mid: [1000, 10000], big: [10000, 100000], whale: [100000, 1e12] };
 const LB_DUR_BANDS = { any: [0, 1e9], sprint: [0, 60], day: [61, 1440], week: [1441, 1e9] };
 
-const lbEnds = m => m < 60 ? m + 'm' : m < 1440 ? Math.round(m / 60) + 'h' : Math.round(m / 1440) + 'd';
+const lbEnds = m => { m = Math.max(1, Math.round(m)); return m < 60 ? m + 'm' : m < 1440 ? Math.round(m / 60) + 'h' : Math.round(m / 1440) + 'd'; };
+
+function lbCol(side) {
+  const dark = document.body.classList.contains('dark');
+  return side === 'a' ? (dark ? '#D3C2F0' : '#6A2E9E') : '#94939F';
+}
+
+function lbName(b, side) {
+  const id = side === 'a' ? b.a : b.b;
+  if (b.kind === 'clan') { const c = clanById(id); return c ? c.name : String(id); }
+  return String(id);
+}
+
+function lbStats(b) {
+  let flips = 0, peak = 0;
+  const n = Math.min(b.sa.length, b.sb.length);
+  for (let k = 1; k < n; k++) {
+    const d0 = b.sa[k - 1] - b.sb[k - 1], d1 = b.sa[k] - b.sb[k];
+    if ((d0 >= 0) !== (d1 >= 0)) flips++;
+    peak = Math.max(peak, Math.abs(d1));
+  }
+  return { flips, peak };
+}
+
+let LB_HOV = { i: -1, idx: null };
 
 function lbFace(b, side) {
+  const dot = `<i class="lb-sdot" style="background:${lbCol(side)}"></i>`;
   const id = side === 'a' ? b.a : b.b;
   if (b.kind === 'clan') {
     const c = clanById(id);
-    return `<span class="lb-face">${c ? clanChip(c, true) : ''}<b>${c ? c.name : id}</b></span>`;
+    return `<span class="lb-face">${dot}${c ? clanChip(c, true) : ''}<b>${c ? c.name : id}</b></span>`;
   }
-  return `<span class="lb-face" data-trader="${id}" style="cursor:pointer">${avatarHTML(id, 'thread-av', '', 'width:26px;height:26px')}<b>${id}</b></span>`;
+  return `<span class="lb-face" data-trader="${id}" style="cursor:pointer">${dot}${avatarHTML(id, 'thread-av', '', 'width:26px;height:26px')}<b>${id}</b></span>`;
 }
 
 function smoothPath(pts) {
@@ -6355,28 +6509,89 @@ function smoothPath(pts) {
 }
 
 function lbMiniSVG(b) {
-  const W = 400, H = 84, pad = 6;
+  const W = 400, H = 150, padL = 42, padR = 12, padT = 12, padB = 10;
   const all = b.sa.concat(b.sb);
   const lo = Math.min(...all), hi = Math.max(...all), rng = (hi - lo) || 1;
-  const pts = sr => sr.map((v, i2) => [pad + i2 / (sr.length - 1) * (W - pad * 2), pad + (1 - (v - lo) / rng) * (H - pad * 2)]);
-  const A = '#10b981', B = '#a855f7';
+  const iw = W - padL - padR, ih = H - padT - padB;
+  const pts = sr => sr.map((v, i2) => [padL + i2 / (sr.length - 1) * iw, padT + (1 - (v - lo) / rng) * ih]);
+  const A = lbCol('a'), B = lbCol('b');
   const pa = pts(b.sa), pb = pts(b.sb);
   const da = smoothPath(pa), db = smoothPath(pb);
   const id = 'lbg' + b.i;
+  let grid = '';
+  for (let g = 0; g <= 3; g++) {
+    const gv = lo + rng * g / 3;
+    const gy = (padT + (1 - g / 3) * ih).toFixed(1);
+    grid += `<line x1="${padL}" x2="${W - padR}" y1="${gy}" y2="${gy}" stroke="currentColor" opacity=".08" stroke-dasharray="2 5"/>
+      <text x="${padL - 7}" y="${gy}" text-anchor="end" alignment-baseline="middle" font-size="8.5" fill="currentColor" opacity=".4">${(gv >= 0 ? '+' : '') + gv.toFixed(1)}%</text>`;
+  }
   const dot = (p, col) => `<circle cx="${p[p.length - 1][0].toFixed(1)}" cy="${p[p.length - 1][1].toFixed(1)}" r="3.5" fill="${col}" stroke="var(--card)" stroke-width="1.5"/>`;
+  let hov = '';
+  if (LB_HOV.i === b.i && LB_HOV.idx != null) {
+    const ia = Math.min(LB_HOV.idx, pa.length - 1), ib = Math.min(LB_HOV.idx, pb.length - 1);
+    hov = `<line x1="${pa[ia][0].toFixed(1)}" x2="${pa[ia][0].toFixed(1)}" y1="${padT}" y2="${H - padB}" stroke="${A}" opacity=".4" stroke-dasharray="4 4"/>
+      <circle cx="${pa[ia][0].toFixed(1)}" cy="${pa[ia][1].toFixed(1)}" r="4" fill="var(--card)" stroke="${A}" stroke-width="2"/>
+      <circle cx="${pb[ib][0].toFixed(1)}" cy="${pb[ib][1].toFixed(1)}" r="4" fill="var(--card)" stroke="${B}" stroke-width="2"/>`;
+  }
   return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
     <defs>
-      <linearGradient id="${id}a" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${A}" stop-opacity=".22"/><stop offset="100%" stop-color="${A}" stop-opacity="0"/></linearGradient>
-      <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${B}" stop-opacity=".22"/><stop offset="100%" stop-color="${B}" stop-opacity="0"/></linearGradient>
+      <linearGradient id="${id}a" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${A}" stop-opacity=".2"/><stop offset="100%" stop-color="${A}" stop-opacity="0"/></linearGradient>
+      <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${B}" stop-opacity=".13"/><stop offset="100%" stop-color="${B}" stop-opacity="0"/></linearGradient>
     </defs>
-    <line x1="${pad}" x2="${W - pad}" y1="${H / 2}" y2="${H / 2}" stroke="currentColor" opacity=".07" stroke-dasharray="3 8"/>
-    <path d="${da} L${W - pad},${H} L${pad},${H} Z" fill="url(#${id}a)"/>
-    <path d="${db} L${W - pad},${H} L${pad},${H} Z" fill="url(#${id}b)"/>
-    <path d="${da}" fill="none" stroke="${A}" stroke-width="2" stroke-linejoin="round"/>
+    ${grid}
+    <path d="${da} L${W - padR},${H - padB} L${padL},${H - padB} Z" fill="url(#${id}a)"/>
+    <path d="${db} L${W - padR},${H - padB} L${padL},${H - padB} Z" fill="url(#${id}b)"/>
+    <path d="${da}" fill="none" stroke="${A}" stroke-width="2.2" stroke-linejoin="round"/>
     <path d="${db}" fill="none" stroke="${B}" stroke-width="2" stroke-linejoin="round"/>
     ${dot(pa, A)}${dot(pb, B)}
+    ${hov}
   </svg>`;
 }
+
+function lbSparkSVG(b) {
+  const W = 120, H = 34, pad = 3;
+  const all = b.sa.concat(b.sb);
+  const lo = Math.min(...all), hi = Math.max(...all), rng = (hi - lo) || 1;
+  const pts = sr => sr.map((v, i2) => [pad + i2 / (sr.length - 1) * (W - pad * 2), pad + (1 - (v - lo) / rng) * (H - pad * 2)]);
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    <path d="${smoothPath(pts(b.sb))}" fill="none" stroke="${lbCol('b')}" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="${smoothPath(pts(b.sa))}" fill="none" stroke="${lbCol('a')}" stroke-width="1.8" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+/* hover crosshair + tooltip on the hub charts — spectate-grade reads without leaving the board */
+document.addEventListener('pointermove', e => {
+  const el = e.target.closest && e.target.closest('[data-lbchart]');
+  const tip = document.getElementById('lbTip');
+  if (!el) {
+    if (LB_HOV.i !== -1) {
+      const prev = document.querySelector(`[data-lbchart="${LB_HOV.i}"]`);
+      const pi = LB_HOV.i;
+      LB_HOV = { i: -1, idx: null };
+      if (prev && LIVE_B[pi] && LIVE_B[pi].sa) prev.innerHTML = lbMiniSVG({ ...LIVE_B[pi], i: pi });
+    }
+    if (tip) tip.classList.remove('on');
+    return;
+  }
+  const i = +el.dataset.lbchart;
+  const b = LIVE_B[i];
+  if (!b || !b.sa) return;
+  const r = el.getBoundingClientRect();
+  const fx = (e.clientX - r.left) / r.width;
+  const t = Math.max(0, Math.min(1, (fx - 42 / 400) / (1 - 54 / 400)));
+  const idx = Math.round(t * (b.sa.length - 1));
+  if (LB_HOV.i !== i || LB_HOV.idx !== idx) {
+    LB_HOV = { i, idx };
+    el.innerHTML = lbMiniSVG({ ...b, i });
+  }
+  if (tip) {
+    tip.innerHTML = `<div class="spt-r"><i style="background:${lbCol('a')}"></i>${lbName(b, 'a')}<b>${fmtRet(b.sa[Math.min(idx, b.sa.length - 1)])}</b></div>
+      <div class="spt-r"><i style="background:${lbCol('b')}"></i>${lbName(b, 'b')}<b>${fmtRet(b.sb[Math.min(idx, b.sb.length - 1)])}</b></div>`;
+    tip.style.left = Math.min(e.clientX + 16, window.innerWidth - 190) + 'px';
+    tip.style.top = (e.clientY - 16) + 'px';
+    tip.classList.add('on');
+  }
+});
 
 function renderLive() {
   const list = LIVE_B
@@ -6394,6 +6609,7 @@ function renderLive() {
   const cards = list.map(b => {
     const lead = Math.max(8, Math.min(92, 50 + (b.ra - b.rb) * 9));
     const close = Math.abs(b.ra - b.rb) < 0.35;
+    const st = lbStats(b);
     return `<article class="lb-card" data-lbwatch="${b.i}">
       <div class="lb-top mono">
         <span class="lb-kind${b.kind === 'clan' ? ' clan' : ''}">${b.kind === 'clan' ? 'CLAN WAR' : '1V1'}</span>
@@ -6403,39 +6619,73 @@ function renderLive() {
       </div>
       <div class="lb-face-row">
         ${lbFace(b, 'a')}
-        <span class="lb-ret odo up" data-lba="${b.i}" data-odo="${fmtRet(b.ra)}" style="color:${b.ra >= 0 ? 'var(--green)' : '#e5484d'}">${odoInner(fmtRet(b.ra))}</span>
+        <span class="lb-ret odo" data-lba="${b.i}" data-odo="${fmtRet(b.ra)}" style="color:${b.ra >= b.rb ? 'var(--text)' : 'var(--text-faint)'}">${odoInner(fmtRet(b.ra))}</span>
         <span class="nw-vs mono">VS</span>
-        <span class="lb-ret odo" data-lbb="${b.i}" data-odo="${fmtRet(b.rb)}" style="color:${b.rb >= 0 ? 'var(--green)' : '#e5484d'}">${odoInner(fmtRet(b.rb))}</span>
+        <span class="lb-ret odo" data-lbb="${b.i}" data-odo="${fmtRet(b.rb)}" style="color:${b.rb > b.ra ? 'var(--text)' : 'var(--text-faint)'}">${odoInner(fmtRet(b.rb))}</span>
         ${lbFace(b, 'b')}
       </div>
       <div class="lb-mini" data-lbchart="${b.i}">${lbMiniSVG(b)}</div>
       <div class="nw-bar"><span data-lbbar="${b.i}" style="width:${lead.toFixed(0)}%"></span><i></i></div>
+      <div class="lb-leadtxt mono" data-lblead="${b.i}">${lbName(b, b.ra >= b.rb ? 'a' : 'b').toUpperCase()}&nbsp;LEADS</div>
+      <div class="lb-stats mono">
+        <span><i>POT</i><b>${fmtM(b.pot)}</b></span>
+        <span><i>PEAK&nbsp;LEAD</i><b data-lbpeak="${b.i}">${st.peak.toFixed(1)}pts</b></span>
+        <span><i>LEAD&nbsp;FLIPS</i><b data-lbflips="${b.i}">${st.flips}</b></span>
+        <span><i>ENDS&nbsp;IN</i><b data-lbends="${b.i}">${lbEnds(b.endsMin)}</b></span>
+      </div>
       <div class="lb-foot mono">
-        <b>£${b.pot.toLocaleString('en-GB')}&nbsp;pot</b>
-        <span>${b.window}&nbsp;window&nbsp;·&nbsp;ends&nbsp;${lbEnds(b.endsMin)}</span>
+        <span>${b.window}&nbsp;window</span>
         <span class="lb-go">Watch →</span>
       </div>
     </article>`;
   }).join('');
+  const rows = list.map(b => {
+    const lead = Math.max(8, Math.min(92, 50 + (b.ra - b.rb) * 9));
+    return `<tr data-lbwatch="${b.i}">
+      <td><span class="lb-tmatch">${lbFace(b, 'a')}<span class="nw-vs mono">VS</span>${lbFace(b, 'b')}</span></td>
+      <td><span class="lb-kind${b.kind === 'clan' ? ' clan' : ''} mono">${b.kind === 'clan' ? 'CLAN' : '1V1'}</span></td>
+      <td><span class="lb-spark" data-lbspark="${b.i}">${lbSparkSVG(b)}</span></td>
+      <td><span class="lb-ret odo" data-lba="${b.i}" data-odo="${fmtRet(b.ra)}" style="color:${b.ra >= b.rb ? 'var(--text)' : 'var(--text-faint)'}">${odoInner(fmtRet(b.ra))}</span></td>
+      <td><span class="lb-ret odo" data-lbb="${b.i}" data-odo="${fmtRet(b.rb)}" style="color:${b.rb > b.ra ? 'var(--text)' : 'var(--text-faint)'}">${odoInner(fmtRet(b.rb))}</span></td>
+      <td><span class="lb-tbar"><span data-lbbar="${b.i}" style="width:${lead.toFixed(0)}%"></span><i></i></span></td>
+      <td><b>${fmtM(b.pot)}</b></td>
+      <td class="mono" style="color:var(--text-faint)" data-lbends="${b.i}">${lbEnds(b.endsMin)}</td>
+      <td class="mono" style="color:var(--text-faint);font-size:10.5px" data-lbw="${b.i}">● ${b.watching.toLocaleString('en-GB')} watching</td>
+      <td><span class="lb-go">Watch →</span></td>
+    </tr>`;
+  }).join('');
+  const empty = '<p style="color:var(--text-faint);font-size:13.5px;padding:20px">No battles match these filters — loosen them up, the action never stops.</p>';
+  const board = lbf.view === 'table'
+    ? (rows ? `<div class="lb-table"><table>
+        <thead><tr class="mono"><th>MATCH</th><th>TYPE</th><th>LIVE</th><th>A&nbsp;RETURN</th><th>B&nbsp;RETURN</th><th>LEAD</th><th>POT</th><th>ENDS</th><th>WATCHING</th><th></th></tr></thead>
+        <tbody>${rows}</tbody></table></div>` : empty)
+    : `<div class="lb-grid">${cards || empty}</div>`;
   viewEl('live').innerHTML = `
     <button class="back-btn" data-nav="arena">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to Arena</button>
     <div class="lb-hero panel-card">
       <div><span class="live-tag"><span class="pulse-dot"></span><span class="mono">LIVE&nbsp;NOW</span></span>
         <h2 class="pt-title" style="margin:8px 0 2px">Live battles</h2>
-        <p class="section-sub" style="margin:0">every duel and clan war on the platform — pick one and pull up ringside</p></div>
+        <p class="section-sub" style="margin:0">every live duel on the platform — pick one and pull up ringside</p></div>
       <div class="lb-hero-stats mono">
         <span>${odoHTML('lbCount', String(LIVE_B.length))}&nbsp;LIVE</span>
         <span>${odoHTML('lbPool', '£' + (LIVE_B.reduce((a2, b2) => a2 + b2.pot, 0) / 1e6).toFixed(2) + 'M')}&nbsp;ESCROWED</span>
       </div>
     </div>
     <div class="lb-filters">
-      <div class="lb-fgroup"><span class="b-label mono">TYPE</span>${chips([['all', 'All'], ['1v1', '1v1'], ['clan', 'Clans']], lbf.kind, 'lbkind')}</div>
+      ${FEATURE_CLANS ? `<div class="lb-fgroup"><span class="b-label mono">TYPE</span>${chips([['all', 'All'], ['1v1', '1v1'], ['clan', 'Clans']], lbf.kind, 'lbkind')}</div>` : ''}
       <div class="lb-fgroup"><span class="b-label mono">POT</span>${chips([['any', 'Any'], ['small', '<£1K'], ['mid', '£1K–10K'], ['big', '£10K–100K'], ['whale', '£100K+']], lbf.pot, 'lbpot')}</div>
       <div class="lb-fgroup"><span class="b-label mono">DURATION</span>${chips([['any', 'Any'], ['sprint', 'Sprint ≤1h'], ['day', 'Intraday'], ['week', 'Week+']], lbf.dur, 'lbdur')}</div>
       <div class="lb-fgroup"><span class="b-label mono">SORT</span>${chips([['pot', 'Biggest pot'], ['watch', 'Most watched'], ['close', 'Closest fight'], ['ends', 'Ending soon']], lbf.sort, 'lbsort')}</div>
+      <div class="lb-fgroup"><span class="b-label mono">VIEW</span>
+        <div class="lb-viewtog">
+          <button class="${lbf.view === 'grid' ? 'on' : ''}" data-lbview="grid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Grid</button>
+          <button class="${lbf.view === 'table' ? 'on' : ''}" data-lbview="table"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Table</button>
+        </div>
+      </div>
     </div>
-    <div class="lb-grid">${cards || '<p style="color:var(--text-faint);font-size:13.5px;padding:20px">No battles match these filters — loosen them up, the action never stops.</p>'}</div>`;
+    ${board}
+    <div class="lb-tip" id="lbTip"></div>`;
 }
 
 /* Tournaments live inside the Arena — one competitive home */
@@ -6597,7 +6847,7 @@ function renderArena() {
     ${myBattlesHTML()}
     ${nationWarsHTML()}
     ${machinesHTML()}
-    ${clansHTML()}
+    ${FEATURE_CLANS ? clansHTML() : ''}
     <div class="section">
       <div class="section-head"><div><h3 class="section-title">Open challenges</h3>
         <p class="section-sub"><span class="mono">${challenges.length}&nbsp;OPEN</span><span class="dot-sep">·</span><span>someone set the terms — take the other side and it locks in at kick-off</span></p></div></div>
@@ -6793,7 +7043,7 @@ function showReward(pot, opp) {
   const veil = document.createElement('div');
   veil.className = 'reward-veil';
   veil.innerHTML = `<div class="reward-card">
-    <div class="reward-gift">${TROPHY_SVG.replace('__S__', '#f59e0b')}</div>
+    <div class="reward-gift"><span class="rg-emoji">🏆</span></div>
     <div class="reward-title">You won the battle!</div>
     <div class="reward-sub">Your return beat <b>${opp}</b> when the window closed.<br>The escrowed pot is yours.</div>
     <div class="slide-track" id="slideTrack">
@@ -6836,7 +7086,7 @@ function unlockReward(pot, opp) {
   card.querySelector('.slide-track').outerHTML = `<div class="claim-strip" data-rclaim>
     <span><span class="claim-amt">+£${pot.toLocaleString('en-GB')} claimed</span>
       <span class="claim-sub" style="display:block">settled to your balance · tap to continue</span></span>
-    <span class="claim-ic">${TROPHY_SVG.replace('__S__', '#f59e0b')}</span>
+    <span class="claim-ic">🏆</span>
   </div>`;
   const skip = card.querySelector('.reward-skip');
   if (skip) skip.remove();
@@ -7243,6 +7493,7 @@ document.addEventListener('click', e => {
   if ((el = q('[data-lbpot]'))) { lbf.pot = el.dataset.lbpot; return renderLive(); }
   if ((el = q('[data-lbdur]'))) { lbf.dur = el.dataset.lbdur; return renderLive(); }
   if ((el = q('[data-lbsort]'))) { lbf.sort = el.dataset.lbsort; return renderLive(); }
+  if ((el = q('[data-lbview]'))) { lbf.view = el.dataset.lbview; return renderLive(); }
   if ((el = q('[data-lbwatch]'))) {
     const face = e.target.closest('[data-trader]');
     if (face) return openTrader(face.dataset.trader);
