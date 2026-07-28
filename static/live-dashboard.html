@@ -2769,41 +2769,6 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .lb-tip { position: fixed; z-index: 130; min-width: 150px; background: #18181B; color: #fff; border-radius: 10px; padding: 8px 11px; pointer-events: none; opacity: 0; transition: opacity .12s ease; box-shadow: 0 10px 26px rgba(0, 0, 0, .3); }
 .lb-tip.on { opacity: 1; }
 
-/* Quick trade board — Polymarket-style jump-straight-in */
-.qt-stake { display: flex; align-items: center; gap: 7px; }
-.qt-stake .b-label { margin: 0; width: auto; }
-.qt-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
-@media (max-width: 1100px) { .qt-wrap { grid-template-columns: 1fr; } }
-.qt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
-.qt-card { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 15px 16px 13px; display: flex; flex-direction: column; gap: 10px; }
-.qt-top { display: flex; align-items: center; gap: 10px; }
-.qt-ic { width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 15px; flex: none; }
-.qt-names { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-.qt-names b { font-size: 13.5px; }
-.qt-names span { font-size: 9px; letter-spacing: 0.07em; color: var(--text-faint); }
-.qt-top .px-pill { margin-left: auto; }
-.qt-px { font-size: 21px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
-.qt-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.qt-btns button { border: 0; cursor: pointer; font: inherit; font-size: 12.5px; font-weight: 800; padding: 10px 8px; border-radius: 12px; transition: transform 0.12s ease, filter 0.15s ease; }
-.qt-btns button:hover { filter: brightness(0.96); }
-.qt-btns button:active { transform: scale(0.97); }
-.qt-long { background: rgba(16, 185, 129, 0.14); color: #0b8a5c; }
-.qt-short { background: rgba(229, 72, 77, 0.12); color: #c9383d; }
-body.dark .qt-long { color: #34d399; }
-body.dark .qt-short { color: #f87171; }
-.qt-btns button.filled { background: #10b981; color: #fff; }
-.qt-foot { display: flex; align-items: center; gap: 9px; font-size: 9.5px; letter-spacing: 0.06em; color: var(--text-faint); }
-.qt-term { margin-left: auto; color: var(--lbA); font-weight: 700; cursor: pointer; letter-spacing: 0; font-size: 11px; }
-.qt-hot { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 16px 16px 8px; }
-.qt-hot-head { font-size: 10px; letter-spacing: 0.1em; color: var(--text-faint); margin-bottom: 8px; }
-.qh-row { display: flex; align-items: center; gap: 10px; padding: 10px 6px; border-bottom: 1px solid var(--line); cursor: pointer; border-radius: 8px; }
-.qh-row:hover { background: var(--surface); }
-.qh-rank { width: 16px; color: var(--text-faint); font-size: 10px; }
-.qh-name { font-size: 12.5px; font-weight: 700; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.qh-val { font-size: 10px; color: var(--text-faint); }
-.qh-arrow { color: var(--text-faint); font-size: 15px; line-height: 1; }
-.qt-hot .link-btn { margin-top: 4px; }
-
 /* Challenge detail — the full read before you take the other side */
 .chd-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 18px; align-items: start; }
 @media (max-width: 1100px) { .chd-grid { grid-template-columns: 1fr; } }
@@ -2832,6 +2797,56 @@ body.dark .qt-short { color: #f87171; }
 .chd-step .mono { font-size: 8.5px; letter-spacing: 0.1em; color: var(--lbA); margin-bottom: 6px; }
 .challenge-card { cursor: pointer; }
 .challenge-card .btn-mach.enter { width: 100%; margin-top: 4px; }
+
+/* Flip badges — tap a spec card, the back tells you how it's earned */
+.bdg.flip { perspective: 900px; cursor: pointer; background: transparent; box-shadow: none; padding: 0; height: 180px; outline: none; }
+.flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.3, 1); transform-style: preserve-3d; }
+.bdg.flip.on .flip-inner { transform: rotateY(180deg); }
+.flip-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 16px; background: var(--card); box-shadow: var(--neu-out-sm); padding: 15px 13px 13px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; transition: transform 0.25s ease-out; }
+.flip-back { transform: rotateY(180deg); }
+.flip-num { position: absolute; font-size: 9px; opacity: 0.3; }
+.flip-num.tr { top: 10px; right: 12px; }
+.flip-num.bl { bottom: 10px; left: 12px; }
+.flip-hint { font-size: 7.5px; letter-spacing: 0.09em; color: var(--text-faint); margin-top: 4px; }
+.fb-chip { font-size: 8px; letter-spacing: 0.1em; padding: 3.5px 10px; border-radius: 999px; background: var(--surface); box-shadow: var(--neu-in-sm); color: var(--text-faint); }
+.fb-chip.in { color: var(--lbA); font-weight: 700; }
+.fb-req { font-size: 11.5px; font-weight: 700; margin: 0; }
+.fb-note { font-size: 9.5px; color: var(--text-faint); line-height: 1.5; margin: 0; }
+
+/* Activity feed — what a trader has been engaging with */
+.act-list { display: flex; flex-direction: column; }
+.act-row { display: flex; align-items: center; gap: 13px; padding: 13px 6px; border-bottom: 1px solid var(--line); }
+.act-row:last-child { border-bottom: none; }
+.act-tag { width: 34px; height: 34px; flex: none; border-radius: 11px; background: var(--surface); box-shadow: var(--neu-in-sm); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: var(--lbA); letter-spacing: 0.04em; }
+.act-tx { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.act-tx b { font-size: 13px; }
+.act-tx span { font-size: 11px; color: var(--text-faint); }
+.act-ago { font-size: 9.5px; color: var(--text-faint); flex: none; }
+
+/* Fan carousel — the Flick deck spread like a hand of cards */
+.fan-wrap { position: relative; height: 730px; margin: 4px 0 8px; }
+@media (max-width: 700px) { .fan-wrap { height: 680px; } }
+.fan-card { position: absolute; left: 50%; top: 8px; width: min(480px, 92%); transform: translateX(-50%) translateY(3rem) scale(0.6); opacity: 0; transition: transform 0.65s cubic-bezier(0.3, 1.4, 0.45, 1), opacity 0.45s ease; will-change: transform; transform-origin: center 115%; }
+.fan-card:not(.ctr) { cursor: pointer; }
+.fan-card .tcard { width: 100%; }
+.fprev { background: var(--card); border-radius: 22px; box-shadow: var(--neu-out); overflow: hidden; }
+.fprev-hero { position: relative; height: 150px; padding: 14px 16px 10px; display: flex; flex-direction: column; justify-content: flex-end; }
+.fprev-hero.up { background: linear-gradient(180deg, rgba(16, 185, 129, 0.16), rgba(16, 185, 129, 0.03)); }
+.fprev-hero.down { background: linear-gradient(180deg, rgba(229, 72, 77, 0.14), rgba(229, 72, 77, 0.03)); }
+.fprev-hero .tc-dir { font-size: 18px; }
+.fprev-body { display: flex; align-items: center; gap: 10px; padding: 13px 16px 0; }
+.fprev-body .asset-ic { width: 34px; height: 34px; border-radius: 11px; flex: none; }
+.fprev-body b { font-size: 14px; display: block; }
+.fprev-body i { font-style: normal; font-size: 10.5px; color: var(--text-faint); display: block; }
+.fprev-head { font-size: 13px; font-weight: 600; line-height: 1.45; padding: 10px 16px 0; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.fprev-cta { padding: 12px 16px 14px; font-size: 8.5px; letter-spacing: 0.1em; color: var(--text-faint); }
+.fan-nav { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 16px; }
+.fan-arrow { width: 42px; height: 42px; border-radius: 50%; border: 0; cursor: pointer; background: var(--card); box-shadow: var(--neu-out-sm); color: var(--text-soft); font-family: inherit; display: flex; align-items: center; justify-content: center; padding: 0; }
+.fan-arrow svg { width: 17px; height: 17px; }
+.fan-arrow:active { box-shadow: var(--neu-in-sm); }
+.fan-dots { display: flex; gap: 6px; }
+.fan-dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--surface); box-shadow: var(--neu-in-sm); transition: transform 0.3s ease, background 0.3s ease; }
+.fan-dots span.on { background: var(--lbA); transform: scale(1.35); }
 
 /* Topbar profile avatar */
 .icon-btn.avatar-btn { display: inline-flex; align-items: center; justify-content: center; }
@@ -3499,7 +3514,7 @@ function tickLiveNumbers() {
       if (fl) fl.textContent = String(st.flips);
     }
     const mc = document.querySelector(`[data-lbchart="${i}"]`);
-    if (mc && b.sa) mc.innerHTML = lbMiniSVG({ ...b, i });
+    if (mc && b.sa) lbChartInto(mc, b, i);
     const sp = document.querySelector(`[data-lbspark="${i}"]`);
     if (sp && b.sa) sp.innerHTML = lbSparkSVG(b);
   });
@@ -4379,10 +4394,97 @@ function flickPicks() {
   }</div><div class="flick-hint">Each pick is live in the terminal against your £100k balance.</div></div>`;
 }
 
+/* Fan carousel engine — slot math + spring transitions, no libraries */
+const FAN_POS = [
+  { rot: -21, scale: 0.7756, x: -30, y: 7.3, z: 1 },
+  { rot: -14, scale: 0.8498, x: -22, y: 4.0, z: 2 },
+  { rot: -7, scale: 0.9346, x: -11, y: 1.3, z: 3 },
+  { rot: 0, scale: 1, x: 0, y: 0, z: 10 },
+  { rot: 7, scale: 0.9346, x: 11, y: 1.3, z: 3 },
+  { rot: 14, scale: 0.8498, x: 22, y: 4.0, z: 2 },
+  { rot: 21, scale: 0.7756, x: 30, y: 7.3, z: 1 }
+];
+
+function fanPrevHTML(c) {
+  const up = c.dir === 'up';
+  return `<div class="fprev">
+    <div class="fprev-hero ${up ? 'up' : 'down'}">${flickSpark(c)}<div class="tc-dir ${up ? 'up' : 'down'}">${up ? '▲ BUY' : '▼ SELL'}</div></div>
+    <div class="fprev-body"><span class="asset-ic" style="background:${INSTR[c.sym].tint}">${INSTR[c.sym].ic}</span>
+      <span><b>${c.sym}</b><i>${HZCFG[c.hz].l} · 1:${HZCFG[c.hz].rr} target</i></span></div>
+    <p class="fprev-head">${c.head}</p>
+    <div class="fprev-cta mono">TAP&nbsp;TO&nbsp;BRING&nbsp;IT&nbsp;CENTER</div>
+  </div>`;
+}
+
+function applyFan() {
+  const wrap = document.getElementById('fanWrap');
+  if (!wrap || !flick.deck || !flick.deck.length) return;
+  const len = flick.deck.length;
+  const w = wrap.clientWidth || 600;
+  const mult = w < 480 ? 0.3 : w < 700 ? 0.42 : 0.55;
+  wrap.querySelectorAll('.fan-card').forEach(el => {
+    const i = +el.dataset.fi;
+    let dd = ((i - flick.pos) % len + len) % len;
+    if (dd > len / 2) dd -= len;
+    const slot = dd + 3;
+    if (slot < 0 || slot > 6) {
+      el.dataset.t = 'translateX(-50%) translateY(2rem) scale(0.3)';
+      el.style.transform = el.dataset.t;
+      el.style.opacity = 0; el.style.zIndex = 0; el.style.pointerEvents = 'none';
+      return;
+    }
+    const p2 = FAN_POS[slot];
+    const t = `translateX(calc(-50% + ${(p2.x * mult).toFixed(1)}rem)) translateY(${(p2.y * 0.9).toFixed(1)}rem) rotate(${p2.rot}deg) scale(${p2.scale})`;
+    el.dataset.t = t;
+    el.style.transform = t;
+    el.style.opacity = 1;
+    el.style.zIndex = p2.z;
+    el.style.pointerEvents = 'auto';
+  });
+}
+
+function fanCycle(target) {
+  const d = flick.deck;
+  if (!d || !d.length) return;
+  const len = d.length;
+  const old = flick.pos;
+  const next = ((target % len) + len) % len;
+  if (next === old) return;
+  flick.pos = next;
+  flick.sec = 60;
+  const wrap = document.getElementById('fanWrap');
+  if (!wrap) return renderIdeas();
+  const oldCtr = wrap.querySelector(`.fan-card[data-fi="${old}"]`);
+  if (oldCtr && d[old]) { oldCtr.classList.remove('ctr'); oldCtr.setAttribute('data-fango', old); oldCtr.innerHTML = fanPrevHTML(d[old]); }
+  const ctr = wrap.querySelector(`.fan-card[data-fi="${next}"]`);
+  if (ctr) { ctr.classList.add('ctr'); ctr.removeAttribute('data-fango'); ctr.innerHTML = flickCardHTML(d[next]); }
+  applyFan();
+  bindFlick();
+  const c = d[next], rr = HZCFG[c.hz].rr, riskAmt = term.bal * flick.risk / 100;
+  const xEl = document.querySelector('.f1c-po-x small'); if (xEl) xEl.textContent = rr + '×';
+  const winEl = document.querySelector('.f1c-po b.win'); if (winEl) winEl.textContent = gbp(riskAmt * rr);
+  document.querySelectorAll('#fanDots span').forEach((s2, i2) => s2.classList.toggle('on', i2 === next));
+}
+
+/* side cards lift on hover — base transform preserved in data-t */
+document.addEventListener('pointerover', e => {
+  const el2 = e.target.closest && e.target.closest('.fan-card[data-fango]');
+  if (el2 && el2.dataset.t) el2.style.transform = el2.dataset.t + ' translateY(-14px) scale(1.05)';
+});
+document.addEventListener('pointerout', e => {
+  const el2 = e.target.closest && e.target.closest('.fan-card[data-fango]');
+  if (!el2 || !el2.dataset.t) return;
+  if (e.relatedTarget && el2.contains(e.relatedTarget)) return;
+  el2.style.transform = el2.dataset.t;
+});
+window.addEventListener('resize', () => { if (currentView === 'ideas' && ideaMode === 'flick') applyFan(); });
+
 function flickHTML() {
   if (!flick.deck) flickBuild();
-  const d = flick.deck, pos = flick.pos;
-  if (pos >= d.length) {
+  const d = flick.deck;
+  if (flick.pos >= d.length) flick.pos = 0;
+  const pos = flick.pos;
+  if (!d.length) {
     return `<div class="flickwrap">${flickHead()}
       <div class="fdone"><div class="fdone-ic">✓</div><div class="fdone-h">Deck cleared</div>
         <div class="fdone-s">Fresh signals are streaming in.</div>
@@ -4394,10 +4496,11 @@ function flickHTML() {
   const rbs = [1, 2, 5, 10].map(v =>
     `<button class="pill-btn${v === flick.risk ? ' on' : ''}" data-frisk="${v}">${v}%</button>`).join('');
   return `<div class="flickwrap">${flickHead()}${flickModelBar()}
-    <div class="fstack">
-      ${pos + 2 < d.length ? '<div class="fstub d2"></div>' : ''}
-      ${pos + 1 < d.length ? '<div class="fstub d1"></div>' : ''}
-      ${flickCardHTML(c)}
+    <div class="fan-wrap" id="fanWrap">${d.map((cc, i2) => `<div class="fan-card${i2 === pos ? ' ctr' : ''}" data-fi="${i2}"${i2 === pos ? '' : ` data-fango="${i2}"`}>${i2 === pos ? flickCardHTML(cc) : fanPrevHTML(cc)}</div>`).join('')}</div>
+    <div class="fan-nav">
+      <button class="fan-arrow" data-fanprev aria-label="Previous signal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="fan-dots" id="fanDots">${d.map((_, i2) => `<span class="${i2 === pos ? 'on' : ''}"></span>`).join('')}</div>
+      <button class="fan-arrow" data-fannext aria-label="Next signal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
     </div>
     <div class="f1c-risk"><span class="f1c-risk-l">How much to risk</span><div style="display:flex;gap:8px">${rbs}</div></div>
     <div class="f1c-payoff">
@@ -4438,7 +4541,12 @@ function flickResolve(take) {
   card.style.transition = 'transform 0.34s ease, opacity 0.34s ease';
   card.style.transform = take ? 'translate(560px, 20px) rotate(16deg)' : 'translate(-560px, 20px) rotate(-16deg)';
   card.style.opacity = '0';
-  setTimeout(() => { flick.pos++; flick.sec = 60; renderIdeas(); }, 300);
+  setTimeout(() => {
+    flick.deck.splice(flick.pos, 1);
+    if (flick.pos >= flick.deck.length) flick.pos = 0;
+    flick.sec = 60;
+    renderIdeas();
+  }, 300);
 }
 
 function bindFlick() {
@@ -4481,7 +4589,7 @@ function renderIdeas() {
     `<button class="pill-btn${ideaMode === k ? ' on' : ''}" data-imode="${k}">${l}${k === 'flick' ? ' <small style="display:inline">swipe</small>' : k === 'stack' ? ' <small style="display:inline">morph</small>' : ''}</button>`).join('');
   viewEl('ideas').innerHTML = `<div class="chip-row">${modes}</div>` +
     (ideaMode === 'flick' ? flickHTML() : ideaMode === 'stack' ? stackHTML() : boardHTML());
-  if (ideaMode === 'flick') bindFlick();
+  if (ideaMode === 'flick') { bindFlick(); requestAnimationFrame(applyFan); }
   if (ideaMode === 'board') bindIdeaCharts();
 }
 
@@ -4492,7 +4600,8 @@ setInterval(() => {
   flick.sec -= 1;
   if (flick.sec <= 0) {
     flick.missed++;
-    flick.pos++;
+    flick.deck.splice(flick.pos, 1);
+    if (flick.pos >= flick.deck.length) flick.pos = 0;
     flick.sec = 60;
     renderIdeas();
     return;
@@ -5232,12 +5341,25 @@ function tpBattlesHTML(d) {
 const medalSVG = c => `<svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M12 2l8 3v6c0 4.8-3.4 8.6-8 11-4.6-2.4-8-6.2-8-11V5l8-3z" fill="${c}"/><path d="M12 7.2l1.3 2.6 2.9.4-2.1 2 .5 2.9-2.6-1.4-2.6 1.4.5-2.9-2.1-2 2.9-.4z" fill="rgba(255,255,255,.88)"/></svg>`;
 
 function tpSpecHTML(d) {
-  const badges = BADGES_DEF.map(([e, name, req, fn]) => {
+  const badges = BADGES_DEF.map(([e, name, req, fn], bi) => {
     const earned = fn(d);
-    return `<div class="bdg ${earned ? 'earned' : 'locked'}">
-      <div class="bdg-emoji"${earned ? '' : ' style="opacity:.3;filter:grayscale(1)"'}>${medalSVG(e)}</div>
-      <div class="bdg-name">${name}</div>
-      <div class="bdg-req">${req}</div>
+    const num = String(bi + 1).padStart(2, '0');
+    return `<div class="bdg flip ${earned ? 'earned' : 'locked'}" data-flip tabindex="0" role="button" aria-pressed="false">
+      <div class="flip-inner">
+        <div class="flip-face flip-front">
+          <span class="flip-num mono tr">${num}</span><span class="flip-num mono bl">${num}</span>
+          <div class="bdg-emoji"${earned ? '' : ' style="opacity:.3;filter:grayscale(1)"'}>${medalSVG(e)}</div>
+          <div class="bdg-name">${name}</div>
+          <div class="flip-hint mono">TAP&nbsp;·&nbsp;HOW&nbsp;IT'S&nbsp;EARNED</div>
+        </div>
+        <div class="flip-face flip-back">
+          <span class="flip-num mono tr">${num}</span><span class="flip-num mono bl">${num}</span>
+          <div class="fb-chip mono${earned ? ' in' : ''}">${earned ? 'EARNED&nbsp;·&nbsp;VERIFIED' : 'LOCKED'}</div>
+          <div class="bdg-name">${name}</div>
+          <p class="fb-req">${req}</p>
+          <p class="fb-note">${earned ? 'Stamped from live results — nobody can grant it, nobody can fake it.' : 'Hit the requirement in live trading and it stamps automatically.'}</p>
+        </div>
+      </div>
     </div>`;
   }).join('');
   const myClub = clubFor(d.winnings);
@@ -5256,6 +5378,8 @@ function tpSpecHTML(d) {
       <div>
         <div class="badge-grid">${badges}</div>
         <p style="font-size:11px;color:var(--text-faint);margin-top:14px">${BADGES_DEF.filter(([, , , fn]) => fn(d)).length} of ${BADGES_DEF.length} badges earned · every badge is verified from live results</p>
+        <div class="chd-chart-t mono" style="margin:20px 2px 10px"><span>HIGHLIGHT&nbsp;REEL</span><span>WINS&nbsp;THAT&nbsp;MADE&nbsp;THE&nbsp;TAPE</span></div>
+        ${tpMediaHTML(d)}
       </div>
       <div class="club-card">
         <div class="bk-title" style="margin-bottom:2px">Paktos Clubs</div>
@@ -5289,18 +5413,39 @@ function tpLikesHTML(d) {
   }).join('')}</div>`;
 }
 
+function tpActivityHTML(d) {
+  const names = Object.keys(TRADER_AV).filter(n => n !== d.name);
+  const h = hashName(d.name + 'act');
+  const pick = k => names[((h >>> k) + k) % names.length];
+  const items = [
+    ['VS', `Accepted a battle vs ${pick(1)}`, `£${5 + (h % 20)}K pot · ${['15m', '1h', '4h', '1d'][h % 4]} window · higher return takes it`, '26m'],
+    ['CH', `Cheered ${pick(2)} ringside`, `${40 + (h % 200)} cheers thrown into a live battle`, '1h'],
+    ['C', `Commented on ${pick(3)} v ${pick(4)}`, `"${['this pace is unreal', 'calling the lead flip now', 'the size of that entry…', 'gg already, no way back'][h % 4]}"`, '2h'],
+    ['W', `Watched ${pick(4)} v ${pick(5)} live`, `stayed ${8 + (h % 40)} minutes ringside`, '5h'],
+    ['F', `Started following ${pick(6)}`, 'scouting the next opponent', '9h'],
+    ['L', `Liked a post from ${pick(7)}`, `"${TP_POSTS[h % TP_POSTS.length]}"`, '12h'],
+    ['T', 'Entered the Monthly tournament', `${1 + (h % 4)} entries · chasing the top ten`, '1d'],
+    ['CL', `Member of the ${clubFor(d.winnings).name}`, 'plaque stamped from verified winnings', '2d']
+  ];
+  return `<div class="fame-card"><div class="act-list">${items.map(([tag, t, s, ago]) => `
+    <div class="act-row">
+      <span class="act-tag mono">${tag}</span>
+      <span class="act-tx"><b>${t}</b><span>${s}</span></span>
+      <span class="act-ago mono">${ago}&nbsp;ago</span>
+    </div>`).join('')}</div></div>`;
+}
+
 function renderTrader() {
   const d = traderProfile(traderId);
   const tier = traderTier(d.winnings);
   const tour = Math.round(d.winnings * d.tourShare), arena = d.winnings - tour;
   const tourPct = Math.round(tour / d.winnings * 100);
-  const tabs = [['posts', 'Posts'], ['spec', 'Spec'], ['battles', 'Battles'], ['trades', 'Trades'], ['media', 'Media'], ['likes', 'Likes']].map(([k, l]) =>
+  const tabs = [['posts', 'Posts'], ['spec', 'Spec'], ['battles', 'Battles'], ['activity', 'Activity'], ['likes', 'Likes']].map(([k, l]) =>
     `<button class="pill-btn${traderTab === k ? ' on' : ''}" data-trtab="${k}">${l}</button>`).join('');
   const body =
     traderTab === 'spec' ? tpSpecHTML(d) :
     traderTab === 'battles' ? tpBattlesHTML(d) :
-    traderTab === 'trades' ? `<div class="fame-card" style="margin-bottom:16px"><div class="fame-scroll">${traderPositionsHTML(d)}</div></div><div class="fame-card"><div class="fame-scroll">${traderActivityHTML(d)}</div></div>` :
-    traderTab === 'media' ? tpMediaHTML(d) :
+    traderTab === 'activity' ? tpActivityHTML(d) :
     traderTab === 'likes' ? tpLikesHTML(d) :
     tpPostsHTML(d);
   const own = d.name === 'jstone';
@@ -6524,58 +6669,6 @@ const LIVE_B = [
 ];
 
 let lbf = { kind: 'all', pot: 'any', dur: 'any', sort: 'pot', view: 'grid' };
-
-/* Quick trade — one tap, straight into a position */
-let qtStake = 100, qtCat = 'all';
-const QT_CATS = { BTC: 'crypto', ETH: 'crypto', NAS100: 'indices', XAUUSD: 'metals', EURUSD: 'fx', GBPJPY: 'fx' };
-
-function quickTradeHTML() {
-  const syms = Object.keys(INSTR).filter(s => qtCat === 'all' || QT_CATS[s] === qtCat);
-  const cards = syms.map(sym => {
-    const a = INSTR[sym];
-    const chg = (a.px - a.open) / a.open * 100;
-    const vol = 2 + hashName(sym + 'qv') % 38;
-    return `<article class="qt-card">
-      <div class="qt-top">
-        <span class="qt-ic" style="background:${a.tint}">${a.ic}</span>
-        <div class="qt-names"><b>${a.name}</b><span class="mono">${sym}&nbsp;·&nbsp;${QT_CATS[sym].toUpperCase()}</span></div>
-        <span class="px-pill${chg < 0 ? ' neg' : ''}" data-ppill="${sym}"><i class="pp-arrow">↑</i><b>${fmtRet(chg)}</b></span>
-      </div>
-      <div class="qt-px odo" data-podo="${sym}" data-odo="${fmtPx(sym)}">${odoInner(fmtPx(sym))}</div>
-      <div class="qt-btns">
-        <button class="qt-long" data-qt="${sym}|long">Long&nbsp;▲</button>
-        <button class="qt-short" data-qt="${sym}|short">Short&nbsp;▼</button>
-      </div>
-      <div class="qt-foot mono"><span class="pulse-dot tiny"></span>LIVE<span>£${vol}M&nbsp;vol&nbsp;today</span><span class="qt-term" data-qterm="${sym}">Full&nbsp;terminal&nbsp;→</span></div>
-    </article>`;
-  }).join('');
-  const hot = [...LIVE_B].map((b, i) => ({ ...b, i })).sort((x, y) => y.watching - x.watching).slice(0, 5);
-  const hotRows = hot.map((h, n) => `<div class="qh-row" data-lbwatch="${h.i}">
-    <span class="qh-rank mono">${n + 1}</span>
-    <span class="qh-name">${lbName(h, 'a')} v ${lbName(h, 'b')}</span>
-    <span class="qh-val mono">${fmtM(h.pot)}&nbsp;pot</span>
-    <span class="qh-arrow">›</span>
-  </div>`).join('');
-  const catChip = (v, l) => `<button class="pill-btn${qtCat === v ? ' on' : ''}" data-qtcat="${v}">${l}</button>`;
-  return `<div class="section">
-    <div class="section-head"><div>
-      <h3 class="section-title">Jump straight in</h3>
-      <p class="section-sub"><span class="mono">ONE&nbsp;TAP&nbsp;·&nbsp;EVERY&nbsp;MARKET</span><span class="dot-sep">·</span><span>pick a side and your stake fires instantly — manage or close it in the terminal</span></p></div>
-      <div class="qt-stake"><span class="b-label mono">STAKE</span>
-        ${[25, 100, 500, 1000].map(v => `<button class="pill-btn${qtStake === v ? ' on' : ''}" data-qtstake="${v}">£${v >= 1000 ? '1K' : v}</button>`).join('')}
-      </div></div>
-    <div class="chip-row" style="margin-bottom:14px">${catChip('all', 'All')}${catChip('crypto', 'Crypto')}${catChip('fx', 'FX')}${catChip('indices', 'Indices')}${catChip('metals', 'Metals')}</div>
-    <div class="qt-wrap">
-      <div class="qt-grid">${cards}</div>
-      <aside class="qt-hot">
-        <div class="qt-hot-head">HOT&nbsp;BOARDS&nbsp;·&nbsp;MOST&nbsp;WATCHED</div>
-        ${hotRows}
-        <button class="link-btn" data-nav="live">Explore all live battles</button>
-      </aside>
-    </div>
-  </div>`;
-}
-
 const LB_POT_BANDS = { any: [0, 1e12], small: [0, 1000], mid: [1000, 10000], big: [10000, 100000], whale: [100000, 1e12] };
 const LB_DUR_BANDS = { any: [0, 1e9], sprint: [0, 60], day: [61, 1440], week: [1441, 1e9] };
 
@@ -6625,8 +6718,8 @@ function smoothPath(pts) {
   return d;
 }
 
-function lbMiniSVG(b) {
-  const W = 400, H = 150, padL = 42, padR = 12, padT = 12, padB = 10;
+function lbMiniSVG(b, W = 400, H = 150) {
+  const padL = 42, padR = 12, padT = 12, padB = 10;
   const all = b.sa.concat(b.sb);
   const lo = Math.min(...all), hi = Math.max(...all), rng = (hi - lo) || 1;
   const iw = W - padL - padR, ih = H - padT - padB;
@@ -6665,6 +6758,11 @@ function lbMiniSVG(b) {
   </svg>`;
 }
 
+/* render a hub chart at the container's real pixel size — no stretched text */
+function lbChartInto(el, b, i) {
+  el.innerHTML = lbMiniSVG({ ...b, i }, Math.max(280, el.clientWidth || 400), el.clientHeight || 150);
+}
+
 function lbSparkSVG(b) {
   const W = 120, H = 34, pad = 3;
   const all = b.sa.concat(b.sb);
@@ -6676,6 +6774,27 @@ function lbSparkSVG(b) {
   </svg>`;
 }
 
+/* flip-card tilt — the active face follows the pointer, both sides */
+document.addEventListener('pointermove', e => {
+  const card = e.target.closest && e.target.closest('.bdg.flip');
+  if (!card) return;
+  const flipped = card.classList.contains('on');
+  const face = card.querySelector(flipped ? '.flip-back' : '.flip-front');
+  if (!face) return;
+  const r = card.getBoundingClientRect();
+  const ry = ((e.clientX - r.left) / r.width - 0.5) * 24;
+  const rx = ((e.clientY - r.top) / r.height - 0.5) * -24;
+  face.style.transform = `${flipped ? 'rotateY(180deg) ' : ''}rotateX(${rx.toFixed(1)}deg) rotateY(${ry.toFixed(1)}deg)`;
+});
+document.addEventListener('pointerout', e => {
+  const card = e.target.closest && e.target.closest('.bdg.flip');
+  if (!card || (e.relatedTarget && card.contains(e.relatedTarget))) return;
+  const f = card.querySelector('.flip-front');
+  const b = card.querySelector('.flip-back');
+  if (f) f.style.transform = '';
+  if (b) b.style.transform = 'rotateY(180deg)';
+});
+
 /* hover crosshair + tooltip on the hub charts — spectate-grade reads without leaving the board */
 document.addEventListener('pointermove', e => {
   const el = e.target.closest && e.target.closest('[data-lbchart]');
@@ -6685,7 +6804,7 @@ document.addEventListener('pointermove', e => {
       const prev = document.querySelector(`[data-lbchart="${LB_HOV.i}"]`);
       const pi = LB_HOV.i;
       LB_HOV = { i: -1, idx: null };
-      if (prev && LIVE_B[pi] && LIVE_B[pi].sa) prev.innerHTML = lbMiniSVG({ ...LIVE_B[pi], i: pi });
+      if (prev && LIVE_B[pi] && LIVE_B[pi].sa) lbChartInto(prev, LIVE_B[pi], pi);
     }
     if (tip) tip.classList.remove('on');
     return;
@@ -6694,12 +6813,11 @@ document.addEventListener('pointermove', e => {
   const b = LIVE_B[i];
   if (!b || !b.sa) return;
   const r = el.getBoundingClientRect();
-  const fx = (e.clientX - r.left) / r.width;
-  const t = Math.max(0, Math.min(1, (fx - 42 / 400) / (1 - 54 / 400)));
+  const t = Math.max(0, Math.min(1, ((e.clientX - r.left) - 42) / Math.max(1, r.width - 54)));
   const idx = Math.round(t * (b.sa.length - 1));
   if (LB_HOV.i !== i || LB_HOV.idx !== idx) {
     LB_HOV = { i, idx };
-    el.innerHTML = lbMiniSVG({ ...b, i });
+    lbChartInto(el, b, i);
   }
   if (tip) {
     tip.innerHTML = `<div class="spt-r"><i style="background:${lbCol('a')}"></i>${lbName(b, 'a')}<b>${fmtRet(b.sa[Math.min(idx, b.sa.length - 1)])}</b></div>
@@ -6803,6 +6921,10 @@ function renderLive() {
     </div>
     ${board}
     <div class="lb-tip" id="lbTip"></div>`;
+  document.querySelectorAll('[data-lbchart]').forEach(el => {
+    const b = LIVE_B[+el.dataset.lbchart];
+    if (b && b.sa) lbChartInto(el, b, +el.dataset.lbchart);
+  });
 }
 
 /* Tournaments live inside the Arena — one competitive home */
@@ -6960,7 +7082,6 @@ function renderArena() {
         </div>
       </div>
     </section>
-    ${quickTradeHTML()}
     ${arenaB.open ? builderHTML() : ''}
     ${myBattlesHTML()}
     ${nationWarsHTML()}
@@ -6977,8 +7098,8 @@ function renderArena() {
 
 let chSel = 0;
 
-function chCurveSVG(series) {
-  const W = 640, H = 200, padL = 50, padR = 14, padT = 14, padB = 12;
+function chCurveSVG(series, W = 640, H = 200) {
+  const padL = 50, padR = 14, padT = 14, padB = 12;
   const s = series.slice(-60);
   const lo = Math.min(...s), hi = Math.max(...s), rng = (hi - lo) || 1;
   const iw = W - padL - padR, ih = H - padT - padB;
@@ -7035,7 +7156,7 @@ function renderChallenge() {
           </div>
           <div style="margin-top:14px">${awardBadgeHTML(clubFor(p.winnings))}</div>
           <div class="chd-chart-t mono"><span>EQUITY&nbsp;·&nbsp;VERIFIED&nbsp;TRACK&nbsp;RECORD</span><span>ALL-TIME</span></div>
-          <div class="chd-chart">${chCurveSVG(p.series)}</div>
+          <div class="chd-chart" id="chdChart"></div>
           <div class="chd-steps">
             <div class="chd-step"><span class="mono">STEP&nbsp;1</span><b>Accept the terms</b><span>Your stake locks into escrow next to theirs — nobody can touch it.</span></div>
             <div class="chd-step"><span class="mono">STEP&nbsp;2</span><b>Trade the window</b><span>Any market, any style. Only the % return on your account counts.</span></div>
@@ -7070,6 +7191,8 @@ function renderChallenge() {
         <div class="chd-note mono">FUNDS&nbsp;LOCK&nbsp;IN&nbsp;ESCROW&nbsp;AT&nbsp;KICK-OFF&nbsp;·&nbsp;SETTLED&nbsp;AUTOMATICALLY&nbsp;AT&nbsp;WINDOW&nbsp;CLOSE&nbsp;·&nbsp;VERIFIED&nbsp;RETURNS&nbsp;ONLY</div>
       </div>
     </div>`;
+  const cc = document.getElementById('chdChart');
+  if (cc) cc.innerHTML = chCurveSVG(p.series, Math.max(320, cc.clientWidth || 640), cc.clientHeight || 200);
   bindAwardTilt();
 }
 
@@ -7424,6 +7547,9 @@ document.addEventListener('click', e => {
   if ((el = q('[data-fskip]'))) return flickResolve(false);
   if ((el = q('[data-ftake]'))) return flickResolve(true);
   if ((el = q('[data-freshuffle]'))) { flickBuild(); return renderIdeas(); }
+  if ((el = q('[data-fanprev]'))) return fanCycle(flick.pos - 1);
+  if ((el = q('[data-fannext]'))) return fanCycle(flick.pos + 1);
+  if ((el = q('[data-fango]'))) return fanCycle(+el.dataset.fango);
   if ((el = q('[data-fprov]'))) {
     flick.prov = el.dataset.fprov;
     flick.model = FLICK_MODELS[flick.prov].models[0];
@@ -7572,6 +7698,7 @@ document.addEventListener('click', e => {
     } else renderTerminal();
     return toast(`Switched to ${ACCTS[i].id} — ${ACCTS[i].label}`);
   }
+  if ((el = q('[data-flip]'))) { el.classList.toggle('on'); el.setAttribute('aria-pressed', el.classList.contains('on')); return; }
   if ((el = q('[data-insights]'))) {
     const card = document.getElementById('insightsCard');
     if (card) {
@@ -7717,22 +7844,6 @@ document.addEventListener('click', e => {
   if ((el = q('[data-lbdur]'))) { lbf.dur = el.dataset.lbdur; return renderLive(); }
   if ((el = q('[data-lbsort]'))) { lbf.sort = el.dataset.lbsort; return renderLive(); }
   if ((el = q('[data-lbview]'))) { lbf.view = el.dataset.lbview; return renderLive(); }
-  if ((el = q('[data-qtstake]'))) { qtStake = +el.dataset.qtstake; return renderArena(); }
-  if ((el = q('[data-qtcat]'))) { qtCat = el.dataset.qtcat; return renderArena(); }
-  if ((el = q('[data-qterm]'))) { term.asset = el.dataset.qterm; return navigate('terminal'); }
-  if ((el = q('[data-qt]'))) {
-    const [sym, dir] = el.dataset.qt.split('|');
-    const up = dir === 'long';
-    term.asset = sym;
-    term.pos = { sym, dir: up ? 'up' : 'down', entry: INSTR[sym].px, risk: qtStake, riskPct: +(qtStake / term.bal * 100).toFixed(2), rr: term.rr, mode: 'day', be: false, src: 'quick', openedAt: Date.now() };
-    el.classList.add('filled');
-    const orig = el.innerHTML;
-    el.textContent = 'Filled ✓';
-    setTimeout(() => { el.classList.remove('filled'); el.innerHTML = orig; }, 1400);
-    toast(`${up ? 'Long' : 'Short'} ${sym} @ ${fmtPx(sym)} — £${qtStake.toLocaleString('en-GB')} on, manage it in the terminal`);
-    addNotif('T', `Quick trade filled — ${sym}`, `${up ? 'Long' : 'Short'} @ ${fmtPx(sym)} with £${qtStake.toLocaleString('en-GB')} at risk, 1:${term.rr} target.`);
-    return;
-  }
   if ((el = q('[data-lbwatch]'))) {
     const face = e.target.closest('[data-trader]');
     if (face) return openTrader(face.dataset.trader);
