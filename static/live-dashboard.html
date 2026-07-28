@@ -3139,6 +3139,34 @@ body.dark .bd-fade { background: linear-gradient(90deg, var(--card) 26%, rgba(0,
 .bd-stats { display: flex; gap: 34px; }
 .bd-stats b { display: block; font-size: 24px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
 .bd-stats span { font-size: 8px; letter-spacing: .12em; color: var(--text-faint); }
+
+/* ---- the Paktos Card (points card) ---- */
+.pkc-grid { display: grid; grid-template-columns: minmax(300px, 440px) 1fr; gap: 30px; align-items: center; background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 26px; }
+@media (max-width: 860px) { .pkc-grid { grid-template-columns: 1fr; } }
+.pkc { position: relative; width: 100%; aspect-ratio: 1.586; border-radius: 20px; background: #fdfdfe; box-shadow: 0 20px 46px rgba(28, 28, 58, .18); overflow: hidden; }
+.pkc-wash { position: absolute; inset: -8%; background:
+  radial-gradient(90% 70% at 10% 96%, rgba(250, 214, 148, .55), transparent 42%),
+  radial-gradient(80% 65% at 36% 102%, rgba(255, 148, 158, .45), transparent 48%),
+  radial-gradient(90% 75% at 66% 106%, rgba(190, 120, 228, .38), transparent 52%),
+  radial-gradient(100% 80% at 96% 92%, rgba(122, 140, 240, .4), transparent 55%);
+  filter: blur(16px); }
+.pkc-mark { position: absolute; top: 18px; left: 20px; display: flex; align-items: center; gap: 8px; color: #111216; }
+.pkc-mark svg { width: 25px; height: 19px; display: block; }
+.pkc-mark b { font-size: 16.5px; font-weight: 700; letter-spacing: -.01em; }
+.pkc-wm { position: absolute; top: 7%; right: 5%; width: 54%; }
+.pkc-wm svg { width: 100%; height: auto; display: block; }
+.pkc-wm svg path { fill: none; stroke: #e9e7f1; stroke-width: .55; }
+.pkc-name { position: absolute; left: 20px; bottom: 54px; font-size: 19px; font-weight: 700; color: #17181c; letter-spacing: -.01em; }
+.pkc-num { position: absolute; left: 20px; bottom: 24px; font-size: 13.5px; letter-spacing: .16em; color: #2c2d34; }
+.pkc-circ { position: absolute; right: 20px; bottom: 20px; display: flex; }
+.pkc-circ i { width: 27px; height: 27px; border-radius: 50%; background: rgba(96, 96, 118, .45); }
+.pkc-circ i:last-child { margin-left: -11px; background: rgba(58, 58, 80, .5); }
+.pkc-panel { min-width: 0; }
+.pkc-ey { font-size: 8.5px; letter-spacing: .13em; font-weight: 700; color: var(--text-faint); }
+.pkc-bal { font-size: 36px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; margin: 4px 0 8px; }
+.pkc-sub { font-size: 12.5px; color: var(--text-soft); line-height: 1.55; margin: 0 0 14px; }
+.pkc-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.bt-pm-ic svg { width: 16px; height: 12px; display: block; }
 @media (max-width: 900px) { .bd-map { opacity: .35; } }
 
 /* ---- explore — the trader fan (same system as Flick) ---- */
@@ -3748,6 +3776,9 @@ function odoIntro(id, from, to) {
 const fmtRet = v => (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
 
 const SEED_WINNINGS = 266900; /* winnings banked before the local ledger existed */
+
+/* the Paktos Card — a points balance you top up yourself and spend on battle stakes */
+let pkCard = { bal: 2500, num: '4471 0092 7001 8842' };
 
 function updateWinningsPills() {
   const won = pkLedger.filter(l => l.won).reduce((a, l) => a + l.pot, 0);
@@ -5428,6 +5459,7 @@ function renderPerformance() {
       <div class="sg-cell"><div class="sg-l mono">BROKER</div><div class="sg-v">Paktos Markets</div></div>
     </div>
     ${streakCardHTML()}
+    ${pkCardHTML()}
     </div>`;
   viewEl('performance').innerHTML = `
     <button class="back-btn" data-nav="terminal">
@@ -6741,6 +6773,7 @@ function openPay() {
     { id: 'apple', ic: '<svg viewBox="0 0 384 512" width="12" height="12" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>', name: 'Apple Pay', sub: 'Face ID · instant' },
     { id: 'bank', ic: '🏦', name: 'Bank transfer', sub: 'Faster Payments · ~2 hrs' },
     { id: 'bal', ic: '◈', name: 'Paktos balance', sub: gbp0(bal) + ' available', off: bal < f.yourStake },
+    { id: 'pcard', ic: MARK_SVG, name: 'Paktos Card', sub: '£' + pkCard.bal.toLocaleString('en-GB') + ' in points', off: pkCard.bal < f.yourStake },
   ];
   if (pms.find(p => p.id === btPm)?.off) btPm = 'card';
   btVeilEl().innerHTML = `<div class="bt-card">
@@ -6770,7 +6803,8 @@ function commitBattleFlow() {
   btFlow = null;
   if (f.ref) { const ix = challenges.indexOf(f.ref); if (ix > -1) challenges.splice(ix, 1); }
   if (btPm === 'bal') { ACCTS[0].bal -= f.yourStake; }
-  const pmName = { card: 'card ••••4471', apple: 'Apple Pay', bank: 'bank transfer', bal: 'Paktos balance' }[btPm] || 'card';
+  if (btPm === 'pcard') { pkCard.bal -= f.yourStake; saveDB(); }
+  const pmName = { card: 'card ••••4471', apple: 'Apple Pay', bank: 'bank transfer', bal: 'Paktos balance', pcard: 'Paktos Card points' }[btPm] || 'card';
   startBattle({
     opp: f.opp, av: f.av, tint: f.tint, machine: f.machine, mic: f.mic, mtint: f.mtint,
     market: f.market, window: f.window, pot: f.pot, watching: f.watching
@@ -7025,7 +7059,8 @@ function saveDB() {
       battles: myBattles.map(b2 => ({ ...b2 })),
       ledger: pkLedger.slice(0, 30),
       trades: tradeLog.slice(0, 40),
-      btlSeq, battleSeq
+      btlSeq, battleSeq,
+      pkCard: pkCard.bal
     }));
   } catch (e2) { }
 }
@@ -7044,6 +7079,7 @@ function loadDB() {
   if (Array.isArray(d.trades) && d.trades.length) { tradeLog.length = 0; d.trades.forEach(t => tradeLog.push(t)); }
   if (d.btlSeq) btlSeq = d.btlSeq;
   if (d.battleSeq) battleSeq = d.battleSeq;
+  if (typeof d.pkCard === 'number') pkCard.bal = d.pkCard;
 }
 loadDB();
 
@@ -7084,6 +7120,31 @@ function markStreak() {
 
 const STK_FLAME = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>';
 const STK_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+
+function pkCardHTML() {
+  return `<div class="section" style="margin-top:22px">
+    <div class="section-head"><div><h3 class="section-title">Paktos Card</h3>
+      <p class="section-sub"><span class="mono">POINTS&nbsp;CARD</span><span class="dot-sep">·</span><span>top it up from your balance, spend it on battle stakes at checkout</span></p></div></div>
+    <div class="pkc-grid">
+      <div class="pkc">
+        <div class="pkc-wash" aria-hidden="true"></div>
+        <div class="pkc-mark">${MARK_SVG}<b>Paktos</b></div>
+        <div class="pkc-wm" aria-hidden="true">${MARK_SVG}</div>
+        <div class="pkc-name">${myProfile.name}</div>
+        <div class="pkc-num mono">${pkCard.num}</div>
+        <div class="pkc-circ" aria-hidden="true"><i></i><i></i></div>
+      </div>
+      <div class="pkc-panel">
+        <div class="pkc-ey mono">POINTS&nbsp;BALANCE</div>
+        <div class="pkc-bal" id="pkcBal">£${pkCard.bal.toLocaleString('en-GB')}</div>
+        <p class="pkc-sub">Top up from your Paktos balance — <b id="pkcSrc">£${Math.round(ACCTS[0].bal).toLocaleString('en-GB')}</b> available. Points cover battle stakes at checkout and never expire.</p>
+        <div class="pkc-chips">
+          ${[100, 500, 1000, 5000].map(v => `<button class="pill-btn" data-pctop="${v}">+£${v.toLocaleString('en-GB')}</button>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
 
 function streakCardHTML() {
   const s2 = streakStats();
@@ -9206,6 +9267,17 @@ document.addEventListener('click', e => {
     return toast(`Switched to ${ACCTS[i].id} — ${ACCTS[i].label}`);
   }
   if (e.target && e.target.id === 'btVeil') { btFlow = null; return e.target.remove(); }
+  if ((el = q('[data-pctop]'))) {
+    const amt = +el.dataset.pctop;
+    if (ACCTS[0].bal < amt) return toast('Not enough in your Paktos balance for that top-up');
+    ACCTS[0].bal -= amt;
+    pkCard.bal += amt;
+    saveDB();
+    const b2 = document.getElementById('pkcBal'), s2 = document.getElementById('pkcSrc');
+    if (b2) b2.textContent = '£' + pkCard.bal.toLocaleString('en-GB');
+    if (s2) s2.textContent = '£' + Math.round(ACCTS[0].bal).toLocaleString('en-GB');
+    return toast(`£${amt.toLocaleString('en-GB')} loaded onto your Paktos Card`);
+  }
   if ((el = q('[data-exskip]'))) return exDecide(-1);
   if ((el = q('[data-exfollow]'))) return exDecide(1);
   if ((el = q('[data-exprev]'))) return exGo(exPos - 1);
