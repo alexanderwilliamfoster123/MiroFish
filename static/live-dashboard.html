@@ -2746,18 +2746,10 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .lbh-main { position: relative; z-index: 1; min-width: 0; }
 .lbh-stats { position: relative; z-index: 1; display: flex; gap: 28px; flex-wrap: wrap; align-items: center; }
 .lbh-stat { display: flex; flex-direction: column; gap: 3px; }
-.lbh-stat b { font-size: 21px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.lbh-stat b { font-size: 27px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; line-height: 1.1; }
 .lbh-stat span { font-size: 9px; letter-spacing: 0.12em; color: var(--text-faint); }
 .lbh-stat.swing b { color: var(--lbA); }
-.lbh-tape { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-.lbh-chip { font-size: 10px; letter-spacing: 0.04em; padding: 5px 10px; border-radius: 999px; background: var(--surface); box-shadow: var(--neu-in-sm); color: var(--text-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.lbh-chip b { font-weight: 800; }
-.lbh-chip.up b { color: #0b8a5c; }
-.lbh-chip.down b { color: #c9383d; }
-body.dark .lbh-chip.up b { color: #34d399; }
-body.dark .lbh-chip.down b { color: #f87171; }
-.lbh-chip.fresh { animation: lbhPop 0.5s cubic-bezier(0.25, 1.4, 0.4, 1); }
-@keyframes lbhPop { from { transform: translateY(9px) scale(0.88); opacity: 0; } to { transform: none; opacity: 1; } }
+
 .lb-card .nw-bar > span, .lb-tbar > span, .spec-hero .nw-bar > span { background: var(--lbA); }
 .lb-card .nw-bar > i, .lb-tbar > i, .spec-hero .nw-bar > i { background: var(--lbBsoft); }
 .lb-sdot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
@@ -3610,15 +3602,13 @@ function tickLiveNumbers() {
     if (sp && b.sa) sp.innerHTML = lbSparkSVG(b);
   });
   if (currentView === 'live') {
-    setOdo('lbCount', String(LIVE_B.length));
-    setOdo('lbPool', '£' + (LIVE_B.reduce((a2, b2) => a2 + b2.pot, 0) / 1e6).toFixed(2) + 'M');
-    lbTapePush();
-    const tape = document.getElementById('lbTape');
-    if (tape) tape.innerHTML = lbTapeHTML();
+    const st = (id, v) => { const el2 = document.getElementById(id); if (el2) el2.textContent = v; };
     lbSettled += Math.random() < 0.45 ? 1 : 0;
     lbSwing = Math.max(500, lbSwing + Math.round((Math.random() - 0.47) * 2600));
-    setOdo('lbSettled', lbSettled.toLocaleString('en-GB'));
-    setOdo('lbSwing', '£' + lbSwing.toLocaleString('en-GB'));
+    st('lbCount', String(LIVE_B.length));
+    st('lbPool', '£' + (LIVE_B.reduce((a2, b2) => a2 + b2.pot, 0) / 1e6).toFixed(2) + 'M');
+    st('lbSettled', lbSettled.toLocaleString('en-GB'));
+    st('lbSwing', '£' + lbSwing.toLocaleString('en-GB'));
   }
   /* arena hero counters — always climbing */
   battlesLiveN += Math.floor(Math.random() * 6);
@@ -6920,19 +6910,6 @@ document.addEventListener('pointermove', e => {
 
 /* hero money wall — pots settling, swings breathing in and out */
 let lbSettled = 1284, lbSwing = 14200;
-const LB_TAPE = [];
-
-function lbTapePush() {
-  const names = Object.keys(TRADER_AV);
-  const n = names[Math.floor(Math.random() * names.length)];
-  LB_TAPE.unshift({ n, up: Math.random() < 0.55, v: Math.round(60 + Math.pow(10, 1.4 + Math.random() * 2.3)) });
-  if (LB_TAPE.length > 6) LB_TAPE.length = 6;
-}
-
-function lbTapeHTML() {
-  if (!LB_TAPE.length) for (let k = 0; k < 6; k++) lbTapePush();
-  return LB_TAPE.map((t, i2) => `<span class="lbh-chip mono ${t.up ? 'up' : 'down'}${i2 === 0 ? ' fresh' : ''}">${t.n}&nbsp;<b>${t.up ? '+' : '−'}£${t.v.toLocaleString('en-GB')}</b></span>`).join('');
-}
 
 function renderLive() {
   const list = LIVE_B
@@ -7010,13 +6987,12 @@ function renderLive() {
         <span class="live-tag"><span class="pulse-dot"></span><span class="mono">LIVE&nbsp;NOW</span></span>
         <h2 class="pt-title" style="margin:8px 0 2px">Live battles</h2>
         <p class="section-sub" style="margin:0">every live duel on the platform — pick one and pull up ringside</p>
-        <div class="lbh-tape" id="lbTape">${lbTapeHTML()}</div>
       </div>
       <div class="lbh-stats mono">
-        <div class="lbh-stat"><b>${odoHTML('lbCount', String(LIVE_B.length))}</b><span>LIVE&nbsp;NOW</span></div>
-        <div class="lbh-stat"><b>${odoHTML('lbPool', '£' + (LIVE_B.reduce((a2, b2) => a2 + b2.pot, 0) / 1e6).toFixed(2) + 'M')}</b><span>ESCROWED</span></div>
-        <div class="lbh-stat"><b>${odoHTML('lbSettled', lbSettled.toLocaleString('en-GB'))}</b><span>POTS&nbsp;SETTLED&nbsp;TODAY</span></div>
-        <div class="lbh-stat swing"><b>${odoHTML('lbSwing', '£' + lbSwing.toLocaleString('en-GB'))}</b><span>BIGGEST&nbsp;SWING&nbsp;LIVE</span></div>
+        <div class="lbh-stat"><b id="lbCount">${LIVE_B.length}</b><span>LIVE&nbsp;NOW</span></div>
+        <div class="lbh-stat"><b id="lbPool">£${(LIVE_B.reduce((a2, b2) => a2 + b2.pot, 0) / 1e6).toFixed(2)}M</b><span>ESCROWED</span></div>
+        <div class="lbh-stat"><b id="lbSettled">${lbSettled.toLocaleString('en-GB')}</b><span>POTS&nbsp;SETTLED&nbsp;TODAY</span></div>
+        <div class="lbh-stat swing"><b id="lbSwing">£${lbSwing.toLocaleString('en-GB')}</b><span>BIGGEST&nbsp;SWING&nbsp;LIVE</span></div>
       </div>
     </div>
     <div class="lb-filters">
