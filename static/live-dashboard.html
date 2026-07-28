@@ -3361,6 +3361,7 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
     <div class="view" data-view="tournaments"></div>
     <div class="view" data-view="arena"></div>
     <div class="view" data-view="leaderboard"></div>
+    <div class="view" data-view="board"></div>
     <div class="view" data-view="ideas"></div>
     <div class="view" data-view="terminal"></div>
     <div class="view" data-view="social"></div>
@@ -3418,7 +3419,7 @@ const MARK_SVG = '<svg viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/
 const TROPHY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="__S__" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5"/></svg>';
 
 const navItems = [
-  { label: 'Arena', view: 'arena', match: ['arena', 'trader', 'spectate', 'live', 'clan', 'challenge', 'tournaments', 'leaderboard'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>' },
+  { label: 'Arena', view: 'arena', match: ['arena', 'trader', 'spectate', 'live', 'clan', 'challenge', 'tournaments', 'leaderboard', 'board'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>' },
   { label: 'Trade', view: 'terminal', match: ['terminal', 'performance'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 15v-4M12 15V8M17 15v-6"/></svg>' },
   { label: 'Ideas', view: 'ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' },
   { label: 'Feed', view: 'social', match: ['social'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' }
@@ -3917,6 +3918,7 @@ const TITLES = {
   tournaments: ['Tournaments', '<span class="mono">LIVE&nbsp;BOARDS</span><span class="dot-sep">·</span><span>five tournaments running — pools grow with every entry</span>'],
   arena: ['Arena', '<span class="mono">HEAD-TO-HEAD</span><span class="dot-sep">·</span><span>battles, tournaments, nation wars &amp; the £1M pot</span>'],
   leaderboard: ['Arena', '<span class="mono">LEADERBOARD</span><span class="dot-sep">·</span><span>live standings, resorted in real time</span>'],
+  board: ['Leaderboard', '<span class="mono">VERIFIED&nbsp;TRACK&nbsp;RECORDS</span><span class="dot-sep">·</span><span>every trader on the platform, ranked by what they\'ve banked</span>'],
   ideas: ['Trade Ideas', '<span class="mono">LIVE&nbsp;WIRE</span><span class="dot-sep">·</span><span>signals streaming from every market</span>'],
   terminal: ['Trade', '<span class="mono">TR-1001</span><span class="dot-sep">·</span><span>£100k competition balance</span>'],
   challenge: ['Challenge', '<span class="mono">OPEN&nbsp;CHALLENGE</span><span class="dot-sep">·</span><span>read the terms, scout the trader, take the other side</span>'],
@@ -7133,7 +7135,7 @@ function nationWarsHTML() {
     ${FEATURE_NATION_WARS ? `<div class="section-head"><div><h3 class="section-title">Nation Wars</h3>
       <p class="section-sub"><span class="mono">COUNTRY&nbsp;VS&nbsp;COUNTRY</span><span class="dot-sep">·</span><span>full squads battle for one pot — the side with the higher average return takes it all</span></p></div></div>
     <div class="nw-grid">${cards}</div>` : ''}
-    ${lbBoardHTML()}
+    ${lbMiniHTML()}
   </div>`;
 }
 
@@ -7192,6 +7194,30 @@ function lbbTableHTML() {
     <thead><tr class="mono"><th>RANK</th><th>TRADER</th><th>CLUB</th>${th('score', 'SCORE')}<th style="text-align:center">VERIFIED</th>${th('winnings', 'TOTAL&nbsp;WINNINGS', 1)}${th('winrate', 'WIN&nbsp;RATE', 1)}${th('dd', 'MAX&nbsp;DD', 1)}<th>PERFORMANCE</th><th></th></tr></thead>
     <tbody>${rows.length ? rows : '<tr><td colspan="10" style="color:var(--text-faint);padding:22px">No traders match that search.</td></tr>'}</tbody>
   </table></div></div>`;
+}
+
+function renderBoard() {
+  viewEl('board').innerHTML = `
+    <button class="back-btn" data-nav="arena">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to Arena</button>
+    ${lbBoardHTML()}`;
+}
+
+function lbMiniHTML() {
+  const top = lbbList().sort((a, b) => b.p.winnings - a.p.winnings).slice(0, 5);
+  const rows = top.map((r, i) => `<tr data-trader="${r.n}" style="cursor:pointer">
+    <td class="mono lbb-rank">${i + 1}</td>
+    <td><span class="lbb-who">${avatarHTML(r.n, 'thread-av')}<b>${r.n}</b>${VERIFIED.has(r.n) ? BADGE : ''}${flagHTML(traderFlag(r.n), 'xs')}</span></td>
+    <td><span class="lbb-club" style="background:${r.club.bg};color:${r.club.tx};border:1px solid ${r.club.edge}">${r.club.name.toUpperCase()}</span></td>
+    <td style="text-align:right"><b>£${r.p.winnings.toLocaleString('en-GB')}</b></td>
+  </tr>`).join('');
+  return `<div class="section-head"><div><h3 class="section-title">Global leaderboard</h3>
+      <p class="section-sub"><span class="mono">TOTAL&nbsp;EARNINGS&nbsp;WON</span><span class="dot-sep">·</span><span>the five biggest bankers on the platform</span></p></div>
+    <div class="section-head-right"><button class="btn-neu" style="padding:10px 18px;font-size:12.5px" data-nav="board">Full leaderboard →</button></div></div>
+    <div class="fame-card"><table class="trades-table lbb-table" style="min-width:100%">
+      <thead><tr class="mono"><th>RANK</th><th>TRADER</th><th>CLUB</th><th style="text-align:right">TOTAL&nbsp;EARNINGS&nbsp;WON</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
 }
 
 function lbBoardHTML() {
@@ -7799,7 +7825,7 @@ const LIVE_B = [
   ...(FEATURE_CLANS ? Array.from({ length: 6 }, () => genLiveBattle('clan')) : []),
 ];
 
-let lbf = { kind: 'all', pot: 'any', dur: 'any', sort: 'pot', view: 'grid' };
+let lbf = { kind: 'all', pot: 'any', dur: 'any', sort: 'pot', view: 'table' };
 let lbMenu = null;
 const LB_POT_L = { any: 'Any pot', small: '<£1K', mid: '£1K–10K', big: '£10K–100K', whale: '£100K+' };
 const LB_DUR_L = { any: 'Any length', sprint: 'Sprint ≤1h', day: 'Intraday', week: 'Week+' };
@@ -8086,9 +8112,9 @@ function renderLive() {
   }).join('');
   const empty = '<p style="color:var(--text-faint);font-size:13.5px;padding:20px">No battles match these filters — loosen them up, the action never stops.</p>';
   const board = lbf.view === 'table'
-    ? (rows ? `<div class="lb-table"><table>
-        <thead><tr class="mono"><th>MATCH</th><th>TYPE</th><th>LIVE</th><th>A&nbsp;RETURN</th><th>B&nbsp;RETURN</th><th>LEAD</th><th>POT</th><th>ENDS</th><th>WATCHING</th><th></th></tr></thead>
-        <tbody>${rows}</tbody></table></div>` : empty)
+    ? (rows ? `<div class="fame-card"><div class="fame-scroll"><table class="trades-table lbb-table" style="min-width:1080px">
+        <thead><tr class="mono"><th>MATCH</th><th>TYPE</th><th>LIVE</th><th style="text-align:right">A&nbsp;RETURN</th><th style="text-align:right">B&nbsp;RETURN</th><th>LEAD</th><th style="text-align:right">POT</th><th>ENDS</th><th>WATCHING</th><th></th></tr></thead>
+        <tbody>${rows}</tbody></table></div></div>` : empty)
     : `<div class="lb-grid">${cards || empty}</div>`;
   viewEl('live').innerHTML = `
     <button class="back-btn" data-nav="arena">
@@ -8671,7 +8697,7 @@ function fireConfetti() {
 const RENDER = {
   terminal: renderTerminal, ideas: renderIdeas, social: renderSocial, inbox: renderInbox,
   performance: renderPerformance, trader: renderTrader,
-  leaderboard: renderLbPage, arena: renderArena, tournaments: renderTournamentsPage, partner: renderPartner, spectate: renderSpectate, live: renderLive, clan: renderClan, challenge: renderChallenge
+  leaderboard: renderLbPage, board: renderBoard, arena: renderArena, tournaments: renderTournamentsPage, partner: renderPartner, spectate: renderSpectate, live: renderLive, clan: renderClan, challenge: renderChallenge
 };
 
 document.addEventListener('click', e => {
