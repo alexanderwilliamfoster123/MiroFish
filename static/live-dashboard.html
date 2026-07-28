@@ -3006,6 +3006,36 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .esc-actions { display: flex; gap: 9px; padding: 0 28px 26px; }
 .esc-actions .btn-mach { flex: 1; }
 
+/* Affiliate portal extensions — heat, geography, assets, payout settings */
+.heat-grid { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 13px); grid-auto-columns: 13px; gap: 3px; overflow-x: auto; padding: 4px 0; }
+.heat-c { width: 13px; height: 13px; border-radius: 3.5px; background: var(--surface); box-shadow: var(--neu-in-sm); }
+.heat-c.l1 { background: rgba(106, 46, 158, 0.22); box-shadow: none; }
+.heat-c.l2 { background: rgba(106, 46, 158, 0.45); box-shadow: none; }
+.heat-c.l3 { background: rgba(106, 46, 158, 0.7); box-shadow: none; }
+.heat-c.l4 { background: #6A2E9E; box-shadow: none; }
+.heat-leg { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text-faint); margin-top: 10px; }
+.heat-leg .heat-c { width: 10px; height: 10px; }
+.reg-row { display: flex; align-items: center; gap: 10px; padding: 7.5px 0; font-size: 12.5px; }
+.reg-n { width: 130px; flex: none; }
+.reg-bar { flex: 1; height: 8px; border-radius: 999px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; }
+.reg-bar span { display: block; height: 100%; background: var(--brandGrad); border-radius: 999px; }
+.reg-v { width: 36px; text-align: right; color: var(--text-faint); font-size: 11px; flex: none; }
+.asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+.asset { background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+.asset-ic { font-size: 9px; letter-spacing: 0.1em; font-weight: 800; color: var(--lbA); }
+.asset-n { font-size: 13px; font-weight: 700; }
+.asset-m { font-size: 10.5px; color: var(--text-faint); margin-bottom: 8px; }
+.swipe-r { background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 13px; padding: 12px 14px; font-size: 12.5px; color: var(--text-soft); font-style: italic; margin-bottom: 9px; }
+.pset-r { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 12.5px; color: var(--text-faint); }
+.pset-r b { color: var(--text); text-align: right; }
+
+/* Entries checkout — pay before you play */
+.chk-pay { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.chk-pm { border: 0; cursor: pointer; font: inherit; text-align: left; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 13px; padding: 11px 13px; color: var(--text-faint); }
+.chk-pm.on { box-shadow: var(--neu-out-sm); background: var(--card); color: var(--text); outline: 2px solid var(--lbA); outline-offset: -2px; }
+.chk-pm b { display: block; font-size: 13px; }
+.chk-pm small { font-size: 10px; }
+
 .icon-btn.avatar-btn { display: inline-flex; align-items: center; justify-content: center; }
 .tb-av { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
 
@@ -4277,6 +4307,31 @@ function closePos(pnl, outcome = 'manual') {
 }
 
 setInterval(tickPrices, 1000);
+
+/* partner desk stays alive — commissions and signups roll in while you watch */
+setInterval(() => {
+  if (currentView !== 'partner' || document.hidden) return;
+  const roll = Math.random();
+  const who = P_CLIENTS[Math.floor(Math.random() * P_CLIENTS.length)][0];
+  const act = document.getElementById('ptActivity');
+  const row = tx => { if (act) { act.insertAdjacentHTML('afterbegin', `<div class="pa-row"><span class="pulse-dot tiny purple"></span><span>${tx}</span><span class="pa-ago mono">now</span></div>`); if (act.children.length > 9) act.lastElementChild.remove(); } };
+  if (roll < 0.55) {
+    const ent = [25, 50, 75, 100][Math.floor(Math.random() * 4)];
+    const comm = Math.round(ent * 0.2);
+    partner.pending += comm; partner.lifetime += comm; partner.month += comm;
+    setOdo('ptLife', gbp0(partner.lifetime));
+    setOdo('ptMonth', gbp0(partner.month));
+    row(`${who} bought £${ent} in entries — +£${comm} to you`);
+  } else if (roll < 0.75) {
+    partner.signups++; partner.clicks += 3 + Math.floor(Math.random() * 22);
+    setOdo('ptActive', String(partner.active));
+    row(`New signup via your link — welcome ${who}`);
+  } else if (roll < 0.87) {
+    row(`${who} won £${[260, 640, 1114, 1820, 3050][Math.floor(Math.random() * 5)].toLocaleString('en-GB')} in a competition`);
+  } else {
+    row(`${8 + Math.floor(Math.random() * 34)} new clicks this hour — traffic spike`);
+  }
+}, 9000);
 
 /* ---------------- Ideas ---------------- */
 
@@ -7539,6 +7594,7 @@ function renderArena() {
     </section>
     ${arenaB.open ? builderHTML() : ''}
     ${myBattlesHTML()}
+    ${tournamentsSectionHTML()}
     ${machinesHTML()}
     ${FEATURE_CLANS ? clansHTML() : ''}
     <div class="section">
@@ -7547,6 +7603,8 @@ function renderArena() {
       <div class="challenge-grid">${cards}</div>
     </div>
     ${nationWarsHTML()}`;
+  renderTournaments();
+  renderLeaderboard();
 }
 
 /* ---------------- Challenge detail — full terms + scout before you accept ---------------- */
@@ -7678,14 +7736,60 @@ const P_SUBS = [['mb****41', 31, 6100, 305], ['cr****22', 18, 3200, 160], ['tk**
 
 const P_PAYOUTS = [['1 Jul 2026', 'Bank · GBP', 1960, 'Pending'], ['1 Jun 2026', 'Bank · GBP', 1760, 'Paid'], ['1 May 2026', 'Bank · GBP', 1510, 'Paid'], ['1 Apr 2026', 'Bank · GBP', 1320, 'Paid'], ['1 Mar 2026', 'USDC', 1180, 'Paid']];
 
+partner.tab = 'overview';
+partner.chartPeriod = 'monthly';
+
+const P_SERIES = {
+  monthly: { l: ['J', 'A', 'S', 'O', 'N', 'D', 'J', 'F', 'M', 'A', 'M', 'J'], v: partner.months },
+  quarterly: { l: ['Q3 24', 'Q4 24', 'Q1 25', 'Q2 25', 'Q3 25', 'Q4 25', 'Q1 26', 'Q2 26'], v: [760, 980, 1240, 1560, 1920, 2360, 2870, 3430] },
+  annual: { l: ['2023', '2024', '2025', '2026'], v: [4200, 7800, 12600, 18510] },
+  daily: (() => { const a2 = { l: [], v: [] }; for (let i2 = 29; i2 >= 0; i2--) { a2.v.push(Math.round(40 + (29 - i2) * 1.6 + Math.sin(i2) * 7 + (hashName('pd' + i2) % 16))); a2.l.push(String(30 - i2)); } return a2; })()
+};
+const P_REGIONS = [['United Kingdom', 96], ['Nigeria', 74], ['India', 58], ['Philippines', 41], ['Brazil', 33], ['Egypt', 28], ['South Africa', 22], ['Rest of world', 60]];
+const P_HEAT = (() => { const a2 = []; for (let i2 = 118; i2 >= 0; i2--) { const dow = new Date(Date.now() - i2 * 864e5).getDay(); const wk = (118 - i2) / 118; a2.push(Math.max(0, Math.round((1 + wk * 3.4) * ((dow === 0 || dow === 6) ? 0.5 : 1.1) * (0.4 + (hashName('ph' + i2) % 100) / 100)))); } return a2; })();
+const P_CAMPAIGNS = [['YouTube bio', 'JS-YT', 1840, 212], ['X pinned post', 'JS-X', 980, 121], ['Discord', 'JS-DC', 600, 79]];
+const P_ASSETS = [['IMG', 'Banner pack', '12 sizes · PNG'], ['VID', 'Promo video', '30s · 9:16 + 16:9'], ['STO', 'Story templates', '8 · editable'], ['KIT', 'Logo & brand kit', 'SVG · guidelines']];
+const P_SWIPE = [
+  'Trade real markets, win real prizes — no deposit to start. Join with my link.',
+  'I\u2019m running a £100k battle account on Paktos — come beat my score.',
+  'Skill-based trading battles with live boards — free to enter this week.'
+];
+const P_PAYSET = [['Commission rate', '20% flat · lifetime'], ['Payout method', 'Bank · GBP (•••• 4471)'], ['Minimum threshold', '£50'], ['Schedule', 'Monthly · 1st'], ['Next run', '1 Aug 2026']];
+
 const P_ACTIVITY = [['New signup from Nigeria', '8m'], ['qu****x7 funded their first account', '2h'], ['ro****pl won £1,114 in the Monthly', '5h'], ['June payout £1,760 paid to your bank', '1d'], ['mb****41 joined as a sub-affiliate', '2d'], ['3 new signups from India', '3d']];
 
+function drawAffChart() {
+  const c = document.getElementById('affChart');
+  if (!c) return;
+  const ser = P_SERIES[partner.chartPeriod] || P_SERIES.monthly;
+  const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = c.clientHeight;
+  c.width = w * dpr; c.height = h * dpr;
+  const ctx = c.getContext('2d'); ctx.scale(dpr, dpr);
+  const vals = ser.v, max = Math.max(...vals) || 1;
+  const bw = (w - 40) / vals.length;
+  vals.forEach((v, i2) => {
+    const bh = (v / max) * (h - 52);
+    const x = 20 + i2 * bw + bw * 0.18, y = h - 26 - bh;
+    const g = ctx.createLinearGradient(0, y, 0, h - 26);
+    g.addColorStop(0, '#d946ef'); g.addColorStop(1, '#7c3aed');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(x, y, bw * 0.64, Math.max(2, bh), [Math.min(5, bw * 0.3), Math.min(5, bw * 0.3), 0, 0]);
+    else ctx.rect(x, y, bw * 0.64, Math.max(2, bh));
+    ctx.fill();
+  });
+  ctx.fillStyle = document.body.classList.contains('dark') ? 'rgba(255,255,255,.45)' : 'rgba(60,60,75,.55)';
+  ctx.font = '9px ui-monospace, Menlo, monospace';
+  ctx.textAlign = 'center';
+  const step = Math.ceil(vals.length / 12);
+  ser.l.forEach((lb, i2) => { if (i2 % step === 0) ctx.fillText(String(lb).slice(0, 5), 20 + i2 * bw + bw / 2, h - 10); });
+}
+
 function renderPartner() {
-  const funnel = [['Clicks', partner.clicks, 100, ''], ['Signups', partner.signups, partner.signups / partner.clicks * 100, (partner.signups / partner.clicks * 100).toFixed(0) + '%'], ['Funded', partner.funded, partner.funded / partner.clicks * 100, Math.round(partner.funded / partner.signups * 100) + '%'], ['Active', partner.active, partner.active / partner.clicks * 100, Math.round(partner.active / partner.funded * 100) + '%']];
-  const milestone = 25000, toGo = milestone - partner.lifetime;
+  const tab = partner.tab || 'overview';
   const stTile = (label, val, sub, col) => `<div class="tile"><div class="tile-tx"><div class="tile-label mono">${label}</div>
     <div class="tile-value"${col ? ` style="color:${col}"` : ''}>${val}</div><div class="pt-sub mono">${sub}</div></div></div>`;
-  viewEl('partner').innerHTML = `
+  const hero = `
     <div class="panel-card pt-hero">
       <div class="pt-hero-l">
         <div class="mono pt-eyebrow">PARTNER&nbsp;PROGRAMME</div>
@@ -7704,8 +7808,143 @@ function renderPartner() {
         <span>flat lifetime revenue share</span>
         <span class="mono">PAID&nbsp;MONTHLY&nbsp;·&nbsp;GBP&nbsp;OR&nbsp;USDC</span>
       </div>
+    </div>`;
+  const tabbar = `<div class="chip-row" style="margin:0 0 18px">${[['overview', 'Overview'], ['network', 'Network'], ['clients', 'Clients'], ['earnings', 'Earnings'], ['assets', 'Assets']].map(([k, l]) =>
+    `<button class="pill-btn${tab === k ? ' on' : ''}" data-pttab="${k}">${l}</button>`).join('')}</div>`;
+  const chartCard = `<div class="panel-card"><div class="panel-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">Earnings
+      <span style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">${[['daily', 'Daily'], ['monthly', 'Monthly'], ['quarterly', 'Quarterly'], ['annual', 'Annual']].map(([k, l]) =>
+        `<button class="pill-btn${partner.chartPeriod === k ? ' on' : ''}" style="padding:6px 11px;font-size:11px" data-ptchart="${k}">${l}</button>`).join('')}</span></div>
+    <canvas class="chart-sm" id="affChart" style="height:230px"></canvas></div>`;
+  const milestone = 25000, toGo = milestone - partner.lifetime;
+  const statusCard = `<div class="panel-card">
+    <div class="panel-title" style="display:flex;align-items:center">Partner status<span class="past-chip" style="position:static;margin-left:auto">Rank #${partner.rank}</span></div>
+    <div class="pt-status">
+      <div><b>#${partner.rank}</b><span class="mono">OF&nbsp;1,240</span></div>
+      <div><b>${partner.streak}</b><span class="mono">ACTIVE&nbsp;STREAK</span></div>
+      <div><b>${gbp0(partner.lifetime)}</b><span class="mono">EARNED</span></div>
     </div>
-    <div class="tile-row" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+    <div class="tier-row"><span><b style="color:var(--text)">Next milestone</b> · £25k club</span><span>${gbp0(Math.max(0, toGo))} to go</span></div>
+    <div class="tier-bar"><span style="width:${Math.min(100, partner.lifetime / milestone * 100).toFixed(0)}%"></span></div>
+    <div class="inv-chips" style="margin-top:14px">
+      <span class="pill-btn on" style="cursor:default">✓ First £10k</span>
+      <span class="pill-btn on" style="cursor:default">✓ 100 signups</span>
+      <span class="pill-btn on" style="cursor:default">✓ Top 5% partner</span>
+      <span class="pill-btn" style="cursor:default">6-month streak</span>
+    </div>
+  </div>`;
+  const funnelData = [['Clicks', partner.clicks, 100, ''], ['Signups', partner.signups, partner.signups / partner.clicks * 100, (partner.signups / partner.clicks * 100).toFixed(0) + '%'], ['Funded', partner.funded, partner.funded / partner.clicks * 100, Math.round(partner.funded / partner.signups * 100) + '%'], ['Active', partner.active, partner.active / partner.clicks * 100, Math.round(partner.active / partner.funded * 100) + '%']];
+  const funnelCard = `<div class="panel-card"><div class="panel-title">Conversion funnel</div>
+    ${funnelData.map(([l, v, w, pc]) => `<div class="pf-row"><span class="pf-l mono">${l.toUpperCase()}</span>
+      <span class="pf-bar"><i style="width:${Math.max(6, w).toFixed(1)}%"><b>${v.toLocaleString('en-GB')}</b></i></span>
+      <span class="pf-pc mono">${pc}</span></div>`).join('')}
+  </div>`;
+  const playerCard = `<div class="panel-card">
+    <div class="panel-title">Player status</div>
+    <div class="pt-pstat">
+      <div style="color:#10b981"><b>${partner.active}</b><span class="mono">ACTIVE</span></div>
+      <div style="color:#f59e0b"><b>${partner.trial}</b><span class="mono">TRIAL</span></div>
+      <div><b>${partner.dormant}</b><span class="mono">DORMANT</span></div>
+      <div style="color:#e5484d"><b>${partner.churned}</b><span class="mono">CHURNED</span></div>
+    </div>
+    <div class="panel-title" style="margin-top:18px">Recent activity <span class="live-tag" style="margin-left:auto"><span class="pulse-dot tiny"></span><span class="mono">LIVE</span></span></div>
+    <div id="ptActivity">${P_ACTIVITY.map(([t, ago]) => `<div class="pa-row"><span class="pulse-dot tiny purple"></span><span>${t}</span><span class="pa-ago mono">${ago}</span></div>`).join('')}</div>
+  </div>`;
+  const geoMax = Math.max(...P_REGIONS.map(r => r[1]));
+  const geoCard = `<div class="panel-card"><div class="panel-title" style="display:flex">Signups by geography<span class="mono" style="margin-left:auto;font-size:9.5px;color:var(--text-faint)">WHERE&nbsp;YOUR&nbsp;LINK&nbsp;LANDS</span></div>
+    ${P_REGIONS.map(([n, c2]) => `<div class="reg-row"><span class="reg-n">${n}</span><div class="reg-bar"><span style="width:${(c2 / geoMax * 100).toFixed(0)}%"></span></div><span class="reg-v mono">${c2}</span></div>`).join('')}
+  </div>`;
+  const heatMax = Math.max(...P_HEAT) || 1, heatTot = P_HEAT.reduce((a2, b2) => a2 + b2, 0);
+  const heatCard = `<div class="panel-card"><div class="panel-title" style="display:flex">Signups over time<span class="mono" style="margin-left:auto;font-size:9.5px;color:var(--text-faint)">${heatTot}&nbsp;IN&nbsp;17&nbsp;WEEKS</span></div>
+    <div class="heat-grid">${P_HEAT.map(v => `<span class="heat-c l${v === 0 ? 0 : Math.max(1, Math.min(4, Math.ceil(v / heatMax * 4)))}" title="${v} signups"></span>`).join('')}</div>
+    <div class="heat-leg"><span>Less</span><span class="heat-c l0"></span><span class="heat-c l1"></span><span class="heat-c l2"></span><span class="heat-c l3"></span><span class="heat-c l4"></span><span>More</span></div>
+  </div>`;
+  const clientsSection = `<div class="section" style="margin-top:4px">
+    <div class="section-head"><div><h3 class="section-title">Referred clients</h3>
+      <p class="section-sub"><span class="mono">${P_CLIENTS.length}&nbsp;SHOWN</span><span class="dot-sep">·</span><span>every client you brought in, and your 20% on each</span></p></div>
+      <div class="section-head-right"><button class="btn-neu" style="padding:9px 18px;font-size:12.5px" data-ptcsv>Export CSV</button></div></div>
+    <div class="fame-card"><div class="fame-scroll"><table class="trades-table" style="min-width:860px">
+      <thead><tr class="mono"><th>CLIENT</th><th>REGION</th><th>JOINED</th><th>STATUS</th><th style="text-align:right">TRADES</th><th style="text-align:right">THEIR&nbsp;WINNINGS</th><th style="text-align:right">LIFETIME&nbsp;SPEND</th><th style="text-align:right">YOUR&nbsp;20%</th><th style="text-align:right">LAST&nbsp;ACTIVE</th></tr></thead>
+      <tbody>${P_CLIENTS.map(c2 => `<tr>
+        <td class="mono-num"><b>${c2[0]}</b></td><td>${c2[1]}</td><td style="color:var(--text-faint)">${c2[2]}</td>
+        <td><span class="obadge ${c2[3] === 'Active' ? 'target' : c2[3] === 'Trial' ? 'manual' : 'stopped'}">${c2[3]}</span></td>
+        <td style="text-align:right">${c2[4]}</td><td style="text-align:right" class="up"><b>£${c2[5].toLocaleString('en-GB')}</b></td>
+        <td style="text-align:right">£${c2[6].toLocaleString('en-GB')}</td><td style="text-align:right"><b>£${c2[7].toLocaleString('en-GB')}</b></td>
+        <td style="text-align:right;color:var(--text-faint)">${c2[8]}</td></tr>`).join('')}</tbody>
+    </table></div></div>
+    <p class="pt-fine" style="margin-top:12px">Per-client spend is shown for your records — in production this is aggregated to protect client privacy.</p>
+  </div>`;
+  const topSubs = `<div class="two-col" style="margin-top:22px">
+    <div class="panel-card">
+      <div class="panel-title">Top players under you</div>
+      <table class="trades-table"><thead><tr class="mono"><th>PLAYER</th><th>REGION</th><th style="text-align:right">WON</th><th style="text-align:right">SPEND</th></tr></thead>
+      <tbody>${P_CLIENTS.filter(c2 => c2[5] > 900).sort((a2, b2) => b2[5] - a2[5]).slice(0, 5).map(c2 => `<tr>
+        <td class="mono-num"><b>${c2[0]}</b></td><td>${c2[1]}</td>
+        <td style="text-align:right" class="up"><b>£${c2[5].toLocaleString('en-GB')}</b></td>
+        <td style="text-align:right">£${c2[6].toLocaleString('en-GB')}</td></tr>`).join('')}</tbody></table>
+    </div>
+    <div class="panel-card">
+      <div class="panel-title" style="display:flex">Sub-affiliates<span class="mono" style="margin-left:auto;font-size:9.5px;color:var(--text-faint)">5%&nbsp;OVERRIDE</span></div>
+      <table class="trades-table"><thead><tr class="mono"><th>PARTNER</th><th style="text-align:right">CLIENTS</th><th style="text-align:right">THEY&nbsp;EARNED</th><th style="text-align:right">YOUR&nbsp;5%</th></tr></thead>
+      <tbody>${P_SUBS.map(x => `<tr><td class="mono-num"><b>${x[0]}</b></td><td style="text-align:right">${x[1]}</td>
+        <td style="text-align:right">£${x[2].toLocaleString('en-GB')}</td><td style="text-align:right" class="up"><b>£${x[3].toLocaleString('en-GB')}</b></td></tr>`).join('')}</tbody></table>
+      <button class="btn-neu" style="margin-top:14px;padding:10px 18px;font-size:12.5px" data-ptsub>Invite sub-affiliates</button>
+    </div>
+  </div>`;
+  const paySettingsCard = `<div class="panel-card"><div class="panel-title">Payout settings</div>
+    ${P_PAYSET.map(([k, v]) => `<div class="pset-r"><span>${k}</span><b>${v}</b></div>`).join('')}
+    <button class="btn-neu" style="margin-top:14px;padding:10px 18px;font-size:12.5px" data-ptset>Edit payout settings</button>
+  </div>`;
+  const payoutsSection = `<div class="section" style="margin-top:22px">
+    <div class="section-head"><div><h3 class="section-title">Payouts</h3>
+      <p class="section-sub"><span class="mono">MONTHLY&nbsp;·&nbsp;1ST</span><span class="dot-sep">·</span><span>20% flat · Bank GBP (•••• 4471) · £50 minimum</span></p></div>
+      <div class="section-head-right"><button class="btn-invite" style="padding:11px 22px;font-size:13px" data-ptwd>Withdraw ${gbp0(partner.pending)}</button></div></div>
+    <div class="fame-card"><table class="trades-table">
+      <thead><tr class="mono"><th>DATE</th><th>METHOD</th><th style="text-align:right">AMOUNT</th><th style="text-align:right">STATUS</th></tr></thead>
+      <tbody>${P_PAYOUTS.map(p2 => `<tr><td>${p2[0]}</td><td>${p2[1]}</td><td style="text-align:right"><b>${gbp0(p2[2])}</b></td>
+        <td style="text-align:right"><span class="obadge ${p2[3] === 'Paid' ? 'target' : 'manual'}">${p2[3]}</span></td></tr>`).join('')}</tbody>
+    </table></div>
+  </div>`;
+  const campaignsCard = `<div class="panel-card">
+    <div class="panel-title" style="display:flex;align-items:center">Your links &amp; campaign codes<button class="btn-neu" style="margin-left:auto;padding:8px 15px;font-size:12px" data-ptnew>+ New code</button></div>
+    <table class="trades-table"><thead><tr class="mono"><th>CAMPAIGN</th><th>CODE</th><th style="text-align:right">CLICKS</th><th style="text-align:right">SIGNUPS</th><th style="text-align:right">CONV.</th><th style="text-align:right"></th></tr></thead>
+    <tbody>${P_CAMPAIGNS.map(c2 => `<tr><td><b>${c2[0]}</b></td><td class="mono-num">${c2[1]}</td>
+      <td style="text-align:right">${c2[2].toLocaleString('en-GB')}</td><td style="text-align:right">${c2[3]}</td>
+      <td style="text-align:right">${(c2[3] / c2[2] * 100).toFixed(1)}%</td>
+      <td style="text-align:right"><button class="link-btn" style="margin:0" data-ptcode>Copy</button></td></tr>`).join('')}</tbody></table>
+  </div>`;
+  const libraryCard = `<div class="panel-card" style="margin-top:22px"><div class="panel-title">Creative library</div>
+    <div class="asset-grid">${P_ASSETS.map(([ic, n, m2]) => `<div class="asset"><div class="asset-ic mono">${ic}</div><div class="asset-n">${n}</div><div class="asset-m">${m2}</div>
+      <button class="btn-neu" style="padding:8px 14px;font-size:12px" data-ptasset="${n}">Download</button></div>`).join('')}</div>
+  </div>`;
+  const swipeCard = `<div class="panel-card" style="margin-top:22px"><div class="panel-title" style="display:flex;align-items:center">Swipe copy<button class="btn-neu" style="margin-left:auto;padding:8px 15px;font-size:12px" data-ptswipe>Copy all</button></div>
+    ${P_SWIPE.map(x => `<div class="swipe-r">“${x}”</div>`).join('')}
+  </div>`;
+  let body;
+  if (tab === 'network') {
+    body = `<div class="tile-row" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+      ${stTile('PLAYERS&nbsp;UNDER&nbsp;YOU', String(partner.signups), 'across all tiers')}
+      ${stTile('ACTIVE&nbsp;NOW', String(partner.active), Math.round(partner.active / partner.signups * 100) + '% of base', 'var(--green)')}
+      ${stTile('THEIR&nbsp;WINNINGS', gbp0(partner.theirWinnings), 'won in comps', 'var(--green)')}
+      ${stTile('THEIR&nbsp;SPEND', gbp0(78400), 'lifetime, all clients')}
+    </div>
+    <div class="two-col">${geoCard}${heatCard}</div>
+    <div class="two-col" style="margin-top:22px">${funnelCard}${playerCard}</div>
+    ${topSubs}`;
+  } else if (tab === 'clients') {
+    body = clientsSection;
+  } else if (tab === 'earnings') {
+    body = `<div class="tile-row" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+      ${stTile('LIFETIME&nbsp;EARNINGS', odoHTML('ptLife', gbp0(partner.lifetime)), 'flat 20%', 'var(--green)')}
+      ${stTile('REVENUE&nbsp;GENERATED', gbp0(partner.revenue), 'net to Paktos')}
+      ${stTile('PENDING&nbsp;PAYOUT', gbp0(partner.pending), 'next: 1 Aug 2026')}
+      ${stTile('PAID&nbsp;OUT', gbp0(partner.paidOut), 'lifetime')}
+    </div>
+    <div class="two-col">${chartCard}${paySettingsCard}</div>
+    ${payoutsSection}`;
+  } else if (tab === 'assets') {
+    body = campaignsCard + libraryCard + swipeCard;
+  } else {
+    body = `<div class="tile-row" style="grid-template-columns:repeat(4,minmax(0,1fr))">
       ${stTile('LIFETIME&nbsp;EARNINGS', odoHTML('ptLife', gbp0(partner.lifetime)), 'flat 20%', 'var(--green)')}
       ${stTile('THIS&nbsp;MONTH', odoHTML('ptMonth', gbp0(partner.month)), '+11% vs last')}
       ${stTile('PENDING&nbsp;PAYOUT', gbp0(partner.pending), 'next: 1 Aug 2026')}
@@ -7717,121 +7956,13 @@ function renderPartner() {
       ${stTile('CONVERSION', (partner.signups / partner.clicks * 100).toFixed(1) + '%', partner.clicks.toLocaleString('en-GB') + ' clicks')}
       ${stTile('CHURNED', String(partner.churned), 'win them back', '#e5484d')}
     </div>
-    <div class="two-col">
-      <div class="panel-card"><div class="panel-title">Earnings</div><canvas class="chart-sm" id="affChart" style="height:230px"></canvas></div>
-      <div class="panel-card">
-        <div class="panel-title" style="display:flex;align-items:center">Partner status<span class="past-chip" style="position:static;margin-left:auto">Rank #${partner.rank}</span></div>
-        <div class="pt-status">
-          <div><b>#${partner.rank}</b><span class="mono">OF&nbsp;1,240</span></div>
-          <div><b>${partner.streak}</b><span class="mono">ACTIVE&nbsp;STREAK</span></div>
-          <div><b>${gbp0(partner.lifetime)}</b><span class="mono">EARNED</span></div>
-        </div>
-        <div class="tier-row"><span><b style="color:var(--text)">Next milestone</b> · £25k club</span><span>${gbp0(toGo)} to go</span></div>
-        <div class="tier-bar"><span style="width:${(partner.lifetime / milestone * 100).toFixed(0)}%"></span></div>
-        <div class="inv-chips" style="margin-top:14px">
-          <span class="pill-btn on" style="cursor:default">✓ First £10k</span>
-          <span class="pill-btn on" style="cursor:default">✓ 100 signups</span>
-          <span class="pill-btn on" style="cursor:default">✓ Top 5% partner</span>
-          <span class="pill-btn" style="cursor:default">6-month streak</span>
-        </div>
-      </div>
-    </div>
-    <div class="two-col" style="margin-top:22px">
-      <div class="panel-card">
-        <div class="panel-title">Conversion funnel</div>
-        ${funnel.map(([l, v, w, pc]) => `<div class="pf-row"><span class="pf-l mono">${l.toUpperCase()}</span>
-          <span class="pf-bar"><i style="width:${Math.max(6, w).toFixed(1)}%"><b>${v.toLocaleString('en-GB')}</b></i></span>
-          <span class="pf-pc mono">${pc}</span></div>`).join('')}
-      </div>
-      <div class="panel-card">
-        <div class="panel-title">Player status</div>
-        <div class="pt-pstat">
-          <div style="color:#10b981"><b>${partner.active}</b><span class="mono">ACTIVE</span></div>
-          <div style="color:#f59e0b"><b>${partner.trial}</b><span class="mono">TRIAL</span></div>
-          <div><b>${partner.dormant}</b><span class="mono">DORMANT</span></div>
-          <div style="color:#e5484d"><b>${partner.churned}</b><span class="mono">CHURNED</span></div>
-        </div>
-        <div class="panel-title" style="margin-top:18px">Recent activity <span class="live-tag" style="margin-left:auto"><span class="pulse-dot tiny"></span><span class="mono">LIVE</span></span></div>
-        <div id="ptActivity">${P_ACTIVITY.map(([t, ago]) => `<div class="pa-row"><span class="pulse-dot tiny purple"></span><span>${t}</span><span class="pa-ago mono">${ago}</span></div>`).join('')}</div>
-      </div>
-    </div>
-    <div class="section" style="margin-top:22px">
-      <div class="section-head"><div><h3 class="section-title">Referred clients</h3>
-        <p class="section-sub"><span class="mono">${P_CLIENTS.length}&nbsp;SHOWN</span><span class="dot-sep">·</span><span>every client you brought in, and your 20% on each</span></p></div>
-        <div class="section-head-right"><button class="btn-neu" style="padding:9px 18px;font-size:12.5px" data-ptcsv>Export CSV</button></div></div>
-      <div class="fame-card"><div class="fame-scroll"><table class="trades-table" style="min-width:860px">
-        <thead><tr class="mono"><th>CLIENT</th><th>REGION</th><th>JOINED</th><th>STATUS</th><th style="text-align:right">TRADES</th><th style="text-align:right">THEIR&nbsp;WINNINGS</th><th style="text-align:right">LIFETIME&nbsp;SPEND</th><th style="text-align:right">YOUR&nbsp;20%</th><th style="text-align:right">LAST&nbsp;ACTIVE</th></tr></thead>
-        <tbody>${P_CLIENTS.map(c => `<tr>
-          <td class="mono-num"><b>${c[0]}</b></td><td>${c[1]}</td><td style="color:var(--text-faint)">${c[2]}</td>
-          <td><span class="obadge ${c[3] === 'Active' ? 'target' : c[3] === 'Trial' ? 'manual' : 'stopped'}">${c[3]}</span></td>
-          <td style="text-align:right">${c[4]}</td><td style="text-align:right" class="up"><b>£${c[5].toLocaleString('en-GB')}</b></td>
-          <td style="text-align:right">£${c[6].toLocaleString('en-GB')}</td><td style="text-align:right" style="color:var(--accent-a)"><b>£${c[7].toLocaleString('en-GB')}</b></td>
-          <td style="text-align:right;color:var(--text-faint)">${c[8]}</td></tr>`).join('')}</tbody>
-      </table></div></div>
-    </div>
-    <div class="two-col" style="margin-top:22px">
-      <div class="panel-card">
-        <div class="panel-title">Top players under you</div>
-        <table class="trades-table"><thead><tr class="mono"><th>PLAYER</th><th>REGION</th><th style="text-align:right">WON</th><th style="text-align:right">SPEND</th></tr></thead>
-        <tbody>${P_CLIENTS.filter(c => c[5] > 900).sort((a, b) => b[5] - a[5]).slice(0, 5).map(c => `<tr>
-          <td class="mono-num"><b>${c[0]}</b></td><td>${c[1]}</td>
-          <td style="text-align:right" class="up"><b>£${c[5].toLocaleString('en-GB')}</b></td>
-          <td style="text-align:right">£${c[6].toLocaleString('en-GB')}</td></tr>`).join('')}</tbody></table>
-      </div>
-      <div class="panel-card">
-        <div class="panel-title" style="display:flex">Sub-affiliates<span class="mono" style="margin-left:auto;font-size:9.5px;color:var(--text-faint)">5%&nbsp;OVERRIDE</span></div>
-        <table class="trades-table"><thead><tr class="mono"><th>PARTNER</th><th style="text-align:right">CLIENTS</th><th style="text-align:right">THEY&nbsp;EARNED</th><th style="text-align:right">YOUR&nbsp;5%</th></tr></thead>
-        <tbody>${P_SUBS.map(x => `<tr><td class="mono-num"><b>${x[0]}</b></td><td style="text-align:right">${x[1]}</td>
-          <td style="text-align:right">£${x[2].toLocaleString('en-GB')}</td><td style="text-align:right" class="up"><b>£${x[3].toLocaleString('en-GB')}</b></td></tr>`).join('')}</tbody></table>
-        <button class="btn-neu" style="margin-top:14px;padding:10px 18px;font-size:12.5px" data-ptsub>Invite sub-affiliates</button>
-      </div>
-    </div>
-    <div class="section" style="margin-top:22px">
-      <div class="section-head"><div><h3 class="section-title">Payouts</h3>
-        <p class="section-sub"><span class="mono">MONTHLY&nbsp;·&nbsp;1ST</span><span class="dot-sep">·</span><span>20% flat · Bank GBP (•••• 4471) · £50 minimum</span></p></div>
-        <div class="section-head-right"><button class="btn-invite" style="padding:11px 22px;font-size:13px" data-ptwd>Withdraw ${gbp0(partner.pending)}</button></div></div>
-      <div class="fame-card"><table class="trades-table">
-        <thead><tr class="mono"><th>DATE</th><th>METHOD</th><th style="text-align:right">AMOUNT</th><th style="text-align:right">STATUS</th></tr></thead>
-        <tbody>${P_PAYOUTS.map(p => `<tr><td>${p[0]}</td><td>${p[1]}</td><td style="text-align:right"><b>${gbp0(p[2])}</b></td>
-          <td style="text-align:right"><span class="obadge ${p[3] === 'Paid' ? 'target' : 'manual'}">${p[3]}</span></td></tr>`).join('')}</tbody>
-      </table></div>
-    </div>
-    <p class="pt-fine">Commission is a flat 20% of Paktos' net revenue per referred client, paid monthly while active. Promoting Paktos means following our Partner Terms and financial-promotion rules — figures shown are a demo on a virtual account.</p>`;
-  const c = document.getElementById('affChart');
-  if (c) {
-    const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = c.clientHeight;
-    c.width = w * dpr; c.height = h * dpr;
-    const ctx = c.getContext('2d'); ctx.scale(dpr, dpr);
-    const vals = partner.months, max = Math.max(...vals);
-    const ml = 'JASONDJFMAMJ'.split('');
-    const bw = (w - 40) / vals.length;
-    ctx.beginPath();
-    vals.forEach((v, i) => {
-      const bh = (v / max) * (h - 52);
-      const x = 20 + i * bw + bw * 0.2, y = h - 26 - bh;
-      const g = ctx.createLinearGradient(0, y, 0, h - 26);
-      g.addColorStop(0, '#d946ef'); g.addColorStop(1, '#7c3aed');
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.roundRect(x, y, bw * 0.55, bh, 5);
-      ctx.fill();
-      ctx.fillStyle = cssVar('--text-faint');
-      ctx.font = '9px ui-monospace, Menlo, monospace';
-      ctx.textAlign = 'center';
-      ctx.fillText(ml[i], x + bw * 0.28, h - 10);
-    });
-    ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2; ctx.beginPath();
-    vals.forEach((v, i) => {
-      const x = 20 + i * bw + bw * 0.475, y = h - 28 - (v / max) * (h - 52);
-      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-    });
-    ctx.stroke();
+    <div class="two-col">${chartCard}${statusCard}</div>
+    <div class="two-col" style="margin-top:22px">${funnelCard}${playerCard}</div>`;
   }
+  viewEl('partner').innerHTML = hero + tabbar + body
+    + `<p class="pt-fine">Commission is a flat 20% of Paktos' net revenue per referred client, paid monthly while active. Promoting Paktos means following our Partner Terms and financial-promotion rules — figures shown are a demo on a virtual account.</p>`;
+  drawAffChart();
 }
-
-/* ---------------- Win reward (slide to claim) ---------------- */
-
-let rewardEl = null;
 
 function showReward(pot, opp) {
   if (rewardEl) return;
@@ -8455,6 +8586,15 @@ document.addEventListener('click', e => {
     try { navigator.clipboard.writeText(partner.code); } catch (e) { }
     return toast('Code JSTONE copied — works at signup');
   }
+  if ((el = q('[data-pttab]'))) { partner.tab = el.dataset.pttab; return renderPartner(); }
+  if ((el = q('[data-ptchart]'))) { partner.chartPeriod = el.dataset.ptchart; return renderPartner(); }
+  if ((el = q('[data-ptnew]'))) { addNotif('PA', 'Campaign code created', 'JS-NEW is live — clicks and signups will attribute to it from now.'); return toast('New campaign code created — JS-NEW'); }
+  if ((el = q('[data-ptasset]'))) return toast(el.dataset.ptasset + ' downloaded — drop it anywhere you promote');
+  if ((el = q('[data-ptswipe]'))) {
+    try { navigator.clipboard.writeText(P_SWIPE.join('\n\n')); } catch (e2) { }
+    return toast('Swipe copy on your clipboard — paste it anywhere');
+  }
+  if ((el = q('[data-ptset]'))) return toast('Payout settings — method, threshold and schedule are tied to your verified bank');
   if ((el = q('[data-ptsub]'))) {
     addNotif('PA', 'Sub-affiliate invites sent', 'Anyone who joins as a partner under you earns you a 5% override on their earnings.');
     return toast('Sub-affiliate invite link copied — 5% override on their earnings');
@@ -8552,14 +8692,94 @@ document.addEventListener('click', e => {
     document.getElementById('enterLabel').textContent = `Enter Now · £${(entryCount * 25).toLocaleString('en-GB')}`;
     return;
   }
-  if ((el = e.target.closest('[data-enter]'))) {
-    prizePool += entryCount * 25;
+  if ((el = e.target.closest('[data-paym]'))) { payMethod = el.dataset.paym; openCheckout(); return; }
+  if ((el = e.target.closest('[data-paygo]'))) {
+    const n = entryCount, total = n * 25;
+    prizePool += total;
     activePlayers += 1;
-    toast(`Entered with ${entryCount} ${entryCount === 1 ? 'entry' : 'entries'} — £${(entryCount * 25).toLocaleString('en-GB')} added to the pool`);
-    addNotif('T', 'Tournament entry confirmed', `${entryCount} ${entryCount === 1 ? 'entry' : 'entries'} · £${(entryCount * 25).toLocaleString('en-GB')} added to the prize pool.`);
+    markStreak();
+    addNotif('T', 'Tournament entry confirmed', `${n} ${n === 1 ? 'entry' : 'entries'} · £${total.toLocaleString('en-GB')} added to the prize pool · paid by ${payMethod === 'card' ? 'Visa •••• 4471' : 'USDC'}.`);
+    showEntryTicket(n, total);
     return;
   }
+  if ((el = e.target.closest('[data-payboard]'))) {
+    document.getElementById('escVeil')?.remove();
+    navigate('arena');
+    return toast('You are on the board — climb it');
+  }
+  if ((el = e.target.closest('[data-enter]'))) return openCheckout();
 });
+
+let payMethod = 'card';
+
+function openCheckout() {
+  document.getElementById('escVeil')?.remove();
+  const n = entryCount, total = n * 25;
+  const veil = document.createElement('div');
+  veil.className = 'esc-veil'; veil.id = 'escVeil';
+  veil.innerHTML = `<div class="esc-ticket">
+    <div class="esc-top">
+      <div class="esc-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5"/></svg></div>
+      <h2 class="esc-h">Confirm your entries</h2>
+      <p class="esc-s">Every entry adds 100% of its £25 to the prize pool.<br>Top 10 on the board share it at close.</p>
+    </div>
+    <div class="esc-body">
+      <div class="esc-dash"></div>
+      <div class="esc-grid">
+        <div><p class="esc-k mono">ENTRIES</p><p class="esc-v big">${n}</p></div>
+        <div style="text-align:right"><p class="esc-k mono">TOTAL</p><p class="esc-v big">£${total.toLocaleString('en-GB')}</p></div>
+      </div>
+      <div class="esc-when"><p class="esc-k mono">EVENT</p><p class="esc-v">Monthly Open · settles with the board</p></div>
+      <div class="chk-pay">
+        <button class="chk-pm${payMethod === 'card' ? ' on' : ''}" data-paym="card"><b>Card</b><small>Visa •••• 4471</small></button>
+        <button class="chk-pm${payMethod === 'usdc' ? ' on' : ''}" data-paym="usdc"><b>USDC</b><small>0x8f…2e41</small></button>
+      </div>
+    </div>
+    <div class="esc-actions">
+      <button class="btn-mach" data-paygo>Pay £${total.toLocaleString('en-GB')} — enter now</button>
+      <button class="btn-neu" data-escdone>Cancel</button>
+    </div>
+  </div>`;
+  veil.addEventListener('click', e2 => { if (e2.target === veil) veil.remove(); });
+  document.body.appendChild(veil);
+}
+
+function showEntryTicket(n, total) {
+  document.getElementById('escVeil')?.remove();
+  const tid = 'T-' + String(4400000 + (hashName('tk' + Date.now()) % 500000));
+  const barVal = String(28100000000000 + (hashName(tid) % 99999999));
+  const when = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()).replace(',', ' ·');
+  const veil = document.createElement('div');
+  veil.className = 'esc-veil'; veil.id = 'escVeil';
+  veil.innerHTML = `<div class="esc-ticket">
+    <div class="esc-top">
+      <div class="esc-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+      <h2 class="esc-h">You're in</h2>
+      <p class="esc-s">Your ${n === 1 ? 'entry is' : n + ' entries are'} live on the Monthly Open.<br>£${total.toLocaleString('en-GB')} went straight into the pool.</p>
+    </div>
+    <div class="esc-body">
+      <div class="esc-dash"></div>
+      <div class="esc-grid">
+        <div><p class="esc-k mono">TICKET&nbsp;ID</p><p class="esc-v mono">${tid}</p></div>
+        <div style="text-align:right"><p class="esc-k mono">AMOUNT</p><p class="esc-v big">£${total.toLocaleString('en-GB')}</p></div>
+      </div>
+      <div class="esc-when"><p class="esc-k mono">ISSUED</p><p class="esc-v">${when}</p></div>
+      <div class="esc-acct">
+        <span class="ad-ic btl">${n}</span>
+        <span><b>${n} ${n === 1 ? 'entry' : 'entries'} · Monthly Open</b><small>paid by ${payMethod === 'card' ? 'Visa •••• 4471' : 'USDC · 0x8f…2e41'} · top 10 share the pool</small></span>
+      </div>
+      <div class="esc-dash"></div>
+      <div class="esc-bar">${barcodeSVG(barVal)}<p class="mono">${barVal}</p></div>
+    </div>
+    <div class="esc-actions">
+      <button class="btn-mach" data-payboard>See the board →</button>
+      <button class="btn-neu" data-escdone>Done</button>
+    </div>
+  </div>`;
+  veil.addEventListener('click', e2 => { if (e2.target === veil) veil.remove(); });
+  document.body.appendChild(veil);
+  fireConfetti();
+}
 
 /* Partner mode toggle */
 document.querySelector('.segmented-state').addEventListener('change', e => {
