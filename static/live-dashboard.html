@@ -6515,7 +6515,7 @@ function nationWarsHTML() {
 }
 
 function myBattlesHTML() {
-  if (!myBattles.length && !pkLedger.length) return '';
+  if (!myBattles.length) return '';
   const rows = myBattles.map((b, i) => {
     const lead = Math.max(8, Math.min(92, 50 + (b.my - b.op) * 9));
     return `<div class="blive" data-bspec="${i}" style="cursor:pointer">
@@ -6532,22 +6532,10 @@ function myBattlesHTML() {
         <span style="margin-left:auto">● ${b.watching} watching</span></div>
     </div>`;
   }).join('');
-  const ledger = pkLedger.length ? `<div class="fame-card" style="margin-top:14px"><div class="fame-scroll">
-    <table class="trades-table">
-      <thead><tr class="mono"><th>RESULT</th><th>OPPONENT</th><th>ACCOUNT</th><th style="text-align:right">YOU&nbsp;vs&nbsp;THEM</th><th style="text-align:right">POT</th><th style="text-align:right">WHEN</th></tr></thead>
-      <tbody>${pkLedger.slice(0, 8).map(l => `<tr>
-        <td><span class="obadge ${l.won ? 'target' : 'stopped'}">${l.won ? 'Battle won' : 'Battle lost'}</span></td>
-        <td><b>${l.opp}</b>${l.machine ? ' <span class="house-chip mono">AI</span>' : ''}</td>
-        <td class="mono" style="font-size:11px;color:var(--text-faint)">${l.acctId}</td>
-        <td style="text-align:right"><b class="${l.won ? 'up' : 'down'}">${fmtRet(l.my)}</b> <span style="color:var(--text-faint)">vs ${fmtRet(l.op)}</span></td>
-        <td style="text-align:right"><b>£${l.pot.toLocaleString('en-GB')}</b></td>
-        <td style="text-align:right;color:var(--text-faint)">${agoStr(Math.max(1, Math.round((Date.now() - l.at) / 60000)))}</td>
-      </tr>`).join('')}</tbody>
-    </table></div></div>` : '';
   return `<div class="section">
     <div class="section-head"><div><h3 class="section-title">Your battles</h3>
-      <p class="section-sub"><span class="mono">${myBattles.length}&nbsp;LIVE&nbsp;·&nbsp;${pkLedger.length}&nbsp;SETTLED</span><span class="dot-sep">·</span><span>every battle runs on its own funded account — the trades you close set your return</span></p></div></div>
-    ${rows}${ledger}</div>`;
+      <p class="section-sub"><span class="mono">${myBattles.length}&nbsp;LIVE</span><span class="dot-sep">·</span><span>every battle runs on its own funded account — the trades you close set your return</span></p></div></div>
+    ${rows}</div>`;
 }
 
 /* ---------------- Trade Clans — team up, fly a banner, battle as one ---------------- */
