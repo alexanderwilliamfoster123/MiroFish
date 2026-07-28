@@ -2769,6 +2769,70 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .lb-tip { position: fixed; z-index: 130; min-width: 150px; background: #18181B; color: #fff; border-radius: 10px; padding: 8px 11px; pointer-events: none; opacity: 0; transition: opacity .12s ease; box-shadow: 0 10px 26px rgba(0, 0, 0, .3); }
 .lb-tip.on { opacity: 1; }
 
+/* Quick trade board — Polymarket-style jump-straight-in */
+.qt-stake { display: flex; align-items: center; gap: 7px; }
+.qt-stake .b-label { margin: 0; width: auto; }
+.qt-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
+@media (max-width: 1100px) { .qt-wrap { grid-template-columns: 1fr; } }
+.qt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.qt-card { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 15px 16px 13px; display: flex; flex-direction: column; gap: 10px; }
+.qt-top { display: flex; align-items: center; gap: 10px; }
+.qt-ic { width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 15px; flex: none; }
+.qt-names { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.qt-names b { font-size: 13.5px; }
+.qt-names span { font-size: 9px; letter-spacing: 0.07em; color: var(--text-faint); }
+.qt-top .px-pill { margin-left: auto; }
+.qt-px { font-size: 21px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.qt-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.qt-btns button { border: 0; cursor: pointer; font: inherit; font-size: 12.5px; font-weight: 800; padding: 10px 8px; border-radius: 12px; transition: transform 0.12s ease, filter 0.15s ease; }
+.qt-btns button:hover { filter: brightness(0.96); }
+.qt-btns button:active { transform: scale(0.97); }
+.qt-long { background: rgba(16, 185, 129, 0.14); color: #0b8a5c; }
+.qt-short { background: rgba(229, 72, 77, 0.12); color: #c9383d; }
+body.dark .qt-long { color: #34d399; }
+body.dark .qt-short { color: #f87171; }
+.qt-btns button.filled { background: #10b981; color: #fff; }
+.qt-foot { display: flex; align-items: center; gap: 9px; font-size: 9.5px; letter-spacing: 0.06em; color: var(--text-faint); }
+.qt-term { margin-left: auto; color: var(--lbA); font-weight: 700; cursor: pointer; letter-spacing: 0; font-size: 11px; }
+.qt-hot { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 16px 16px 8px; }
+.qt-hot-head { font-size: 10px; letter-spacing: 0.1em; color: var(--text-faint); margin-bottom: 8px; }
+.qh-row { display: flex; align-items: center; gap: 10px; padding: 10px 6px; border-bottom: 1px solid var(--line); cursor: pointer; border-radius: 8px; }
+.qh-row:hover { background: var(--surface); }
+.qh-rank { width: 16px; color: var(--text-faint); font-size: 10px; }
+.qh-name { font-size: 12.5px; font-weight: 700; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qh-val { font-size: 10px; color: var(--text-faint); }
+.qh-arrow { color: var(--text-faint); font-size: 15px; line-height: 1; }
+.qt-hot .link-btn { margin-top: 4px; }
+
+/* Challenge detail — the full read before you take the other side */
+.chd-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 18px; align-items: start; }
+@media (max-width: 1100px) { .chd-grid { grid-template-columns: 1fr; } }
+.chd-card { background: var(--card); border-radius: 24px; box-shadow: var(--neu-out-sm); padding: 22px 24px; }
+.chd-top { display: flex; gap: 14px; align-items: center; cursor: pointer; }
+.chd-name { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
+.chd-sub { font-size: 11px; color: var(--text-faint); margin-top: 2px; }
+.chd-bio { font-size: 13.5px; color: var(--text-soft); margin: 12px 0 14px; line-height: 1.5; }
+.chd-chart { margin-top: 16px; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 16px; overflow: hidden; height: 200px; color: var(--text); }
+.chd-chart svg { width: 100%; height: 100%; display: block; }
+.chd-chart-t { display: flex; justify-content: space-between; font-size: 9px; letter-spacing: 0.09em; color: var(--text-faint); margin: 16px 2px 8px; }
+.chd-terms { background: var(--card); border-radius: 24px; box-shadow: var(--neu-out-sm); padding: 20px 22px; position: sticky; top: 14px; }
+.chd-pot-l { font-size: 9.5px; letter-spacing: 0.12em; color: var(--text-faint); }
+.chd-pot { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; margin: 4px 0 2px; }
+.chd-split { height: 9px; border-radius: 999px; overflow: hidden; display: flex; margin: 12px 0 6px; }
+.chd-split i { height: 100%; }
+.chd-split-t { display: flex; justify-content: space-between; font-size: 9px; letter-spacing: 0.08em; color: var(--text-faint); margin-bottom: 14px; }
+.chd-tgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.chd-actions { display: flex; flex-direction: column; gap: 9px; margin-top: 16px; }
+.chd-actions .btn-mach { width: 100%; }
+.chd-note { font-size: 9px; letter-spacing: 0.07em; color: var(--text-faint); margin-top: 12px; text-align: center; line-height: 1.7; }
+.chd-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+.chd-step { background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 14px; padding: 12px 13px; }
+.chd-step b { display: block; font-size: 12px; margin-bottom: 3px; }
+.chd-step span { font-size: 10.5px; color: var(--text-faint); line-height: 1.5; display: block; }
+.chd-step .mono { font-size: 8.5px; letter-spacing: 0.1em; color: var(--lbA); margin-bottom: 6px; }
+.challenge-card { cursor: pointer; }
+.challenge-card .btn-mach.enter { width: 100%; margin-top: 4px; }
+
 /* Topbar profile avatar */
 .icon-btn.avatar-btn { display: inline-flex; align-items: center; justify-content: center; }
 .tb-av { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
@@ -2996,6 +3060,7 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
     <div class="view" data-view="performance"></div>
     <div class="view" data-view="trader"></div>
     <div class="view" data-view="spectate"></div>
+    <div class="view" data-view="challenge"></div>
     <div class="view" data-view="live"></div>
     <div class="view" data-view="clan"></div>
     <div class="view" data-view="partner"></div>
@@ -3016,7 +3081,7 @@ const MARK_SVG = '<svg viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/
 const TROPHY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="__S__" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5"/></svg>';
 
 const navItems = [
-  { label: 'Arena', view: 'arena', match: ['arena', 'trader', 'spectate', 'live', 'clan', 'tournaments', 'leaderboard'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>' },
+  { label: 'Arena', view: 'arena', match: ['arena', 'trader', 'spectate', 'live', 'clan', 'challenge', 'tournaments', 'leaderboard'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>' },
   { label: 'Feed', view: 'social', match: ['social'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' },
   { label: 'Trade', view: 'terminal', match: ['terminal', 'performance'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 15v-4M12 15V8M17 15v-6"/></svg>' },
   { label: 'Ideas', view: 'ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' }
@@ -3501,6 +3566,7 @@ const TITLES = {
   leaderboard: ['Arena', '<span class="mono">LEADERBOARD</span><span class="dot-sep">·</span><span>live standings, resorted in real time</span>'],
   ideas: ['Trade Ideas', '<span class="mono">LIVE&nbsp;WIRE</span><span class="dot-sep">·</span><span>signals streaming from every market</span>'],
   terminal: ['Trade', '<span class="mono">TR-1001</span><span class="dot-sep">·</span><span>£100k competition balance</span>'],
+  challenge: ['Challenge', '<span class="mono">OPEN&nbsp;CHALLENGE</span><span class="dot-sep">·</span><span>read the terms, scout the trader, take the other side</span>'],
   social: ['Feed', '<span class="mono">FEED</span><span class="dot-sep">·</span><span>what 177K traders are saying right now</span>'],
   performance: ['Performance', '<span class="mono">ALL&nbsp;ACCOUNTS</span><span class="dot-sep">·</span><span>verified live track record</span>'],
   partner: ['Partner', '<span class="mono">PARTNER&nbsp;PROGRAMME</span><span class="dot-sep">·</span><span>earn 20% for the lifetime of every client</span>'],
@@ -6459,6 +6525,57 @@ const LIVE_B = [
 
 let lbf = { kind: 'all', pot: 'any', dur: 'any', sort: 'pot', view: 'grid' };
 
+/* Quick trade — one tap, straight into a position */
+let qtStake = 100, qtCat = 'all';
+const QT_CATS = { BTC: 'crypto', ETH: 'crypto', NAS100: 'indices', XAUUSD: 'metals', EURUSD: 'fx', GBPJPY: 'fx' };
+
+function quickTradeHTML() {
+  const syms = Object.keys(INSTR).filter(s => qtCat === 'all' || QT_CATS[s] === qtCat);
+  const cards = syms.map(sym => {
+    const a = INSTR[sym];
+    const chg = (a.px - a.open) / a.open * 100;
+    const vol = 2 + hashName(sym + 'qv') % 38;
+    return `<article class="qt-card">
+      <div class="qt-top">
+        <span class="qt-ic" style="background:${a.tint}">${a.ic}</span>
+        <div class="qt-names"><b>${a.name}</b><span class="mono">${sym}&nbsp;·&nbsp;${QT_CATS[sym].toUpperCase()}</span></div>
+        <span class="px-pill${chg < 0 ? ' neg' : ''}" data-ppill="${sym}"><i class="pp-arrow">↑</i><b>${fmtRet(chg)}</b></span>
+      </div>
+      <div class="qt-px odo" data-podo="${sym}" data-odo="${fmtPx(sym)}">${odoInner(fmtPx(sym))}</div>
+      <div class="qt-btns">
+        <button class="qt-long" data-qt="${sym}|long">Long&nbsp;▲</button>
+        <button class="qt-short" data-qt="${sym}|short">Short&nbsp;▼</button>
+      </div>
+      <div class="qt-foot mono"><span class="pulse-dot tiny"></span>LIVE<span>£${vol}M&nbsp;vol&nbsp;today</span><span class="qt-term" data-qterm="${sym}">Full&nbsp;terminal&nbsp;→</span></div>
+    </article>`;
+  }).join('');
+  const hot = [...LIVE_B].map((b, i) => ({ ...b, i })).sort((x, y) => y.watching - x.watching).slice(0, 5);
+  const hotRows = hot.map((h, n) => `<div class="qh-row" data-lbwatch="${h.i}">
+    <span class="qh-rank mono">${n + 1}</span>
+    <span class="qh-name">${lbName(h, 'a')} v ${lbName(h, 'b')}</span>
+    <span class="qh-val mono">${fmtM(h.pot)}&nbsp;pot</span>
+    <span class="qh-arrow">›</span>
+  </div>`).join('');
+  const catChip = (v, l) => `<button class="pill-btn${qtCat === v ? ' on' : ''}" data-qtcat="${v}">${l}</button>`;
+  return `<div class="section">
+    <div class="section-head"><div>
+      <h3 class="section-title">Jump straight in</h3>
+      <p class="section-sub"><span class="mono">ONE&nbsp;TAP&nbsp;·&nbsp;EVERY&nbsp;MARKET</span><span class="dot-sep">·</span><span>pick a side and your stake fires instantly — manage or close it in the terminal</span></p></div>
+      <div class="qt-stake"><span class="b-label mono">STAKE</span>
+        ${[25, 100, 500, 1000].map(v => `<button class="pill-btn${qtStake === v ? ' on' : ''}" data-qtstake="${v}">£${v >= 1000 ? '1K' : v}</button>`).join('')}
+      </div></div>
+    <div class="chip-row" style="margin-bottom:14px">${catChip('all', 'All')}${catChip('crypto', 'Crypto')}${catChip('fx', 'FX')}${catChip('indices', 'Indices')}${catChip('metals', 'Metals')}</div>
+    <div class="qt-wrap">
+      <div class="qt-grid">${cards}</div>
+      <aside class="qt-hot">
+        <div class="qt-hot-head">HOT&nbsp;BOARDS&nbsp;·&nbsp;MOST&nbsp;WATCHED</div>
+        ${hotRows}
+        <button class="link-btn" data-nav="live">Explore all live battles</button>
+      </aside>
+    </div>
+  </div>`;
+}
+
 const LB_POT_BANDS = { any: [0, 1e12], small: [0, 1000], mid: [1000, 10000], big: [10000, 100000], whale: [100000, 1e12] };
 const LB_DUR_BANDS = { any: [0, 1e9], sprint: [0, 60], day: [61, 1440], week: [1441, 1e9] };
 
@@ -6783,7 +6900,7 @@ function renderArena() {
     const p = c.mine ? null : traderProfile(c.name);
     const tier = p ? traderTier(p.winnings) : null;
     return `
-    <article class="challenge-card">
+    <article class="challenge-card" data-chopen="${i}">
       <div class="challenge-head"${c.mine ? '' : ` data-trader="${c.name}" style="cursor:pointer"`}>${avatarHTML(c.name, 'thread-av')}
         <div><div class="challenge-name">${c.name}${c.mine ? ' <span class="mine-tag">YOURS</span>' : ` <span class="tier-chip">LV ${tier.lv} ${tier.name.toUpperCase()}</span>`}</div>
           <div class="challenge-sub">${c.mine ? 'waiting for an opponent' : 'set the terms · take the other side'}</div></div></div>
@@ -6803,7 +6920,7 @@ function renderArena() {
       </div>
       ${c.mine
         ? `<button class="btn-neu enter" data-abcancel="${i}">Cancel challenge</button>`
-        : `<button class="btn-neu enter" data-accept="${i}"><span class="pulse-dot tiny purple"></span>Accept battle</button>`}
+        : `<button class="btn-mach enter" data-accept="${i}">Accept battle →</button>`}
     </article>`;
   }).join('');
   viewEl('arena').innerHTML = `
@@ -6843,6 +6960,7 @@ function renderArena() {
         </div>
       </div>
     </section>
+    ${quickTradeHTML()}
     ${arenaB.open ? builderHTML() : ''}
     ${myBattlesHTML()}
     ${nationWarsHTML()}
@@ -6853,6 +6971,106 @@ function renderArena() {
         <p class="section-sub"><span class="mono">${challenges.length}&nbsp;OPEN</span><span class="dot-sep">·</span><span>someone set the terms — take the other side and it locks in at kick-off</span></p></div></div>
       <div class="challenge-grid">${cards}</div>
     </div>`;
+}
+
+/* ---------------- Challenge detail — full terms + scout before you accept ---------------- */
+
+let chSel = 0;
+
+function chCurveSVG(series) {
+  const W = 640, H = 200, padL = 50, padR = 14, padT = 14, padB = 12;
+  const s = series.slice(-60);
+  const lo = Math.min(...s), hi = Math.max(...s), rng = (hi - lo) || 1;
+  const iw = W - padL - padR, ih = H - padT - padB;
+  const pts = s.map((v, i) => [padL + i / (s.length - 1) * iw, padT + (1 - (v - lo) / rng) * ih]);
+  const A = lbCol('a');
+  let grid = '';
+  for (let g = 0; g <= 3; g++) {
+    const gv = lo + rng * g / 3;
+    const gy = (padT + (1 - g / 3) * ih).toFixed(1);
+    grid += `<line x1="${padL}" x2="${W - padR}" y1="${gy}" y2="${gy}" stroke="currentColor" opacity=".08" stroke-dasharray="2 5"/>
+      <text x="${padL - 8}" y="${gy}" text-anchor="end" alignment-baseline="middle" font-size="9" fill="currentColor" opacity=".4">${fmtM(gv)}</text>`;
+  }
+  const d = smoothPath(pts);
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    <defs><linearGradient id="chg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${A}" stop-opacity=".2"/><stop offset="100%" stop-color="${A}" stop-opacity="0"/></linearGradient></defs>
+    ${grid}
+    <path d="${d} L${W - padR},${H - padB} L${padL},${H - padB} Z" fill="url(#chg)"/>
+    <path d="${d}" fill="none" stroke="${A}" stroke-width="2.4" stroke-linejoin="round"/>
+    <circle cx="${pts[pts.length - 1][0].toFixed(1)}" cy="${pts[pts.length - 1][1].toFixed(1)}" r="4" fill="${A}" stroke="var(--card)" stroke-width="1.5"/>
+  </svg>`;
+}
+
+function renderChallenge() {
+  const c = challenges[chSel];
+  if (!c) return navigate('arena');
+  const mine = !!c.mine;
+  const p = traderProfile(c.name);
+  const tier = traderTier(p.winnings);
+  const odds = c.odds || 1;
+  const youPut = Math.round((mine ? c.stake : c.pot) * odds);
+  const theirPut = mine ? c.pot - Math.round(c.stake * odds) : c.pot;
+  const total = mine ? c.pot : Math.round(c.pot * (1 + odds));
+  const youPct = Math.max(6, Math.min(94, Math.round(youPut / total * 100)));
+  const tile = (k, v, accent) => `<div class="term-cell"><div class="k">${k}</div><div class="v"${accent ? ' style="color:var(--lbA);font-weight:800"' : ''}>${v}</div></div>`;
+  viewEl('challenge').innerHTML = `
+    <button class="back-btn" data-nav="arena">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to Arena</button>
+    <div class="chd-grid">
+      <div>
+        <div class="chd-card">
+          <div class="chd-top" data-trader="${c.name}">
+            ${avatarHTML(c.name, 'thread-av', '', 'width:54px;height:54px;font-size:24px')}
+            <div>
+              <div class="chd-name">${c.name} ${flagHTML(traderFlag(c.name), 'xs')} ${mine ? '<span class="mine-tag">YOURS</span>' : `<span class="tier-chip">LV ${tier.lv} ${tier.name.toUpperCase()}</span>`}</div>
+              <div class="chd-sub">${mine ? 'your open challenge — waiting for someone to take the other side' : 'set these terms and is waiting for an opponent'}</div>
+            </div>
+          </div>
+          <p class="chd-bio">${p.bio}</p>
+          <div class="tp-strip">
+            <span class="tp-ss"><b>+£${kfmt(p.winnings)}</b><span>Banked profit</span></span>
+            <span class="tp-ss"><b>${p.winRate}%</b><span>Win rate</span></span>
+            <span class="tp-ss"><b>${p.wins}–${p.losses}</b><span>Battle record</span></span>
+            <span class="tp-ss"><b>+${p.mediaRets[0]}%</b><span>Best form</span></span>
+          </div>
+          <div style="margin-top:14px">${awardBadgeHTML(clubFor(p.winnings))}</div>
+          <div class="chd-chart-t mono"><span>EQUITY&nbsp;·&nbsp;VERIFIED&nbsp;TRACK&nbsp;RECORD</span><span>ALL-TIME</span></div>
+          <div class="chd-chart">${chCurveSVG(p.series)}</div>
+          <div class="chd-steps">
+            <div class="chd-step"><span class="mono">STEP&nbsp;1</span><b>Accept the terms</b><span>Your stake locks into escrow next to theirs — nobody can touch it.</span></div>
+            <div class="chd-step"><span class="mono">STEP&nbsp;2</span><b>Trade the window</b><span>Any market, any style. Only the % return on your account counts.</span></div>
+            <div class="chd-step"><span class="mono">STEP&nbsp;3</span><b>Higher return takes it</b><span>At window close the pot settles automatically to the winner.</span></div>
+          </div>
+        </div>
+        <div class="chd-card" style="margin-top:16px;padding:16px 18px">
+          <div class="chd-chart-t mono" style="margin:2px 2px 10px"><span>RECENT&nbsp;BATTLES</span><span>TAP&nbsp;A&nbsp;ROW&nbsp;TO&nbsp;RELIVE&nbsp;IT</span></div>
+          ${tpBattlesHTML(p)}
+        </div>
+      </div>
+      <div class="chd-terms">
+        <div class="chd-pot-l mono">TOTAL&nbsp;POT&nbsp;·&nbsp;ESCROWED&nbsp;AT&nbsp;KICK-OFF</div>
+        <div class="chd-pot">£${total.toLocaleString('en-GB')}</div>
+        <div class="chd-split"><i style="width:${youPct}%;background:var(--lbA)"></i><i style="flex:1;background:var(--lbBsoft)"></i></div>
+        <div class="chd-split-t mono"><span>${mine ? 'YOURS' : 'YOU'}&nbsp;£${(mine ? theirPut : youPut).toLocaleString('en-GB')}</span><span>${mine ? 'THEM' : c.name.toUpperCase()}&nbsp;£${(mine ? Math.round(c.stake * odds) : theirPut).toLocaleString('en-GB')}</span></div>
+        <div class="chd-tgrid">
+          ${tile(mine ? 'Starts' : 'Window', mine ? c.start : c.window)}
+          ${tile('Odds', 'offering ' + odds + ':1', true)}
+          ${tile(mine ? 'They put up' : 'You put up', '£' + (mine ? Math.round(c.stake * odds) : youPut).toLocaleString('en-GB'))}
+          ${tile('Kick-off', (c.start || 'On accept'))}
+        </div>
+        <div class="ch-kick mono" style="margin-top:14px"><span class="pulse-dot tiny purple"></span>LIVE&nbsp;INTEREST<span class="ch-eye" data-eye="${chSel}">● ${c.eyeing || 12} eyeing it</span></div>
+        <div class="chd-actions">
+          ${mine
+            ? `<button class="btn-neu" data-invopen="duel">Share the call-out →</button>
+               <button class="btn-neu" data-abcancel="${chSel}">Cancel challenge</button>`
+            : `<button class="btn-mach" data-accept="${chSel}">Accept battle — put up £${youPut.toLocaleString('en-GB')} →</button>
+               <button class="btn-neu" data-trader="${c.name}">Scout the full profile</button>
+               <button class="btn-neu" data-abopen>Counter with your own terms</button>`}
+        </div>
+        <div class="chd-note mono">FUNDS&nbsp;LOCK&nbsp;IN&nbsp;ESCROW&nbsp;AT&nbsp;KICK-OFF&nbsp;·&nbsp;SETTLED&nbsp;AUTOMATICALLY&nbsp;AT&nbsp;WINDOW&nbsp;CLOSE&nbsp;·&nbsp;VERIFIED&nbsp;RETURNS&nbsp;ONLY</div>
+      </div>
+    </div>`;
+  bindAwardTilt();
 }
 
 /* ---------------- Partner — the full portal ---------------- */
@@ -7134,7 +7352,7 @@ function fireConfetti() {
 const RENDER = {
   terminal: renderTerminal, ideas: renderIdeas, social: renderSocial, inbox: renderInbox,
   performance: renderPerformance, trader: renderTrader,
-  leaderboard: renderLbPage, arena: renderArena, tournaments: renderTournamentsPage, partner: renderPartner, spectate: renderSpectate, live: renderLive, clan: renderClan
+  leaderboard: renderLbPage, arena: renderArena, tournaments: renderTournamentsPage, partner: renderPartner, spectate: renderSpectate, live: renderLive, clan: renderClan, challenge: renderChallenge
 };
 
 document.addEventListener('click', e => {
@@ -7300,7 +7518,11 @@ document.addEventListener('click', e => {
   if ((el = q('[data-lbpage]'))) { lbPage += +el.dataset.lbpage; return renderLbPage(); }
   if ((el = q('[data-lbtour]'))) { lbTour = el.dataset.lbtour; return renderLbPage(); }
   /* arena */
-  if ((el = q('[data-abopen]'))) { arenaB.open = !arenaB.open; return renderArena(); }
+  if ((el = q('[data-abopen]'))) {
+    arenaB.open = currentView === 'arena' ? !arenaB.open : true;
+    renderArena();
+    return navigate('arena');
+  }
   if ((el = q('[data-abstake]'))) {
     if (el.dataset.abstake === 'custom') arenaB.stakeMode = 'custom';
     else { arenaB.stakeMode = 'preset'; arenaB.stake = +el.dataset.abstake; }
@@ -7331,7 +7553,8 @@ document.addEventListener('click', e => {
   if ((el = q('[data-abcancel]'))) {
     challenges.splice(+el.dataset.abcancel, 1);
     toast('Challenge cancelled — stake released from escrow');
-    return renderArena();
+    renderArena();
+    return navigate('arena');
   }
   if ((el = q('[data-tacct]'))) {
     const i = +el.dataset.tacct;
@@ -7494,6 +7717,22 @@ document.addEventListener('click', e => {
   if ((el = q('[data-lbdur]'))) { lbf.dur = el.dataset.lbdur; return renderLive(); }
   if ((el = q('[data-lbsort]'))) { lbf.sort = el.dataset.lbsort; return renderLive(); }
   if ((el = q('[data-lbview]'))) { lbf.view = el.dataset.lbview; return renderLive(); }
+  if ((el = q('[data-qtstake]'))) { qtStake = +el.dataset.qtstake; return renderArena(); }
+  if ((el = q('[data-qtcat]'))) { qtCat = el.dataset.qtcat; return renderArena(); }
+  if ((el = q('[data-qterm]'))) { term.asset = el.dataset.qterm; return navigate('terminal'); }
+  if ((el = q('[data-qt]'))) {
+    const [sym, dir] = el.dataset.qt.split('|');
+    const up = dir === 'long';
+    term.asset = sym;
+    term.pos = { sym, dir: up ? 'up' : 'down', entry: INSTR[sym].px, risk: qtStake, riskPct: +(qtStake / term.bal * 100).toFixed(2), rr: term.rr, mode: 'day', be: false, src: 'quick', openedAt: Date.now() };
+    el.classList.add('filled');
+    const orig = el.innerHTML;
+    el.textContent = 'Filled ✓';
+    setTimeout(() => { el.classList.remove('filled'); el.innerHTML = orig; }, 1400);
+    toast(`${up ? 'Long' : 'Short'} ${sym} @ ${fmtPx(sym)} — £${qtStake.toLocaleString('en-GB')} on, manage it in the terminal`);
+    addNotif('T', `Quick trade filled — ${sym}`, `${up ? 'Long' : 'Short'} @ ${fmtPx(sym)} with £${qtStake.toLocaleString('en-GB')} at risk, 1:${term.rr} target.`);
+    return;
+  }
   if ((el = q('[data-lbwatch]'))) {
     const face = e.target.closest('[data-trader]');
     if (face) return openTrader(face.dataset.trader);
@@ -7575,7 +7814,8 @@ document.addEventListener('click', e => {
     });
     toast(`Battle vs ${c.name} locked in — you put up £${(c.pot * (c.odds || 1)).toLocaleString('en-GB')}, higher return takes £${(c.pot * (1 + (c.odds || 1))).toLocaleString('en-GB')}`);
     addNotif('VS', `Battle vs ${c.name} is live`, `£${(c.pot * (1 + (c.odds || 1))).toLocaleString('en-GB')} pot · ${c.window} window · higher return takes it.`);
-    return renderArena();
+    renderArena();
+    return navigate('arena');
   }
   if ((el = q('[data-watch]'))) {
     const b = BATTLES[0];
@@ -7622,6 +7862,12 @@ document.addEventListener('click', e => {
   if ((el = q('[data-trtab]'))) { traderTab = el.dataset.trtab; return renderTrader(); }
   if ((el = q('[data-trrange]'))) { traderRange = el.dataset.trrange; return renderTrader(); }
   /* trader rows — fall-through so buttons inside rows keep priority */
+  if ((el = q('[data-chopen]'))) {
+    const face = e.target.closest('[data-trader]');
+    if (face) return openTrader(face.dataset.trader);
+    chSel = +el.dataset.chopen;
+    return navigate('challenge');
+  }
   if ((el = q('[data-trader]'))) return openTrader(el.dataset.trader);
 });
 
