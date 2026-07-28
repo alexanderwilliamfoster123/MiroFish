@@ -3110,6 +3110,23 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 /* ---- topbar winnings pills ---- */
 .tw-pill { display: inline-flex; align-items: center; gap: 8px; background: var(--card); box-shadow: var(--neu-out-sm); border-radius: 999px; padding: 10px 16px; font-size: 12.5px; color: var(--text-faint); white-space: nowrap; }
 .tw-pill b { color: var(--text); font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+
+/* ---- global leaderboard table ---- */
+.lbb-search { display: flex; align-items: center; gap: 8px; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 12px; padding: 9px 14px; min-width: 230px; }
+.lbb-search input { border: 0; outline: 0; background: none; font: inherit; font-size: 12.5px; color: var(--text); width: 100%; }
+.lbb-search input::placeholder { color: var(--text-faint); }
+.lbb-table th { white-space: nowrap; }
+.lbb-th { border: 0; background: none; cursor: pointer; font: inherit; font-size: inherit; letter-spacing: inherit; color: inherit; display: inline-flex; align-items: center; gap: 4px; padding: 0; }
+.lbb-th.on { color: var(--lbA); }
+.lbb-rank { color: var(--text-faint); font-size: 11px; }
+.lbb-who { display: inline-flex; align-items: center; gap: 9px; font-size: 12.5px; }
+.lbb-who b { font-weight: 700; }
+.lbb-club { font-size: 8.5px; letter-spacing: .08em; font-weight: 800; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.lbb-ring { display: block; }
+.lbb-ver { display: inline-flex; align-items: center; justify-content: center; width: 17px; height: 17px; border-radius: 50%; background: #1d9bf0; color: #fff; font-size: 10px; font-weight: 800; }
+.lbb-nver { color: var(--text-faint); }
+.lbb-add { padding: 7px 14px; font-size: 11.5px; }
+.lbb-spark svg { display: block; opacity: .9; }
 @media (max-width: 1100px) { .tw-pill { display: none; } }
 
 /* ---- battles across the globe (dotted world map) ---- */
@@ -3166,11 +3183,10 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
 .mach-terms { font-size: 12.5px; color: var(--text-soft); line-height: 1.55; }
 .mach-terms b { color: var(--text); }
 .mach-meta { display: flex; align-items: center; gap: 7px; font-size: 10px; letter-spacing: .08em; color: var(--text-faint); }
-.btn-mach { position: relative; z-index: 0; overflow: hidden; border: 0; cursor: pointer; border-radius: 14px; padding: 13px; font: inherit; font-size: 13.5px; font-weight: 700; color: #fff; background: #17181c; box-shadow: 0 10px 22px rgba(14, 15, 24, .32); transition: transform .2s ease, box-shadow .2s ease; }
-.btn-mach::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899); filter: blur(16px); opacity: .4; transition: opacity .5s ease; }
-.btn-mach:hover { transform: translateY(-1px); box-shadow: 0 13px 26px rgba(14, 15, 24, .42); }
-.btn-mach:hover::before { opacity: .85; }
-body.dark .btn-mach { background: #f4f4f5; color: #17181c; }
+.btn-mach { position: relative; z-index: 0; overflow: hidden; border: 0; cursor: pointer; border-radius: 14px; padding: 13px; font: inherit; font-size: 13.5px; font-weight: 700; color: #241a3f; background: linear-gradient(105deg, #d9d6fa, #e5cdf6 45%, #f7cfe2); box-shadow: 0 10px 22px rgba(144, 129, 223, .30); transition: transform .2s ease, box-shadow .2s ease; }
+.btn-mach::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, #b9c4fb, #dcb9f8, #fbc0dd); filter: blur(16px); opacity: 0; transition: opacity .5s ease; }
+.btn-mach:hover { transform: translateY(-1px); box-shadow: 0 13px 28px rgba(144, 129, 223, .42); }
+.btn-mach:hover::before { opacity: .8; }
 
 /* ---------------- Clans ---------------- */
 .clan-chip { display: inline-flex; align-items: center; justify-content: center; border-radius: 11px; padding: 8px 11px; color: #fff; font-weight: 800; font-size: 12px; letter-spacing: .08em; flex: none; box-shadow: 0 6px 14px rgba(60, 50, 120, .25); }
@@ -7117,11 +7133,81 @@ function nationWarsHTML() {
     ${FEATURE_NATION_WARS ? `<div class="section-head"><div><h3 class="section-title">Nation Wars</h3>
       <p class="section-sub"><span class="mono">COUNTRY&nbsp;VS&nbsp;COUNTRY</span><span class="dot-sep">·</span><span>full squads battle for one pot — the side with the higher average return takes it all</span></p></div></div>
     <div class="nw-grid">${cards}</div>` : ''}
-    <div class="section-head" ${FEATURE_NATION_WARS ? 'style="margin-top:26px"' : ''}><div><h3 class="section-title">Global leaderboard</h3>
-      <p class="section-sub"><span class="mono">WHERE&nbsp;THE&nbsp;MONEY'S&nbsp;BEING&nbsp;WON</span><span class="dot-sep">·</span><span>total winnings banked by traders in every country, ranked all-time</span></p></div></div>
-    <div class="nat-acc" style="padding:8px 26px">${rows}</div>
+    ${lbBoardHTML()}
   </div>`;
 }
+
+/* ---- global leaderboard — trader table, sortable + searchable ---- */
+let lbb = { q: '', sort: 'winnings', dir: -1 };
+
+function lbbList() {
+  return Object.keys(TRADER_AV).map(n => {
+    const p = traderProfile(n);
+    let s2 = hashName(n + 'lbb') || 1;
+    const rnd = () => { s2 = (s2 * 16807) % 2147483647; return s2 / 2147483647; };
+    const dd = 2 + rnd() * 28;
+    const score = Math.min(99, Math.round(p.winRate * 0.72 + Math.min(28, p.winnings / 50000) + rnd() * 6));
+    return { n, p, dd, score, club: clubFor(p.winnings) };
+  });
+}
+
+function lbbSpark(series) {
+  const pts = series.filter((_, i) => i % 4 === 0);
+  const min = Math.min(...pts), max = Math.max(...pts);
+  const W = 110, H = 30;
+  const d = pts.map((v, i) => `${(i / (pts.length - 1) * W).toFixed(1)},${(H - 3 - (v - min) / ((max - min) || 1) * (H - 6)).toFixed(1)}`).join(' ');
+  return `<span class="lbb-spark"><svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><polyline points="${d}" fill="none" stroke="var(--lbA)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg></span>`;
+}
+
+function lbbRing(v) {
+  const r = 12, c = 2 * Math.PI * r;
+  return `<svg class="lbb-ring" viewBox="0 0 30 30" width="30" height="30">
+    <circle cx="15" cy="15" r="${r}" fill="none" stroke="var(--lbBsoft)" stroke-width="2.4" opacity=".55"/>
+    <circle cx="15" cy="15" r="${r}" fill="none" stroke="var(--lbA)" stroke-width="2.4" stroke-linecap="round"
+      stroke-dasharray="${(c * v / 100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 15 15)"/>
+    <text x="15" y="18.5" text-anchor="middle" font-size="9" font-weight="800" fill="var(--text)">${v}</text>
+  </svg>`;
+}
+
+function lbbTableHTML() {
+  const qy = lbb.q.trim().toLowerCase();
+  const key = { winnings: r => r.p.winnings, winrate: r => r.p.winRate, score: r => r.score, dd: r => r.dd };
+  const list = lbbList()
+    .filter(r => !qy || r.n.toLowerCase().includes(qy))
+    .sort((a, b) => (key[lbb.sort](a) - key[lbb.sort](b)) * lbb.dir);
+  const th = (k, label, right) => `<th${right ? ' style="text-align:right"' : ''}><button class="lbb-th${lbb.sort === k ? ' on' : ''}" data-lbbsort="${k}">${label}<svg viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="${lbb.sort === k && lbb.dir === 1 ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6'}"/></svg></button></th>`;
+  const rows = list.map((r, i) => `<tr data-trader="${r.n}" style="cursor:pointer">
+    <td class="mono lbb-rank">${i + 1}</td>
+    <td><span class="lbb-who">${avatarHTML(r.n, 'thread-av')}<b>${r.n}</b>${VERIFIED.has(r.n) ? BADGE : ''}${flagHTML(traderFlag(r.n), 'xs')}</span></td>
+    <td><span class="lbb-club" style="background:${r.club.bg};color:${r.club.tx};border:1px solid ${r.club.edge}">${r.club.name.toUpperCase()}</span></td>
+    <td>${lbbRing(r.score)}</td>
+    <td style="text-align:center">${VERIFIED.has(r.n) ? '<span class="lbb-ver">✓</span>' : '<span class="lbb-nver">–</span>'}</td>
+    <td style="text-align:right"><b>£${r.p.winnings.toLocaleString('en-GB')}</b></td>
+    <td style="text-align:right">${r.p.winRate}%</td>
+    <td style="text-align:right;color:var(--text-faint)">${r.dd.toFixed(1)}%</td>
+    <td>${lbbSpark(r.p.series)}</td>
+    <td><button class="btn-neu lbb-add" data-follow="${r.n}">${following.has(r.n) ? 'Following' : 'Follow'}</button></td>
+  </tr>`).join('');
+  return `<div class="fame-card"><div class="fame-scroll"><table class="trades-table lbb-table" style="min-width:1080px">
+    <thead><tr class="mono"><th>RANK</th><th>TRADER</th><th>CLUB</th>${th('score', 'SCORE')}<th style="text-align:center">VERIFIED</th>${th('winnings', 'TOTAL&nbsp;WINNINGS', 1)}${th('winrate', 'WIN&nbsp;RATE', 1)}${th('dd', 'MAX&nbsp;DD', 1)}<th>PERFORMANCE</th><th></th></tr></thead>
+    <tbody>${rows.length ? rows : '<tr><td colspan="10" style="color:var(--text-faint);padding:22px">No traders match that search.</td></tr>'}</tbody>
+  </table></div></div>`;
+}
+
+function lbBoardHTML() {
+  return `<div class="section-head"><div><h3 class="section-title">Global leaderboard</h3>
+      <p class="section-sub"><span class="mono">VERIFIED&nbsp;TRACK&nbsp;RECORDS</span><span class="dot-sep">·</span><span>every trader on the platform ranked — tap a row to dive into their record</span></p></div>
+    <div class="section-head-right"><label class="lbb-search"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="lbbQ" placeholder="Search traders…" value="${lbb.q}"></label></div></div>
+    <div id="lbbWrap">${lbbTableHTML()}</div>`;
+}
+
+document.addEventListener('input', e => {
+  if (e.target && e.target.id === 'lbbQ') {
+    lbb.q = e.target.value;
+    const w = document.getElementById('lbbWrap');
+    if (w) w.innerHTML = lbbTableHTML();
+  }
+});
 
 function myBattlesHTML() {
   if (!myBattles.length) return '';
@@ -8743,10 +8829,18 @@ document.addEventListener('click', e => {
   if ((el = q('[data-psclose]'))) return document.getElementById('psVeil')?.remove();
   if ((el = q('[data-pmenu]'))) return toast('Post options are a demo');
   if ((el = q('[data-tst]'))) return toast(el.dataset.tst);
+  if ((el = q('[data-lbbsort]'))) {
+    const k = el.dataset.lbbsort;
+    if (lbb.sort === k) lbb.dir *= -1; else { lbb.sort = k; lbb.dir = -1; }
+    const w = document.getElementById('lbbWrap');
+    if (w) w.innerHTML = lbbTableHTML();
+    return;
+  }
   if ((el = q('[data-follow]'))) {
     const n = el.dataset.follow;
     following.has(n) ? following.delete(n) : following.add(n);
     toast(following.has(n) ? `Following ${n}` : `Unfollowed ${n}`);
+    if (currentView === 'arena') { const w = document.getElementById('lbbWrap'); if (w) w.innerHTML = lbbTableHTML(); return; }
     return currentView === 'trader' ? renderTrader() : renderSocial();
   }
   if ((el = q('[data-preply]'))) {
