@@ -215,6 +215,7 @@ button { font-family: inherit; }
 .segmented { display: inline-flex; cursor: pointer; user-select: none; }
 
 .segmented-state { display: none; }
+.segmented[hidden] { display: none; }
 
 .segmented-track {
   position: relative;
@@ -1481,6 +1482,9 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
 .shc-band { display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr); gap: 18px 26px; align-items: center; padding: 18px 26px 2px; }
 @media (max-width: 640px) { .shc-band { grid-template-columns: 1fr; } }
 .shc-foot { display: flex; align-items: stretch; gap: 12px; padding: 16px 26px 22px; }
+.shc-club { display: flex; align-items: center; gap: 16px; padding: 14px 26px 0; }
+.shc-club .award-badge { width: 250px; flex: none; }
+.shc-club-tx { font-size: 8px; letter-spacing: 0.1em; color: var(--text-faint); }
 .shc-foot .sc-rank { margin-top: 0; flex: 1; }
 .shc-ins { padding: 0 18px; font-size: 12.5px; font-weight: 700; border-radius: 16px; white-space: nowrap; }
 .shc-ins .ins-chev { font-size: 10px; opacity: 0.6; margin-left: 4px; }
@@ -3027,6 +3031,94 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .esc-actions { display: flex; gap: 9px; padding: 0 28px 26px; }
 .esc-actions .btn-mach { flex: 1; }
 
+/* ---- take-the-other-side terms + secure checkout ---- */
+.bt-card { position: relative; width: min(430px, 92vw); max-height: 86vh; overflow-y: auto; background: var(--card); border-radius: 26px; box-shadow: 0 30px 80px rgba(15, 18, 28, .28); padding: 24px 26px; }
+.bt-x { position: absolute; top: 16px; right: 16px; width: 30px; height: 30px; border-radius: 50%; border: none; cursor: pointer; background: var(--surface); box-shadow: var(--neu-out-sm); color: var(--text-soft); font-size: 12px; }
+.bt-x.bk { right: auto; left: 16px; font-size: 15px; line-height: 1; }
+.bt-chip { display: inline-block; font-size: 8.5px; letter-spacing: .12em; font-weight: 700; color: var(--lbA); background: var(--surface); box-shadow: var(--neu-in-sm); padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
+.bt-h { font-size: 19px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 14px; }
+.bt-vs { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 16px; padding: 14px 16px 12px; margin-bottom: 14px; }
+.bt-side { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; min-width: 0; }
+.bt-side b { font-size: 12.5px; }
+.bt-side small { font-size: 7.5px; letter-spacing: .1em; color: var(--text-faint); font-weight: 700; }
+.bt-av { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 800; color: #fff; overflow: hidden; margin-bottom: 3px; }
+.bt-av img { width: 100%; height: 100%; object-fit: cover; }
+.bt-vs-tag { font-size: 9px; letter-spacing: .14em; color: var(--text-faint); font-weight: 700; }
+.bt-rows { margin-bottom: 14px; }
+.bt-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8.5px 2px; border-bottom: 1px dashed var(--line); }
+.bt-row:last-child { border-bottom: none; }
+.bt-row-k span { display: block; font-size: 12px; color: var(--text-soft); }
+.bt-row-k small { display: block; font-size: 9px; color: var(--text-faint); margin-top: 1px; }
+.bt-row > b { font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.bt-out { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.bt-win, .bt-lose { border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; }
+.bt-win { background: linear-gradient(150deg, rgba(16, 185, 129, .04), rgba(16, 185, 129, .15)); border: 1px solid rgba(16, 185, 129, .2); }
+.bt-lose { background: var(--surface); box-shadow: var(--neu-in-sm); }
+.bt-win small, .bt-lose small { font-size: 7.5px; letter-spacing: .11em; font-weight: 700; color: var(--text-faint); }
+.bt-win b { font-size: 18px; color: var(--green); font-variant-numeric: tabular-nums; }
+.bt-lose b { font-size: 18px; color: var(--text); font-variant-numeric: tabular-nums; }
+.bt-win span, .bt-lose span { font-size: 9.5px; color: var(--text-faint); line-height: 1.45; }
+.bt-note { font-size: 10.5px; color: var(--text-faint); margin-bottom: 14px; line-height: 1.55; }
+.bt-go { width: 100%; }
+.bt-ey { font-size: 8.5px; letter-spacing: .14em; font-weight: 700; color: var(--lbA); margin-bottom: 8px; }
+.bt-amt { font-size: 34px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1.05; }
+.bt-amt-s { font-size: 11px; color: var(--text-faint); margin: 4px 0 16px; }
+.bt-pmh { font-size: 8.5px; letter-spacing: .12em; font-weight: 700; color: var(--text-faint); margin: 2px 0 8px; }
+.bt-pm { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 14px; background: var(--surface); box-shadow: var(--neu-in-sm); margin-bottom: 8px; cursor: pointer; }
+.bt-pm.on { background: var(--card); box-shadow: var(--neu-out-sm); outline: 1.5px solid var(--lbA); }
+.bt-pm.off { opacity: .45; cursor: not-allowed; }
+.bt-radio { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--text-faint); flex: none; }
+.bt-pm.on .bt-radio { border-color: var(--lbA); background: radial-gradient(circle, var(--lbA) 0 4.5px, transparent 5px); }
+.bt-pm-ic { width: 30px; height: 30px; border-radius: 9px; background: var(--card); box-shadow: var(--neu-out-sm); display: flex; align-items: center; justify-content: center; font-size: 14px; flex: none; }
+.bt-pm-tx b { display: block; font-size: 12.5px; }
+.bt-pm-tx small { font-size: 9.5px; color: var(--text-faint); }
+.bt-fees { margin: 12px 0 14px; }
+.bt-fee { display: flex; justify-content: space-between; align-items: baseline; font-size: 11.5px; color: var(--text-soft); padding: 7px 2px; border-bottom: 1px dashed var(--line); }
+.bt-fee b { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--text); }
+.bt-fee.tot { border-bottom: none; font-size: 13px; }
+.bt-fee.tot span, .bt-fee.tot b { font-weight: 800; color: var(--text); }
+.bt-secure { font-size: 8px; letter-spacing: .08em; color: var(--text-faint); text-align: center; margin-top: 12px; line-height: 1.7; }
+
+/* ---- your battles cards ---- */
+.mb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 14px; }
+.mb-card { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 18px 20px 16px; cursor: pointer; }
+.mb-top { display: flex; align-items: center; gap: 10px; font-size: 8.5px; letter-spacing: .09em; font-weight: 700; color: var(--text-faint); margin-bottom: 14px; }
+.mb-live { display: inline-flex; align-items: center; gap: 5px; color: var(--green); }
+.mb-watch { margin-left: auto; font-weight: 600; letter-spacing: .04em; }
+.mb-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.mb-side { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.mb-side.opp { align-items: flex-end; text-align: right; }
+.mb-who { display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; }
+.mb-tag { font-size: 7px; letter-spacing: .11em; font-weight: 800; color: var(--lbA); background: var(--surface); box-shadow: var(--neu-in-sm); padding: 2.5px 7px; border-radius: 999px; }
+.mb-ret { font-size: 21px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.mb-ret.up { color: var(--green); }
+.mb-ret.down { color: var(--text-soft); }
+.mb-mid { display: flex; flex-direction: column; align-items: center; gap: 2px; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 12px; padding: 8px 14px; flex: none; }
+.mb-mid b { font-size: 13px; font-variant-numeric: tabular-nums; }
+.mb-mid small { font-size: 7px; letter-spacing: .12em; color: var(--text-faint); font-weight: 700; }
+.mb-lead { height: 6px; border-radius: 3px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; margin-bottom: 12px; }
+.mb-lead span { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--lbA), #9081DF); transition: width .6s ease; }
+.mb-foot { display: flex; align-items: center; gap: 10px; font-size: 10.5px; color: var(--text-faint); min-height: 26px; }
+.mb-foot .link-btn { margin: 0 0 0 auto; }
+
+/* ---- frosted prize-pool card ---- */
+.frost-card { position: relative; height: 138px; border-radius: 18px; overflow: hidden; box-shadow: var(--neu-out-sm); perspective: 1000px; }
+.frost-inner { position: absolute; inset: 0; transition: transform .12s ease-out; will-change: transform; }
+.frost-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.frost-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(22, 18, 44, .5), rgba(22, 18, 44, .12) 55%, transparent); }
+.frost-tx { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; text-align: center; padding: 0 16px; }
+.frost-tx small { font-size: 8px; letter-spacing: .16em; font-weight: 700; color: rgba(255, 255, 255, .88); }
+.frost-tx b { font-size: 37px; font-weight: 800; letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; background: linear-gradient(to bottom, rgba(255, 255, 255, .98), rgba(255, 255, 255, .66)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 9px rgba(28, 18, 82, .5)); }
+.frost-date { position: absolute; bottom: 10px; right: 14px; font-size: 8px; letter-spacing: .08em; color: rgba(255, 255, 255, .78); }
+
+/* ---- battles across the globe (dotted world map) ---- */
+.wm-card { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 14px 18px 8px; margin-bottom: 22px; --wm-dot: rgba(24, 26, 34, .18); }
+body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
+.wm-card svg { width: 100%; height: auto; display: block; }
+.wm-arc { stroke-dasharray: 1; stroke-dashoffset: 1; animation: wmDash 2.4s ease-out forwards; }
+@keyframes wmDash { to { stroke-dashoffset: 0; } }
+.wm-city { font: 700 9px ui-monospace, Menlo, monospace; fill: var(--text-faint); letter-spacing: .08em; }
+
 .icon-btn.avatar-btn { display: inline-flex; align-items: center; justify-content: center; }
 .tb-av { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
 
@@ -3067,7 +3159,7 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .house-chip { margin-left: 8px; font-size: 8.5px; letter-spacing: .1em; padding: 3px 8px; border-radius: 999px; background: linear-gradient(135deg, rgba(124, 58, 237, .14), rgba(217, 70, 239, .14)); color: var(--accent-a); font-weight: 800; vertical-align: 2px; }
 .mach-by { display: block; font-size: 11px; color: var(--text-faint); margin-top: 3px; }
 .mach-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.mach-stats > div { background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 13px; padding: 9px 11px; min-width: 0; }
+.mach-stats > div { background: var(--card); box-shadow: var(--neu-out-sm); border-radius: 13px; padding: 9px 11px; min-width: 0; }
 .mach-stats span { display: block; font-size: 8.5px; letter-spacing: .1em; color: var(--text-faint); }
 .mach-stats b { display: block; font-size: 12.5px; font-weight: 800; margin-top: 3px; }
 .mach-terms { font-size: 12.5px; color: var(--text-soft); line-height: 1.55; }
@@ -3195,7 +3287,8 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
       </div>
 
       <div class="topbar-right">
-        <label class="segmented" aria-label="Account mode">
+        <!-- Partner portal parked for launch — remove [hidden] to bring the toggle back -->
+        <label class="segmented" aria-label="Account mode" hidden>
           <input type="checkbox" class="segmented-state" />
           <span class="segmented-track">
             <b class="segmented-thumb"></b>
@@ -3621,8 +3714,8 @@ function tickLiveNumbers() {
       const my = document.querySelector(`[data-bmy="${i}"]`);
       const op = document.querySelector(`[data-bop="${i}"]`);
       const ld = document.querySelector(`[data-blead="${i}"]`);
-      if (my) { setOdo(my, fmtRet(b.my)); my.className = 'fd-bt-ret odo ' + (b.my >= 0 ? 'up' : 'down'); }
-      if (op) { setOdo(op, fmtRet(b.op)); op.className = 'fd-bt-ret odo ' + (b.op >= 0 ? 'up' : 'down'); }
+      if (my) { setOdo(my, fmtRet(b.my)); my.className = 'mb-ret odo ' + (b.my >= 0 ? 'up' : 'down'); }
+      if (op) { setOdo(op, fmtRet(b.op)); op.className = 'mb-ret odo ' + (b.op >= 0 ? 'up' : 'down'); }
       if (ld) ld.style.width = Math.max(8, Math.min(92, 50 + (b.my - b.op) * 9)).toFixed(0) + '%';
     });
   }
@@ -5040,7 +5133,7 @@ function postCard(p) {
         <span class="side">
           <button class="pact bm${p.bm ? ' on' : ''}" data-pbm="${p.id}" aria-label="Bookmark">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-6-4.5L6 21V3z"/></svg></button>
-          <button class="pact" data-pshare aria-label="Share">
+          <button class="pact" data-pshare="${p.id}" aria-label="Share">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg></button>
         </span>
       </div>
@@ -5727,7 +5820,6 @@ function renderTrader() {
             <span class="tp-ss"><b>£${kfmt(d.big)}</b><span>Biggest win</span></span>
             <span class="tp-ss"><b>${d.trades.toLocaleString('en-GB')}</b><span>Trades</span></span>
           </div>
-          <div class="tp-club">${awardBadgeHTML(clubFor(d.winnings))}</div>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:16px">
@@ -5745,6 +5837,10 @@ function renderTrader() {
               <div class="sc-sub-cell"><div class="sc-sub-v">${d.wins} <span>battle wins</span></div><div class="sc-sub-s">${d.battlesMonth} this month</div></div>
             </div>
           </div>
+          <div class="shc-club">
+            ${awardBadgeHTML(clubFor(d.winnings))}
+            <span class="shc-club-tx mono">CLUB&nbsp;STATUS&nbsp;·&nbsp;STAMPED&nbsp;FROM&nbsp;VERIFIED&nbsp;WINNINGS</span>
+          </div>
           <div class="shc-foot">
             <div class="sc-rank">
               <div>
@@ -5753,6 +5849,7 @@ function renderTrader() {
               </div>
               ${LAUREL}
             </div>
+            <button class="btn-neu shc-ins" data-sharewin>Share ↗</button>
             <button class="btn-neu shc-ins" data-insights>Insights <span class="ins-chev">▾</span></button>
           </div>
         </div></div>
@@ -6006,76 +6103,317 @@ function drawCallout(cv) {
   const W = 1080, H = 1350;
   cv.width = W; cv.height = H;
   const x = cv.getContext('2d');
-  /* ground */
+  const opp = inv.to, me = myProfile.name;
+  const pot = '£' + (inv.stake * (1 + inv.odds)).toLocaleString('en-GB');
+  const rnd = (a, b) => { const s = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453; return s - Math.floor(s); };
+  /* table ground */
+  x.fillStyle = '#0e0f16'; x.fillRect(0, 0, W, H);
+  /* playing-card: gradient outline + dark face */
+  const og = x.createLinearGradient(40, 40, W - 40, H - 40);
+  og.addColorStop(0, '#7c6ee6'); og.addColorStop(.5, '#d95ddf'); og.addColorStop(1, '#9081df');
+  x.fillStyle = og;
+  x.beginPath(); x.roundRect(40, 40, W - 80, H - 80, 46); x.fill();
+  x.fillStyle = '#16172a';
+  x.beginPath(); x.roundRect(45, 45, W - 90, H - 90, 42); x.fill();
+  /* dot-matrix reveal, vignetted toward the middle */
+  const DOT_COLS = ['143,108,255', '99,102,241', '211,194,240'];
+  for (let dy = 90; dy < H - 90; dy += 26) for (let dx = 90; dx < W - 90; dx += 26) {
+    const d = Math.hypot(dx - W / 2, dy - H / 2);
+    const a = Math.max(0, .3 - d / 2100) * rnd(dx, dy);
+    if (a < .015) continue;
+    x.fillStyle = `rgba(${DOT_COLS[Math.floor(rnd(dy, dx) * 3)]},${a.toFixed(3)})`;
+    x.fillRect(dx, dy, 4, 4);
+  }
+  /* mirrored corner inscriptions — the playing-card tell */
+  const corner = flip => {
+    x.save();
+    if (flip) { x.translate(W - 92, H - 92); x.rotate(Math.PI); } else x.translate(92, 92);
+    x.textAlign = 'left';
+    x.fillStyle = '#B794E6';
+    x.font = '800 62px -apple-system, "Segoe UI", sans-serif';
+    x.fillText('VS', 0, 56);
+    x.fillStyle = 'rgba(255,255,255,.78)';
+    x.font = '700 25px ui-monospace, Menlo, monospace';
+    x.fillText(pot, 0, 98);
+    x.restore();
+  };
+  corner(false); corner(true);
+  /* header */
+  x.textAlign = 'center';
+  x.fillStyle = 'rgba(255,255,255,.92)';
+  x.font = '800 46px -apple-system, "Segoe UI", sans-serif';
+  x.fillText('PAKTOS', W / 2, 148);
+  x.fillStyle = '#D3C2F0';
+  x.font = '700 26px ui-monospace, Menlo, monospace';
+  x.fillText('D U E L   I N V I T E', W / 2, 200);
+  /* faces */
+  const face = (cx2, name, tint1, tint2) => {
+    const fg = x.createLinearGradient(cx2 - 105, 350, cx2 + 105, 560);
+    fg.addColorStop(0, tint1); fg.addColorStop(1, tint2);
+    x.fillStyle = fg;
+    x.beginPath(); x.arc(cx2, 460, 105, 0, 7); x.fill();
+    x.fillStyle = '#fff';
+    x.font = '800 88px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(name.charAt(0).toUpperCase(), cx2, 492);
+    x.font = '800 42px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(name, cx2, 640);
+    x.fillStyle = 'rgba(255,255,255,.5)';
+    x.font = '600 27px ui-monospace, Menlo, monospace';
+    x.fillText('@' + name, cx2, 684);
+    x.fillStyle = '#fff';
+  };
+  face(W * 0.28, me, '#7c3aed', '#d946ef');
+  face(W * 0.72, opp, '#9081DF', '#D3C2F0');
+  x.fillStyle = 'rgba(255,255,255,.55)';
+  x.font = '800 40px ui-monospace, Menlo, monospace';
+  x.fillText('VS', W / 2, 475);
+  /* headline */
+  x.fillStyle = 'rgba(255,255,255,.96)';
+  x.font = '800 56px -apple-system, "Segoe UI", sans-serif';
+  x.fillText(`${me} calls out @${opp}`, W / 2, 790);
+  x.fillStyle = 'rgba(255,255,255,.55)';
+  x.font = '400 31px -apple-system, "Segoe UI", sans-serif';
+  x.fillText('Higher return when the window closes takes the pot.', W / 2, 842);
+  /* terms tiles */
+  const terms = [
+    ['STAKE', '£' + inv.stake.toLocaleString('en-GB')],
+    ['ODDS', inv.odds + ':1'],
+    ['POT', pot],
+    ['KICK-OFF', inv.start.toUpperCase()],
+  ];
+  const bw = 218, gap2 = 18, x0 = (W - bw * 4 - gap2 * 3) / 2;
+  terms.forEach(([k, v], i2) => {
+    const bx = x0 + i2 * (bw + gap2);
+    x.fillStyle = 'rgba(255,255,255,.06)';
+    x.beginPath(); x.roundRect(bx, 900, bw, 148, 22); x.fill();
+    x.strokeStyle = 'rgba(255,255,255,.12)'; x.stroke();
+    x.fillStyle = 'rgba(255,255,255,.45)';
+    x.font = '700 20px ui-monospace, Menlo, monospace';
+    x.fillText(k, bx + bw / 2, 952);
+    x.fillStyle = i2 === 2 ? '#D3C2F0' : 'rgba(255,255,255,.95)';
+    x.font = '800 38px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(v, bx + bw / 2, 1012);
+  });
+  /* the tag line */
+  x.fillStyle = '#F0DCFF';
+  x.font = '800 60px -apple-system, "Segoe UI", sans-serif';
+  x.fillText(`@${opp} — you in?`, W / 2, 1150);
+  x.fillStyle = '#B794E6';
+  x.font = '700 28px ui-monospace, Menlo, monospace';
+  x.fillText('accept the duel · ' + partner.link, W / 2, 1212);
+}
+function drawWinShare(cv, d) {
+  const W = 1080, H = 1350;
+  cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
   x.fillStyle = '#15161b'; x.fillRect(0, 0, W, H);
   let g = x.createRadialGradient(W * 0.85, 0, 60, W * 0.85, 0, 900);
-  g.addColorStop(0, 'rgba(217,70,239,.34)'); g.addColorStop(1, 'transparent');
+  g.addColorStop(0, 'rgba(144,129,223,.32)'); g.addColorStop(1, 'transparent');
   x.fillStyle = g; x.fillRect(0, 0, W, H);
   g = x.createRadialGradient(0, H, 60, 0, H, 1000);
   g.addColorStop(0, 'rgba(124,58,237,.30)'); g.addColorStop(1, 'transparent');
   x.fillStyle = g; x.fillRect(0, 0, W, H);
-  /* dot texture */
   x.fillStyle = 'rgba(255,255,255,.05)';
   for (let dy = 60; dy < H; dy += 46) for (let dx = 60; dx < W; dx += 46) { x.beginPath(); x.arc(dx, dy, 2, 0, 7); x.fill(); }
-  /* header */
   x.textAlign = 'center';
   x.fillStyle = 'rgba(255,255,255,.92)';
   x.font = '800 54px -apple-system, "Segoe UI", sans-serif';
-  x.fillText('PAKTOS', W / 2, 120);
-  x.fillStyle = '#d946ef';
-  x.font = '700 30px ui-monospace, Menlo, monospace';
-  x.fillText('C A L L - O U T', W / 2, 178);
-  /* faces */
-  const face = (cx2, name, tint1, tint2) => {
-    const fg = x.createLinearGradient(cx2 - 110, 380, cx2 + 110, 600);
-    fg.addColorStop(0, tint1); fg.addColorStop(1, tint2);
-    x.fillStyle = fg;
-    x.beginPath(); x.arc(cx2, 490, 110, 0, 7); x.fill();
-    x.fillStyle = '#fff';
-    x.font = '800 92px -apple-system, "Segoe UI", sans-serif';
-    x.fillText(name.charAt(0).toUpperCase(), cx2, 524);
-    x.font = '800 44px -apple-system, "Segoe UI", sans-serif';
-    x.fillText(name, cx2, 680);
-  };
-  face(W * 0.28, myProfile.name, '#7c3aed', '#d946ef');
-  face(W * 0.72, inv.to, '#f59e0b', '#ef4444');
-  x.fillStyle = 'rgba(255,255,255,.55)';
-  x.font = '800 40px ui-monospace, Menlo, monospace';
-  x.fillText('VS', W / 2, 505);
-  /* headline */
-  x.fillStyle = 'rgba(255,255,255,.96)';
-  x.font = '800 58px -apple-system, "Segoe UI", sans-serif';
-  x.fillText(`${myProfile.name} just called out ${inv.to}`, W / 2, 800);
-  x.fillStyle = 'rgba(255,255,255,.55)';
-  x.font = '400 32px -apple-system, "Segoe UI", sans-serif';
-  x.fillText('Higher return when the window closes takes the pot.', W / 2, 852);
-  /* terms */
-  const terms = [
-    ['STAKE', '£' + inv.stake.toLocaleString('en-GB')],
-    ['ODDS', inv.odds + ':1'],
-    ['POT', '£' + (inv.stake * (1 + inv.odds)).toLocaleString('en-GB')],
-    ['KICK-OFF', inv.start.toUpperCase()],
-  ];
-  const bw = 226, gap2 = 18, x0 = (W - bw * 4 - gap2 * 3) / 2;
-  terms.forEach(([k, v], i2) => {
-    const bx = x0 + i2 * (bw + gap2);
-    x.fillStyle = 'rgba(255,255,255,.06)';
-    x.beginPath(); x.roundRect(bx, 910, bw, 150, 22); x.fill();
-    x.strokeStyle = 'rgba(255,255,255,.12)'; x.stroke();
-    x.fillStyle = 'rgba(255,255,255,.45)';
-    x.font = '700 20px ui-monospace, Menlo, monospace';
-    x.fillText(k, bx + bw / 2, 962);
-    x.fillStyle = i2 === 2 ? '#34d399' : 'rgba(255,255,255,.95)';
-    x.font = '800 40px -apple-system, "Segoe UI", sans-serif';
-    x.fillText(v, bx + bw / 2, 1022);
+  x.fillText('PAKTOS', W / 2, 116);
+  x.fillStyle = '#9081DF';
+  x.font = '700 26px ui-monospace, Menlo, monospace';
+  x.fillText('V E R I F I E D   R E S U L T S', W / 2, 170);
+  /* avatar + name */
+  const fg = x.createLinearGradient(W / 2 - 90, 230, W / 2 + 90, 410);
+  fg.addColorStop(0, '#9081DF'); fg.addColorStop(1, '#D95DDF');
+  x.fillStyle = fg;
+  x.beginPath(); x.arc(W / 2, 320, 90, 0, 7); x.fill();
+  x.fillStyle = '#fff';
+  x.font = '800 76px -apple-system, "Segoe UI", sans-serif';
+  x.fillText(d.name[0].toUpperCase(), W / 2, 348);
+  x.font = '800 52px -apple-system, "Segoe UI", sans-serif';
+  x.fillText(d.name, W / 2, 486);
+  x.fillStyle = 'rgba(255,255,255,.5)';
+  x.font = '500 28px ui-monospace, Menlo, monospace';
+  x.fillText('@' + d.name.toLowerCase().replace(/\\s+/g, ''), W / 2, 528);
+  /* club plaque */
+  const club = clubFor(d.winnings);
+  const pw = 560, ph = 110, px2 = (W - pw) / 2, py = 570;
+  x.fillStyle = club.bg;
+  x.beginPath(); x.roundRect(px2, py, pw, ph, 20); x.fill();
+  x.strokeStyle = club.edge; x.lineWidth = 2;
+  x.beginPath(); x.roundRect(px2 + 8, py + 8, pw - 16, ph - 16, 14); x.stroke();
+  x.fillStyle = club.label;
+  x.font = '800 20px -apple-system, "Segoe UI", sans-serif';
+  x.fillText('PAKTOS AWARDS', W / 2, py + 42);
+  x.fillStyle = club.tx;
+  x.font = '800 38px -apple-system, "Segoe UI", sans-serif';
+  x.fillText(club.name, W / 2, py + 86);
+  /* total winnings */
+  x.fillStyle = 'rgba(255,255,255,.5)';
+  x.font = '700 24px ui-monospace, Menlo, monospace';
+  x.fillText('T O T A L   W I N N I N G S', W / 2, 780);
+  x.fillStyle = '#fff';
+  x.font = '800 120px -apple-system, "Segoe UI", sans-serif';
+  x.fillText('£' + d.winnings.toLocaleString('en-GB'), W / 2, 900);
+  /* equity line */
+  const s2 = d.series.slice(-60);
+  const lo = Math.min(...s2), hi = Math.max(...s2), rng = (hi - lo) || 1;
+  const cx0 = 140, cw = W - 280, cy0 = 960, ch2 = 170;
+  x.strokeStyle = 'rgba(255,255,255,.14)'; x.lineWidth = 1;
+  for (let gl = 0; gl <= 2; gl++) {
+    x.beginPath(); x.setLineDash([4, 12]);
+    x.moveTo(cx0, cy0 + gl * ch2 / 2); x.lineTo(cx0 + cw, cy0 + gl * ch2 / 2); x.stroke();
+  }
+  x.setLineDash([]);
+  x.strokeStyle = '#B794E6'; x.lineWidth = 5; x.lineJoin = 'round';
+  x.beginPath();
+  s2.forEach((v, i2) => {
+    const xx = cx0 + i2 / (s2.length - 1) * cw, yy = cy0 + ch2 - (v - lo) / rng * ch2;
+    i2 ? x.lineTo(xx, yy) : x.moveTo(xx, yy);
   });
+  x.stroke();
+  x.fillStyle = '#B794E6';
+  x.beginPath(); x.arc(cx0 + cw, cy0 + ch2 - (s2[s2.length - 1] - lo) / rng * ch2, 9, 0, 7); x.fill();
+  /* stat tiles */
+  const tile = (tx2, k, v) => {
+    x.fillStyle = 'rgba(255,255,255,.06)';
+    x.beginPath(); x.roundRect(tx2, 1180, 280, 100, 18); x.fill();
+    x.fillStyle = 'rgba(255,255,255,.45)';
+    x.font = '700 18px ui-monospace, Menlo, monospace';
+    x.fillText(k, tx2 + 140, 1218);
+    x.fillStyle = '#fff';
+    x.font = '800 36px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(v, tx2 + 140, 1262);
+  };
+  tile(90, 'WIN RATE', d.winRate + '%');
+  tile(400, 'RECORD', d.wins + '–' + d.losses);
+  tile(710, 'RANK', '#' + d.rank);
+  x.fillStyle = 'rgba(255,255,255,.4)';
+  x.font = '600 22px ui-monospace, Menlo, monospace';
+  x.fillText('beat me on paktos · ' + partner.link, W / 2, 1326);
+}
+
+function showWinShare(d) {
+  if (!document.getElementById('winVeil')) {
+    const v = document.createElement('div'); v.className = 'pk-veil'; v.id = 'winVeil';
+    document.body.appendChild(v);
+  }
+  const veil = document.getElementById('winVeil');
+  veil.innerHTML = `<div class="pk-modal" style="width:min(430px,92vw)">
+    <div class="pk-modal-h">Share the card</div>
+    <div class="pk-modal-s">Winnings, club and rank on one story card — verified results only.</div>
+    <canvas id="winCanvas" class="co-canvas"></canvas>
+    <div class="pk-actions">
+      <button class="btn-primary" style="flex:1;justify-content:center" data-windl>Download card</button>
+      <button class="btn-neu" data-winx>Share on X</button>
+      <button class="btn-neu" data-winclose>Done</button>
+    </div>
+  </div>`;
+  drawWinShare(document.getElementById('winCanvas'), d);
+}
+
+/* ---- post story card — put a feed post on your story, X-card style ---- */
+function drawPostShare(cv, p) {
+  const W = 1080, H = 1350;
+  cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  x.fillStyle = '#0e0f16'; x.fillRect(0, 0, W, H);
+  let g = x.createRadialGradient(W / 2, H / 2, 100, W / 2, H / 2, 900);
+  g.addColorStop(0, 'rgba(124,58,237,.16)'); g.addColorStop(1, 'transparent');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  /* header */
+  x.textAlign = 'center';
+  x.fillStyle = 'rgba(255,255,255,.92)';
+  x.font = '800 46px -apple-system, "Segoe UI", sans-serif';
+  x.fillText('PAKTOS', W / 2, 150);
+  x.fillStyle = '#D3C2F0';
+  x.font = '700 26px ui-monospace, Menlo, monospace';
+  x.fillText('F R O M   T H E   F E E D', W / 2, 202);
+  /* wrapped post text (needed to size the card) */
+  x.font = '600 46px -apple-system, "Segoe UI", sans-serif';
+  const words = p.text.split(' '); const lines = []; let cur = '';
+  words.forEach(w2 => {
+    const t = cur ? cur + ' ' + w2 : w2;
+    if (x.measureText(t).width > 760 && cur) { lines.push(cur); cur = w2; } else cur = t;
+  });
+  if (cur) lines.push(cur);
+  const cardH = 330 + lines.length * 62 + 110;
+  const cy = 300;
+  /* glow border */
+  x.save();
+  x.shadowColor = 'rgba(144,129,223,.55)'; x.shadowBlur = 70;
+  const bg2 = x.createLinearGradient(80, cy, W - 80, cy + cardH);
+  bg2.addColorStop(0, '#7c6ee6'); bg2.addColorStop(.5, '#d95ddf'); bg2.addColorStop(1, '#9081df');
+  x.fillStyle = bg2;
+  x.beginPath(); x.roundRect(80, cy, W - 160, cardH, 38); x.fill();
+  x.restore();
+  /* glass card face */
+  const face = x.createLinearGradient(84, cy + 4, W - 84, cy + cardH - 4);
+  face.addColorStop(0, '#191a2c'); face.addColorStop(1, '#131424');
+  x.fillStyle = face;
+  x.beginPath(); x.roundRect(84, cy + 4, W - 168, cardH - 8, 34); x.fill();
+  x.fillStyle = 'rgba(255,255,255,.045)';
+  x.beginPath(); x.roundRect(84, cy + 4, W - 168, 120, 34); x.fill();
+  /* avatar */
+  const av = x.createLinearGradient(150, cy + 60, 250, cy + 160);
+  av.addColorStop(0, '#7c3aed'); av.addColorStop(1, '#d946ef');
+  x.fillStyle = av;
+  x.beginPath(); x.arc(190, cy + 100, 52, 0, 7); x.fill();
+  x.fillStyle = '#fff';
+  x.font = '800 46px -apple-system, "Segoe UI", sans-serif';
+  x.fillText(p.name.charAt(0).toUpperCase(), 190, cy + 117);
+  /* name + verified + handle */
+  x.textAlign = 'left';
+  x.font = '800 40px -apple-system, "Segoe UI", sans-serif';
+  x.fillText(p.name, 268, cy + 92);
+  const nw = x.measureText(p.name).width;
+  x.fillStyle = '#1d9bf0';
+  x.beginPath(); x.arc(268 + nw + 34, cy + 78, 20, 0, 7); x.fill();
+  x.strokeStyle = '#fff'; x.lineWidth = 5; x.lineCap = 'round'; x.lineJoin = 'round';
+  x.beginPath(); x.moveTo(268 + nw + 24, cy + 78); x.lineTo(268 + nw + 32, cy + 87); x.lineTo(268 + nw + 46, cy + 69); x.stroke();
+  x.fillStyle = 'rgba(255,255,255,.5)';
+  x.font = '500 30px -apple-system, "Segoe UI", sans-serif';
+  x.fillText(p.handle + ' · ' + p.time, 268, cy + 138);
+  /* X mark top-right */
+  x.strokeStyle = 'rgba(255,255,255,.7)'; x.lineWidth = 7;
+  x.beginPath(); x.moveTo(W - 190, cy + 70); x.lineTo(W - 140, cy + 120); x.moveTo(W - 140, cy + 70); x.lineTo(W - 190, cy + 120); x.stroke();
+  /* text */
+  x.fillStyle = 'rgba(255,255,255,.94)';
+  x.font = '600 46px -apple-system, "Segoe UI", sans-serif';
+  lines.forEach((l, i2) => x.fillText(l, 150, cy + 250 + i2 * 62));
+  /* stats */
+  const sy = cy + 250 + lines.length * 62 + 44;
+  x.font = '700 27px ui-monospace, Menlo, monospace';
+  x.fillStyle = 'rgba(255,255,255,.45)';
+  x.fillText(`${kfmt(p.replies)} replies   ${kfmt(p.reposts)} reposts   ${kfmt(p.likes)} likes   ${p.views} views`, 150, sy);
   /* footer */
-  x.fillStyle = 'rgba(255,255,255,.85)';
-  x.font = '700 34px -apple-system, "Segoe UI", sans-serif';
-  x.fillText('Think they can take it?', W / 2, 1170);
-  x.fillStyle = '#d946ef';
-  x.font = '700 30px ui-monospace, Menlo, monospace';
-  x.fillText(partner.link, W / 2, 1225);
+  x.textAlign = 'center';
+  x.fillStyle = '#F0DCFF';
+  x.font = '800 50px -apple-system, "Segoe UI", sans-serif';
+  x.fillText('Trade talk happens on Paktos.', W / 2, cy + cardH + 130);
+  x.fillStyle = '#B794E6';
+  x.font = '700 28px ui-monospace, Menlo, monospace';
+  x.fillText('join the feed · ' + partner.link, W / 2, cy + cardH + 186);
+}
+
+function showPostShare(p) {
+  if (!document.getElementById('psVeil')) {
+    const v = document.createElement('div'); v.className = 'pk-veil'; v.id = 'psVeil';
+    document.body.appendChild(v);
+  }
+  const mine = p.name === myProfile.name;
+  const veil = document.getElementById('psVeil');
+  veil.innerHTML = `<div class="pk-modal" style="width:min(430px,92vw)">
+    <div class="pk-modal-h">${mine ? 'Put your post on your story' : 'Share this post to your story'}</div>
+    <div class="pk-modal-s">Story-ready card, brand-stamped — download it or post straight to X.</div>
+    <canvas id="psCanvas" class="co-canvas"></canvas>
+    <div class="pk-actions">
+      <button class="btn-primary" style="flex:1;justify-content:center" data-psdl="${p.id}">Download card</button>
+      <button class="btn-neu" data-psx="${p.id}">Share on X</button>
+      <button class="btn-neu" data-psclose>Done</button>
+    </div>
+  </div>`;
+  drawPostShare(document.getElementById('psCanvas'), p);
 }
 
 function showCallout() {
@@ -6086,7 +6424,7 @@ function showCallout() {
   const veil = document.getElementById('coVeil');
   veil.innerHTML = `<div class="pk-modal" style="width:min(430px,92vw)">
     <div class="pk-modal-h">Call-out sent — now make it public</div>
-    <div class="pk-modal-s">Post the card to your story so everyone knows ${inv.to} is on the clock.</div>
+    <div class="pk-modal-s">Post the card and tag <b>@${inv.to}</b> — everyone should know they're on the clock.</div>
     <canvas id="coCanvas" class="co-canvas"></canvas>
     <div class="pk-actions">
       <button class="btn-primary" style="flex:1;justify-content:center" data-codl>Download card</button>
@@ -6254,6 +6592,271 @@ function battleRet(b) {
   return (bal - a2.startBal) / a2.startBal * 100;
 }
 
+/* ---------------- take-the-other-side terms + secure checkout flow ---------------- */
+
+let btFlow = null, btPm = 'card';
+
+function btVeilEl() {
+  let v = document.getElementById('btVeil');
+  if (!v) { v = document.createElement('div'); v.className = 'pk-veil'; v.id = 'btVeil'; document.body.appendChild(v); }
+  return v;
+}
+
+function openTerms(cfg) {
+  btFlow = cfg; btPm = 'card';
+  const oppAv = cfg.machine
+    ? `<span class="bt-av" style="background:${cfg.mtint}">${cfg.mic}</span>`
+    : `<span class="bt-av" style="background:${cfg.tint}">${cfg.av}</span>`;
+  const row = (k, val, sub) => `<div class="bt-row"><div class="bt-row-k"><span>${k}</span>${sub ? `<small>${sub}</small>` : ''}</div><b>${val}</b></div>`;
+  const g = n => '£' + n.toLocaleString('en-GB');
+  btVeilEl().innerHTML = `<div class="bt-card">
+    <button class="bt-x" data-btclose>✕</button>
+    <span class="bt-chip mono">THE&nbsp;ARENA</span>
+    <h3 class="bt-h">Take the other side</h3>
+    <div class="bt-vs">
+      <div class="bt-side"><span class="bt-av" style="background:linear-gradient(135deg,var(--accent-b),var(--accent-a))">J</span><b>jstone</b><small>YOU</small></div>
+      <span class="bt-vs-tag mono">VS</span>
+      <div class="bt-side">${oppAv}<b>${cfg.opp}</b><small>${cfg.machine ? 'HOUSE-BACKED&nbsp;AI' : 'CHALLENGER'}</small></div>
+    </div>
+    ${frostPotHTML(cfg.pot, 'PRIZE&nbsp;POT&nbsp;·&nbsp;FROZEN&nbsp;IN&nbsp;ESCROW&nbsp;UNTIL&nbsp;SETTLEMENT', 'winner takes £' + cfg.winnerTakes.toLocaleString('en-GB'))}
+    <div class="bt-rows" style="margin-top:12px">
+      ${row('Window', cfg.window)}
+      ${row('Kick-off', cfg.kick)}
+      ${row(cfg.opp + ' staked', g(cfg.theirStake), 'already sitting in escrow')}
+      ${row('You put up', g(cfg.yourStake), 'held in escrow until settlement')}
+      ${row('Winner takes', g(cfg.winnerTakes), 'after the 10% platform fee')}
+    </div>
+    <div class="bt-out">
+      <div class="bt-win"><small>IF&nbsp;YOU&nbsp;WIN</small><b>+${g(cfg.winnerTakes - cfg.yourStake)}</b><span>profit on your ${g(cfg.yourStake)} stake</span></div>
+      <div class="bt-lose"><small>IF&nbsp;YOU&nbsp;LOSE</small><b>${g(cfg.yourStake)}</b><span>your stake goes to ${cfg.opp} — nothing more</span></div>
+    </div>
+    <p class="bt-note">${cfg.oddsLine} Higher return on your battle account when the window closes takes the pot.</p>
+    <button class="btn-mach bt-go" data-btpay>Lock in ${g(cfg.yourStake)} — starts ${cfg.kick.toLowerCase()} →</button>
+  </div>`;
+}
+
+function openPay() {
+  const f = btFlow; if (!f) return;
+  const g = n => '£' + n.toLocaleString('en-GB');
+  const bal = ACCTS[0].bal;
+  const pms = [
+    { id: 'card', ic: '💳', name: 'Card', sub: 'Visa ••••4471 · instant' },
+    { id: 'apple', ic: '<svg viewBox="0 0 384 512" width="12" height="12" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>', name: 'Apple Pay', sub: 'Face ID · instant' },
+    { id: 'bank', ic: '🏦', name: 'Bank transfer', sub: 'Faster Payments · ~2 hrs' },
+    { id: 'bal', ic: '◈', name: 'Paktos balance', sub: gbp0(bal) + ' available', off: bal < f.yourStake },
+  ];
+  if (pms.find(p => p.id === btPm)?.off) btPm = 'card';
+  btVeilEl().innerHTML = `<div class="bt-card">
+    <button class="bt-x bk" data-btback>‹</button>
+    <button class="bt-x" data-btclose>✕</button>
+    <div class="bt-ey mono" style="text-align:center">SECURE&nbsp;CHECKOUT</div>
+    <div class="bt-amt" style="text-align:center">${g(f.yourStake)}</div>
+    <p class="bt-amt-s" style="text-align:center">goes straight into escrow — released only when the battle vs ${f.opp} settles</p>
+    <div class="bt-pmh mono">PAY&nbsp;WITH</div>
+    ${pms.map(p => `<div class="bt-pm ${btPm === p.id ? 'on' : ''} ${p.off ? 'off' : ''}" data-btpm="${p.id}">
+      <span class="bt-radio"></span><span class="bt-pm-ic">${p.ic}</span>
+      <span class="bt-pm-tx"><b>${p.name}</b><small>${p.off ? 'not enough balance' : p.sub}</small></span>
+    </div>`).join('')}
+    <div class="bt-fees">
+      <div class="bt-fee"><span>Your stake — escrowed</span><b>${g(f.yourStake)}</b></div>
+      <div class="bt-fee"><span>Booking fee</span><b>Free</b></div>
+      <div class="bt-fee tot"><span>Pay now</span><b>${g(f.yourStake)}</b></div>
+    </div>
+    <button class="btn-mach bt-go" data-btgo>Pay &amp; lock in — ${g(f.yourStake)} →</button>
+    <div class="bt-secure mono">256-BIT&nbsp;TLS&nbsp;·&nbsp;PCI-DSS&nbsp;·&nbsp;FUNDS&nbsp;HELD&nbsp;IN&nbsp;SEGREGATED&nbsp;ESCROW<br>demo checkout — no real money moves</div>
+  </div>`;
+}
+
+function commitBattleFlow() {
+  const f = btFlow; if (!f) return;
+  document.getElementById('btVeil')?.remove();
+  btFlow = null;
+  if (f.ref) { const ix = challenges.indexOf(f.ref); if (ix > -1) challenges.splice(ix, 1); }
+  if (btPm === 'bal') { ACCTS[0].bal -= f.yourStake; }
+  const pmName = { card: 'card ••••4471', apple: 'Apple Pay', bank: 'bank transfer', bal: 'Paktos balance' }[btPm] || 'card';
+  startBattle({
+    opp: f.opp, av: f.av, tint: f.tint, machine: f.machine, mic: f.mic, mtint: f.mtint,
+    market: f.market, window: f.window, pot: f.pot, watching: f.watching
+  });
+  toast(`£${f.yourStake.toLocaleString('en-GB')} escrowed via ${pmName} — battle vs ${f.opp} is live on a fresh £${BATTLE_CAPITAL.toLocaleString('en-GB')} account`);
+  addNotif('VS', `Battle vs ${f.opp} is live`, `£${f.pot.toLocaleString('en-GB')} pot · ${f.window} · winner takes £${f.winnerTakes.toLocaleString('en-GB')} after the 10% fee.`);
+  renderArena();
+  navigate('arena');
+}
+
+function drawBattleShare(cv, b) {
+  const W = 1080, H = 1350;
+  cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  const me = myProfile.name;
+  const pot = '£' + b.pot.toLocaleString('en-GB');
+  const rnd = (a2, b2) => { const s = Math.sin(a2 * 12.9898 + b2 * 78.233) * 43758.5453; return s - Math.floor(s); };
+  x.fillStyle = '#0e0f16'; x.fillRect(0, 0, W, H);
+  const og = x.createLinearGradient(40, 40, W - 40, H - 40);
+  og.addColorStop(0, '#7c6ee6'); og.addColorStop(.5, '#d95ddf'); og.addColorStop(1, '#9081df');
+  x.fillStyle = og;
+  x.beginPath(); x.roundRect(40, 40, W - 80, H - 80, 46); x.fill();
+  x.fillStyle = '#16172a';
+  x.beginPath(); x.roundRect(45, 45, W - 90, H - 90, 42); x.fill();
+  const DOT_COLS = ['143,108,255', '99,102,241', '211,194,240'];
+  for (let dy = 90; dy < H - 90; dy += 26) for (let dx = 90; dx < W - 90; dx += 26) {
+    const d = Math.hypot(dx - W / 2, dy - H / 2);
+    const a2 = Math.max(0, .3 - d / 2100) * rnd(dx, dy);
+    if (a2 < .015) continue;
+    x.fillStyle = `rgba(${DOT_COLS[Math.floor(rnd(dy, dx) * 3)]},${a2.toFixed(3)})`;
+    x.fillRect(dx, dy, 4, 4);
+  }
+  const corner = flip => {
+    x.save();
+    if (flip) { x.translate(W - 92, H - 92); x.rotate(Math.PI); } else x.translate(92, 92);
+    x.textAlign = 'left';
+    x.fillStyle = '#B794E6';
+    x.font = '800 62px -apple-system, "Segoe UI", sans-serif';
+    x.fillText('VS', 0, 56);
+    x.fillStyle = 'rgba(255,255,255,.78)';
+    x.font = '700 25px ui-monospace, Menlo, monospace';
+    x.fillText(pot, 0, 98);
+    x.restore();
+  };
+  corner(false); corner(true);
+  x.textAlign = 'center';
+  x.fillStyle = 'rgba(255,255,255,.92)';
+  x.font = '800 46px -apple-system, "Segoe UI", sans-serif';
+  x.fillText('PAKTOS', W / 2, 148);
+  x.fillStyle = '#34d399';
+  x.font = '700 26px ui-monospace, Menlo, monospace';
+  x.fillText('● L I V E   B A T T L E', W / 2, 200);
+  /* faces + live returns */
+  const face = (cx2, name, ret, tint1, tint2) => {
+    const fg = x.createLinearGradient(cx2 - 100, 300, cx2 + 100, 500);
+    fg.addColorStop(0, tint1); fg.addColorStop(1, tint2);
+    x.fillStyle = fg;
+    x.beginPath(); x.arc(cx2, 410, 100, 0, 7); x.fill();
+    x.fillStyle = '#fff';
+    x.font = '800 84px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(name.charAt(0).toUpperCase(), cx2, 440);
+    x.font = '800 40px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(name, cx2, 578);
+    x.fillStyle = ret >= 0 ? '#34d399' : 'rgba(255,255,255,.6)';
+    x.font = '800 52px -apple-system, "Segoe UI", sans-serif';
+    x.fillText((ret >= 0 ? '+' : '') + ret.toFixed(2) + '%', cx2, 646);
+  };
+  face(W * 0.28, me, b.my, '#7c3aed', '#d946ef');
+  face(W * 0.72, b.opp, b.op, b.machine ? '#24262c' : '#9081DF', b.machine ? '#3a3d46' : '#D3C2F0');
+  x.fillStyle = 'rgba(255,255,255,.55)';
+  x.font = '800 38px ui-monospace, Menlo, monospace';
+  x.fillText('VS', W / 2, 425);
+  /* frozen pot panel */
+  const fg2 = x.createLinearGradient(150, 720, W - 150, 930);
+  fg2.addColorStop(0, '#8f9fd8'); fg2.addColorStop(.55, '#aebde8'); fg2.addColorStop(1, '#9081DF');
+  x.fillStyle = fg2;
+  x.beginPath(); x.roundRect(150, 720, W - 300, 200, 30); x.fill();
+  x.fillStyle = 'rgba(255,255,255,.14)';
+  x.beginPath(); x.moveTo(190, 920); x.lineTo(330, 760); x.lineTo(450, 920); x.closePath(); x.fill();
+  x.beginPath(); x.moveTo(560, 920); x.lineTo(710, 745); x.lineTo(860, 920); x.closePath(); x.fill();
+  x.fillStyle = 'rgba(20,16,50,.55)';
+  x.font = '700 22px ui-monospace, Menlo, monospace';
+  x.fillText('PRIZE POT · FROZEN IN ESCROW', W / 2, 775);
+  x.fillStyle = '#fff';
+  x.shadowColor = 'rgba(28,18,82,.5)'; x.shadowBlur = 18;
+  x.font = '800 84px -apple-system, "Segoe UI", sans-serif';
+  x.fillText(pot, W / 2, 878);
+  x.shadowBlur = 0;
+  /* terms tiles */
+  const terms = [
+    ['WINDOW', b.window.replace(' window', '').toUpperCase()],
+    ['ACCOUNT', b.acctId || '—'],
+    ['WATCHING', String(b.watching)],
+  ];
+  const bw = 280, gap2 = 20, x0 = (W - bw * 3 - gap2 * 2) / 2;
+  terms.forEach(([k, v], i2) => {
+    const bx = x0 + i2 * (bw + gap2);
+    x.fillStyle = 'rgba(255,255,255,.06)';
+    x.beginPath(); x.roundRect(bx, 970, bw, 140, 22); x.fill();
+    x.strokeStyle = 'rgba(255,255,255,.12)'; x.stroke();
+    x.fillStyle = 'rgba(255,255,255,.45)';
+    x.font = '700 20px ui-monospace, Menlo, monospace';
+    x.fillText(k, bx + bw / 2, 1020);
+    x.fillStyle = 'rgba(255,255,255,.95)';
+    x.font = '800 36px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(v, bx + bw / 2, 1078);
+  });
+  /* tagline */
+  x.fillStyle = '#F0DCFF';
+  x.font = '800 46px -apple-system, "Segoe UI", sans-serif';
+  x.fillText(b.machine ? 'Beat the machine, take the pot.' : `@${b.opp} — still want it?`, W / 2, 1180);
+  x.fillStyle = '#B794E6';
+  x.font = '700 28px ui-monospace, Menlo, monospace';
+  x.fillText('watch it live · ' + partner.link, W / 2, 1236);
+}
+
+function showBattleShare(b) {
+  if (!document.getElementById('bsVeil')) {
+    const v = document.createElement('div'); v.className = 'pk-veil'; v.id = 'bsVeil';
+    document.body.appendChild(v);
+  }
+  const veil = document.getElementById('bsVeil');
+  veil.innerHTML = `<div class="pk-modal" style="width:min(430px,92vw)">
+    <div class="pk-modal-h">Put this battle on socials</div>
+    <div class="pk-modal-s">Terms, live returns and the frozen pot — post it and bring a crowd${b.machine ? '' : ', and tag <b>@' + b.opp + '</b>'}.</div>
+    <canvas id="bsCanvas" class="co-canvas"></canvas>
+    <div class="pk-actions">
+      <button class="btn-primary" style="flex:1;justify-content:center" data-bsdl="${myBattles.indexOf(b)}">Download card</button>
+      <button class="btn-neu" data-bsx="${myBattles.indexOf(b)}">Share on X</button>
+      <button class="btn-neu" data-bsclose>Done</button>
+    </div>
+  </div>`;
+  drawBattleShare(document.getElementById('bsCanvas'), b);
+}
+
+function frostPotHTML(pot, sub, dateLine) {
+  return `<div class="frost-card">
+    <div class="frost-inner">
+      <svg class="frost-bg" viewBox="0 0 400 138" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="frostG" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#8f9fd8"/><stop offset=".45" stop-color="#aebde8"/>
+            <stop offset=".75" stop-color="#c9c2ec"/><stop offset="1" stop-color="#9081DF"/>
+          </linearGradient>
+          <filter id="frostN" x="0" y="0" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/>
+            <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .26 0"/>
+          </filter>
+        </defs>
+        <rect width="400" height="138" fill="url(#frostG)"/>
+        <rect width="400" height="138" filter="url(#frostN)"/>
+        <g fill="#fff" opacity=".13">
+          <polygon points="0,138 66,34 126,138"/>
+          <polygon points="88,138 176,16 254,138"/>
+          <polygon points="226,138 314,48 400,138"/>
+        </g>
+        <g stroke="#fff" stroke-width="1.1" stroke-linecap="round" opacity=".5" fill="none">
+          <path d="M352 18v20M342 23l20 10M362 23l-20 10M344.5 30.5l15-5M344.5 25.5l15 5"/>
+        </g>
+      </svg>
+      <div class="frost-shade"></div>
+      <div class="frost-tx"><small>${sub}</small><b>£${pot.toLocaleString('en-GB')}</b></div>
+      <div class="frost-date mono">${dateLine}</div>
+    </div>
+  </div>`;
+}
+
+document.addEventListener('mousemove', e => {
+  const cards = document.querySelectorAll('.frost-card');
+  if (!cards.length) return;
+  cards.forEach(fc => {
+    const inner = fc.querySelector('.frost-inner');
+    if (!inner) return;
+    const r = fc.getBoundingClientRect();
+    const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+    if (inside) {
+      const ry = ((e.clientX - r.left) / r.width - 0.5) * 22;
+      const rx = -((e.clientY - r.top) / r.height - 0.5) * 22;
+      inner.style.transform = `rotateX(${rx.toFixed(1)}deg) rotateY(${ry.toFixed(1)}deg) scale(1.06)`;
+    } else if (inner.style.transform) inner.style.transform = '';
+  });
+});
+
 function barcodeSVG(value) {
   const hash = [...value].reduce((a2, c) => ((a2 << 5) - a2 + c.charCodeAt(0)) | 0, 0);
   const rnd2 = s2 => { const x = Math.sin(s2) * 10000; return x - Math.floor(x); };
@@ -6281,9 +6884,10 @@ function showEscrowTicket(b) {
     </div>
     <div class="esc-body">
       <div class="esc-dash"></div>
-      <div class="esc-grid">
+      ${frostPotHTML(b.pot, 'PRIZE&nbsp;POT&nbsp;·&nbsp;FROZEN&nbsp;IN&nbsp;ESCROW', b.window)}
+      <div class="esc-grid" style="margin-top:14px">
         <div><p class="esc-k mono">ESCROW&nbsp;ID</p><p class="esc-v mono">${escId}</p></div>
-        <div style="text-align:right"><p class="esc-k mono">POT&nbsp;IN&nbsp;ESCROW</p><p class="esc-v big">£${b.pot.toLocaleString('en-GB')}</p></div>
+        <div style="text-align:right"><p class="esc-k mono">STATUS</p><p class="esc-v">Locked — untouchable</p></div>
       </div>
       <div class="esc-when"><p class="esc-k mono">LOCKED&nbsp;AT</p><p class="esc-v">${when}</p></div>
       <div class="esc-acct">
@@ -6295,6 +6899,7 @@ function showEscrowTicket(b) {
     </div>
     <div class="esc-actions">
       <button class="btn-mach" data-btrade="${b.acctId}">Start trading it →</button>
+      <button class="btn-neu" data-bshare="${myBattles.indexOf(b)}">Share ↗</button>
       <button class="btn-neu" data-escdone>Done</button>
     </div>
   </div>`;
@@ -6549,24 +7154,29 @@ function myBattlesHTML() {
   if (!myBattles.length) return '';
   const rows = myBattles.map((b, i) => {
     const lead = Math.max(8, Math.min(92, 50 + (b.my - b.op) * 9));
-    return `<div class="blive" data-bspec="${i}" style="cursor:pointer">
-      <div class="fd-bt-row">
-        <span class="fd-bt-f"><span class="thread-av" style="background:linear-gradient(135deg,var(--accent-b),var(--accent-a));color:#fff;font-weight:700">J</span>jstone
-          <span class="fd-bt-ret odo ${b.my >= 0 ? 'up' : 'down'}" data-bmy="${i}" data-odo="${fmtRet(b.my)}">${odoInner(fmtRet(b.my))}</span></span>
-        <span class="fd-bt-vs">VS</span>
-        <span class="fd-bt-f">${b.machine ? `<span class="thread-av" style="background:${b.mtint};color:#fff">${b.mic}</span>` : avatarHTML(b.opp, 'thread-av')}${b.opp}
-          <span class="fd-bt-ret odo ${b.op >= 0 ? 'up' : 'down'}" data-bop="${i}" data-odo="${fmtRet(b.op)}">${odoInner(fmtRet(b.op))}</span></span>
+    return `<article class="mb-card" data-bspec="${i}">
+      <div class="mb-top"><span class="mb-live"><span class="pulse-dot tiny"></span>LIVE</span>
+        <span class="mono">${b.window.toUpperCase()}&nbsp;·&nbsp;${b.market.toUpperCase()}</span>
+        <span class="mb-watch mono">●&nbsp;${b.watching}&nbsp;WATCHING</span></div>
+      <div class="mb-row">
+        <div class="mb-side">
+          <span class="mb-who"><span class="thread-av" style="background:linear-gradient(135deg,var(--accent-b),var(--accent-a));color:#fff;font-weight:700">J</span>jstone<span class="mb-tag mono">YOU</span></span>
+          <span class="mb-ret odo ${b.my >= 0 ? 'up' : 'down'}" data-bmy="${i}" data-odo="${fmtRet(b.my)}">${odoInner(fmtRet(b.my))}</span>
+        </div>
+        <div class="mb-mid"><small>POT</small><b>£${b.pot.toLocaleString('en-GB')}</b></div>
+        <div class="mb-side opp">
+          <span class="mb-who">${b.machine ? `<span class="thread-av" style="background:${b.mtint};color:#fff">${b.mic}</span>` : avatarHTML(b.opp, 'thread-av')}${b.opp}</span>
+          <span class="mb-ret odo ${b.op >= 0 ? 'up' : 'down'}" data-bop="${i}" data-odo="${fmtRet(b.op)}">${odoInner(fmtRet(b.op))}</span>
+        </div>
       </div>
-      <div class="fd-leadbar"><span data-blead="${i}" style="width:${lead.toFixed(0)}%"></span></div>
-      <div class="blive-meta"><span class="pulse-dot tiny"></span>LIVE · ${b.window} · £${b.pot.toLocaleString('en-GB')} pot · ${b.market}
-        ${b.acctId ? `<span class="bacct mono">${b.acctId}&nbsp;·&nbsp;YOUR&nbsp;TRADES&nbsp;COUNT</span><button class="link-btn" style="margin:0" data-btrade="${b.acctId}">Trade it →</button>` : ''}
-        <span style="margin-left:auto">● ${b.watching} watching</span></div>
-    </div>`;
+      <div class="mb-lead"><span data-blead="${i}" style="width:${lead.toFixed(0)}%"></span></div>
+      <div class="mb-foot">${b.acctId ? `<span class="bacct mono">${b.acctId}</span><span>your closed trades set this return</span><button class="link-btn" data-btrade="${b.acctId}">Trade it →</button>` : ''}<button class="link-btn" data-bshare="${i}" style="margin:0">Share ↗</button></div>
+    </article>`;
   }).join('');
   return `<div class="section">
     <div class="section-head"><div><h3 class="section-title">Your battles</h3>
       <p class="section-sub"><span class="mono">${myBattles.length}&nbsp;LIVE</span><span class="dot-sep">·</span><span>every battle runs on its own funded account — the trades you close set your return</span></p></div></div>
-    ${rows}</div>`;
+    <div class="mb-grid">${rows}</div></div>`;
 }
 
 /* ---------------- Trade Clans — team up, fly a banner, battle as one ---------------- */
@@ -7293,6 +7903,67 @@ document.addEventListener('pointermove', e => {
 /* hero money wall — pots settling, swings breathing in and out */
 let lbSettled = 1284, lbSwing = 14200;
 
+/* ---- dotted world map — battles routing money through escrow across the globe ---- */
+const WM_LAND = [
+  [[-168, 66], [-155, 71], [-120, 72], [-95, 73], [-80, 70], [-60, 60], [-55, 52], [-65, 45], [-75, 40], [-80, 32], [-81, 25], [-97, 18], [-105, 20], [-117, 33], [-125, 42], [-130, 55], [-160, 58]],
+  [[-45, 60], [-20, 70], [-25, 78], [-55, 80], [-60, 75], [-52, 65]],
+  [[-78, 7], [-60, 10], [-50, 5], [-35, -6], [-40, -20], [-53, -33], [-62, -40], [-70, -52], [-73, -45], [-75, -30], [-70, -15], [-78, -3]],
+  [[-9, 37], [0, 44], [-2, 48], [-5, 50], [0, 52], [5, 58], [10, 65], [20, 70], [30, 70], [40, 66], [45, 60], [38, 55], [30, 50], [25, 45], [15, 42], [5, 38]],
+  [[-17, 15], [-10, 32], [0, 36], [10, 37], [20, 32], [32, 31], [43, 11], [51, 10], [40, -5], [35, -20], [25, -34], [18, -34], [12, -18], [8, 4], [-5, 5], [-12, 9]],
+  [[30, 70], [60, 73], [90, 75], [110, 73], [130, 70], [150, 65], [160, 60], [155, 50], [140, 45], [135, 35], [120, 25], [108, 12], [100, 5], [95, 10], [88, 22], [80, 8], [77, 20], [70, 22], [60, 25], [50, 30], [40, 40], [35, 45], [30, 55]],
+  [[95, 5], [105, 0], [115, -5], [125, -8], [135, -5], [140, -8], [120, -10], [105, -7]],
+  [[114, -22], [122, -14], [132, -12], [142, -11], [147, -19], [153, -27], [150, -37], [140, -38], [130, -32], [117, -35], [113, -26]],
+  [[130, 32], [138, 36], [142, 42], [145, 45], [141, 40], [135, 34]],
+];
+const WM_CITIES = {
+  LDN: [51.5, -0.13], NYC: [40.7, -74], SAO: [-23.5, -46.6], DXB: [25.2, 55.3],
+  SGP: [1.35, 103.8], TYO: [35.7, 139.7], SYD: [-33.9, 151.2], LOS: [6.5, 3.4], LAX: [34, -118.2],
+};
+const WM_ROUTES = [['LDN', 'NYC'], ['NYC', 'SAO'], ['LDN', 'DXB'], ['DXB', 'SGP'], ['SGP', 'TYO'], ['TYO', 'SYD'], ['LDN', 'LOS'], ['NYC', 'LAX']];
+let WM_SVG = null;
+
+function wmSVG() {
+  if (WM_SVG) return WM_SVG;
+  const W = 800, H = 400;
+  const px = (lat, lng) => [(lng + 180) * (W / 360), (90 - lat) * (H / 180)];
+  const inPoly = (lng, lat, poly) => {
+    let c = false;
+    for (let a = 0, b = poly.length - 1; a < poly.length; b = a++) {
+      const [x1, y1] = poly[a], [x2, y2] = poly[b];
+      if (((y1 > lat) !== (y2 > lat)) && (lng < (x2 - x1) * (lat - y1) / (y2 - y1) + x1)) c = !c;
+    }
+    return c;
+  };
+  let dots = '';
+  for (let lat = 74; lat >= -56; lat -= 2.4) for (let lng = -178; lng <= 178; lng += 2.4) {
+    if (!WM_LAND.some(poly => inPoly(lng, lat, poly))) continue;
+    const [dx, dy] = px(lat, lng);
+    dots += `<circle cx="${dx.toFixed(1)}" cy="${dy.toFixed(1)}" r="1.5"/>`;
+  }
+  const arcs = WM_ROUTES.map(([a, b], i) => {
+    const [x1, y1] = px(...WM_CITIES[a]), [x2, y2] = px(...WM_CITIES[b]);
+    const midX = (x1 + x2) / 2, midY = Math.min(y1, y2) - Math.max(34, Math.abs(x1 - x2) * 0.18);
+    return `<path class="wm-arc" d="M ${x1.toFixed(0)} ${y1.toFixed(0)} Q ${midX.toFixed(0)} ${midY.toFixed(0)} ${x2.toFixed(0)} ${y2.toFixed(0)}" fill="none" stroke="url(#wmGrad)" stroke-width="1.3" pathLength="1" style="animation-delay:${(i * 0.35).toFixed(2)}s"/>`;
+  }).join('');
+  const pins = Object.entries(WM_CITIES).map(([k, [lat, lng]]) => {
+    const [cx, cy] = px(lat, lng);
+    return `<circle cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" r="2.4" fill="var(--lbA)"/>
+      <circle cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" r="2.4" fill="var(--lbA)" opacity=".5">
+        <animate attributeName="r" from="2.4" to="9" dur="1.6s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" from=".5" to="0" dur="1.6s" repeatCount="indefinite"/>
+      </circle>`;
+  }).join('');
+  WM_SVG = `<svg viewBox="0 0 ${W} ${H}" aria-label="Live battles across the globe">
+    <defs><linearGradient id="wmGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#9081DF" stop-opacity="0"/>
+      <stop offset=".12" stop-color="#9081DF"/>
+      <stop offset=".85" stop-color="#D95DDF"/>
+      <stop offset="1" stop-color="#D95DDF" stop-opacity="0"/>
+    </linearGradient></defs>
+    <g fill="var(--wm-dot)">${dots}</g>${arcs}${pins}</svg>`;
+  return WM_SVG;
+}
+
 function renderLive() {
   const list = LIVE_B
     .map((b, i) => ({ ...b, i }))
@@ -7377,6 +8048,9 @@ function renderLive() {
         <div class="lbh-stat swing"><b id="lbSwing">£${lbSwing.toLocaleString('en-GB')}</b><span>BIGGEST&nbsp;SWING&nbsp;LIVE</span></div>
       </div>
     </div>
+    <div class="section-head"><div><h3 class="section-title">Battles across the globe</h3>
+      <p class="section-sub"><span class="mono">LIVE&nbsp;ESCROW&nbsp;ROUTES</span><span class="dot-sep">·</span><span>stakes moving between traders on every continent, settled through one escrow</span></p></div></div>
+    <div class="wm-card">${wmSVG()}</div>
     <div class="lb-bar">
       ${[['pot', 'Pot', LB_POT_L, lbf.pot, 'lbpot'], ['dur', 'Duration', LB_DUR_L, lbf.dur, 'lbdur'], ['sort', 'Sort', LB_SORT_L, lbf.sort, 'lbsort']].map(([k2, lab, L, cur, attr], gi) => `
         ${gi ? '<i class="lb-bar-div"></i>' : ''}
@@ -7992,10 +8666,14 @@ document.addEventListener('click', e => {
     const name = el.dataset.fdaccept;
     const p = POSTS.find(x => x.name === name && x.open);
     const side = p ? parseFloat(p.open.pot.replace(/[£,]/g, '')) * (p.open.pot.includes('K') ? 1000 : 1) : 4000;
-    startBattle({ opp: name, av: p ? p.av : name.charAt(0).toUpperCase(), tint: p ? p.tint : AV_TINTS[0], market: 'Any market', window: p ? p.open.window : '1 week', pot: side * 2 });
-    addNotif('VS', 'Battle locked in', `You accepted ${name}’s open challenge — stakes escrowed.`);
-    navigate('arena');
-    return toast(`Battle vs ${name} locked in — live under Your battles`);
+    openTerms({
+      opp: name, av: p ? p.av : name.charAt(0).toUpperCase(), tint: p ? p.tint : AV_TINTS[0],
+      market: 'Any market', window: p ? p.open.window : '1 week', kick: 'On accept',
+      theirStake: side, yourStake: side, pot: side * 2,
+      winnerTakes: Math.round(side * 2 * 0.9),
+      oddsLine: `Even-money open challenge — both sides stake £${side.toLocaleString('en-GB')}.`
+    });
+    return;
   }
   /* terminal */
   if ((el = q('[data-tasset]'))) { term.asset = el.dataset.tasset; return renderTerminal(); }
@@ -8085,7 +8763,25 @@ document.addEventListener('click', e => {
     if (p) { p.bm = !p.bm; toast(p.bm ? 'Added to your Bookmarks' : 'Removed from Bookmarks'); renderSocial(); }
     return;
   }
-  if ((el = q('[data-pshare]'))) return toast('Post link copied');
+  if ((el = q('[data-pshare]'))) {
+    const p = POSTS.find(x2 => x2.id === +el.dataset.pshare);
+    return p ? showPostShare(p) : toast('Post link copied');
+  }
+  if ((el = q('[data-psdl]'))) {
+    const cv = document.getElementById('psCanvas');
+    if (!cv) return;
+    const a = document.createElement('a');
+    a.href = cv.toDataURL('image/png');
+    a.download = 'paktos-post.png';
+    a.click();
+    return toast('Story card downloaded — post it everywhere');
+  }
+  if ((el = q('[data-psx]'))) {
+    const p = POSTS.find(x2 => x2.id === +el.dataset.psx);
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(`${p ? '"' + p.text + '"' : ''} — live on the Paktos feed: https://${partner.link}`), '_blank');
+    return toast('Opening X — attach the downloaded card for the full flex');
+  }
+  if ((el = q('[data-psclose]'))) return document.getElementById('psVeil')?.remove();
   if ((el = q('[data-pmenu]'))) return toast('Post options are a demo');
   if ((el = q('[data-tst]'))) return toast(el.dataset.tst);
   if ((el = q('[data-follow]'))) {
@@ -8190,6 +8886,12 @@ document.addEventListener('click', e => {
     renderTerminal();
     return toast(`Switched to ${ACCTS[i].id} — ${ACCTS[i].label}`);
   }
+  if (e.target && e.target.id === 'btVeil') { btFlow = null; return e.target.remove(); }
+  if ((el = q('[data-btclose]'))) { btFlow = null; return document.getElementById('btVeil')?.remove(); }
+  if ((el = q('[data-btback]'))) { if (btFlow) openTerms(btFlow); return; }
+  if ((el = q('[data-btpm]'))) { if (el.classList.contains('off')) return; btPm = el.dataset.btpm; return openPay(); }
+  if ((el = q('[data-btpay]'))) return openPay();
+  if ((el = q('[data-btgo]'))) return commitBattleFlow();
   if ((el = q('[data-escdone]'))) { document.getElementById('escVeil')?.remove(); return; }
   if ((el = q('[data-btrade]'))) {
     document.getElementById('escVeil')?.remove();
@@ -8298,10 +9000,26 @@ document.addEventListener('click', e => {
     return toast('Call-out card downloaded — post it everywhere');
   }
   if ((el = q('[data-cox]'))) {
-    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(`I just called out ${inv.to} on Paktos — £${(inv.stake * (1 + inv.odds)).toLocaleString('en-GB')} pot, kick-off ${inv.start}. Come watch them fold: https://${partner.link}`), '_blank');
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(`Calling out @${inv.to} on Paktos — £${(inv.stake * (1 + inv.odds)).toLocaleString('en-GB')} pot, ${inv.odds}:1 odds, kick-off ${inv.start}. Accept the duel: https://${partner.link}`), '_blank');
     return toast('Opening X — attach the downloaded card for the full flex');
   }
   if ((el = q('[data-coclose]'))) return document.getElementById('coVeil')?.remove();
+  if ((el = q('[data-sharewin]'))) return showWinShare(traderProfile(traderId));
+  if ((el = q('[data-windl]'))) {
+    const cv = document.getElementById('winCanvas');
+    if (!cv) return;
+    const a = document.createElement('a');
+    a.href = cv.toDataURL('image/png');
+    a.download = `paktos-results-${traderId}.png`;
+    a.click();
+    return toast('Results card downloaded — post it everywhere');
+  }
+  if ((el = q('[data-winx]'))) {
+    const d2 = traderProfile(traderId);
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(`£${d2.winnings.toLocaleString('en-GB')} banked on Paktos — ${clubFor(d2.winnings).name}, rank #${d2.rank}. Verified live results. Come take the other side: https://${partner.link}`), '_blank');
+    return toast('Opening X — attach the downloaded card for the full flex');
+  }
+  if ((el = q('[data-winclose]'))) return document.getElementById('winVeil')?.remove();
   if ((el = q('[data-invsend]'))) {
     challenges.unshift({
       name: 'jstone', av: '👱‍♂️', market: inv.market, start: inv.start,
@@ -8316,15 +9034,15 @@ document.addEventListener('click', e => {
   }
   if ((el = q('[data-mbattle]'))) {
     const m = MACHINES[+el.dataset.mbattle];
-    const pot = m.you + m.house;
-    startBattle({
+    openTerms({
       opp: m.name, machine: true, mic: m.ic, mtint: m.tint,
-      market: 'All markets', window: m.window + ' window', pot,
-      watching: 900 + Math.floor(Math.random() * 2400)
+      market: 'All markets', window: m.window + ' window', kick: 'Now',
+      theirStake: m.house, yourStake: m.you, pot: m.you + m.house,
+      winnerTakes: Math.round((m.you + m.house) * 0.9),
+      watching: 900 + Math.floor(Math.random() * 2400),
+      oddsLine: `The house backed ${m.name} with £${m.house} — you only put up £${m.you} for a shot at the full pot.`
     });
-    toast(`Battle vs ${m.name} is live on a fresh £${BATTLE_CAPITAL.toLocaleString('en-GB')} account — beat the bot, take £${pot}.`);
-    addNotif('AI', `Battling ${m.name}`, `£${pot} pot · ${m.window} window · the house backed the bot with £${m.house}. Higher return takes it.`);
-    return renderArena();
+    return;
   }
   if ((el = q('[data-clanopen]'))) {
     clanDraft = { name: '', tag: '', tint: 0, members: ['Theo4'] };
@@ -8430,6 +9148,29 @@ document.addEventListener('click', e => {
     if (b) openDuel(b[0], b[2], b[4], Math.round(parseFloat(b[5]) * 1000));
     return;
   }
+  if ((el = q('[data-bshare]'))) {
+    const b = myBattles[+el.dataset.bshare];
+    if (!b) return;
+    document.getElementById('escVeil')?.remove();
+    return showBattleShare(b);
+  }
+  if ((el = q('[data-bsdl]'))) {
+    const cv = document.getElementById('bsCanvas');
+    if (!cv) return;
+    const a = document.createElement('a');
+    a.href = cv.toDataURL('image/png');
+    a.download = `paktos-battle-${myBattles[+el.dataset.bsdl]?.opp || 'live'}.png`;
+    a.click();
+    return toast('Battle card downloaded — post it everywhere');
+  }
+  if ((el = q('[data-bsx]'))) {
+    const b = myBattles[+el.dataset.bsx];
+    if (!b) return;
+    const tag = b.machine ? b.opp : '@' + b.opp;
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(`Live battle vs ${tag} on Paktos — £${b.pot.toLocaleString('en-GB')} frozen in escrow, I'm at ${(b.my >= 0 ? '+' : '') + b.my.toFixed(2)}%. Watch it live: https://${partner.link}`), '_blank');
+    return toast('Opening X — attach the downloaded card for the full flex');
+  }
+  if ((el = q('[data-bsclose]'))) return document.getElementById('bsVeil')?.remove();
   if ((el = q('[data-bspec]'))) {
     const b = myBattles[+el.dataset.bspec];
     if (b) openDuel('jstone', b.opp, b.pot, b.watching, b.my, b.op);
@@ -8458,18 +9199,19 @@ document.addEventListener('click', e => {
     return;
   }
   if ((el = q('[data-accept]'))) {
-    const i = +el.dataset.accept;
-    const c = challenges[i];
+    const c = challenges[+el.dataset.accept];
     if (!c) return;
-    challenges.splice(i, 1);
-    startBattle({
-      opp: c.name, av: c.av, tint: AV_TINTS[battleSeq % 6],
-      market: c.market, window: c.window, pot: c.pot * (1 + (c.odds || 1))
+    const yourStake = Math.round(c.pot * (c.odds || 1));
+    openTerms({
+      ref: c, opp: c.name, av: c.av, tint: AV_TINTS[battleSeq % 6],
+      market: c.market, window: c.window, kick: 'On accept',
+      theirStake: c.pot, yourStake, pot: c.pot + yourStake,
+      winnerTakes: Math.round((c.pot + yourStake) * 0.9),
+      oddsLine: c.odds && c.odds !== 1
+        ? `${c.name} set 1:${c.odds} odds — you put up ${c.odds}× their stake to enter.`
+        : 'Even-money battle — both sides stake the same.'
     });
-    toast(`Battle vs ${c.name} locked in on a fresh £${BATTLE_CAPITAL.toLocaleString('en-GB')} account — higher return takes £${(c.pot * (1 + (c.odds || 1))).toLocaleString('en-GB')}`);
-    addNotif('VS', `Battle vs ${c.name} is live`, `£${(c.pot * (1 + (c.odds || 1))).toLocaleString('en-GB')} pot · ${c.window} window · higher return takes it.`);
-    renderArena();
-    return navigate('arena');
+    return;
   }
   if ((el = q('[data-watch]'))) {
     const b = BATTLES[0];
