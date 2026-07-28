@@ -2948,6 +2948,37 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .soc-add { border: 0; background: none; cursor: pointer; font: inherit; font-size: 11px; font-weight: 600; color: var(--text-faint); }
 .soc-add:hover { color: var(--text); }
 
+/* Streaks — one qualifying action a day keeps it alive */
+.stk-card { background: var(--card); border-radius: 22px; box-shadow: var(--neu-out-sm); padding: 20px 22px; align-self: start; }
+.stk-head { display: flex; align-items: center; gap: 9px; }
+.stk-head b { font-size: 16px; font-weight: 800; }
+.stk-flame { width: 30px; height: 30px; border-radius: 10px; background: var(--surface); box-shadow: var(--neu-in-sm); display: flex; align-items: center; justify-content: center; color: var(--lbA); }
+.stk-flame svg { width: 16px; height: 16px; }
+.stk-sub { margin-left: auto; font-size: 8px; letter-spacing: 0.1em; color: var(--text-faint); }
+.stk-big { font-size: 44px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; margin: 14px 0 16px; font-variant-numeric: tabular-nums; }
+.stk-big span { font-size: 17px; font-weight: 600; color: var(--text-faint); margin-left: 8px; letter-spacing: 0; }
+.stk-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; }
+.stk-day { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.stk-dl { font-size: 9px; color: var(--text-faint); letter-spacing: 0.05em; }
+.stk-dot { width: 30px; height: 30px; border-radius: 50%; background: var(--surface); box-shadow: var(--neu-in-sm); display: flex; align-items: center; justify-content: center; color: #fff; }
+.stk-day.on .stk-dot { background: var(--lbA); box-shadow: 0 6px 14px rgba(106, 46, 158, 0.3); }
+.stk-day.on .stk-dot svg { width: 13px; height: 13px; }
+.stk-day.today .stk-dl { color: var(--text); font-weight: 700; }
+.stk-day.today .stk-dot { outline: 2px solid var(--lbA); outline-offset: 2px; }
+.stk-day.future { opacity: 0.45; }
+.stk-stats { display: flex; justify-content: space-between; gap: 14px; margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line); }
+.stk-stats span { display: block; font-size: 8.5px; letter-spacing: 0.1em; color: var(--text-faint); margin-bottom: 4px; }
+.stk-stats b { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.stk-stats i { font-style: normal; font-size: 13px; font-weight: 600; color: var(--text-faint); }
+.stk-how { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; margin-top: 14px; border: 0; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; color: var(--text); background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 13px; padding: 12px 15px; }
+.stk-how svg { width: 15px; height: 15px; color: var(--text-faint); transition: transform 0.25s ease; }
+.stk-rows { display: flex; flex-direction: column; gap: 12px; padding: 14px 4px 2px; }
+.stk-row { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: var(--text-soft); line-height: 1.5; }
+.stk-ri { width: 26px; height: 26px; flex: none; border-radius: 9px; background: var(--surface); box-shadow: var(--neu-in-sm); display: flex; align-items: center; justify-content: center; color: var(--lbA); }
+.stk-ri svg { width: 13px; height: 13px; }
+.perf-duo { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; align-items: start; margin-top: 16px; }
+@media (max-width: 1100px) { .perf-duo { grid-template-columns: 1fr; } }
+
 /* Topbar profile avatar */
 .icon-btn.avatar-btn { display: inline-flex; align-items: center; justify-content: center; }
 .tb-av { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
@@ -4214,6 +4245,7 @@ function closePos(pnl, outcome = 'manual') {
   }[outcome];
   toast(msg);
   addNotif(pnl > 0 ? 'W' : pnl < 0 ? 'L' : '—', `${pos.sym} ${pos.dir === 'up' ? 'long' : 'short'} closed`, msg);
+  markStreak();
   saveDB();
   renderTerminal();
 }
@@ -4675,6 +4707,7 @@ function executeIdea(c) {
   term.pos = { sym: c.sym, dir: c.dir, entry: INSTR[c.sym].px, risk: term.bal * flick.risk / 100, riskPct: flick.risk, rr: HZCFG[c.hz].rr, mode: modeMap[c.hz] || 'day', be: false, src: 'flick', openedAt: Date.now() };
   toast(`${c.dir === 'up' ? 'Bought' : 'Sold'} ${c.sym} @ ${fmtPx(c.sym)} — ${flick.risk}% risk, 1:${HZCFG[c.hz].rr}`);
   addNotif('F', `Flick signal taken — ${c.sym}`, `${c.dir === 'up' ? 'Long' : 'Short'} @ ${fmtPx(c.sym)}, ${flick.risk}% risk, 1:${HZCFG[c.hz].rr} target`);
+  markStreak();
 }
 
 function flickResolve(take) {
@@ -5145,7 +5178,8 @@ function renderPerformance() {
       <tbody>${tradeLog.map(tradeRow).join('')}</tbody>
     </table></div></div>` : `
     ${metricCardHTML('perfEquity', 'Account equity', 'GBP · LIVE')}
-    <div class="stats-grid">
+    <div class="perf-duo">
+    <div class="stats-grid" style="margin-top:0">
       <div class="sg-cell"><div class="sg-l mono">YTD&nbsp;RETURN</div><div class="sg-v ${ret >= 0 ? 'up' : 'down'}">${sPct(ret * 0.7)}</div></div>
       <div class="sg-cell"><div class="sg-l mono">AVG&nbsp;MONTHLY</div><div class="sg-v">${sPct(ret / 7)}</div></div>
       <div class="sg-cell"><div class="sg-l mono">TOTAL&nbsp;PROFIT</div><div class="sg-v ${eq >= start ? 'up' : 'down'}">${sMoney(eq - start)}</div></div>
@@ -5154,6 +5188,8 @@ function renderPerformance() {
       <div class="sg-cell"><div class="sg-l mono">TRADES</div><div class="sg-v">${perfTrades.length * 8}</div></div>
       <div class="sg-cell"><div class="sg-l mono">CURRENCY</div><div class="sg-v">GBP</div></div>
       <div class="sg-cell"><div class="sg-l mono">BROKER</div><div class="sg-v">Paktos Markets</div></div>
+    </div>
+    ${streakCardHTML()}
     </div>`;
   viewEl('performance').innerHTML = `
     <button class="back-btn" data-nav="terminal">
@@ -6172,6 +6208,7 @@ function startBattle(cfg) {
   };
   myBattles.unshift(b);
   addNotif('T', `Battle account ${acct.id} funded`, `£${BATTLE_CAPITAL.toLocaleString('en-GB')} of battle capital provisioned vs ${cfg.opp} — every trade you close on it moves your battle return.`);
+  markStreak();
   saveDB();
   if (currentView === 'terminal') renderTerminal();
   return b;
@@ -6221,6 +6258,75 @@ function loadDB() {
   if (d.battleSeq) battleSeq = d.battleSeq;
 }
 loadDB();
+
+/* ---------------- Streaks — a day counts when you actually act ---------------- */
+
+const stISO = t => { const d = new Date(t); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+let pkStreak = [];
+try { pkStreak = JSON.parse(localStorage.getItem('pkStreak') || '[]'); } catch (e2) { }
+if (!pkStreak.length) {
+  for (let k = 1; k <= 16; k++) pkStreak.push(stISO(Date.now() - k * 864e5));
+  for (let k = 20; k < 140; k++) if ((k * 7919) % 10 < 6) pkStreak.push(stISO(Date.now() - k * 864e5));
+}
+let stkHowOpen = false;
+
+function streakStats() {
+  const set = new Set(pkStreak);
+  let cur = 0, t = set.has(stISO(Date.now())) ? Date.now() : Date.now() - 864e5;
+  while (set.has(stISO(t))) { cur++; t -= 864e5; }
+  const dates = [...set].sort();
+  let longest = 0, run = 0, prev = null;
+  dates.forEach(ds => {
+    run = prev && (new Date(ds) - new Date(prev) === 864e5) ? run + 1 : 1;
+    longest = Math.max(longest, run);
+    prev = ds;
+  });
+  return { cur, longest: Math.max(longest, cur), total: set.size, set };
+}
+
+function markStreak() {
+  const today = stISO(Date.now());
+  if (pkStreak.includes(today)) return;
+  pkStreak.push(today);
+  try { localStorage.setItem('pkStreak', JSON.stringify(pkStreak.slice(-420))); } catch (e2) { }
+  const s2 = streakStats();
+  toast(`Streak extended — day ${s2.cur} locked in`);
+  addNotif('S', `Streak day ${s2.cur} locked in`, 'One qualifying action a day keeps it alive — miss a day and it resets to zero.');
+}
+
+const STK_FLAME = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>';
+const STK_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+
+function streakCardHTML() {
+  const s2 = streakStats();
+  const now = new Date();
+  const dow = (now.getDay() + 6) % 7;
+  const week = Array.from({ length: 7 }, (_, k) => {
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dow + k);
+    const iso = stISO(d);
+    const on = s2.set.has(iso);
+    return `<div class="stk-day${on ? ' on' : ''}${k === dow ? ' today' : ''}${k > dow ? ' future' : ''}">
+      <span class="stk-dl mono">${['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'][k]}</span>
+      <span class="stk-dot">${on ? STK_CHECK : ''}</span>
+    </div>`;
+  }).join('');
+  return `<div class="stk-card">
+    <div class="stk-head"><span class="stk-flame">${STK_FLAME}</span><b>Streak</b><span class="stk-sub mono">ONE&nbsp;QUALIFYING&nbsp;ACTION&nbsp;A&nbsp;DAY</span></div>
+    <div class="stk-big">${s2.cur}<span>day${s2.cur === 1 ? '' : 's'}</span></div>
+    <div class="stk-week">${week}</div>
+    <div class="stk-stats">
+      <div><span class="mono">LONGEST&nbsp;STREAK</span><b>${s2.longest} <i>days</i></b></div>
+      <div style="text-align:right"><span class="mono">ACTIVE&nbsp;DAYS&nbsp;ALL-TIME</span><b>${s2.total}</b></div>
+    </div>
+    <button class="stk-how" data-stkhow aria-expanded="${stkHowOpen}">How do streaks work?
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"${stkHowOpen ? ' style="transform:rotate(180deg)"' : ''}><path d="M6 9l6 6 6-6"/></svg></button>
+    ${stkHowOpen ? `<div class="stk-rows">
+      <div class="stk-row"><span class="stk-ri">${STK_CHECK}</span>Close a trade, take a Flick signal or start a battle — any one of them counts for the day.</div>
+      <div class="stk-row"><span class="stk-ri">${STK_FLAME}</span>Every active day adds one. Streaks feed your level and your standing on the boards.</div>
+      <div class="stk-row"><span class="stk-ri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span>Miss a day and it resets to zero — only the ledger remembers your longest.</div>
+    </div>` : ''}
+  </div>`;
+}
 
 function builderHTML() {
   const stakePills = B_STAKES.map(v =>
@@ -8030,6 +8136,7 @@ document.addEventListener('click', e => {
     const v = document.getElementById('authVeil'); if (v) v.hidden = true;
     return toast(`Signed in with ${el.dataset.sso} — welcome back, ${myProfile.name}`);
   }
+  if ((el = q('[data-stkhow]'))) { stkHowOpen = !stkHowOpen; if (currentView === 'performance') renderPerformance(); return; }
   if ((el = q('[data-forgot]'))) return toast('Reset link sent — check your inbox');
   if ((el = q('[data-authskip]'))) { const v = document.getElementById('authVeil'); if (v) v.hidden = true; return; }
   if ((el = q('[data-appstore]'))) return toast('The iOS app is almost here — you\u2019re on the early list');
