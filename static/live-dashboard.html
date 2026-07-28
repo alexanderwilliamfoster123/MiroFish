@@ -2799,10 +2799,11 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .challenge-card .btn-mach.enter { width: 100%; margin-top: 4px; }
 
 /* Flip badges — tap a spec card, the back tells you how it's earned */
-.bdg.flip { perspective: 900px; cursor: pointer; background: transparent; box-shadow: none; padding: 0; height: 180px; outline: none; }
+.bdg.flip { perspective: 1000px; cursor: pointer; background: transparent; box-shadow: none; padding: 0; height: 180px; outline: none; }
 .flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.3, 1); transform-style: preserve-3d; }
 .bdg.flip.on .flip-inner { transform: rotateY(180deg); }
-.flip-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 16px; background: var(--card); box-shadow: var(--neu-out-sm); padding: 15px 13px 13px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; transition: transform 0.25s ease-out; }
+.flip-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 16px; background: var(--card); box-shadow: var(--neu-out-sm); padding: 15px 13px 13px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; transition: transform 0.25s ease-out, box-shadow 0.3s ease; }
+.bdg.flip:hover .flip-face { box-shadow: var(--neu-out-sm), 0 18px 36px rgba(20, 20, 40, 0.12); }
 .flip-back { transform: rotateY(180deg); }
 .flip-num { position: absolute; font-size: 9px; opacity: 0.3; }
 .flip-num.tr { top: 10px; right: 12px; }
@@ -2844,9 +2845,6 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .fan-arrow { width: 42px; height: 42px; border-radius: 50%; border: 0; cursor: pointer; background: var(--card); box-shadow: var(--neu-out-sm); color: var(--text-soft); font-family: inherit; display: flex; align-items: center; justify-content: center; padding: 0; }
 .fan-arrow svg { width: 17px; height: 17px; }
 .fan-arrow:active { box-shadow: var(--neu-in-sm); }
-.fan-dots { display: flex; gap: 6px; }
-.fan-dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--surface); box-shadow: var(--neu-in-sm); transition: transform 0.3s ease, background 0.3s ease; }
-.fan-dots span.on { background: var(--lbA); transform: scale(1.35); }
 
 /* Topbar profile avatar */
 .icon-btn.avatar-btn { display: inline-flex; align-items: center; justify-content: center; }
@@ -3097,9 +3095,9 @@ const TROPHY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="__S__" stroke-w
 
 const navItems = [
   { label: 'Arena', view: 'arena', match: ['arena', 'trader', 'spectate', 'live', 'clan', 'challenge', 'tournaments', 'leaderboard'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>' },
-  { label: 'Feed', view: 'social', match: ['social'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' },
   { label: 'Trade', view: 'terminal', match: ['terminal', 'performance'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 15v-4M12 15V8M17 15v-6"/></svg>' },
-  { label: 'Ideas', view: 'ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' }
+  { label: 'Ideas', view: 'ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' },
+  { label: 'Feed', view: 'social', match: ['social'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' }
 ];
 
 let prizePool = 4420000;
@@ -4463,7 +4461,6 @@ function fanCycle(target) {
   const c = d[next], rr = HZCFG[c.hz].rr, riskAmt = term.bal * flick.risk / 100;
   const xEl = document.querySelector('.f1c-po-x small'); if (xEl) xEl.textContent = rr + '×';
   const winEl = document.querySelector('.f1c-po b.win'); if (winEl) winEl.textContent = gbp(riskAmt * rr);
-  document.querySelectorAll('#fanDots span').forEach((s2, i2) => s2.classList.toggle('on', i2 === next));
 }
 
 /* side cards lift on hover — base transform preserved in data-t */
@@ -4499,7 +4496,6 @@ function flickHTML() {
     <div class="fan-wrap" id="fanWrap">${d.map((cc, i2) => `<div class="fan-card${i2 === pos ? ' ctr' : ''}" data-fi="${i2}"${i2 === pos ? '' : ` data-fango="${i2}"`}>${i2 === pos ? flickCardHTML(cc) : fanPrevHTML(cc)}</div>`).join('')}</div>
     <div class="fan-nav">
       <button class="fan-arrow" data-fanprev aria-label="Previous signal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-      <div class="fan-dots" id="fanDots">${d.map((_, i2) => `<span class="${i2 === pos ? 'on' : ''}"></span>`).join('')}</div>
       <button class="fan-arrow" data-fannext aria-label="Next signal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
     </div>
     <div class="f1c-risk"><span class="f1c-risk-l">How much to risk</span><div style="display:flex;gap:8px">${rbs}</div></div>
@@ -5378,8 +5374,6 @@ function tpSpecHTML(d) {
       <div>
         <div class="badge-grid">${badges}</div>
         <p style="font-size:11px;color:var(--text-faint);margin-top:14px">${BADGES_DEF.filter(([, , , fn]) => fn(d)).length} of ${BADGES_DEF.length} badges earned · every badge is verified from live results</p>
-        <div class="chd-chart-t mono" style="margin:20px 2px 10px"><span>HIGHLIGHT&nbsp;REEL</span><span>WINS&nbsp;THAT&nbsp;MADE&nbsp;THE&nbsp;TAPE</span></div>
-        ${tpMediaHTML(d)}
       </div>
       <div class="club-card">
         <div class="bk-title" style="margin-bottom:2px">Paktos Clubs</div>
@@ -6451,9 +6445,6 @@ function specChartSVG() {
     grid += `<line x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="currentColor" opacity=".08" stroke-dasharray="4 12"/>`
       + `<text x="${padL - 10}" y="${+y + 3}" text-anchor="end" fill="currentColor" opacity=".38" font-size="9" font-family="ui-monospace,Menlo,monospace">${v.toFixed(1)}%</text>`;
   }
-  const area = (sr, col, id) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="${col}" stop-opacity=".16"/><stop offset="100%" stop-color="${col}" stop-opacity="0"/></linearGradient></defs>
-    <path d="${path(sr)} L${(W - padR).toFixed(1)},${(H - padB).toFixed(1)} L${padL},${(H - padB).toFixed(1)} Z" fill="url(#${id})"/>`;
   const endDot = (sr, col) => `<circle cx="${X(sr.length - 1, sr.length).toFixed(1)}" cy="${Y(sr[sr.length - 1]).toFixed(1)}" r="5" fill="${col}" stroke="#fff" stroke-width="2" filter="url(#spDot)"/>`;
   let hover = '';
   if (spec.hov != null) {
@@ -6467,7 +6458,6 @@ function specChartSVG() {
   return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
     <defs><filter id="spDot" x="-60%" y="-60%" width="220%" height="220%"><feDropShadow dx="1" dy="2" stdDeviation="2.4" flood-color="rgba(0,0,0,.35)"/></filter></defs>
     ${grid}
-    ${area(spec.sa, A, 'spgA')}${area(spec.sb, B, 'spgB')}
     <path d="${path(spec.sa)}" fill="none" stroke="${A}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
     <path d="${path(spec.sb)}" fill="none" stroke="${B}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
     ${endDot(spec.sa, A)}${endDot(spec.sb, B)}
@@ -6719,41 +6709,36 @@ function smoothPath(pts) {
 }
 
 function lbMiniSVG(b, W = 400, H = 150) {
-  const padL = 42, padR = 12, padT = 12, padB = 10;
+  const padL = 42, padR = 14, padT = 12, padB = 10;
   const all = b.sa.concat(b.sb);
   const lo = Math.min(...all), hi = Math.max(...all), rng = (hi - lo) || 1;
   const iw = W - padL - padR, ih = H - padT - padB;
   const pts = sr => sr.map((v, i2) => [padL + i2 / (sr.length - 1) * iw, padT + (1 - (v - lo) / rng) * ih]);
+  const lin = p2 => 'M' + p2.map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join(' L');
   const A = lbCol('a'), B = lbCol('b');
   const pa = pts(b.sa), pb = pts(b.sb);
-  const da = smoothPath(pa), db = smoothPath(pb);
-  const id = 'lbg' + b.i;
+  const fid = 'lbd' + b.i;
   let grid = '';
   for (let g = 0; g <= 3; g++) {
     const gv = lo + rng * g / 3;
     const gy = (padT + (1 - g / 3) * ih).toFixed(1);
-    grid += `<line x1="${padL}" x2="${W - padR}" y1="${gy}" y2="${gy}" stroke="currentColor" opacity=".08" stroke-dasharray="2 5"/>
-      <text x="${padL - 7}" y="${gy}" text-anchor="end" alignment-baseline="middle" font-size="8.5" fill="currentColor" opacity=".4">${(gv >= 0 ? '+' : '') + gv.toFixed(1)}%</text>`;
+    grid += `<line x1="${padL}" x2="${W - padR}" y1="${gy}" y2="${gy}" stroke="currentColor" opacity=".09" stroke-dasharray="4 12"/>
+      <text x="${padL - 7}" y="${gy}" text-anchor="end" alignment-baseline="middle" font-size="8.5" fill="currentColor" opacity=".4" font-family="ui-monospace,Menlo,monospace">${(gv >= 0 ? '+' : '') + gv.toFixed(1)}%</text>`;
   }
-  const dot = (p, col) => `<circle cx="${p[p.length - 1][0].toFixed(1)}" cy="${p[p.length - 1][1].toFixed(1)}" r="3.5" fill="${col}" stroke="var(--card)" stroke-width="1.5"/>`;
+  const dot = (p2, col) => `<circle cx="${p2[p2.length - 1][0].toFixed(1)}" cy="${p2[p2.length - 1][1].toFixed(1)}" r="4" fill="${col}" stroke="var(--card)" stroke-width="2" filter="url(#${fid})"/>`;
   let hov = '';
   if (LB_HOV.i === b.i && LB_HOV.idx != null) {
     const ia = Math.min(LB_HOV.idx, pa.length - 1), ib = Math.min(LB_HOV.idx, pb.length - 1);
-    hov = `<line x1="${pa[ia][0].toFixed(1)}" x2="${pa[ia][0].toFixed(1)}" y1="${padT}" y2="${H - padB}" stroke="${A}" opacity=".4" stroke-dasharray="4 4"/>
-      <circle cx="${pa[ia][0].toFixed(1)}" cy="${pa[ia][1].toFixed(1)}" r="4" fill="var(--card)" stroke="${A}" stroke-width="2"/>
-      <circle cx="${pb[ib][0].toFixed(1)}" cy="${pb[ib][1].toFixed(1)}" r="4" fill="var(--card)" stroke="${B}" stroke-width="2"/>`;
+    hov = `<line x1="${pa[ia][0].toFixed(1)}" x2="${pa[ia][0].toFixed(1)}" y1="${padT}" y2="${H - padB}" stroke="${A}" opacity=".35"/>
+      <circle cx="${pa[ia][0].toFixed(1)}" cy="${pa[ia][1].toFixed(1)}" r="4" fill="${A}" stroke="var(--card)" stroke-width="2" filter="url(#${fid})"/>
+      <circle cx="${pb[ib][0].toFixed(1)}" cy="${pb[ib][1].toFixed(1)}" r="4" fill="${B}" stroke="var(--card)" stroke-width="2" filter="url(#${fid})"/>`;
   }
   return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-    <defs>
-      <linearGradient id="${id}a" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${A}" stop-opacity=".2"/><stop offset="100%" stop-color="${A}" stop-opacity="0"/></linearGradient>
-      <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${B}" stop-opacity=".13"/><stop offset="100%" stop-color="${B}" stop-opacity="0"/></linearGradient>
-    </defs>
+    <defs><filter id="${fid}" x="-60%" y="-60%" width="220%" height="220%"><feDropShadow dx="1" dy="1.5" stdDeviation="1.8" flood-color="rgba(0,0,0,.3)"/></filter></defs>
     ${grid}
-    <path d="${da} L${W - padR},${H - padB} L${padL},${H - padB} Z" fill="url(#${id}a)"/>
-    <path d="${db} L${W - padR},${H - padB} L${padL},${H - padB} Z" fill="url(#${id}b)"/>
-    <path d="${da}" fill="none" stroke="${A}" stroke-width="2.2" stroke-linejoin="round"/>
-    <path d="${db}" fill="none" stroke="${B}" stroke-width="2" stroke-linejoin="round"/>
-    ${dot(pa, A)}${dot(pb, B)}
+    <path d="${lin(pb)}" fill="none" stroke="${B}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="${lin(pa)}" fill="none" stroke="${A}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+    ${dot(pb, B)}${dot(pa, A)}
     ${hov}
   </svg>`;
 }
@@ -6768,9 +6753,10 @@ function lbSparkSVG(b) {
   const all = b.sa.concat(b.sb);
   const lo = Math.min(...all), hi = Math.max(...all), rng = (hi - lo) || 1;
   const pts = sr => sr.map((v, i2) => [pad + i2 / (sr.length - 1) * (W - pad * 2), pad + (1 - (v - lo) / rng) * (H - pad * 2)]);
+  const lin = p2 => 'M' + p2.map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join(' L');
   return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-    <path d="${smoothPath(pts(b.sb))}" fill="none" stroke="${lbCol('b')}" stroke-width="1.6" stroke-linejoin="round"/>
-    <path d="${smoothPath(pts(b.sa))}" fill="none" stroke="${lbCol('a')}" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="${lin(pts(b.sb))}" fill="none" stroke="${lbCol('b')}" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="${lin(pts(b.sa))}" fill="none" stroke="${lbCol('a')}" stroke-width="1.8" stroke-linejoin="round"/>
   </svg>`;
 }
 
@@ -6782,9 +6768,9 @@ document.addEventListener('pointermove', e => {
   const face = card.querySelector(flipped ? '.flip-back' : '.flip-front');
   if (!face) return;
   const r = card.getBoundingClientRect();
-  const ry = ((e.clientX - r.left) / r.width - 0.5) * 24;
-  const rx = ((e.clientY - r.top) / r.height - 0.5) * -24;
-  face.style.transform = `${flipped ? 'rotateY(180deg) ' : ''}rotateX(${rx.toFixed(1)}deg) rotateY(${ry.toFixed(1)}deg)`;
+  const ry = ((e.clientX - r.left) / r.width - 0.5) * 30;
+  const rx = ((e.clientY - r.top) / r.height - 0.5) * -30;
+  face.style.transform = `${flipped ? 'rotateY(180deg) ' : ''}rotateX(${rx.toFixed(1)}deg) rotateY(${ry.toFixed(1)}deg) scale(1.03)`;
 });
 document.addEventListener('pointerout', e => {
   const card = e.target.closest && e.target.closest('.bdg.flip');
@@ -7109,16 +7095,15 @@ function chCurveSVG(series, W = 640, H = 200) {
   for (let g = 0; g <= 3; g++) {
     const gv = lo + rng * g / 3;
     const gy = (padT + (1 - g / 3) * ih).toFixed(1);
-    grid += `<line x1="${padL}" x2="${W - padR}" y1="${gy}" y2="${gy}" stroke="currentColor" opacity=".08" stroke-dasharray="2 5"/>
-      <text x="${padL - 8}" y="${gy}" text-anchor="end" alignment-baseline="middle" font-size="9" fill="currentColor" opacity=".4">${fmtM(gv)}</text>`;
+    grid += `<line x1="${padL}" x2="${W - padR}" y1="${gy}" y2="${gy}" stroke="currentColor" opacity=".09" stroke-dasharray="4 12"/>
+      <text x="${padL - 8}" y="${gy}" text-anchor="end" alignment-baseline="middle" font-size="9" fill="currentColor" opacity=".4" font-family="ui-monospace,Menlo,monospace">${fmtM(gv)}</text>`;
   }
-  const d = smoothPath(pts);
+  const d = 'M' + pts.map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join(' L');
   return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-    <defs><linearGradient id="chg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${A}" stop-opacity=".2"/><stop offset="100%" stop-color="${A}" stop-opacity="0"/></linearGradient></defs>
+    <defs><filter id="chDot" x="-60%" y="-60%" width="220%" height="220%"><feDropShadow dx="1" dy="1.5" stdDeviation="1.8" flood-color="rgba(0,0,0,.3)"/></filter></defs>
     ${grid}
-    <path d="${d} L${W - padR},${H - padB} L${padL},${H - padB} Z" fill="url(#chg)"/>
-    <path d="${d}" fill="none" stroke="${A}" stroke-width="2.4" stroke-linejoin="round"/>
-    <circle cx="${pts[pts.length - 1][0].toFixed(1)}" cy="${pts[pts.length - 1][1].toFixed(1)}" r="4" fill="${A}" stroke="var(--card)" stroke-width="1.5"/>
+    <path d="${d}" fill="none" stroke="${A}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${pts[pts.length - 1][0].toFixed(1)}" cy="${pts[pts.length - 1][1].toFixed(1)}" r="4.5" fill="${A}" stroke="var(--card)" stroke-width="2" filter="url(#chDot)"/>
   </svg>`;
 }
 
