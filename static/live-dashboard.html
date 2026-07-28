@@ -2806,6 +2806,9 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .chd-step .mono { font-size: 8.5px; letter-spacing: 0.1em; color: var(--lbA); margin-bottom: 6px; }
 .challenge-card { cursor: pointer; }
 .challenge-card .btn-mach.enter { width: 100%; margin-top: 4px; }
+.ch-actions { display: flex; gap: 9px; margin-top: 4px; }
+.ch-actions .btn-mach.enter { width: auto; flex: 1; margin-top: 0; }
+.ch-decline { padding: 12px 20px; font-size: 13px; }
 
 /* Flip badges — tap a spec card, the back tells you how it's earned */
 .bdg.flip { perspective: 1000px; cursor: pointer; background: transparent; box-shadow: none; padding: 0; height: 180px; outline: none; }
@@ -7509,7 +7512,10 @@ function renderArena() {
       </div>
       ${c.mine
         ? `<button class="btn-neu enter" data-abcancel="${i}">Cancel challenge</button>`
-        : `<button class="btn-mach enter" data-accept="${i}">Accept battle →</button>`}
+        : `<div class="ch-actions">
+            <button class="btn-neu ch-decline" data-decline="${i}">Decline</button>
+            <button class="btn-mach enter" data-accept="${i}">Accept →</button>
+          </div>`}
     </article>`;
   }).join('');
   viewEl('arena').innerHTML = `
@@ -7655,6 +7661,7 @@ function renderChallenge() {
             ? `<button class="btn-neu" data-invopen="duel">Share the call-out →</button>
                <button class="btn-neu" data-abcancel="${chSel}">Cancel challenge</button>`
             : `<button class="btn-mach" data-accept="${chSel}">Accept battle — put up £${youPut.toLocaleString('en-GB')} →</button>
+               <button class="btn-neu" data-decline="${chSel}">Decline the terms</button>
                <button class="btn-neu" data-trader="${c.name}">Scout the full profile</button>
                <button class="btn-neu" data-abopen>Counter with your own terms</button>`}
         </div>
@@ -8150,6 +8157,15 @@ document.addEventListener('click', e => {
     toast(`Challenge posted — £${arenaB.stake.toLocaleString('en-GB')} at ${oddsLabel()}, kick-off ${startLabel()}`);
     addNotif('VS', 'Challenge posted to the open board', `£${arenaB.stake.toLocaleString('en-GB')} at ${oddsLabel()} · ${arenaB.market} · kick-off ${startLabel()}.`);
     return renderArena();
+  }
+  if ((el = q('[data-decline]'))) {
+    const i = +el.dataset.decline;
+    const c = challenges[i];
+    challenges.splice(i, 1);
+    toast(`Declined ${c ? c.name + '\u2019s' : 'the'} challenge — their terms are released`);
+    renderArena();
+    if (currentView === 'challenge') return navigate('arena');
+    return;
   }
   if ((el = q('[data-abcancel]'))) {
     challenges.splice(+el.dataset.abcancel, 1);
