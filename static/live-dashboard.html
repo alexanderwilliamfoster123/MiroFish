@@ -3127,6 +3127,32 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .lbb-nver { color: var(--text-faint); }
 .lbb-add { padding: 7px 14px; font-size: 11.5px; }
 .lbb-spark svg { display: block; opacity: .9; }
+
+/* ---- explore — swipe the trader deck ---- */
+.ex-wrap { display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 8px 0 40px; }
+.ex-stack { position: relative; width: min(370px, 88vw); height: 520px; perspective: 900px; transform-style: preserve-3d; touch-action: none; }
+.ex-card { position: absolute; inset: 0; background: var(--card); border-radius: 26px; box-shadow: var(--neu-out); overflow: hidden; cursor: grab; will-change: transform;
+  transform: translateZ(calc(var(--i) * -16px)) translateY(calc(var(--i) * 11px)) translateX(var(--sx, 0px)) rotate(var(--sr, 0deg));
+  transition: transform .3s ease, opacity .3s ease; }
+.ex-card:active { cursor: grabbing; }
+.ex-hero { height: 168px; display: flex; align-items: center; justify-content: center; position: relative; }
+.ex-hero > span:first-child { font-size: 74px; filter: drop-shadow(0 6px 14px rgba(20, 16, 50, .25)); }
+.ex-club { position: absolute; top: 14px; right: 14px; font-size: 8px; letter-spacing: .09em; font-weight: 800; padding: 4px 10px; border-radius: 999px; border: 1px solid; }
+.ex-body { padding: 18px 20px 16px; display: flex; flex-direction: column; gap: 12px; }
+.ex-name { display: flex; align-items: center; gap: 7px; font-size: 18px; font-weight: 800; letter-spacing: -.01em; cursor: pointer; }
+.ex-view { margin-left: auto; font-size: 8px; letter-spacing: .1em; color: var(--lbA); font-weight: 700; }
+.ex-bio { font-size: 12.5px; color: var(--text-soft); line-height: 1.5; min-height: 38px; margin: 0; }
+.ex-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.ex-tiles > div { background: var(--card); box-shadow: var(--neu-out-sm); border-radius: 12px; padding: 9px 12px; }
+.ex-tiles span { display: block; font-size: 7.5px; letter-spacing: .1em; color: var(--text-faint); font-weight: 700; }
+.ex-tiles b { display: block; font-size: 14.5px; font-weight: 800; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.ex-spark svg { width: 100%; height: 44px; display: block; }
+.ex-hint { font-size: 7.5px; letter-spacing: .12em; color: var(--text-faint); text-align: center; }
+.ex-actions { display: flex; align-items: center; gap: 16px; }
+.ex-btn { width: 56px; height: 56px; border-radius: 50%; border: 0; cursor: pointer; background: var(--card); box-shadow: var(--neu-out-sm); color: var(--text-soft); display: flex; align-items: center; justify-content: center; transition: transform .15s ease; }
+.ex-btn:hover { transform: translateY(-2px); }
+.ex-btn.on { color: var(--lbA); }
+.ex-duel { border-radius: 999px; padding: 15px 30px; font-size: 14px; }
 @media (max-width: 1100px) { .tw-pill { display: none; } }
 
 /* ---- battles across the globe (dotted world map) ---- */
@@ -3362,6 +3388,7 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
     <div class="view" data-view="arena"></div>
     <div class="view" data-view="leaderboard"></div>
     <div class="view" data-view="board"></div>
+    <div class="view" data-view="explore"></div>
     <div class="view" data-view="ideas"></div>
     <div class="view" data-view="terminal"></div>
     <div class="view" data-view="social"></div>
@@ -3422,7 +3449,8 @@ const navItems = [
   { label: 'Arena', view: 'arena', match: ['arena', 'trader', 'spectate', 'live', 'clan', 'challenge', 'tournaments', 'leaderboard', 'board'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>' },
   { label: 'Trade', view: 'terminal', match: ['terminal', 'performance'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 15v-4M12 15V8M17 15v-6"/></svg>' },
   { label: 'Ideas', view: 'ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' },
-  { label: 'Feed', view: 'social', match: ['social'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' }
+  { label: 'Feed', view: 'social', match: ['social'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' },
+  { label: 'Explore', view: 'explore', match: ['explore'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z"/></svg>' }
 ];
 
 let prizePool = 4420000;
@@ -3919,6 +3947,7 @@ const TITLES = {
   arena: ['Arena', '<span class="mono">HEAD-TO-HEAD</span><span class="dot-sep">·</span><span>battles, tournaments, nation wars &amp; the £1M pot</span>'],
   leaderboard: ['Arena', '<span class="mono">LEADERBOARD</span><span class="dot-sep">·</span><span>live standings, resorted in real time</span>'],
   board: ['Leaderboard', '<span class="mono">VERIFIED&nbsp;TRACK&nbsp;RECORDS</span><span class="dot-sep">·</span><span>every trader on the platform, ranked by what they\'ve banked</span>'],
+  explore: ['Explore', '<span class="mono">TRADER&nbsp;RADAR</span><span class="dot-sep">·</span><span>swipe through traders — follow the ones you rate, challenge the ones you don\'t</span>'],
   ideas: ['Trade Ideas', '<span class="mono">LIVE&nbsp;WIRE</span><span class="dot-sep">·</span><span>signals streaming from every market</span>'],
   terminal: ['Trade', '<span class="mono">TR-1001</span><span class="dot-sep">·</span><span>£100k competition balance</span>'],
   challenge: ['Challenge', '<span class="mono">OPEN&nbsp;CHALLENGE</span><span class="dot-sep">·</span><span>read the terms, scout the trader, take the other side</span>'],
@@ -4127,7 +4156,7 @@ function drawCandleChart() {
   const a = INSTR[term.asset];
   ensureCandles(a, term.asset);
   const cd = a.cd, n = cd.length;
-  const W = 920, H = 330, AXIS = 62, VOLH = 44, GAP2 = 8;
+  const W = Math.max(600, box.clientWidth || 920), H = 330, AXIS = 62, VOLH = 44, GAP2 = 8;
   const PH = H - VOLH - GAP2;
   const plotW = W - AXIS;
   const min = Math.min(...cd.map(k => k.l)), max = Math.max(...cd.map(k => k.h));
@@ -4182,7 +4211,9 @@ function drawCandleChart() {
   });
   /* crosshair */
   if (hov != null) out += `<line x1="${X(hov).toFixed(1)}" x2="${X(hov).toFixed(1)}" y1="0" y2="${H}" stroke="currentColor" opacity=".28" stroke-dasharray="3 3"/>`;
-  box.querySelector('svg').innerHTML = out;
+  const svgEl = box.querySelector('svg');
+  svgEl.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svgEl.innerHTML = out;
   /* crosshair tooltip */
   const tip = document.getElementById('ccTip');
   if (tip) {
@@ -6090,7 +6121,7 @@ function renderInvite() {
     `<button class="pill-btn${v === cur ? ' on' : ''}" data-${attr}="${v}">${fmt ? fmt(v) : v}</button>`).join('');
   const duel = `
     <div class="inv-row"><div class="b-label mono">WHO&nbsp;ARE&nbsp;YOU&nbsp;CALLING&nbsp;OUT</div>
-      <div class="inv-chips">${CONTACTS.map(c => `<button class="pill-btn${c[0] === inv.to ? ' on' : ''}" data-invto="${c[0]}">${c[0]}</button>`).join('')}</div></div>
+      <div class="inv-chips">${(CONTACTS.some(c => c[0] === inv.to) ? CONTACTS : [[inv.to]].concat(CONTACTS)).map(c => `<button class="pill-btn${c[0] === inv.to ? ' on' : ''}" data-invto="${c[0]}">${c[0]}</button>`).join('')}</div></div>
     <div class="inv-row"><div class="b-label mono">MONEY&nbsp;—&nbsp;YOUR&nbsp;STAKE</div>
       <div class="inv-chips">${chips(INV_STAKES, inv.stake, 'invstake', v => '£' + v.toLocaleString('en-GB'))}</div></div>
     <div class="inv-row"><div class="b-label mono">ODDS&nbsp;—&nbsp;WHAT&nbsp;THEY&nbsp;PUT&nbsp;UP</div>
@@ -7196,6 +7227,92 @@ function lbbTableHTML() {
   </table></div></div>`;
 }
 
+/* ---- explore — swipe-to-follow trader deck ---- */
+let exOrder = null;
+
+function exCardHTML(n, i) {
+  const p = traderProfile(n);
+  const club = clubFor(p.winnings);
+  return `<article class="ex-card" style="--i:${i};z-index:${9 - i}">
+    <div class="ex-hero" style="background:${p.tint}"><span>${p.av}</span>
+      <span class="ex-club" style="background:${club.bg};color:${club.tx};border-color:${club.edge}">${club.name.toUpperCase()}</span></div>
+    <div class="ex-body">
+      <div class="ex-name" data-trader="${n}"><b>${n}</b>${VERIFIED.has(n) ? BADGE : ''}${flagHTML(traderFlag(n), 'xs')}<span class="ex-view mono">VIEW&nbsp;PROFILE&nbsp;→</span></div>
+      <p class="ex-bio">${p.bio}</p>
+      <div class="ex-tiles">
+        <div><span class="mono">WIN&nbsp;RATE</span><b>${p.winRate}%</b></div>
+        <div><span class="mono">TOTAL&nbsp;WINNINGS</span><b>£${p.winnings >= 1e6 ? (p.winnings / 1e6).toFixed(2) + 'M' : kfmt(p.winnings)}</b></div>
+        <div><span class="mono">BATTLE&nbsp;RECORD</span><b>${p.wins}–${p.losses}</b></div>
+        <div><span class="mono">FOLLOWERS</span><b>${p.followers}</b></div>
+      </div>
+      <div class="ex-spark">${lbbSpark(p.series)}</div>
+      <div class="ex-hint mono">SWIPE&nbsp;RIGHT&nbsp;TO&nbsp;FOLLOW&nbsp;·&nbsp;LEFT&nbsp;TO&nbsp;SKIP</div>
+    </div>
+  </article>`;
+}
+
+function renderExplore() {
+  if (!exOrder) exOrder = Object.keys(TRADER_AV).sort((a, b) => hashName(a + 'x') - hashName(b + 'x'));
+  const topN = exOrder[0];
+  viewEl('explore').innerHTML = `<div class="ex-wrap">
+    <div class="ex-stack" id="exStack">${exOrder.slice(0, 4).map((n, i) => exCardHTML(n, i)).join('')}</div>
+    <div class="ex-actions">
+      <button class="ex-btn" data-exskip aria-label="Skip"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <button class="btn-mach ex-duel" data-exduel>Challenge ${topN} — set the date →</button>
+      <button class="ex-btn${following.has(topN) ? ' on' : ''}" data-exfollow aria-label="Follow"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+    </div>
+  </div>`;
+  exBind();
+}
+
+function exBind() {
+  const stack = document.getElementById('exStack');
+  if (!stack) return;
+  let live = false, sx = 0, dx = 0;
+  const top = () => stack.querySelector('.ex-card');
+  stack.onpointerdown = e => {
+    live = true; dx = 0; sx = e.clientX;
+    const c = top(); if (c) c.style.transition = 'none';
+  };
+  stack.onpointermove = e => {
+    if (!live) return;
+    dx = e.clientX - sx;
+    const c = top(); if (!c) return;
+    c.style.setProperty('--sx', dx + 'px');
+    c.style.setProperty('--sr', (dx * 0.06).toFixed(2) + 'deg');
+    c.style.opacity = String(1 - Math.min(Math.abs(dx) / 320, 0.45));
+  };
+  const finish = () => {
+    if (!live) return;
+    live = false;
+    const c = top(); if (!c) return;
+    c.style.transition = '';
+    if (Math.abs(dx) > 70) {
+      stack.addEventListener('click', ev => { ev.stopPropagation(); ev.preventDefault(); }, { capture: true, once: true });
+      exFly(Math.sign(dx));
+    } else {
+      c.style.setProperty('--sx', '0px'); c.style.setProperty('--sr', '0deg'); c.style.opacity = '1';
+    }
+    dx = 0;
+  };
+  stack.onpointerup = finish;
+  stack.onpointercancel = finish;
+  stack.onpointerleave = finish;
+}
+
+function exFly(dir) {
+  const stack = document.getElementById('exStack');
+  const c = stack?.querySelector('.ex-card');
+  if (!c) return;
+  const n = exOrder[0];
+  c.style.transition = '';
+  c.style.setProperty('--sx', dir * 480 + 'px');
+  c.style.setProperty('--sr', dir * 16 + 'deg');
+  c.style.opacity = '0';
+  if (dir > 0 && !following.has(n)) { following.add(n); toast(`Following ${n} — their calls hit your feed`); }
+  setTimeout(() => { exOrder.push(exOrder.shift()); if (currentView === 'explore') renderExplore(); }, 300);
+}
+
 function renderBoard() {
   viewEl('board').innerHTML = `
     <button class="back-btn" data-nav="arena">
@@ -7596,7 +7713,8 @@ function openNation(i) {
 }
 
 function specChartSVG() {
-  const W = 920, H = 250, padL = 48, padR = 20, padT = 18, padB = 28;
+  const box = document.getElementById('specChart');
+  const W = Math.max(560, box ? box.clientWidth : 920), H = 250, padL = 48, padR = 20, padT = 18, padB = 28;
   const iw = W - padL - padR, ih = H - padT - padB;
   const all = spec.sa.concat(spec.sb);
   const min = Math.min(...all), max = Math.max(...all);
@@ -7637,10 +7755,11 @@ function specChartSVG() {
 function bindSpecChart() {
   const box = document.getElementById('specChart');
   if (!box) return;
+  requestAnimationFrame(() => { if (document.getElementById('specChart')) box.innerHTML = specChartSVG(); });
   box.onpointermove = e => {
     if (!spec) return;
     const r = box.getBoundingClientRect();
-    const frac = ((e.clientX - r.left) / r.width * 920 - 48) / (920 - 68);
+    const frac = ((e.clientX - r.left) - 48) / (r.width - 68);
     spec.hov = Math.max(0, Math.min(spec.sa.length - 1, Math.round(frac * (spec.sa.length - 1))));
     box.innerHTML = specChartSVG();
     const tip = document.getElementById('specTip');
@@ -7648,7 +7767,7 @@ function bindSpecChart() {
       const i2 = spec.hov;
       tip.innerHTML = `<div class="spt-r"><i style="background:${lbCol('a')}"></i>${spec.a.name}<b>${fmtRet(spec.sa[i2])}</b></div>
         <div class="spt-r"><i style="background:${lbCol('b')}"></i>${spec.b.name}<b>${fmtRet(spec.sb[Math.min(i2, spec.sb.length - 1)])}</b></div>`;
-      const px = (48 + frac * (920 - 68)) / 920 * r.width;
+      const px = 48 + frac * (r.width - 68);
       tip.style.left = Math.min(Math.max(8, px + 14), r.width - 160) + 'px';
       tip.classList.add('on');
     }
@@ -8697,7 +8816,7 @@ function fireConfetti() {
 const RENDER = {
   terminal: renderTerminal, ideas: renderIdeas, social: renderSocial, inbox: renderInbox,
   performance: renderPerformance, trader: renderTrader,
-  leaderboard: renderLbPage, board: renderBoard, arena: renderArena, tournaments: renderTournamentsPage, partner: renderPartner, spectate: renderSpectate, live: renderLive, clan: renderClan, challenge: renderChallenge
+  leaderboard: renderLbPage, board: renderBoard, explore: renderExplore, arena: renderArena, tournaments: renderTournamentsPage, partner: renderPartner, spectate: renderSpectate, live: renderLive, clan: renderClan, challenge: renderChallenge
 };
 
 document.addEventListener('click', e => {
@@ -8966,6 +9085,9 @@ document.addEventListener('click', e => {
     return toast(`Switched to ${ACCTS[i].id} — ${ACCTS[i].label}`);
   }
   if (e.target && e.target.id === 'btVeil') { btFlow = null; return e.target.remove(); }
+  if ((el = q('[data-exskip]'))) return exFly(-1);
+  if ((el = q('[data-exfollow]'))) return exFly(1);
+  if ((el = q('[data-exduel]'))) { inv.to = exOrder[0]; openInvite('duel'); return; }
   if ((el = q('[data-btclose]'))) { btFlow = null; return document.getElementById('btVeil')?.remove(); }
   if ((el = q('[data-btback]'))) { if (btFlow) openTerms(btFlow); return; }
   if ((el = q('[data-btpm]'))) { if (el.classList.contains('off')) return; btPm = el.dataset.btpm; return openPay(); }
@@ -9058,6 +9180,8 @@ document.addEventListener('click', e => {
   }
   if ((el = q('[data-epcancel]'))) return closeEditProfile();
   if ((el = q('[data-invopen]'))) return openInvite(el.dataset.invopen);
+  if (e.target && e.target.id === 'invVeil') return closeInvite();
+  if ((el = q('[data-invclose]'))) return closeInvite();
   if ((el = q('[data-invtab]'))) { inv.mode = el.dataset.invtab; return renderInvite(); }
   if ((el = q('[data-invto]'))) { inv.to = el.dataset.invto; return renderInvite(); }
   if ((el = q('[data-invstake]'))) { inv.stake = +el.dataset.invstake; return renderInvite(); }
