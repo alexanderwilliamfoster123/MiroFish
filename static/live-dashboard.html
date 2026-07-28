@@ -2525,11 +2525,7 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 }
 
 /* ---------------- Odometer — every live number rolls like a slot machine ---------------- */
-.odo { display: inline-flex; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.odo .odc { height: 1.12em; display: flex; align-items: center; }
-.odo .odd { position: relative; width: 1ch; height: 1.12em; overflow: hidden; }
-.odo .odd i { position: absolute; left: 0; top: 0; width: 100%; display: block; font-style: normal; transition: transform .9s cubic-bezier(.16, 1, .3, 1); will-change: transform; }
-.odo .odd b { height: 1.12em; display: flex; align-items: center; justify-content: center; font-weight: inherit; }
+.odo { line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 /* ---------------- Nation Wars ---------------- */
 .nw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 18px; }
@@ -3112,7 +3108,7 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .frost-date { position: absolute; bottom: 10px; right: 14px; font-size: 8px; letter-spacing: .08em; color: rgba(255, 255, 255, .78); }
 
 /* ---- battles across the globe (dotted world map) ---- */
-.wm-card { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 14px 18px 8px; margin-bottom: 22px; --wm-dot: rgba(24, 26, 34, .18); }
+.wm-card { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 14px 18px 8px; margin: 0 auto 22px; max-width: 1000px; --wm-dot: rgba(24, 26, 34, .18); }
 body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
 .wm-card svg { width: 100%; height: auto; display: block; }
 .wm-arc { stroke-dasharray: 1; stroke-dashoffset: 1; animation: wmDash 2.4s ease-out forwards; }
@@ -3633,9 +3629,8 @@ function tickCountdowns() {
 const ODIGITS = '0123456789'.split('').map(d => `<b>${d}</b>`).join('');
 
 function odoInner(str) {
-  return [...str].map(ch => /\d/.test(ch)
-    ? `<span class="odd"><i style="transform:translateY(-${(+ch * 1.12).toFixed(2)}em)">${ODIGITS}</i></span>`
-    : `<span class="odc">${ch}</span>`).join('');
+  /* rolling digit strips retired — numbers render plain so every figure sits on the same baseline */
+  return str;
 }
 
 function odoHTML(id, str, cls = '') {
@@ -3645,15 +3640,7 @@ function odoHTML(id, str, cls = '') {
 function setOdo(target, str) {
   const el = typeof target === 'string' ? document.getElementById(target) : target;
   if (!el || el.dataset.odo === str) return;
-  const shape = s => [...(s || '')].map(c => /\d/.test(c) ? '#' : c).join('');
-  if (shape(el.dataset.odo) !== shape(str)) {
-    el.classList.add('odo');
-    el.innerHTML = odoInner(str);
-  } else {
-    const strips = el.querySelectorAll('.odd i');
-    let j = 0;
-    [...str].forEach(ch => { if (/\d/.test(ch)) strips[j++].style.transform = `translateY(-${(+ch * 1.12).toFixed(2)}em)`; });
-  }
+  el.textContent = str;
   el.dataset.odo = str;
 }
 
@@ -6105,103 +6092,89 @@ function drawCallout(cv) {
   const x = cv.getContext('2d');
   const opp = inv.to, me = myProfile.name;
   const pot = '£' + (inv.stake * (1 + inv.odds)).toLocaleString('en-GB');
-  const rnd = (a, b) => { const s = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453; return s - Math.floor(s); };
-  /* table ground */
-  x.fillStyle = '#0e0f16'; x.fillRect(0, 0, W, H);
-  /* playing-card: gradient outline + dark face */
-  const og = x.createLinearGradient(40, 40, W - 40, H - 40);
-  og.addColorStop(0, '#7c6ee6'); og.addColorStop(.5, '#d95ddf'); og.addColorStop(1, '#9081df');
-  x.fillStyle = og;
-  x.beginPath(); x.roundRect(40, 40, W - 80, H - 80, 46); x.fill();
-  x.fillStyle = '#16172a';
-  x.beginPath(); x.roundRect(45, 45, W - 90, H - 90, 42); x.fill();
-  /* dot-matrix reveal, vignetted toward the middle */
-  const DOT_COLS = ['143,108,255', '99,102,241', '211,194,240'];
-  for (let dy = 90; dy < H - 90; dy += 26) for (let dx = 90; dx < W - 90; dx += 26) {
-    const d = Math.hypot(dx - W / 2, dy - H / 2);
-    const a = Math.max(0, .3 - d / 2100) * rnd(dx, dy);
-    if (a < .015) continue;
-    x.fillStyle = `rgba(${DOT_COLS[Math.floor(rnd(dy, dx) * 3)]},${a.toFixed(3)})`;
-    x.fillRect(dx, dy, 4, 4);
-  }
-  /* mirrored corner inscriptions — the playing-card tell */
+  /* soft light ground, one clean white card */
+  x.fillStyle = '#eef0f5'; x.fillRect(0, 0, W, H);
+  x.save();
+  x.shadowColor = 'rgba(40, 40, 70, .10)'; x.shadowBlur = 60; x.shadowOffsetY = 24;
+  x.fillStyle = '#ffffff';
+  x.beginPath(); x.roundRect(70, 70, W - 140, H - 140, 48); x.fill();
+  x.restore();
+  x.strokeStyle = '#e9e7f2'; x.lineWidth = 2;
+  x.beginPath(); x.roundRect(70, 70, W - 140, H - 140, 48); x.stroke();
+  /* quiet mirrored corner inscriptions */
   const corner = flip => {
     x.save();
-    if (flip) { x.translate(W - 92, H - 92); x.rotate(Math.PI); } else x.translate(92, 92);
+    if (flip) { x.translate(W - 132, H - 132); x.rotate(Math.PI); } else x.translate(132, 132);
     x.textAlign = 'left';
-    x.fillStyle = '#B794E6';
-    x.font = '800 62px -apple-system, "Segoe UI", sans-serif';
-    x.fillText('VS', 0, 56);
-    x.fillStyle = 'rgba(255,255,255,.78)';
-    x.font = '700 25px ui-monospace, Menlo, monospace';
-    x.fillText(pot, 0, 98);
+    x.fillStyle = '#6A2E9E';
+    x.font = '800 38px -apple-system, "Segoe UI", sans-serif';
+    x.fillText('VS', 0, 32);
+    x.fillStyle = '#bcbac9';
+    x.font = '700 19px ui-monospace, Menlo, monospace';
+    x.fillText(pot, 0, 64);
     x.restore();
   };
   corner(false); corner(true);
-  /* header */
+  /* wordmark */
   x.textAlign = 'center';
-  x.fillStyle = 'rgba(255,255,255,.92)';
-  x.font = '800 46px -apple-system, "Segoe UI", sans-serif';
-  x.fillText('PAKTOS', W / 2, 148);
-  x.fillStyle = '#D3C2F0';
-  x.font = '700 26px ui-monospace, Menlo, monospace';
-  x.fillText('D U E L   I N V I T E', W / 2, 200);
-  /* faces */
-  const face = (cx2, name, tint1, tint2) => {
-    const fg = x.createLinearGradient(cx2 - 105, 350, cx2 + 105, 560);
-    fg.addColorStop(0, tint1); fg.addColorStop(1, tint2);
+  x.fillStyle = '#17181c';
+  x.font = '800 38px -apple-system, "Segoe UI", sans-serif';
+  x.fillText('PAKTOS', W / 2, 184);
+  x.fillStyle = '#6A2E9E';
+  x.font = '700 20px ui-monospace, Menlo, monospace';
+  x.fillText('D U E L   I N V I T E', W / 2, 228);
+  /* matchup */
+  const face = (cx2, name, t1, t2) => {
+    const fg = x.createLinearGradient(cx2 - 88, 330, cx2 + 88, 510);
+    fg.addColorStop(0, t1); fg.addColorStop(1, t2);
     x.fillStyle = fg;
-    x.beginPath(); x.arc(cx2, 460, 105, 0, 7); x.fill();
+    x.beginPath(); x.arc(cx2, 420, 88, 0, 7); x.fill();
     x.fillStyle = '#fff';
-    x.font = '800 88px -apple-system, "Segoe UI", sans-serif';
-    x.fillText(name.charAt(0).toUpperCase(), cx2, 492);
-    x.font = '800 42px -apple-system, "Segoe UI", sans-serif';
-    x.fillText(name, cx2, 640);
-    x.fillStyle = 'rgba(255,255,255,.5)';
-    x.font = '600 27px ui-monospace, Menlo, monospace';
-    x.fillText('@' + name, cx2, 684);
-    x.fillStyle = '#fff';
+    x.font = '800 72px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(name.charAt(0).toUpperCase(), cx2, 446);
+    x.fillStyle = '#17181c';
+    x.font = '800 37px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(name, cx2, 566);
+    x.fillStyle = '#a6a5b1';
+    x.font = '600 23px ui-monospace, Menlo, monospace';
+    x.fillText('@' + name, cx2, 604);
   };
-  face(W * 0.28, me, '#7c3aed', '#d946ef');
-  face(W * 0.72, opp, '#9081DF', '#D3C2F0');
-  x.fillStyle = 'rgba(255,255,255,.55)';
-  x.font = '800 40px ui-monospace, Menlo, monospace';
-  x.fillText('VS', W / 2, 475);
-  /* headline */
-  x.fillStyle = 'rgba(255,255,255,.96)';
-  x.font = '800 56px -apple-system, "Segoe UI", sans-serif';
-  x.fillText(`${me} calls out @${opp}`, W / 2, 790);
-  x.fillStyle = 'rgba(255,255,255,.55)';
-  x.font = '400 31px -apple-system, "Segoe UI", sans-serif';
-  x.fillText('Higher return when the window closes takes the pot.', W / 2, 842);
-  /* terms tiles */
-  const terms = [
+  face(W * 0.3, me, '#7c3aed', '#d946ef');
+  face(W * 0.7, opp, '#9081DF', '#D3C2F0');
+  x.fillStyle = '#cbcad6';
+  x.font = '800 28px ui-monospace, Menlo, monospace';
+  x.fillText('VS', W / 2, 430);
+  /* the stats — nothing else */
+  const rows = [
     ['STAKE', '£' + inv.stake.toLocaleString('en-GB')],
     ['ODDS', inv.odds + ':1'],
-    ['POT', pot],
+    ['PRIZE POT', pot],
     ['KICK-OFF', inv.start.toUpperCase()],
+    ['MARKETS', inv.market.toUpperCase()],
   ];
-  const bw = 218, gap2 = 18, x0 = (W - bw * 4 - gap2 * 3) / 2;
-  terms.forEach(([k, v], i2) => {
-    const bx = x0 + i2 * (bw + gap2);
-    x.fillStyle = 'rgba(255,255,255,.06)';
-    x.beginPath(); x.roundRect(bx, 900, bw, 148, 22); x.fill();
-    x.strokeStyle = 'rgba(255,255,255,.12)'; x.stroke();
-    x.fillStyle = 'rgba(255,255,255,.45)';
-    x.font = '700 20px ui-monospace, Menlo, monospace';
-    x.fillText(k, bx + bw / 2, 952);
-    x.fillStyle = i2 === 2 ? '#D3C2F0' : 'rgba(255,255,255,.95)';
-    x.font = '800 38px -apple-system, "Segoe UI", sans-serif';
-    x.fillText(v, bx + bw / 2, 1012);
+  let ry = 736;
+  rows.forEach(([k, v], i2) => {
+    if (i2) {
+      x.strokeStyle = '#efeef5'; x.lineWidth = 2;
+      x.beginPath(); x.moveTo(180, ry - 54); x.lineTo(W - 180, ry - 54); x.stroke();
+    }
+    x.textAlign = 'left';
+    x.fillStyle = '#a6a5b1';
+    x.font = '700 22px ui-monospace, Menlo, monospace';
+    x.fillText(k, 180, ry);
+    x.textAlign = 'right';
+    x.fillStyle = i2 === 2 ? '#6A2E9E' : '#17181c';
+    x.font = '800 40px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(v, W - 180, ry + 6);
+    ry += 92;
   });
-  /* the tag line */
-  x.fillStyle = '#F0DCFF';
-  x.font = '800 60px -apple-system, "Segoe UI", sans-serif';
-  x.fillText(`@${opp} — you in?`, W / 2, 1150);
-  x.fillStyle = '#B794E6';
-  x.font = '700 28px ui-monospace, Menlo, monospace';
-  x.fillText('accept the duel · ' + partner.link, W / 2, 1212);
+  /* whisper of a footer */
+  x.textAlign = 'center';
+  x.fillStyle = '#bcbac9';
+  x.font = '700 20px ui-monospace, Menlo, monospace';
+  x.fillText(partner.link, W / 2, H - 136);
 }
+
 function drawWinShare(cv, d) {
   const W = 1080, H = 1350;
   cv.width = W; cv.height = H;
@@ -6690,104 +6663,83 @@ function drawBattleShare(cv, b) {
   const x = cv.getContext('2d');
   const me = myProfile.name;
   const pot = '£' + b.pot.toLocaleString('en-GB');
-  const rnd = (a2, b2) => { const s = Math.sin(a2 * 12.9898 + b2 * 78.233) * 43758.5453; return s - Math.floor(s); };
-  x.fillStyle = '#0e0f16'; x.fillRect(0, 0, W, H);
-  const og = x.createLinearGradient(40, 40, W - 40, H - 40);
-  og.addColorStop(0, '#7c6ee6'); og.addColorStop(.5, '#d95ddf'); og.addColorStop(1, '#9081df');
-  x.fillStyle = og;
-  x.beginPath(); x.roundRect(40, 40, W - 80, H - 80, 46); x.fill();
-  x.fillStyle = '#16172a';
-  x.beginPath(); x.roundRect(45, 45, W - 90, H - 90, 42); x.fill();
-  const DOT_COLS = ['143,108,255', '99,102,241', '211,194,240'];
-  for (let dy = 90; dy < H - 90; dy += 26) for (let dx = 90; dx < W - 90; dx += 26) {
-    const d = Math.hypot(dx - W / 2, dy - H / 2);
-    const a2 = Math.max(0, .3 - d / 2100) * rnd(dx, dy);
-    if (a2 < .015) continue;
-    x.fillStyle = `rgba(${DOT_COLS[Math.floor(rnd(dy, dx) * 3)]},${a2.toFixed(3)})`;
-    x.fillRect(dx, dy, 4, 4);
-  }
+  x.fillStyle = '#eef0f5'; x.fillRect(0, 0, W, H);
+  x.save();
+  x.shadowColor = 'rgba(40, 40, 70, .10)'; x.shadowBlur = 60; x.shadowOffsetY = 24;
+  x.fillStyle = '#ffffff';
+  x.beginPath(); x.roundRect(70, 70, W - 140, H - 140, 48); x.fill();
+  x.restore();
+  x.strokeStyle = '#e9e7f2'; x.lineWidth = 2;
+  x.beginPath(); x.roundRect(70, 70, W - 140, H - 140, 48); x.stroke();
   const corner = flip => {
     x.save();
-    if (flip) { x.translate(W - 92, H - 92); x.rotate(Math.PI); } else x.translate(92, 92);
+    if (flip) { x.translate(W - 132, H - 132); x.rotate(Math.PI); } else x.translate(132, 132);
     x.textAlign = 'left';
-    x.fillStyle = '#B794E6';
-    x.font = '800 62px -apple-system, "Segoe UI", sans-serif';
-    x.fillText('VS', 0, 56);
-    x.fillStyle = 'rgba(255,255,255,.78)';
-    x.font = '700 25px ui-monospace, Menlo, monospace';
-    x.fillText(pot, 0, 98);
+    x.fillStyle = '#6A2E9E';
+    x.font = '800 38px -apple-system, "Segoe UI", sans-serif';
+    x.fillText('VS', 0, 32);
+    x.fillStyle = '#bcbac9';
+    x.font = '700 19px ui-monospace, Menlo, monospace';
+    x.fillText(pot, 0, 64);
     x.restore();
   };
   corner(false); corner(true);
   x.textAlign = 'center';
-  x.fillStyle = 'rgba(255,255,255,.92)';
-  x.font = '800 46px -apple-system, "Segoe UI", sans-serif';
-  x.fillText('PAKTOS', W / 2, 148);
-  x.fillStyle = '#34d399';
-  x.font = '700 26px ui-monospace, Menlo, monospace';
-  x.fillText('● L I V E   B A T T L E', W / 2, 200);
-  /* faces + live returns */
-  const face = (cx2, name, ret, tint1, tint2) => {
-    const fg = x.createLinearGradient(cx2 - 100, 300, cx2 + 100, 500);
-    fg.addColorStop(0, tint1); fg.addColorStop(1, tint2);
+  x.fillStyle = '#17181c';
+  x.font = '800 38px -apple-system, "Segoe UI", sans-serif';
+  x.fillText('PAKTOS', W / 2, 184);
+  x.fillStyle = '#10b981';
+  x.font = '700 20px ui-monospace, Menlo, monospace';
+  x.fillText('● L I V E   B A T T L E', W / 2, 228);
+  /* matchup with live returns */
+  const face = (cx2, name, ret, t1, t2) => {
+    const fg = x.createLinearGradient(cx2 - 88, 330, cx2 + 88, 510);
+    fg.addColorStop(0, t1); fg.addColorStop(1, t2);
     x.fillStyle = fg;
-    x.beginPath(); x.arc(cx2, 410, 100, 0, 7); x.fill();
+    x.beginPath(); x.arc(cx2, 420, 88, 0, 7); x.fill();
     x.fillStyle = '#fff';
-    x.font = '800 84px -apple-system, "Segoe UI", sans-serif';
-    x.fillText(name.charAt(0).toUpperCase(), cx2, 440);
-    x.font = '800 40px -apple-system, "Segoe UI", sans-serif';
-    x.fillText(name, cx2, 578);
-    x.fillStyle = ret >= 0 ? '#34d399' : 'rgba(255,255,255,.6)';
-    x.font = '800 52px -apple-system, "Segoe UI", sans-serif';
-    x.fillText((ret >= 0 ? '+' : '') + ret.toFixed(2) + '%', cx2, 646);
+    x.font = '800 72px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(name.charAt(0).toUpperCase(), cx2, 446);
+    x.fillStyle = '#17181c';
+    x.font = '800 37px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(name, cx2, 566);
+    x.fillStyle = ret >= 0 ? '#10b981' : '#71717d';
+    x.font = '800 44px -apple-system, "Segoe UI", sans-serif';
+    x.fillText((ret >= 0 ? '+' : '') + ret.toFixed(2) + '%', cx2, 622);
   };
-  face(W * 0.28, me, b.my, '#7c3aed', '#d946ef');
-  face(W * 0.72, b.opp, b.op, b.machine ? '#24262c' : '#9081DF', b.machine ? '#3a3d46' : '#D3C2F0');
-  x.fillStyle = 'rgba(255,255,255,.55)';
-  x.font = '800 38px ui-monospace, Menlo, monospace';
-  x.fillText('VS', W / 2, 425);
-  /* frozen pot panel */
-  const fg2 = x.createLinearGradient(150, 720, W - 150, 930);
-  fg2.addColorStop(0, '#8f9fd8'); fg2.addColorStop(.55, '#aebde8'); fg2.addColorStop(1, '#9081DF');
-  x.fillStyle = fg2;
-  x.beginPath(); x.roundRect(150, 720, W - 300, 200, 30); x.fill();
-  x.fillStyle = 'rgba(255,255,255,.14)';
-  x.beginPath(); x.moveTo(190, 920); x.lineTo(330, 760); x.lineTo(450, 920); x.closePath(); x.fill();
-  x.beginPath(); x.moveTo(560, 920); x.lineTo(710, 745); x.lineTo(860, 920); x.closePath(); x.fill();
-  x.fillStyle = 'rgba(20,16,50,.55)';
-  x.font = '700 22px ui-monospace, Menlo, monospace';
-  x.fillText('PRIZE POT · FROZEN IN ESCROW', W / 2, 775);
-  x.fillStyle = '#fff';
-  x.shadowColor = 'rgba(28,18,82,.5)'; x.shadowBlur = 18;
-  x.font = '800 84px -apple-system, "Segoe UI", sans-serif';
-  x.fillText(pot, W / 2, 878);
-  x.shadowBlur = 0;
-  /* terms tiles */
-  const terms = [
+  face(W * 0.3, me, b.my, '#7c3aed', '#d946ef');
+  face(W * 0.7, b.opp, b.op, b.machine ? '#24262c' : '#9081DF', b.machine ? '#3a3d46' : '#D3C2F0');
+  x.fillStyle = '#cbcad6';
+  x.font = '800 28px ui-monospace, Menlo, monospace';
+  x.fillText('VS', W / 2, 430);
+  /* the stats — nothing else */
+  const rows = [
+    ['PRIZE POT · IN ESCROW', pot],
     ['WINDOW', b.window.replace(' window', '').toUpperCase()],
+    ['MARKETS', (b.market || 'All markets').toUpperCase()],
     ['ACCOUNT', b.acctId || '—'],
     ['WATCHING', String(b.watching)],
   ];
-  const bw = 280, gap2 = 20, x0 = (W - bw * 3 - gap2 * 2) / 2;
-  terms.forEach(([k, v], i2) => {
-    const bx = x0 + i2 * (bw + gap2);
-    x.fillStyle = 'rgba(255,255,255,.06)';
-    x.beginPath(); x.roundRect(bx, 970, bw, 140, 22); x.fill();
-    x.strokeStyle = 'rgba(255,255,255,.12)'; x.stroke();
-    x.fillStyle = 'rgba(255,255,255,.45)';
-    x.font = '700 20px ui-monospace, Menlo, monospace';
-    x.fillText(k, bx + bw / 2, 1020);
-    x.fillStyle = 'rgba(255,255,255,.95)';
-    x.font = '800 36px -apple-system, "Segoe UI", sans-serif';
-    x.fillText(v, bx + bw / 2, 1078);
+  let ry = 758;
+  rows.forEach(([k, v], i2) => {
+    if (i2) {
+      x.strokeStyle = '#efeef5'; x.lineWidth = 2;
+      x.beginPath(); x.moveTo(180, ry - 54); x.lineTo(W - 180, ry - 54); x.stroke();
+    }
+    x.textAlign = 'left';
+    x.fillStyle = '#a6a5b1';
+    x.font = '700 22px ui-monospace, Menlo, monospace';
+    x.fillText(k, 180, ry);
+    x.textAlign = 'right';
+    x.fillStyle = i2 === 0 ? '#6A2E9E' : '#17181c';
+    x.font = '800 40px -apple-system, "Segoe UI", sans-serif';
+    x.fillText(v, W - 180, ry + 6);
+    ry += 92;
   });
-  /* tagline */
-  x.fillStyle = '#F0DCFF';
-  x.font = '800 46px -apple-system, "Segoe UI", sans-serif';
-  x.fillText(b.machine ? 'Beat the machine, take the pot.' : `@${b.opp} — still want it?`, W / 2, 1180);
-  x.fillStyle = '#B794E6';
-  x.font = '700 28px ui-monospace, Menlo, monospace';
-  x.fillText('watch it live · ' + partner.link, W / 2, 1236);
+  x.textAlign = 'center';
+  x.fillStyle = '#bcbac9';
+  x.font = '700 20px ui-monospace, Menlo, monospace';
+  x.fillText(partner.link, W / 2, H - 136);
 }
 
 function showBattleShare(b) {
@@ -8034,23 +7986,6 @@ function renderLive() {
   viewEl('live').innerHTML = `
     <button class="back-btn" data-nav="arena">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to Arena</button>
-    <div class="lb-hero panel-card">
-      <div class="lbh-tex" aria-hidden="true"></div>
-      <div class="lbh-main">
-        <span class="live-tag"><span class="pulse-dot"></span><span class="mono">LIVE&nbsp;NOW</span></span>
-        <h2 class="pt-title" style="margin:8px 0 2px">Live battles</h2>
-        <p class="section-sub" style="margin:0">every live duel on the platform — pick one and pull up ringside</p>
-      </div>
-      <div class="lbh-stats mono">
-        <div class="lbh-stat"><b id="lbCount">${LIVE_B.length}</b><span>LIVE&nbsp;NOW</span></div>
-        <div class="lbh-stat"><b id="lbPool">£${(LIVE_B.reduce((a2, b2) => a2 + b2.pot, 0) / 1e6).toFixed(2)}M</b><span>ESCROWED</span></div>
-        <div class="lbh-stat"><b id="lbSettled">${lbSettled.toLocaleString('en-GB')}</b><span>POTS&nbsp;SETTLED&nbsp;TODAY</span></div>
-        <div class="lbh-stat swing"><b id="lbSwing">£${lbSwing.toLocaleString('en-GB')}</b><span>BIGGEST&nbsp;SWING&nbsp;LIVE</span></div>
-      </div>
-    </div>
-    <div class="section-head"><div><h3 class="section-title">Battles across the globe</h3>
-      <p class="section-sub"><span class="mono">LIVE&nbsp;ESCROW&nbsp;ROUTES</span><span class="dot-sep">·</span><span>stakes moving between traders on every continent, settled through one escrow</span></p></div></div>
-    <div class="wm-card">${wmSVG()}</div>
     <div class="lb-bar">
       ${[['pot', 'Pot', LB_POT_L, lbf.pot, 'lbpot'], ['dur', 'Duration', LB_DUR_L, lbf.dur, 'lbdur'], ['sort', 'Sort', LB_SORT_L, lbf.sort, 'lbsort']].map(([k2, lab, L, cur, attr], gi) => `
         ${gi ? '<i class="lb-bar-div"></i>' : ''}
@@ -8064,6 +7999,9 @@ function renderLive() {
       </div>
     </div>
     ${board}
+    <div class="section-head" style="margin-top:30px"><div><h3 class="section-title">Battles across the globe</h3>
+      <p class="section-sub"><span class="mono">LIVE&nbsp;ESCROW&nbsp;ROUTES</span><span class="dot-sep">·</span><span>stakes moving between traders on every continent, settled through one escrow</span></p></div></div>
+    <div class="wm-card">${wmSVG()}</div>
     <div class="lb-tip" id="lbTip"></div>`;
   document.querySelectorAll('[data-lbchart]').forEach(el => {
     const b = LIVE_B[+el.dataset.lbchart];
