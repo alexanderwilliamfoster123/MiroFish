@@ -2979,7 +2979,33 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .perf-duo { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; align-items: start; margin-top: 16px; }
 @media (max-width: 1100px) { .perf-duo { grid-template-columns: 1fr; } }
 
-/* Topbar profile avatar */
+/* Escrow ticket — the receipt for locked terms */
+.esc-veil { position: fixed; inset: 0; z-index: 150; background: rgba(15, 16, 20, 0.45); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px; zoom: 1.176; animation: viewfade 0.3s ease; }
+.esc-ticket { position: relative; width: 386px; max-width: 100%; background: var(--card); border-radius: 22px; box-shadow: var(--neu-out), 0 30px 70px rgba(0, 0, 0, 0.35); animation: rewardPop 0.5s cubic-bezier(0.22, 1.4, 0.36, 1); }
+.esc-ticket::before, .esc-ticket::after { content: ''; position: absolute; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; border-radius: 50%; background: var(--bg, #f0f1f5); }
+.esc-ticket::before { left: -15px; }
+.esc-ticket::after { right: -15px; }
+.esc-top { padding: 28px 28px 22px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.esc-check { width: 62px; height: 62px; border-radius: 50%; background: var(--surface); box-shadow: var(--neu-in-sm); display: flex; align-items: center; justify-content: center; color: var(--lbA); animation: rewardPop 0.6s cubic-bezier(0.22, 1.4, 0.36, 1) 0.15s backwards; }
+.esc-check svg { width: 30px; height: 30px; }
+.esc-h { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; margin-top: 14px; }
+.esc-s { font-size: 12.5px; color: var(--text-faint); margin-top: 5px; line-height: 1.5; }
+.esc-body { padding: 0 28px 24px; display: flex; flex-direction: column; gap: 16px; }
+.esc-dash { border-top: 2px dashed var(--line); }
+.esc-grid { display: flex; justify-content: space-between; gap: 14px; text-align: left; }
+.esc-grid p, .esc-when p { margin: 0; }
+.esc-k { font-size: 8.5px; letter-spacing: 0.11em; color: var(--text-faint); margin-bottom: 4px; }
+.esc-v { font-size: 13.5px; font-weight: 700; }
+.esc-v.big { font-size: 17px; font-weight: 800; }
+.esc-acct { display: flex; align-items: center; gap: 12px; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 14px; padding: 13px 15px; text-align: left; }
+.esc-acct .ad-ic { flex: none; }
+.esc-acct b { display: block; font-size: 13px; }
+.esc-acct small { font-size: 10.5px; color: var(--text-faint); }
+.esc-bar { display: flex; flex-direction: column; align-items: center; color: var(--text); }
+.esc-bar p { margin: 8px 0 0; font-size: 11px; color: var(--text-faint); letter-spacing: 0.3em; }
+.esc-actions { display: flex; gap: 9px; padding: 0 28px 26px; }
+.esc-actions .btn-mach { flex: 1; }
+
 .icon-btn.avatar-btn { display: inline-flex; align-items: center; justify-content: center; }
 .tb-av { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
 
@@ -6197,6 +6223,55 @@ function battleRet(b) {
   return (bal - a2.startBal) / a2.startBal * 100;
 }
 
+function barcodeSVG(value) {
+  const hash = [...value].reduce((a2, c) => ((a2 << 5) - a2 + c.charCodeAt(0)) | 0, 0);
+  const rnd2 = s2 => { const x = Math.sin(s2) * 10000; return x - Math.floor(x); };
+  const bars = Array.from({ length: 60 }, (_, i2) => (rnd2(hash + i2) > 0.7 ? 2.5 : 1.5));
+  const spacing = 1.5;
+  const total = bars.reduce((a2, w) => a2 + w + spacing, -spacing);
+  let x = (250 - total) / 2;
+  const rects = bars.map(w => { const r = `<rect x="${x.toFixed(1)}" y="10" width="${w}" height="50"/>`; x += w + spacing; return r; }).join('');
+  return `<svg width="250" height="70" viewBox="0 0 250 70" fill="currentColor" aria-hidden="true">${rects}</svg>`;
+}
+
+function showEscrowTicket(b) {
+  document.getElementById('escVeil')?.remove();
+  const escId = 'E-' + String(100000 + (hashName(String(b.opp) + b.id) % 900000));
+  const barVal = String(28900000000000 + (hashName(escId) % 99999999));
+  const when = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()).replace(',', ' ·');
+  const veil = document.createElement('div');
+  veil.className = 'esc-veil';
+  veil.id = 'escVeil';
+  veil.innerHTML = `<div class="esc-ticket">
+    <div class="esc-top">
+      <div class="esc-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+      <h2 class="esc-h">Terms locked in</h2>
+      <p class="esc-s">Your stake is sitting in escrow — nobody can touch it.<br>Higher return at window close takes the pot.</p>
+    </div>
+    <div class="esc-body">
+      <div class="esc-dash"></div>
+      <div class="esc-grid">
+        <div><p class="esc-k mono">ESCROW&nbsp;ID</p><p class="esc-v mono">${escId}</p></div>
+        <div style="text-align:right"><p class="esc-k mono">POT&nbsp;IN&nbsp;ESCROW</p><p class="esc-v big">£${b.pot.toLocaleString('en-GB')}</p></div>
+      </div>
+      <div class="esc-when"><p class="esc-k mono">LOCKED&nbsp;AT</p><p class="esc-v">${when}</p></div>
+      <div class="esc-acct">
+        <span class="ad-ic btl">VS</span>
+        <span><b>${b.acctId || 'Battle account'} · vs ${b.opp}</b><small>£${BATTLE_CAPITAL.toLocaleString('en-GB')} battle capital · ${b.window}</small></span>
+      </div>
+      <div class="esc-dash"></div>
+      <div class="esc-bar">${barcodeSVG(barVal)}<p class="mono">${barVal}</p></div>
+    </div>
+    <div class="esc-actions">
+      <button class="btn-mach" data-btrade="${b.acctId}">Start trading it →</button>
+      <button class="btn-neu" data-escdone>Done</button>
+    </div>
+  </div>`;
+  veil.addEventListener('click', e2 => { if (e2.target === veil) veil.remove(); });
+  document.body.appendChild(veil);
+  fireConfetti();
+}
+
 function startBattle(cfg) {
   const acct = { id: 'BTL-' + (btlSeq++), label: 'vs ' + cfg.opp, bal: BATTLE_CAPITAL, startBal: BATTLE_CAPITAL, pos: null, battle: true };
   ACCTS.push(acct);
@@ -6211,6 +6286,7 @@ function startBattle(cfg) {
   markStreak();
   saveDB();
   if (currentView === 'terminal') renderTerminal();
+  showEscrowTicket(b);
   return b;
 }
 
@@ -8082,7 +8158,9 @@ document.addEventListener('click', e => {
     renderTerminal();
     return toast(`Switched to ${ACCTS[i].id} — ${ACCTS[i].label}`);
   }
+  if ((el = q('[data-escdone]'))) { document.getElementById('escVeil')?.remove(); return; }
   if ((el = q('[data-btrade]'))) {
+    document.getElementById('escVeil')?.remove();
     const ai = ACCTS.findIndex(a2 => a2.id === el.dataset.btrade);
     if (ai < 0) return toast('That battle account has settled');
     if (ai !== term.acct) {
