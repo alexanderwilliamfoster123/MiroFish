@@ -2902,6 +2902,52 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .as-tx small { font-size: 8.5px; letter-spacing: 0.02em; opacity: 0.75; margin-bottom: 3px; }
 .as-tx b { font-size: 14.5px; font-weight: 700; letter-spacing: 0.01em; }
 
+/* Account dropdown — scales to any number of battle accounts */
+.acct-dd { position: relative; display: inline-block; margin-bottom: 18px; min-width: 340px; z-index: 20; }
+.acct-dd-btn { display: flex; align-items: center; gap: 12px; width: 100%; border: 0; cursor: pointer; font: inherit; text-align: left; background: var(--card); box-shadow: var(--neu-out-sm); border-radius: 16px; padding: 11px 16px; color: var(--text); }
+.acct-dd-btn > svg { width: 15px; height: 15px; color: var(--text-faint); flex: none; }
+.ad-ic { width: 34px; height: 34px; flex: none; border-radius: 11px; background: var(--surface); box-shadow: var(--neu-in-sm); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: var(--text-soft); }
+.ad-ic.btl { color: var(--lbA); }
+.ad-tx { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.ad-tx b { font-size: 13.5px; font-weight: 800; letter-spacing: 0.02em; }
+.ad-tx small { font-size: 10px; color: var(--text-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ad-n { font-size: 8.5px; letter-spacing: 0.09em; color: var(--text-faint); flex: none; }
+.acct-dd-menu { position: absolute; top: calc(100% + 8px); left: 0; right: 0; max-height: 320px; overflow-y: auto; background: var(--card); border-radius: 16px; box-shadow: var(--neu-out), 0 22px 44px rgba(20, 20, 45, 0.16); padding: 6px; display: flex; flex-direction: column; gap: 2px; z-index: 30; }
+.acct-dd-menu[hidden] { display: none; }
+.ad-item { display: flex; align-items: center; gap: 11px; border: 0; cursor: pointer; font: inherit; text-align: left; background: none; border-radius: 12px; padding: 9px 11px; color: var(--text); }
+.ad-item:hover { background: var(--surface); }
+.ad-item.on { background: var(--surface); box-shadow: var(--neu-in-sm); }
+.ad-item.on .ad-tx b { color: var(--lbA); }
+.ad-bal { margin-left: auto; font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.bacct { font-size: 8.5px; letter-spacing: 0.07em; padding: 3px 8px; border-radius: 999px; background: var(--surface); box-shadow: var(--neu-in-sm); color: var(--lbA); font-weight: 700; }
+
+/* Airbnb-style filter bar — one clean pill, dropdown groups */
+.lb-bar { display: flex; align-items: stretch; background: var(--card); border-radius: 999px; box-shadow: var(--neu-out-sm); padding: 6px; margin-bottom: 18px; width: fit-content; max-width: 100%; position: relative; z-index: 15; flex-wrap: wrap; }
+.lb-g { position: relative; }
+.lb-g > button { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; border: 0; background: none; cursor: pointer; font: inherit; padding: 8px 24px; border-radius: 999px; text-align: left; color: var(--text); }
+.lb-g > button:hover { background: var(--surface); }
+.lb-g.open > button { background: var(--surface); box-shadow: var(--neu-in-sm); }
+.lb-g small { font-size: 8.5px; letter-spacing: 0.1em; color: var(--text-faint); text-transform: uppercase; }
+.lb-g b { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.lb-g b svg { width: 11px; height: 11px; color: var(--text-faint); }
+.lb-bar-div { width: 1px; background: var(--line); margin: 9px 2px; }
+.lb-menu { position: absolute; top: calc(100% + 9px); left: 0; min-width: 185px; background: var(--card); border-radius: 16px; box-shadow: var(--neu-out), 0 20px 42px rgba(20, 20, 45, 0.15); padding: 6px; display: flex; flex-direction: column; gap: 1px; z-index: 40; }
+.lb-menu button { border: 0; background: none; cursor: pointer; font: inherit; text-align: left; padding: 9px 13px; border-radius: 10px; font-size: 12.5px; color: var(--text-soft); }
+.lb-menu button:hover { background: var(--surface); }
+.lb-menu button.on { color: var(--lbA); font-weight: 700; }
+.lb-bar-view { display: flex; align-items: center; gap: 4px; padding: 0 8px 0 14px; margin-left: 4px; border-left: 1px solid var(--line); }
+.lb-bar-view button { border: 0; background: none; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-faint); }
+.lb-bar-view button.on { background: var(--surface); box-shadow: var(--neu-in-sm); color: var(--text); }
+.lb-bar-view svg { width: 15px; height: 15px; }
+
+/* Social profiles — neumorphic boxes that lift, linked out */
+.soc-row { display: flex; gap: 9px; align-items: center; margin-top: 12px; }
+.soc-box { width: 34px; height: 34px; border-radius: 11px; background: var(--surface); box-shadow: var(--neu-out-sm); display: flex; align-items: center; justify-content: center; color: var(--text-soft); transition: transform 0.2s cubic-bezier(0.25, 1.4, 0.4, 1), color 0.2s ease, box-shadow 0.2s ease; }
+.soc-box:hover { transform: translateY(-4px); color: var(--lbA); box-shadow: var(--neu-out-sm), 0 10px 18px rgba(20, 20, 45, 0.12); }
+.soc-box svg { width: 16px; height: 16px; }
+.soc-add { border: 0; background: none; cursor: pointer; font: inherit; font-size: 11px; font-weight: 600; color: var(--text-faint); }
+.soc-add:hover { color: var(--text); }
+
 /* Topbar profile avatar */
 .icon-btn.avatar-btn { display: inline-flex; align-items: center; justify-content: center; }
 .tb-av { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
@@ -3469,11 +3515,19 @@ function tickLiveNumbers() {
     const settled = [];
     myBattles.forEach(b => {
       b.age = (b.age || 0) + 1;
-      if (b.age >= 12) settled.push(b);
+      if (b.age >= (b.acctId ? 100 : 12)) settled.push(b);
     });
     settled.forEach(b => {
       myBattles.splice(myBattles.indexOf(b), 1);
-      if (b.my > b.op) {
+      const won = b.my > b.op;
+      settleBattleAccount(b);
+      pkLedger.unshift({
+        opp: b.opp, machine: !!b.machine, mic: b.mic, mtint: b.mtint,
+        acctId: b.acctId || '—', window: b.window, pot: b.pot,
+        my: +b.my.toFixed(2), op: +b.op.toFixed(2), won, at: Date.now()
+      });
+      saveDB();
+      if (won) {
         showReward(b.pot, b.opp);
       } else {
         toast(`Battle settled — ${b.opp} edged it ${b.op.toFixed(2)}% to ${b.my.toFixed(2)}%`);
@@ -3482,7 +3536,8 @@ function tickLiveNumbers() {
       if (currentView === 'arena') renderArena();
     });
     myBattles.forEach((b, i) => {
-      b.my += (Math.random() - 0.48) * 0.35;
+      if (b.acctId && acctById(b.acctId)) b.my = battleRet(b);
+      else b.my += (Math.random() - 0.48) * 0.35;
       b.op += (Math.random() - 0.5) * 0.35;
       if (currentView !== 'arena') return;
       const my = document.querySelector(`[data-bmy="${i}"]`);
@@ -4025,9 +4080,20 @@ function renderTerminal() {
     `<span class="hist-pill ${h.pnl >= 0 ? 'up' : 'down'}">${h.pnl >= 0 ? '+' : '−'}${gbp(h.pnl)}</span>`).join('');
 
   viewEl('terminal').innerHTML = `
-    <div class="acct-toggle" role="tablist" aria-label="Trading account">
-      <span class="at-thumb" style="transform:translateX(${term.acct * 100}%)"></span>
-      ${ACCTS.map((ac, i) => `<button role="tab" aria-selected="${i === term.acct}" class="${i === term.acct ? 'on' : ''}" data-tacct="${i}"><b>${ac.id}</b><small>${ac.label} · £${Math.round(i === term.acct ? term.bal : ac.bal).toLocaleString('en-GB')}</small></button>`).join('')}
+    <div class="acct-dd" id="acctDd">
+      <button class="acct-dd-btn" data-acctdd aria-haspopup="listbox" aria-expanded="false">
+        <span class="ad-ic${ACCTS[term.acct].battle ? ' btl' : ''}">${ACCTS[term.acct].battle ? 'VS' : '£'}</span>
+        <span class="ad-tx"><b>${ACCTS[term.acct].id}</b><small>${ACCTS[term.acct].label} · £${Math.round(term.bal).toLocaleString('en-GB')}</small></span>
+        <span class="ad-n mono">${ACCTS.length}&nbsp;ACCOUNTS</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="acct-dd-menu" id="acctDdMenu" hidden role="listbox">
+        ${ACCTS.map((ac, i) => `<button class="ad-item${i === term.acct ? ' on' : ''}" role="option" aria-selected="${i === term.acct}" data-tacct="${i}">
+          <span class="ad-ic${ac.battle ? ' btl' : ''}">${ac.battle ? 'VS' : '£'}</span>
+          <span class="ad-tx"><b>${ac.id}</b><small>${ac.label}</small></span>
+          <span class="ad-bal mono">£${Math.round(i === term.acct ? term.bal : ac.bal).toLocaleString('en-GB')}</span>
+        </button>`).join('')}
+      </div>
     </div>
     <div class="tile-row">
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#34d399,#10b981)">£</span>
@@ -4148,6 +4214,7 @@ function closePos(pnl, outcome = 'manual') {
   }[outcome];
   toast(msg);
   addNotif(pnl > 0 ? 'W' : pnl < 0 ? 'L' : '—', `${pos.sym} ${pos.dir === 'up' ? 'long' : 'short'} closed`, msg);
+  saveDB();
   renderTerminal();
 }
 
@@ -5562,6 +5629,7 @@ function renderTrader() {
           <div class="tpc-bio">${dispBio}</div>
           <div class="tpc-meta">Joined ${d.joined} · ${d.views} views · Rank #${d.rank}</div>
           <div class="tpc-follows"><span><b>${d.followers}</b> followers</span><span><b>${d.following}</b> following</span></div>
+          ${socialRowHTML(d, own)}
           <div class="tp-level">
             <span class="tp-level-ic">★</span>
             <span class="tp-level-tx">
@@ -5680,8 +5748,25 @@ function avatarHTML(name, cls, attrs = '', styl = '') {
 
 /* ---------------- Your profile — editable, stored locally ---------------- */
 
-let myProfile = { name: 'jstone', bio: 'Building the stack one clean R at a time.', avatar: null, cover: null };
+let myProfile = { name: 'jstone', bio: 'Building the stack one clean R at a time.', avatar: null, cover: null, socials: { x: '', ig: '', yt: '' } };
 try { Object.assign(myProfile, JSON.parse(localStorage.getItem('pkProfile') || '{}')); } catch (e) { }
+myProfile.socials = Object.assign({ x: '', ig: '', yt: '' }, myProfile.socials || {});
+
+const SOC_ICONS = {
+  x: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-6.77 7.74L23.2 22h-6.23l-4.88-6.38L6.5 22H3.37l7.24-8.28L1.2 2h6.39l4.41 5.83L18.9 2zm-1.1 18.13h1.73L7.7 3.77H5.85l11.95 16.36z"/></svg>',
+  ig: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" stroke="none"/></svg>',
+  yt: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.5s-.22-1.56-.9-2.24c-.86-.9-1.82-.9-2.26-.96C16.7 4.08 12 4.08 12 4.08h-.01s-4.7 0-7.84.22c-.44.05-1.4.06-2.26.96C1.2 5.94 1 7.5 1 7.5S.78 9.33.78 11.16v1.66C.78 14.65 1 16.5 1 16.5s.21 1.56.89 2.24c.86.9 2 .87 2.5.97 1.81.17 7.61.22 7.61.22s4.71-.01 7.85-.23c.44-.05 1.4-.06 2.26-.96.68-.68.9-2.24.9-2.24s.21-1.85.21-3.68v-1.66C23.2 9.33 23 7.5 23 7.5zM9.8 14.9V8.6l6.05 3.16L9.8 14.9z"/></svg>'
+};
+const SOC_URLS = { x: h => 'https://x.com/' + h, ig: h => 'https://instagram.com/' + h, yt: h => 'https://youtube.com/@' + h };
+
+function socialRowHTML(d, own) {
+  const handle = String(d.name).toLowerCase().replace(/[^a-z0-9_]/g, '');
+  const socs = own ? myProfile.socials : { x: handle, ig: handle, yt: handle };
+  const boxes = ['x', 'ig', 'yt'].filter(k => socs[k]).map((k, bi) =>
+    `<a class="soc-box" style="transition-delay:${bi * 0.04}s" href="${SOC_URLS[k](socs[k].replace(/^@/, ''))}" target="_blank" rel="noopener noreferrer" title="${socs[k]}">${SOC_ICONS[k]}</a>`).join('');
+  if (!boxes && own) return `<div class="soc-row"><button class="soc-add" data-editprof>+ Add your socials</button></div>`;
+  return boxes ? `<div class="soc-row">${boxes}${own ? '<button class="soc-add" data-editprof>Edit</button>' : ''}</div>` : '';
+}
 
 let pkAuth = null;
 try { pkAuth = JSON.parse(localStorage.getItem('pkAuth') || 'null'); } catch (e) { }
@@ -5751,6 +5836,9 @@ function renderEditProfile() {
     </div>
     <div class="ep-field"><label class="mono">DISPLAY&nbsp;NAME</label><input id="epName" maxlength="24" value="${epDraft.name.replace(/"/g, '&quot;')}"></div>
     <div class="ep-field"><label class="mono">BIO</label><textarea id="epBio" rows="3" maxlength="160">${epDraft.bio}</textarea></div>
+    <div class="ep-field"><label class="mono">X&nbsp;HANDLE</label><input id="epX" maxlength="30" placeholder="yourhandle" value="${(epDraft.socials && epDraft.socials.x || '').replace(/"/g, '&quot;')}"></div>
+    <div class="ep-field"><label class="mono">INSTAGRAM</label><input id="epIG" maxlength="30" placeholder="yourhandle" value="${(epDraft.socials && epDraft.socials.ig || '').replace(/"/g, '&quot;')}"></div>
+    <div class="ep-field"><label class="mono">YOUTUBE</label><input id="epYT" maxlength="30" placeholder="yourchannel" value="${(epDraft.socials && epDraft.socials.yt || '').replace(/"/g, '&quot;')}"></div>
     <div class="pk-actions">
       <button class="btn-primary" style="flex:1;justify-content:center" data-epsave>Save profile</button>
       <button class="btn-neu" data-epcancel>Cancel</button>
@@ -6058,6 +6146,82 @@ let challenges = [
 let myBattles = [];
 let battleSeq = 0;
 
+/* ---------------- Battle engine — funded account per fight, real returns, persistent ledger ---------------- */
+
+let btlSeq = 7001;
+const pkLedger = [];
+const BATTLE_CAPITAL = 10000;
+
+const acctById = id => ACCTS.find(a2 => a2.id === id);
+
+function battleRet(b) {
+  const a2 = acctById(b.acctId);
+  if (!a2) return b.my;
+  const bal = ACCTS.indexOf(a2) === term.acct ? term.bal : a2.bal;
+  return (bal - a2.startBal) / a2.startBal * 100;
+}
+
+function startBattle(cfg) {
+  const acct = { id: 'BTL-' + (btlSeq++), label: 'vs ' + cfg.opp, bal: BATTLE_CAPITAL, startBal: BATTLE_CAPITAL, pos: null, battle: true };
+  ACCTS.push(acct);
+  const b = {
+    id: battleSeq++, opp: cfg.opp, machine: !!cfg.machine, mic: cfg.mic, mtint: cfg.mtint,
+    av: cfg.av, tint: cfg.tint, market: cfg.market || 'All markets', window: cfg.window,
+    pot: cfg.pot, my: 0, op: 0, watching: cfg.watching || (12 + Math.floor(Math.random() * 240)),
+    acctId: acct.id, startedAt: Date.now()
+  };
+  myBattles.unshift(b);
+  addNotif('T', `Battle account ${acct.id} funded`, `£${BATTLE_CAPITAL.toLocaleString('en-GB')} of battle capital provisioned vs ${cfg.opp} — every trade you close on it moves your battle return.`);
+  saveDB();
+  if (currentView === 'terminal') renderTerminal();
+  return b;
+}
+
+function settleBattleAccount(b) {
+  if (!b.acctId) return 0;
+  const ai = ACCTS.findIndex(a2 => a2.id === b.acctId);
+  if (ai < 0) return 0;
+  const wasActive = ai === term.acct;
+  const finalBal = wasActive ? term.bal : ACCTS[ai].bal;
+  const pnl = finalBal - ACCTS[ai].startBal;
+  ACCTS.splice(ai, 1);
+  if (wasActive) { term.acct = 0; term.bal = ACCTS[0].bal; term.pos = ACCTS[0].pos; }
+  else if (term.acct > ai) term.acct--;
+  if (term.acct === 0) { term.bal += pnl; ACCTS[0].bal = term.bal; } else ACCTS[0].bal += pnl;
+  if (currentView === 'terminal') renderTerminal();
+  return pnl;
+}
+
+function saveDB() {
+  try {
+    localStorage.setItem('pkDB', JSON.stringify({
+      accounts: ACCTS.map(a2 => ({ id: a2.id, label: a2.label, bal: Math.round(ACCTS.indexOf(a2) === term.acct ? term.bal : a2.bal), startBal: a2.startBal, battle: !!a2.battle })),
+      termAcct: term.acct,
+      battles: myBattles.map(b2 => ({ ...b2 })),
+      ledger: pkLedger.slice(0, 30),
+      trades: tradeLog.slice(0, 40),
+      btlSeq, battleSeq
+    }));
+  } catch (e2) { }
+}
+
+function loadDB() {
+  let d;
+  try { d = JSON.parse(localStorage.getItem('pkDB') || 'null'); } catch (e2) { }
+  if (!d) return;
+  if (Array.isArray(d.accounts) && d.accounts.length >= 3) {
+    ACCTS.length = 0;
+    d.accounts.forEach(a2 => ACCTS.push({ ...a2, pos: null }));
+  }
+  if (typeof d.termAcct === 'number' && ACCTS[d.termAcct]) { term.acct = d.termAcct; term.bal = ACCTS[d.termAcct].bal; }
+  if (Array.isArray(d.battles)) myBattles = d.battles;
+  if (Array.isArray(d.ledger)) d.ledger.forEach(x => pkLedger.push(x));
+  if (Array.isArray(d.trades) && d.trades.length) { tradeLog.length = 0; d.trades.forEach(t => tradeLog.push(t)); }
+  if (d.btlSeq) btlSeq = d.btlSeq;
+  if (d.battleSeq) battleSeq = d.battleSeq;
+}
+loadDB();
+
 function builderHTML() {
   const stakePills = B_STAKES.map(v =>
     `<button class="pill-btn${arenaB.stakeMode === 'preset' && arenaB.stake === v ? ' on' : ''}" data-abstake="${v}">£${v.toLocaleString('en-GB')}</button>`).join('') +
@@ -6169,7 +6333,7 @@ function nationWarsHTML() {
 }
 
 function myBattlesHTML() {
-  if (!myBattles.length) return '';
+  if (!myBattles.length && !pkLedger.length) return '';
   const rows = myBattles.map((b, i) => {
     const lead = Math.max(8, Math.min(92, 50 + (b.my - b.op) * 9));
     return `<div class="blive" data-bspec="${i}" style="cursor:pointer">
@@ -6182,13 +6346,26 @@ function myBattlesHTML() {
       </div>
       <div class="fd-leadbar"><span data-blead="${i}" style="width:${lead.toFixed(0)}%"></span></div>
       <div class="blive-meta"><span class="pulse-dot tiny"></span>LIVE · ${b.window} · £${b.pot.toLocaleString('en-GB')} pot · ${b.market}
+        ${b.acctId ? `<span class="bacct mono">${b.acctId}&nbsp;·&nbsp;YOUR&nbsp;TRADES&nbsp;COUNT</span><button class="link-btn" style="margin:0" data-btrade="${b.acctId}">Trade it →</button>` : ''}
         <span style="margin-left:auto">● ${b.watching} watching</span></div>
     </div>`;
   }).join('');
+  const ledger = pkLedger.length ? `<div class="fame-card" style="margin-top:14px"><div class="fame-scroll">
+    <table class="trades-table">
+      <thead><tr class="mono"><th>RESULT</th><th>OPPONENT</th><th>ACCOUNT</th><th style="text-align:right">YOU&nbsp;vs&nbsp;THEM</th><th style="text-align:right">POT</th><th style="text-align:right">WHEN</th></tr></thead>
+      <tbody>${pkLedger.slice(0, 8).map(l => `<tr>
+        <td><span class="obadge ${l.won ? 'target' : 'stopped'}">${l.won ? 'Battle won' : 'Battle lost'}</span></td>
+        <td><b>${l.opp}</b>${l.machine ? ' <span class="house-chip mono">AI</span>' : ''}</td>
+        <td class="mono" style="font-size:11px;color:var(--text-faint)">${l.acctId}</td>
+        <td style="text-align:right"><b class="${l.won ? 'up' : 'down'}">${fmtRet(l.my)}</b> <span style="color:var(--text-faint)">vs ${fmtRet(l.op)}</span></td>
+        <td style="text-align:right"><b>£${l.pot.toLocaleString('en-GB')}</b></td>
+        <td style="text-align:right;color:var(--text-faint)">${agoStr(Math.max(1, Math.round((Date.now() - l.at) / 60000)))}</td>
+      </tr>`).join('')}</tbody>
+    </table></div></div>` : '';
   return `<div class="section">
     <div class="section-head"><div><h3 class="section-title">Your battles</h3>
-      <p class="section-sub"><span class="mono">${myBattles.length}&nbsp;LIVE</span><span class="dot-sep">·</span><span>higher return when the window closes takes the pot</span></p></div></div>
-    ${rows}</div>`;
+      <p class="section-sub"><span class="mono">${myBattles.length}&nbsp;LIVE&nbsp;·&nbsp;${pkLedger.length}&nbsp;SETTLED</span><span class="dot-sep">·</span><span>every battle runs on its own funded account — the trades you close set your return</span></p></div></div>
+    ${rows}${ledger}</div>`;
 }
 
 /* ---------------- Trade Clans — team up, fly a banner, battle as one ---------------- */
@@ -6753,6 +6930,10 @@ const LIVE_B = [
 ];
 
 let lbf = { kind: 'all', pot: 'any', dur: 'any', sort: 'pot', view: 'grid' };
+let lbMenu = null;
+const LB_POT_L = { any: 'Any pot', small: '<£1K', mid: '£1K–10K', big: '£10K–100K', whale: '£100K+' };
+const LB_DUR_L = { any: 'Any length', sprint: 'Sprint ≤1h', day: 'Intraday', week: 'Week+' };
+const LB_SORT_L = { pot: 'Biggest pot', watch: 'Most watched', close: 'Closest fight', ends: 'Ending soon' };
 const LB_POT_BANDS = { any: [0, 1e12], small: [0, 1000], mid: [1000, 10000], big: [10000, 100000], whale: [100000, 1e12] };
 const LB_DUR_BANDS = { any: [0, 1e9], sprint: [0, 60], day: [61, 1440], week: [1441, 1e9] };
 
@@ -6995,16 +7176,16 @@ function renderLive() {
         <div class="lbh-stat swing"><b id="lbSwing">£${lbSwing.toLocaleString('en-GB')}</b><span>BIGGEST&nbsp;SWING&nbsp;LIVE</span></div>
       </div>
     </div>
-    <div class="lb-filters">
-      ${FEATURE_CLANS ? `<div class="lb-fgroup"><span class="b-label mono">TYPE</span>${chips([['all', 'All'], ['1v1', '1v1'], ['clan', 'Clans']], lbf.kind, 'lbkind')}</div>` : ''}
-      <div class="lb-fgroup"><span class="b-label mono">POT</span>${chips([['any', 'Any'], ['small', '<£1K'], ['mid', '£1K–10K'], ['big', '£10K–100K'], ['whale', '£100K+']], lbf.pot, 'lbpot')}</div>
-      <div class="lb-fgroup"><span class="b-label mono">DURATION</span>${chips([['any', 'Any'], ['sprint', 'Sprint ≤1h'], ['day', 'Intraday'], ['week', 'Week+']], lbf.dur, 'lbdur')}</div>
-      <div class="lb-fgroup"><span class="b-label mono">SORT</span>${chips([['pot', 'Biggest pot'], ['watch', 'Most watched'], ['close', 'Closest fight'], ['ends', 'Ending soon']], lbf.sort, 'lbsort')}</div>
-      <div class="lb-fgroup"><span class="b-label mono">VIEW</span>
-        <div class="lb-viewtog">
-          <button class="${lbf.view === 'grid' ? 'on' : ''}" data-lbview="grid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Grid</button>
-          <button class="${lbf.view === 'table' ? 'on' : ''}" data-lbview="table"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Table</button>
-        </div>
+    <div class="lb-bar">
+      ${[['pot', 'Pot', LB_POT_L, lbf.pot, 'lbpot'], ['dur', 'Duration', LB_DUR_L, lbf.dur, 'lbdur'], ['sort', 'Sort', LB_SORT_L, lbf.sort, 'lbsort']].map(([k2, lab, L, cur, attr], gi) => `
+        ${gi ? '<i class="lb-bar-div"></i>' : ''}
+        <div class="lb-g${lbMenu === k2 ? ' open' : ''}">
+          <button data-lbmenu="${k2}"><small class="mono">${lab}</small><b>${L[cur]}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></b></button>
+          ${lbMenu === k2 ? `<div class="lb-menu">${Object.keys(L).map(v => `<button class="${cur === v ? 'on' : ''}" data-${attr}="${v}">${L[v]}</button>`).join('')}</div>` : ''}
+        </div>`).join('')}
+      <div class="lb-bar-view">
+        <button class="${lbf.view === 'grid' ? 'on' : ''}" data-lbview="grid" aria-label="Grid view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+        <button class="${lbf.view === 'table' ? 'on' : ''}" data-lbview="table" aria-label="Table view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
       </div>
     </div>
     ${board}
@@ -7572,6 +7753,11 @@ const RENDER = {
 document.addEventListener('click', e => {
   const q = sel => e.target.closest(sel);
   let el;
+  /* dismiss the filter menu when clicking elsewhere */
+  if (lbMenu && currentView === 'live' && !q('.lb-g')) { lbMenu = null; renderLive(); }
+  /* dismiss the account menu when clicking elsewhere */
+  const adm = document.getElementById('acctDdMenu');
+  if (adm && !adm.hidden && !q('#acctDd')) adm.hidden = true;
   /* dismiss notifications when clicking elsewhere */
   if (notifOpen && !q('[data-bell]') && !q('#notifPanel')) {
     notifOpen = false;
@@ -7601,7 +7787,7 @@ document.addEventListener('click', e => {
     const name = el.dataset.fdaccept;
     const p = POSTS.find(x => x.name === name && x.open);
     const side = p ? parseFloat(p.open.pot.replace(/[£,]/g, '')) * (p.open.pot.includes('K') ? 1000 : 1) : 4000;
-    myBattles.unshift({ id: battleSeq++, opp: name, av: p ? p.av : name.charAt(0).toUpperCase(), tint: p ? p.tint : AV_TINTS[0], market: 'Any market', window: p ? p.open.window : '1 week', pot: side * 2, my: 0, op: 0, watching: 12 + Math.floor(Math.random() * 240) });
+    startBattle({ opp: name, av: p ? p.av : name.charAt(0).toUpperCase(), tint: p ? p.tint : AV_TINTS[0], market: 'Any market', window: p ? p.open.window : '1 week', pot: side * 2 });
     addNotif('VS', 'Battle locked in', `You accepted ${name}’s open challenge — stakes escrowed.`);
     navigate('arena');
     return toast(`Battle vs ${name} locked in — live under Your battles`);
@@ -7773,21 +7959,36 @@ document.addEventListener('click', e => {
     renderArena();
     return navigate('arena');
   }
+  if ((el = q('[data-acctdd]'))) {
+    const m2 = document.getElementById('acctDdMenu');
+    if (m2) { m2.hidden = !m2.hidden; el.setAttribute('aria-expanded', String(!m2.hidden)); }
+    return;
+  }
   if ((el = q('[data-tacct]'))) {
     const i = +el.dataset.tacct;
-    if (i === term.acct) return;
+    if (i === term.acct) { const m2 = document.getElementById('acctDdMenu'); if (m2) m2.hidden = true; return; }
     ACCTS[term.acct].bal = term.bal;
     ACCTS[term.acct].pos = term.pos;
     term.acct = i;
     term.bal = ACCTS[i].bal;
     term.pos = ACCTS[i].pos;
-    const tg = document.querySelector('.acct-toggle');
-    if (tg) {
-      tg.querySelector('.at-thumb').style.transform = `translateX(${i * 100}%)`;
-      [...tg.querySelectorAll('button')].forEach((b, k) => b.classList.toggle('on', k === i));
-      setTimeout(renderTerminal, 300);
-    } else renderTerminal();
+    saveDB();
+    renderTerminal();
     return toast(`Switched to ${ACCTS[i].id} — ${ACCTS[i].label}`);
+  }
+  if ((el = q('[data-btrade]'))) {
+    const ai = ACCTS.findIndex(a2 => a2.id === el.dataset.btrade);
+    if (ai < 0) return toast('That battle account has settled');
+    if (ai !== term.acct) {
+      ACCTS[term.acct].bal = term.bal;
+      ACCTS[term.acct].pos = term.pos;
+      term.acct = ai;
+      term.bal = ACCTS[ai].bal;
+      term.pos = ACCTS[ai].pos;
+      saveDB();
+    }
+    navigate('terminal');
+    return toast(`On ${el.dataset.btrade} — every close moves your battle return`);
   }
   if ((el = q('[data-flip]'))) { el.classList.toggle('on'); el.setAttribute('aria-pressed', el.classList.contains('on')); return; }
   if ((el = q('[data-insights]'))) {
@@ -7846,6 +8047,11 @@ document.addEventListener('click', e => {
   if ((el = q('[data-epsave]'))) {
     epDraft.name = (document.getElementById('epName')?.value || 'jstone').trim() || 'jstone';
     epDraft.bio = document.getElementById('epBio')?.value || '';
+    epDraft.socials = {
+      x: (document.getElementById('epX')?.value || '').trim().replace(/^@/, ''),
+      ig: (document.getElementById('epIG')?.value || '').trim().replace(/^@/, ''),
+      yt: (document.getElementById('epYT')?.value || '').trim().replace(/^@/, '')
+    };
     myProfile = epDraft;
     saveProfile();
     closeEditProfile();
@@ -7894,12 +8100,12 @@ document.addEventListener('click', e => {
   if ((el = q('[data-mbattle]'))) {
     const m = MACHINES[+el.dataset.mbattle];
     const pot = m.you + m.house;
-    myBattles.unshift({
-      id: battleSeq++, opp: m.name, machine: true, mic: m.ic, mtint: m.tint,
+    startBattle({
+      opp: m.name, machine: true, mic: m.ic, mtint: m.tint,
       market: 'All markets', window: m.window + ' window', pot,
-      my: 0, op: 0, watching: 900 + Math.floor(Math.random() * 2400)
+      watching: 900 + Math.floor(Math.random() * 2400)
     });
-    toast(`Battle vs ${m.name} is live — you put up £${m.you}, the house staked £${m.house}. Beat the bot, take £${pot}.`);
+    toast(`Battle vs ${m.name} is live on a fresh £${BATTLE_CAPITAL.toLocaleString('en-GB')} account — beat the bot, take £${pot}.`);
     addNotif('AI', `Battling ${m.name}`, `£${pot} pot · ${m.window} window · the house backed the bot with £${m.house}. Higher return takes it.`);
     return renderArena();
   }
@@ -7960,9 +8166,10 @@ document.addEventListener('click', e => {
     return renderArena();
   }
   if ((el = q('[data-lbkind]'))) { lbf.kind = el.dataset.lbkind; return renderLive(); }
-  if ((el = q('[data-lbpot]'))) { lbf.pot = el.dataset.lbpot; return renderLive(); }
-  if ((el = q('[data-lbdur]'))) { lbf.dur = el.dataset.lbdur; return renderLive(); }
-  if ((el = q('[data-lbsort]'))) { lbf.sort = el.dataset.lbsort; return renderLive(); }
+  if ((el = q('[data-lbmenu]'))) { lbMenu = lbMenu === el.dataset.lbmenu ? null : el.dataset.lbmenu; return renderLive(); }
+  if ((el = q('[data-lbpot]'))) { lbf.pot = el.dataset.lbpot; lbMenu = null; return renderLive(); }
+  if ((el = q('[data-lbdur]'))) { lbf.dur = el.dataset.lbdur; lbMenu = null; return renderLive(); }
+  if ((el = q('[data-lbsort]'))) { lbf.sort = el.dataset.lbsort; lbMenu = null; return renderLive(); }
   if ((el = q('[data-lbview]'))) { lbf.view = el.dataset.lbview; return renderLive(); }
   if ((el = q('[data-lbwatch]'))) {
     const face = e.target.closest('[data-trader]');
@@ -8038,12 +8245,11 @@ document.addEventListener('click', e => {
     const c = challenges[i];
     if (!c) return;
     challenges.splice(i, 1);
-    myBattles.unshift({
-      id: battleSeq++, opp: c.name, av: c.av, tint: AV_TINTS[battleSeq % 6],
-      market: c.market, window: c.window, pot: c.pot * (1 + (c.odds || 1)),
-      my: 0, op: 0, watching: 12 + Math.floor(Math.random() * 240)
+    startBattle({
+      opp: c.name, av: c.av, tint: AV_TINTS[battleSeq % 6],
+      market: c.market, window: c.window, pot: c.pot * (1 + (c.odds || 1))
     });
-    toast(`Battle vs ${c.name} locked in — you put up £${(c.pot * (c.odds || 1)).toLocaleString('en-GB')}, higher return takes £${(c.pot * (1 + (c.odds || 1))).toLocaleString('en-GB')}`);
+    toast(`Battle vs ${c.name} locked in on a fresh £${BATTLE_CAPITAL.toLocaleString('en-GB')} account — higher return takes £${(c.pot * (1 + (c.odds || 1))).toLocaleString('en-GB')}`);
     addNotif('VS', `Battle vs ${c.name} is live`, `£${(c.pot * (1 + (c.odds || 1))).toLocaleString('en-GB')} pot · ${c.window} window · higher return takes it.`);
     renderArena();
     return navigate('arena');
