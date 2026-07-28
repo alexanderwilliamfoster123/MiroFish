@@ -1473,6 +1473,30 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
 .sc-rank-cat { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); margin-top: 3px; }
 .sc-rank { margin-top: auto; }
 
+/* Shareable winnings card — chart + stats living in one clean card */
+
+.share-card { position: relative; border-radius: 26px; background: var(--card); box-shadow: var(--neu-out-sm); overflow: hidden; display: flex; flex-direction: column; }
+.share-card .pmc2 { box-shadow: none; border-radius: 0; background: transparent; min-height: 330px; }
+.share-card .pmc2-foot { background: transparent; }
+.shc-band { display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr); gap: 18px 26px; align-items: center; padding: 18px 26px 2px; }
+@media (max-width: 640px) { .shc-band { grid-template-columns: 1fr; } }
+.shc-foot { display: flex; align-items: stretch; gap: 12px; padding: 16px 26px 22px; }
+.shc-foot .sc-rank { margin-top: 0; flex: 1; }
+.shc-ins { padding: 0 18px; font-size: 12.5px; font-weight: 700; border-radius: 16px; white-space: nowrap; }
+.shc-ins .ins-chev { font-size: 10px; opacity: 0.6; margin-left: 4px; }
+.shc-ins.on { color: #7c3aed; }
+
+/* Post composer — write your own thoughts from your profile */
+
+.composer { display: flex; gap: 14px; background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 18px 20px; margin-bottom: 16px; }
+.composer .thread-av { flex: 0 0 auto; }
+.thread-av img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; display: block; }
+.composer-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.composer-main textarea { width: 100%; border: none; outline: none; resize: none; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 14px; padding: 12px 14px; font: inherit; font-size: 13.5px; color: var(--text); min-height: 58px; }
+.composer-main textarea::placeholder { color: var(--text-faint); }
+.composer-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.composer-hint { font-size: 9px; letter-spacing: 0.1em; color: var(--text-faint); }
+
 /* Slide-to-unlock reward (comp win) */
 
 .reward-veil {
@@ -1737,6 +1761,8 @@ body.dark .tpc-cover::before { background-image: radial-gradient(rgba(196, 181, 
 
 .lb-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
 .lb-table-card { background: var(--card); border-radius: 22px; box-shadow: var(--neu-out-sm); padding: 8px 26px; margin-bottom: 18px; }
+.lb-mini { height: 84px; border-radius: 12px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; color: var(--text); }
+.lb-mini svg { display: block; width: 100%; height: 100%; }
 .lb-foot { display: flex; align-items: center; justify-content: space-between; }
 .lb-page { font-size: 12px; color: var(--text-faint); }
 tr.lb-me td { background: var(--surface); }
@@ -2631,17 +2657,6 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .dk-tip { position: absolute; left: 50%; top: -34px; transform: translateX(-50%); background: var(--card); box-shadow: var(--neu-out-sm); border-radius: 10px; padding: 5px 11px; font-size: 11px; font-weight: 600; color: var(--text); white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .18s ease; }
 .dk:hover .dk-tip { opacity: 1; }
 
-/* globe row */
-.globe-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 18px; }
-.globe-panel { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.globe-panel canvas { width: 100%; max-width: 380px; aspect-ratio: 1; cursor: grab; touch-action: none; }
-.globe-panel canvas:active { cursor: grabbing; }
-.globe-cap { font-size: 9.5px; letter-spacing: .12em; color: var(--text-faint); margin-top: 8px; }
-.globe-tip { position: absolute; pointer-events: none; background: var(--card); box-shadow: var(--neu-out-sm); border-radius: 12px; padding: 8px 12px; font-size: 11px; opacity: 0; transition: opacity .15s ease; z-index: 5; white-space: nowrap; }
-.globe-tip.on { opacity: 1; }
-.globe-tip b { display: block; font-size: 12px; }
-@media (max-width: 980px) { .globe-row { grid-template-columns: 1fr; } }
-
 /* ---------------- Locked nav (coming soon) ---------------- */
 .nav-item.locked { opacity: .45; cursor: not-allowed; }
 .nav-item.locked:hover { transform: none; }
@@ -3313,6 +3328,7 @@ function tickLiveNumbers() {
     b.rb += (Math.random() - 0.5) * 0.18;
     b.watching += Math.floor(Math.random() * 25);
     b.endsMin = Math.max(1, b.endsMin - 0.025);
+    if (b.sa) { b.sa.push(+b.ra.toFixed(3)); b.sb.push(+b.rb.toFixed(3)); if (b.sa.length > 44) { b.sa.shift(); b.sb.shift(); } }
     if (currentView !== 'live') return;
     const a = document.querySelector(`[data-lba="${i}"]`);
     const bb = document.querySelector(`[data-lbb="${i}"]`);
@@ -3322,6 +3338,8 @@ function tickLiveNumbers() {
     if (bb) { setOdo(bb, fmtRet(b.rb)); bb.style.color = b.rb >= 0 ? 'var(--green)' : '#e5484d'; }
     if (bar) bar.style.width = Math.max(8, Math.min(92, 50 + (b.ra - b.rb) * 9)).toFixed(0) + '%';
     if (w) w.textContent = '● ' + b.watching.toLocaleString('en-GB') + ' watching';
+    const mc = document.querySelector(`[data-lbchart="${i}"]`);
+    if (mc && b.sa) mc.innerHTML = lbMiniSVG({ ...b, i });
   });
   if (currentView === 'live') {
     setOdo('lbCount', String(LIVE_B.length));
@@ -4953,28 +4971,6 @@ function ordinal(n) {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-function scoreCardHTML(d) {
-  return `<div class="glow-wrap"><div class="score-card">
-    <div class="sc-head"><span class="sc-title">Stats</span><span class="pmc2-chip mono">ALL&nbsp;TIME</span></div>
-    <div>
-      <div class="sc-earn-label mono">TOTAL WINNINGS</div>
-      <div class="sc-earn">£${d.winnings.toLocaleString('en-GB')}</div>
-      <div class="sc-change">▲ +£${d.winningsChange.toLocaleString('en-GB')} <span>since last month</span></div>
-    </div>
-    <div class="sc-sub">
-      <div class="sc-sub-cell"><div class="sc-sub-v">${d.tours} <span>tournaments</span></div><div class="sc-sub-s">${d.toursMonth} this month</div></div>
-      <div class="sc-sub-cell"><div class="sc-sub-v">${d.wins} <span>battle wins</span></div><div class="sc-sub-s">${d.battlesMonth} this month</div></div>
-    </div>
-    <div class="sc-rank">
-      <div>
-        <div class="sc-rank-place">${ordinal(d.rank)} place</div>
-        <div class="sc-rank-cat">top ranked traders</div>
-      </div>
-      ${LAUREL}
-    </div>
-  </div></div>`;
-}
-
 const BADGES_DEF = [
   ['#f59e0b', 'Seven-Figure Club', '£1M+ banked profits', d => d.winnings >= 1e6],
   ['#10b981', 'Six-Figure Club', '£100K+ banked profits', d => d.winnings >= 1e5],
@@ -5023,6 +5019,7 @@ function bindAwardTilt() {
 }
 
 function tpPostsHTML(d) {
+  const own = d.name === 'jstone';
   const real = POSTS.filter(p => p.name === d.name)
     .map(p => profilePost(p.name, p.av, p.tint, p.text, p.time, p.likes, p.views));
   const h = hashName(d.name + 'p');
@@ -5030,7 +5027,19 @@ function tpPostsHTML(d) {
     const t = TP_POSTS[(h + i * 3) % TP_POSTS.length];
     return profilePost(d.name, d.av, d.tint, t, `${2 + i}d`, 80 + ((h >>> (i + 2)) % 900), kfmt(2000 + ((h >>> i) % 40000)));
   });
-  return `<div class="xfeed">${real.join('')}${seeded.join('')}</div>`;
+  const mine = own ? myPosts.map(p => profilePost(myProfile.name, myAvHTML(), d.tint, p.text, postAgo(p.ts), p.likes || 3, p.views || '14')).join('') : '';
+  const composer = own ? `
+  <div class="composer">
+    <span class="thread-av" style="background:${d.tint}">${myAvHTML()}</span>
+    <div class="composer-main">
+      <textarea id="myThought" rows="2" maxlength="500" placeholder="Share your thoughts — a call, a lesson, a call-out..."></textarea>
+      <div class="composer-foot">
+        <span class="composer-hint mono">POSTS&nbsp;TO&nbsp;YOUR&nbsp;PROFILE</span>
+        <button class="fr-follow" data-postthought>Post</button>
+      </div>
+    </div>
+  </div>` : '';
+  return `${composer}<div class="xfeed">${mine}${real.join('')}${seeded.join('')}</div>`;
 }
 
 function tpBattlesHTML(d) {
@@ -5148,10 +5157,33 @@ function renderTrader() {
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:16px">
-        ${metricCardHTML('traderEquity', 'Prize winnings', 'ALL-TIME · VERIFIED',
+        <div class="glow-wrap"><div class="share-card">
+          ${metricCardHTML('traderEquity', 'Prize winnings', 'ALL-TIME · VERIFIED',
           Object.keys(TR_RANGES).map(r => `<button class="pill-btn${traderRange === r ? ' on' : ''}" style="padding:6px 11px;font-size:11px" data-trrange="${r}">${r}</button>`).join(''))}
-        <div class="bk-card">
-          <div class="bk-title">How these winnings were built</div>
+          <div class="shc-band">
+            <div>
+              <div class="sc-earn-label mono">TOTAL WINNINGS</div>
+              <div class="sc-earn">£${d.winnings.toLocaleString('en-GB')}</div>
+              <div class="sc-change">▲ +£${d.winningsChange.toLocaleString('en-GB')} <span>since last month</span></div>
+            </div>
+            <div class="sc-sub">
+              <div class="sc-sub-cell"><div class="sc-sub-v">${d.tours} <span>tournaments</span></div><div class="sc-sub-s">${d.toursMonth} this month</div></div>
+              <div class="sc-sub-cell"><div class="sc-sub-v">${d.wins} <span>battle wins</span></div><div class="sc-sub-s">${d.battlesMonth} this month</div></div>
+            </div>
+          </div>
+          <div class="shc-foot">
+            <div class="sc-rank">
+              <div>
+                <div class="sc-rank-place">${ordinal(d.rank)} place</div>
+                <div class="sc-rank-cat">top ranked traders</div>
+              </div>
+              ${LAUREL}
+            </div>
+            <button class="btn-neu shc-ins" data-insights>Insights <span class="ins-chev">▾</span></button>
+          </div>
+        </div></div>
+        <div class="bk-card" id="insightsCard" hidden>
+          <div class="bk-title">How these winnings were won</div>
           <div class="bk-bar"><i style="width:${tourPct}%;background:linear-gradient(90deg,#fbbf24,#f59e0b)"></i><i style="width:${100 - tourPct}%;background:linear-gradient(90deg,#a855f7,#7c3aed)"></i></div>
           <div class="bk-row">
             <span class="bk-ic" style="background:rgba(245,158,11,.15);color:#f59e0b;font-weight:800">T</span>
@@ -5163,8 +5195,17 @@ function renderTrader() {
             <span class="bk-tx"><span class="bk-t">Arena battle winnings</span><span class="bk-s">${d.wins}–${d.losses} record</span></span>
             <span class="bk-v up">+£${kfmt(arena)}</span>
           </div>
+          <div class="bk-row">
+            <span class="bk-ic" style="background:rgba(16,185,129,.12);color:#10b981;font-weight:800">★</span>
+            <span class="bk-tx"><span class="bk-t">Biggest single win</span><span class="bk-s">one print, fully banked</span></span>
+            <span class="bk-v up">+£${kfmt(d.big)}</span>
+          </div>
+          <div class="bk-row">
+            <span class="bk-ic" style="background:rgba(14,165,233,.12);color:#0ea5e9;font-weight:800">◎</span>
+            <span class="bk-tx"><span class="bk-t">Hit rate</span><span class="bk-s">${d.trades.toLocaleString('en-GB')} trades logged</span></span>
+            <span class="bk-v">${d.winRate}%</span>
+          </div>
         </div>
-        ${scoreCardHTML(d)}
       </div>
     </div>
     <div class="chip-row">${tabs}</div>
@@ -5218,6 +5259,12 @@ function avatarHTML(name, cls, attrs = '', styl = '') {
 
 let myProfile = { name: 'jstone', bio: 'Building the stack one clean R at a time.', avatar: null, cover: null };
 try { Object.assign(myProfile, JSON.parse(localStorage.getItem('pkProfile') || '{}')); } catch (e) { }
+
+let myPosts = [];
+try { myPosts = JSON.parse(localStorage.getItem('pkPosts') || '[]'); } catch (e) { myPosts = []; }
+const saveMyPosts = () => { try { localStorage.setItem('pkPosts', JSON.stringify(myPosts)); } catch (e) { } };
+const myAvHTML = () => myProfile.avatar ? `<img src="${myProfile.avatar}" alt="">` : (myProfile.name[0] || 'J').toUpperCase();
+const postAgo = ts => { const m = Math.max(0, Math.round((Date.now() - ts) / 60000)); return m < 1 ? 'now' : agoStr(m); };
 
 function saveProfile() {
   try { localStorage.setItem('pkProfile', JSON.stringify(myProfile)); } catch (e) { }
@@ -5689,14 +5736,7 @@ function nationWarsHTML() {
     <div class="nw-grid">${cards}</div>` : ''}
     <div class="section-head" ${FEATURE_NATION_WARS ? 'style="margin-top:26px"' : ''}><div><h3 class="section-title">Global leaderboard</h3>
       <p class="section-sub"><span class="mono">WHERE&nbsp;THE&nbsp;MONEY'S&nbsp;BEING&nbsp;WON</span><span class="dot-sep">·</span><span>total winnings banked by traders in every country, ranked all-time</span></p></div></div>
-    <div class="globe-row">
-      <div class="panel-card globe-panel">
-        <canvas id="globeCv"></canvas>
-        <div class="globe-tip" id="globeTip"></div>
-        <div class="globe-cap mono">DRAG&nbsp;TO&nbsp;SPIN&nbsp;·&nbsp;MARKER&nbsp;HEAT&nbsp;=&nbsp;MONEY&nbsp;WON</div>
-      </div>
-      <div class="nat-acc" style="padding:8px 26px">${rows}</div>
-    </div>
+    <div class="nat-acc" style="padding:8px 26px">${rows}</div>
   </div>`;
 }
 
@@ -5990,104 +6030,6 @@ function openClanWarObj(w, i) {
   navigate('spectate');
 }
 
-/* ---------------- Winnings globe — spins inside the global leaderboard ---------------- */
-
-const COUNTRY_GEO = {
-  ch: [46.8, 8.2], gb: [54, -2], nl: [52.1, 5.3], se: [60.1, 18.6], de: [51.2, 10.4],
-  fr: [46.2, 2.2], it: [41.9, 12.6], es: [40.5, -3.7], us: [39.8, -98.6], ca: [56.1, -106.3],
-  br: [-14.2, -51.9], mx: [23.6, -102.5], ar: [-38.4, -63.6], cl: [-35.7, -71.5],
-  co: [4.6, -74.1], pe: [-9.2, -75], jp: [36.2, 138.3], sg: [1.35, 103.8], au: [-25.3, 133.8],
-  in: [20.6, 79], kr: [35.9, 127.8], hk: [22.3, 114.2], th: [15.9, 101], my: [4.2, 102],
-};
-const heatCol = (t, a = 1) => `rgba(${Math.round(56 + t * 161)},${Math.round(189 - t * 119)},${Math.round(248 - t * 9)},${a})`;
-
-function bindGlobe() {
-  const cv = document.getElementById('globeCv');
-  if (!cv) return;
-  if (window._globeRaf) cancelAnimationFrame(window._globeRaf);
-  const tip = document.getElementById('globeTip');
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const S = cv.clientWidth || 360;
-  cv.width = S * dpr; cv.height = S * dpr;
-  const ctx = cv.getContext('2d');
-  ctx.scale(dpr, dpr);
-  const R = S / 2 - 26;
-  const names = {};
-  NATION_REGIONS.forEach(r => r.countries.forEach(([c, n]) => { names[c] = n; }));
-  const data = Object.keys(COUNTRY_GEO).filter(c => names[c]).map(c => ({ c, name: names[c], won: countryWon(c) }));
-  data.sort((a, b) => b.won - a.won);
-  const maxWon = data[0].won;
-  let rot = 0.9, dragging = false, lx = 0, marks = [], fr = 0;
-
-  const proj = (lat, lng) => {
-    const la = lat * Math.PI / 180, lo = lng * Math.PI / 180 + rot, tl = -0.38;
-    const px = Math.cos(la) * Math.sin(lo), py = Math.sin(la), pz = Math.cos(la) * Math.cos(lo);
-    const y2 = py * Math.cos(tl) - pz * Math.sin(tl), z2 = py * Math.sin(tl) + pz * Math.cos(tl);
-    return { x: S / 2 + R * px, y: S / 2 - R * y2, z: z2 };
-  };
-
-  function frame() {
-    window._globeRaf = requestAnimationFrame(frame);
-    if (currentView !== 'arena' || !document.getElementById('globeCv')) return;
-    fr++;
-    if (!dragging) rot += 0.0032;
-    const dark = document.body.classList.contains('dark');
-    ctx.clearRect(0, 0, S, S);
-    ctx.fillStyle = dark ? 'rgba(148,163,184,.6)' : 'rgba(100,116,139,.55)';
-    for (let la = -80; la <= 80; la += 10) for (let lo = 0; lo < 360; lo += 10) {
-      const p = proj(la, lo);
-      if (p.z > 0.05) { ctx.globalAlpha = 0.07 + 0.2 * p.z; ctx.beginPath(); ctx.arc(p.x, p.y, 1.1, 0, 7); ctx.fill(); }
-    }
-    ctx.globalAlpha = 1;
-    marks = data.map((d, i) => {
-      const [lat, lng] = COUNTRY_GEO[d.c];
-      return { ...d, ...proj(lat, lng), r: 3.5 + 10 * Math.sqrt(d.won / maxWon), t: 1 - i / (data.length - 1), rank: i + 1 };
-    }).sort((a, b) => a.z - b.z);
-    marks.forEach(m => {
-      if (m.z < -0.12) return;
-      const a = Math.max(0.12, Math.min(1, 0.25 + m.z));
-      ctx.shadowColor = heatCol(m.t, .9); ctx.shadowBlur = m.z > 0 ? 14 * m.t + 4 : 0;
-      ctx.beginPath(); ctx.arc(m.x, m.y, m.r * (0.65 + 0.35 * Math.max(0, m.z)), 0, 7);
-      ctx.fillStyle = heatCol(m.t, a); ctx.fill();
-      ctx.shadowBlur = 0;
-    });
-    /* LIVE chips on the top 3 front-facing money markets */
-    marks.filter(m => m.z > 0.25 && m.rank <= 3).forEach(m => {
-      const watching = (12000 + m.rank * 3100 + Math.floor(fr / 12) % 900);
-      const label = 'LIVE · ' + (watching / 1000).toFixed(1) + 'K';
-      ctx.font = '700 9px ui-monospace, Menlo, monospace';
-      const tw = ctx.measureText(label).width + 26;
-      const bx = m.x - tw / 2, by = m.y - m.r - 26;
-      ctx.fillStyle = 'rgba(20,21,26,.92)';
-      ctx.beginPath(); ctx.roundRect(bx, by, tw, 18, 9); ctx.fill();
-      const pulse = 0.55 + 0.45 * Math.sin(fr / 9);
-      ctx.fillStyle = `rgba(255,59,48,${pulse.toFixed(2)})`;
-      ctx.beginPath(); ctx.arc(bx + 11, by + 9, 3, 0, 7); ctx.fill();
-      ctx.fillStyle = 'rgba(255,255,255,.92)';
-      ctx.textAlign = 'left';
-      ctx.fillText(label, bx + 19, by + 12.5);
-      ctx.textAlign = 'center';
-    });
-  }
-  frame();
-
-  cv.onpointerdown = e => { dragging = true; lx = e.clientX; cv.setPointerCapture(e.pointerId); };
-  cv.onpointermove = e => {
-    if (dragging) { rot += (e.clientX - lx) * 0.006; lx = e.clientX; return; }
-    const rc = cv.getBoundingClientRect();
-    const mx = (e.clientX - rc.left) * (S / rc.width), my = (e.clientY - rc.top) * (S / rc.height);
-    const hit = marks.filter(m => m.z > 0).find(m => Math.hypot(m.x - mx, m.y - my) < m.r + 6);
-    if (hit && tip) {
-      tip.innerHTML = `<b>${hit.name}</b>#${hit.rank} · £${(hit.won / 1e6).toFixed(1)}M won by profitable traders`;
-      tip.style.left = (hit.x / S * rc.width + 12) + 'px';
-      tip.style.top = (hit.y / S * rc.height - 12) + 'px';
-      tip.classList.add('on');
-    } else if (tip) tip.classList.remove('on');
-  };
-  cv.onpointerup = cv.onpointercancel = () => { dragging = false; };
-  cv.onpointerleave = () => { if (tip) tip.classList.remove('on'); };
-}
-
 /* ---------------- Spectate — watching battles is a sport of its own ---------------- */
 
 let spec = null;
@@ -6352,6 +6294,13 @@ syncUserCard();
 const LB_WINDOWS = [['15m', 15], ['1h', 60], ['4h', 240], ['1d', 1440], ['1w', 10080], ['1M', 43200]];
 const LB_POTS = [500, 1000, 2500, 5000, 10000, 25000, 50000, 100000, 250000, 1000000];
 
+function lbSeed(b) {
+  const seed = hashName(String(b.a) + String(b.b) + 'lb') || 1;
+  b.sa = specSeries(b.ra, seed).slice(-40);
+  b.sb = specSeries(b.rb, (seed * 23) % 2147483647 || 5).slice(-40);
+  return b;
+}
+
 function genLiveBattle(kind) {
   const names = Object.keys(TRADER_AV);
   const [wl, wm] = LB_WINDOWS[Math.floor(Math.random() * LB_WINDOWS.length)];
@@ -6370,11 +6319,11 @@ function genLiveBattle(kind) {
     const shuffled = [...names].sort(() => Math.random() - 0.5);
     b.a = shuffled[0]; b.b = shuffled[1];
   }
-  return b;
+  return lbSeed(b);
 }
 
 const LIVE_B = [
-  ...BATTLES.map(x => ({ kind: '1v1', a: x[0], b: x[2], pot: x[4], window: '1d', windowMin: 1440, endsMin: 200 + Math.floor(Math.random() * 800), ra: +((Math.random()) * 5).toFixed(2), rb: +((Math.random()) * 5).toFixed(2), watching: Math.round(parseFloat(x[5]) * 1000) })),
+  ...BATTLES.map(x => lbSeed({ kind: '1v1', a: x[0], b: x[2], pot: x[4], window: '1d', windowMin: 1440, endsMin: 200 + Math.floor(Math.random() * 800), ra: +((Math.random()) * 5).toFixed(2), rb: +((Math.random()) * 5).toFixed(2), watching: Math.round(parseFloat(x[5]) * 1000) })),
   ...Array.from({ length: 18 }, () => genLiveBattle('1v1')),
   ...Array.from({ length: 6 }, () => genLiveBattle('clan')),
 ];
@@ -6393,6 +6342,40 @@ function lbFace(b, side) {
     return `<span class="lb-face">${c ? clanChip(c, true) : ''}<b>${c ? c.name : id}</b></span>`;
   }
   return `<span class="lb-face" data-trader="${id}" style="cursor:pointer">${avatarHTML(id, 'thread-av', '', 'width:26px;height:26px')}<b>${id}</b></span>`;
+}
+
+function smoothPath(pts) {
+  let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
+  for (let i = 1; i < pts.length; i++) {
+    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
+    const mx = ((x0 + x1) / 2).toFixed(1);
+    d += ` C${mx},${y0.toFixed(1)} ${mx},${y1.toFixed(1)} ${x1.toFixed(1)},${y1.toFixed(1)}`;
+  }
+  return d;
+}
+
+function lbMiniSVG(b) {
+  const W = 400, H = 84, pad = 6;
+  const all = b.sa.concat(b.sb);
+  const lo = Math.min(...all), hi = Math.max(...all), rng = (hi - lo) || 1;
+  const pts = sr => sr.map((v, i2) => [pad + i2 / (sr.length - 1) * (W - pad * 2), pad + (1 - (v - lo) / rng) * (H - pad * 2)]);
+  const A = '#10b981', B = '#a855f7';
+  const pa = pts(b.sa), pb = pts(b.sb);
+  const da = smoothPath(pa), db = smoothPath(pb);
+  const id = 'lbg' + b.i;
+  const dot = (p, col) => `<circle cx="${p[p.length - 1][0].toFixed(1)}" cy="${p[p.length - 1][1].toFixed(1)}" r="3.5" fill="${col}" stroke="var(--card)" stroke-width="1.5"/>`;
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="${id}a" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${A}" stop-opacity=".22"/><stop offset="100%" stop-color="${A}" stop-opacity="0"/></linearGradient>
+      <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${B}" stop-opacity=".22"/><stop offset="100%" stop-color="${B}" stop-opacity="0"/></linearGradient>
+    </defs>
+    <line x1="${pad}" x2="${W - pad}" y1="${H / 2}" y2="${H / 2}" stroke="currentColor" opacity=".07" stroke-dasharray="3 8"/>
+    <path d="${da} L${W - pad},${H} L${pad},${H} Z" fill="url(#${id}a)"/>
+    <path d="${db} L${W - pad},${H} L${pad},${H} Z" fill="url(#${id}b)"/>
+    <path d="${da}" fill="none" stroke="${A}" stroke-width="2" stroke-linejoin="round"/>
+    <path d="${db}" fill="none" stroke="${B}" stroke-width="2" stroke-linejoin="round"/>
+    ${dot(pa, A)}${dot(pb, B)}
+  </svg>`;
 }
 
 function renderLive() {
@@ -6425,6 +6408,7 @@ function renderLive() {
         <span class="lb-ret odo" data-lbb="${b.i}" data-odo="${fmtRet(b.rb)}" style="color:${b.rb >= 0 ? 'var(--green)' : '#e5484d'}">${odoInner(fmtRet(b.rb))}</span>
         ${lbFace(b, 'b')}
       </div>
+      <div class="lb-mini" data-lbchart="${b.i}">${lbMiniSVG(b)}</div>
       <div class="nw-bar"><span data-lbbar="${b.i}" style="width:${lead.toFixed(0)}%"></span><i></i></div>
       <div class="lb-foot mono">
         <b>£${b.pot.toLocaleString('en-GB')}&nbsp;pot</b>
@@ -6619,7 +6603,6 @@ function renderArena() {
         <p class="section-sub"><span class="mono">${challenges.length}&nbsp;OPEN</span><span class="dot-sep">·</span><span>someone set the terms — take the other side and it locks in at kick-off</span></p></div></div>
       <div class="challenge-grid">${cards}</div>
     </div>`;
-  bindGlobe();
 }
 
 /* ---------------- Partner — the full portal ---------------- */
@@ -7116,6 +7099,27 @@ document.addEventListener('click', e => {
     } else renderTerminal();
     return toast(`Switched to ${ACCTS[i].id} — ${ACCTS[i].label}`);
   }
+  if ((el = q('[data-insights]'))) {
+    const card = document.getElementById('insightsCard');
+    if (card) {
+      card.hidden = !card.hidden;
+      el.classList.toggle('on', !card.hidden);
+      const ch = el.querySelector('.ins-chev'); if (ch) ch.textContent = card.hidden ? '▾' : '▴';
+      if (!card.hidden) setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 40);
+    }
+    return;
+  }
+  if ((el = q('[data-postthought]'))) {
+    const ta = document.getElementById('myThought');
+    const txt = (ta ? ta.value : '').trim();
+    if (!txt) return toast('Write a thought first');
+    myPosts.unshift({ text: txt.replace(/&/g, '&amp;').replace(/</g, '&lt;'), ts: Date.now(), likes: 0, views: '2' });
+    if (myPosts.length > 40) myPosts.length = 40;
+    saveMyPosts();
+    renderTrader();
+    toast('Posted to your profile');
+    return;
+  }
   if ((el = q('[data-editprof]'))) return openEditProfile();
   if ((el = q('[data-epcover]'))) return pickImage(1280, url => { epDraft.cover = url; renderEditProfile(); });
   if ((el = q('[data-epavatar]'))) return pickImage(280, url => { epDraft.avatar = url; renderEditProfile(); });
@@ -7246,6 +7250,7 @@ document.addEventListener('click', e => {
     if (!b) return;
     if (b.kind === 'clan') openClanWarObj({ a: b.a, b: b.b, ra: b.ra, rb: b.rb, pot: b.pot, ends: lbEnds(b.endsMin), watching: b.watching }, -1);
     else openDuel(b.a, b.b, b.pot, b.watching, b.ra, b.rb);
+    if (spec && b.sa) { spec.sa = [...b.sa]; spec.sb = [...b.sb]; }
     return;
   }
   if ((el = q('[data-clanview]'))) return openClan(el.dataset.clanview);
