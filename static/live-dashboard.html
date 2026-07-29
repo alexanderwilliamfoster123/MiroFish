@@ -1490,6 +1490,39 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
 .shc-ins .ins-chev { font-size: 10px; opacity: 0.6; margin-left: 4px; }
 .shc-ins.on { color: #7c3aed; }
 
+/* Arena main-event banner — animated backdrop + live countdown */
+
+.ab-banner { position: relative; overflow: hidden; border-radius: 24px; box-shadow: var(--neu-out); margin: 26px 0 6px; min-height: 216px; display: flex; align-items: flex-end; color: #fff; isolation: isolate; }
+.ab-bg { position: absolute; inset: 0; background: linear-gradient(120deg, #1c1526, #2a1b3d 45%, #1a2340); }
+.ab-bg::before {
+  content: ''; position: absolute; inset: -40%;
+  background:
+    radial-gradient(38% 55% at 24% 34%, rgba(217, 93, 223, 0.5), transparent 70%),
+    radial-gradient(42% 60% at 74% 26%, rgba(144, 129, 223, 0.55), transparent 70%),
+    radial-gradient(36% 52% at 56% 78%, rgba(255, 142, 148, 0.36), transparent 70%),
+    radial-gradient(30% 46% at 12% 82%, rgba(240, 220, 255, 0.24), transparent 70%);
+  animation: abDrift 16s ease-in-out infinite alternate;
+}
+.ab-bg::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255, 255, 255, 0.13) 1px, transparent 1px); background-size: 22px 22px; opacity: 0.32; }
+@keyframes abDrift { 0% { transform: rotate(0deg) scale(1); } 100% { transform: rotate(8deg) scale(1.18); } }
+.ab-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10, 8, 16, 0.88), rgba(10, 8, 16, 0.55) 46%, rgba(10, 8, 16, 0.05) 78%); }
+.ab-deep { position: absolute; inset: 0; background: rgba(10, 8, 16, 0.26); opacity: 0; transition: opacity 0.35s ease; }
+.ab-banner:hover .ab-deep { opacity: 1; }
+.ab-content { position: relative; z-index: 2; width: 100%; display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; flex-wrap: wrap; padding: 26px 28px 24px; }
+.ab-kick { display: inline-flex; align-items: center; gap: 8px; font-size: 10px; letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.72); margin-bottom: 10px; }
+.ab-title { font-size: clamp(24px, 3vw, 34px); font-weight: 800; letter-spacing: -0.5px; margin: 0 0 6px; }
+.ab-title em { font-style: normal; background: var(--brandGrad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.ab-sub { font-size: 13.5px; color: rgba(255, 255, 255, 0.78); max-width: 520px; margin: 0 0 16px; line-height: 1.5; }
+.ab-cta { display: inline-flex; align-items: center; gap: 10px; border: 0; cursor: pointer; font: inherit; font-size: 13.5px; font-weight: 700; color: #241a3f; background: linear-gradient(105deg, #e9e5fb, #f3ddf8 55%, #fbdeea); border-radius: 999px; padding: 12px 22px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35); transition: gap 0.25s ease, transform 0.2s ease; }
+.ab-cta:hover { gap: 16px; transform: translateY(-1px); }
+.ab-cta svg { width: 16px; height: 16px; }
+.ab-count { display: flex; align-items: center; gap: 6px; }
+.ab-seg { min-width: 58px; text-align: center; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.14); backdrop-filter: blur(6px); border-radius: 14px; padding: 9px 8px 7px; }
+.ab-seg b { display: block; font-family: ui-monospace, Menlo, monospace; font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
+.ab-seg small { display: block; margin-top: 4px; font-size: 8.5px; letter-spacing: 0.12em; color: rgba(255, 255, 255, 0.6); }
+.ab-colon { font-family: ui-monospace, Menlo, monospace; font-size: 20px; font-weight: 700; opacity: 0.5; padding-bottom: 14px; }
+@media (max-width: 760px) { .ab-content { padding: 20px; } .ab-seg { min-width: 48px; } .ab-seg b { font-size: 17px; } }
+
 /* Post composer — write your own thoughts from your profile */
 
 .composer { display: flex; gap: 14px; background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 18px 20px; margin-bottom: 16px; }
@@ -1666,6 +1699,7 @@ body.dark .tpc-cover {
 }
 body.dark .tpc-cover::before { background-image: radial-gradient(rgba(196, 181, 253, 0.18) 1px, transparent 1px); }
 .view[data-view="trader"] .xfeed { max-width: 900px; margin: 0; }
+.view[data-view="trader"] .composer { max-width: 900px; }
 .tpc-cover .past-chip { top: 12px; }
 .tpc-body { padding: 0 24px 20px; display: flex; flex-direction: column; flex: 1; }
 .tpc-avrow { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
@@ -1965,6 +1999,13 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .tier-row { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--text-faint); margin-bottom: 8px; }
 .tier-bar { height: 10px; border-radius: 5px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; }
 .tier-bar span { display: block; height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--accent-a), var(--accent-b)); }
+
+/* Social world switcher — feed / communities / people under one roof */
+
+.soc-seg { display: flex; width: max-content; margin: 0 auto 20px; gap: 4px; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 999px; padding: 5px; }
+.soc-tab { border: 0; cursor: pointer; font: inherit; font-size: 13px; font-weight: 600; color: var(--text-faint); background: none; border-radius: 999px; padding: 9px 22px; transition: color 0.2s ease; }
+.soc-tab:hover { color: var(--text); }
+.soc-tab.on { color: var(--lbA); background: var(--card); box-shadow: var(--neu-out-sm); }
 
 /* Social feed (X-style) */
 
@@ -3328,7 +3369,7 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
 .spec-squad .down { color: var(--text-soft); }
 
 /* ---- hubs — discord-style communities ---- */
-.hub-wrap { display: grid; grid-template-columns: 68px 236px minmax(0, 1fr) 216px; gap: 14px; height: calc(100vh - 200px); min-height: 540px; }
+.hub-wrap { display: grid; grid-template-columns: 68px 236px minmax(0, 1fr) 216px; gap: 14px; height: calc(100vh - 262px); min-height: 540px; }
 .hub-rail { display: flex; flex-direction: column; align-items: center; gap: 10px; background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 14px 0; overflow-y: auto; }
 .hr-ic { position: relative; width: 44px; height: 44px; border-radius: 16px; border: 0; cursor: pointer; color: #fff; font-size: 17px; font-weight: 800; font-family: inherit; transition: border-radius .2s ease, transform .15s ease; }
 .hr-ic:hover { transform: translateY(-2px); }
@@ -3607,9 +3648,7 @@ const navItems = [
   { label: 'Arena', view: 'arena', match: ['arena', 'trader', 'spectate', 'live', 'clan', 'challenge', 'tournaments', 'leaderboard', 'board'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>' },
   { label: 'Trade', view: 'terminal', match: ['terminal', 'performance'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 15v-4M12 15V8M17 15v-6"/></svg>' },
   { label: 'Ideas', view: 'ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' },
-  { label: 'Feed', view: 'social', match: ['social'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' },
-  { label: 'Explore', view: 'explore', match: ['explore'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z"/></svg>' },
-  { label: 'Hubs', view: 'hub', match: ['hub'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><circle cx="16.5" cy="9.5" r="2.4"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5M14.5 14.6c2.2.3 3.9 1.8 4.4 4.4"/></svg>' }
+  { label: 'Social', view: 'social', match: ['social', 'hub', 'explore'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' }
 ];
 
 let prizePool = 4420000;
@@ -4136,12 +4175,12 @@ const TITLES = {
   arena: ['Arena', '<span class="mono">HEAD-TO-HEAD</span><span class="dot-sep">·</span><span>battles, tournaments, nation wars &amp; the £1M pot</span>'],
   leaderboard: ['Arena', '<span class="mono">LEADERBOARD</span><span class="dot-sep">·</span><span>live standings, resorted in real time</span>'],
   board: ['Leaderboard', '<span class="mono">VERIFIED&nbsp;TRACK&nbsp;RECORDS</span><span class="dot-sep">·</span><span>every trader on the platform, ranked by what they\'ve banked</span>'],
-  explore: ['Explore', '<span class="mono">TRADER&nbsp;RADAR</span><span class="dot-sep">·</span><span>swipe through traders — follow the ones you rate, challenge the ones you don\'t</span>'],
-  hub: ['Hubs', '<span class="mono">COMMUNITIES</span><span class="dot-sep">·</span><span>trader-run rooms — lessons, signals and chat, all in one place</span>'],
+  explore: ['Social', '<span class="mono">PEOPLE</span><span class="dot-sep">·</span><span>swipe the radar — follow the traders you rate, challenge the ones you don\'t</span>'],
+  hub: ['Social', '<span class="mono">COMMUNITIES</span><span class="dot-sep">·</span><span>gated rooms run by traders — lessons, signals and chat</span>'],
   ideas: ['Trade Ideas', '<span class="mono">LIVE&nbsp;WIRE</span><span class="dot-sep">·</span><span>signals streaming from every market</span>'],
   terminal: ['Trade', '<span class="mono">TR-1001</span><span class="dot-sep">·</span><span>£100k competition balance</span>'],
   challenge: ['Challenge', '<span class="mono">OPEN&nbsp;CHALLENGE</span><span class="dot-sep">·</span><span>read the terms, scout the trader, take the other side</span>'],
-  social: ['Feed', '<span class="mono">FEED</span><span class="dot-sep">·</span><span>what 177K traders are saying right now</span>'],
+  social: ['Social', '<span class="mono">FEED</span><span class="dot-sep">·</span><span>the open tape — post your results, follow traders, build a name</span>'],
   performance: ['Performance', '<span class="mono">ALL&nbsp;ACCOUNTS</span><span class="dot-sep">·</span><span>verified live track record</span>'],
   partner: ['Partner', '<span class="mono">PARTNER&nbsp;PROGRAMME</span><span class="dot-sep">·</span><span>earn 20% for the lifetime of every client</span>'],
   inbox: ['Messages', '<span class="mono">INBOX</span><span class="dot-sep">·</span><span>messages, contacts &amp; invites</span>'],
@@ -5442,8 +5481,16 @@ const invites = [
   { t: 'Arena battle challenge', s: 'swisstony challenged you · £5,000 pot · 1 week window · any market', from: '👩‍💻' }
 ];
 
+/* ---------------- Social world — feed, communities & people under one roof ---------------- */
+
+function socSegHTML(active) {
+  const tabs = [['social', 'Feed'], ['hub', 'Communities'], ['explore', 'People']];
+  return `<div class="soc-seg">${tabs.map(([v, l]) =>
+    `<button class="soc-tab${v === active ? ' on' : ''}" data-nav="${v}">${l}</button>`).join('')}</div>`;
+}
+
 function renderSocial() {
-  viewEl('social').innerHTML = renderFeed();
+  viewEl('social').innerHTML = socSegHTML('social') + renderFeed();
 }
 
 let inboxTab = 'messages';
@@ -7581,7 +7628,7 @@ function renderHub() {
     ${avatarHTML(n, 'thread-av')}<span class="hmem-tx"><b>${n}</b><small>${n === h.host ? 'Host' : i < 3 ? 'Moderator' : 'Member'}</small></span>
     <i class="hmem-dot${i < 6 ? ' on' : ''}"></i>
   </div>`).join('');
-  viewEl('hub').innerHTML = `<div class="hub-wrap">
+  viewEl('hub').innerHTML = socSegHTML('hub') + `<div class="hub-wrap">
     <aside class="hub-rail">${rail}
       <button class="hr-ic hr-add" data-hubcreate title="Host your own community"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></aside>
     <aside class="hub-side">
@@ -7685,7 +7732,7 @@ function exApplyFan() {
 
 function renderExplore() {
   if (!exOrder) exOrder = Object.keys(TRADER_AV).sort((a, b) => hashName(a + 'x') - hashName(b + 'x'));
-  viewEl('explore').innerHTML = `<div class="ex-wrap">
+  viewEl('explore').innerHTML = socSegHTML('explore') + `<div class="ex-wrap">
     <div class="exfan-wrap" id="exFan">${exOrder.map((n, i) => `<div class="fan-card" data-xi="${i}">${exCardHTML(n)}</div>`).join('')}</div>
     <div class="ex-nav">
       <button class="fan-arrow" data-exprev aria-label="Previous trader"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
@@ -8849,6 +8896,51 @@ function renderTournamentsPage() {
   renderPast();
 }
 
+/* ---------------- Arena main-event banner — the £1M battle countdown ---------------- */
+
+let abDeadline = Date.now() + ((2 * 24 + 14) * 3600 + 47 * 60 + 22) * 1000;
+const abPad = n => String(n).padStart(2, '0');
+
+function abBannerHTML() {
+  return `<section class="ab-banner">
+    <div class="ab-bg"></div>
+    <div class="ab-overlay"></div>
+    <div class="ab-deep"></div>
+    <div class="ab-content">
+      <div class="ab-left">
+        <div class="ab-kick mono"><span class="pulse-dot tiny"></span>MAIN&nbsp;EVENT&nbsp;·&nbsp;LIVE&nbsp;IN&nbsp;THE&nbsp;ARENA</div>
+        <h3 class="ab-title">The <em>£1,000,000</em> battle</h3>
+        <p class="ab-sub">Theo4 v swisstony — the biggest pot ever locked in escrow. Every trade streams live until the window closes and the winner sweeps the lot.</p>
+        <button class="ab-cta" data-watch>Watch it live
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
+      </div>
+      <div class="ab-right">
+        <div class="ab-kick mono" style="justify-content:flex-end">POT&nbsp;SWEEPS&nbsp;IN</div>
+        <div class="ab-count">
+          <div class="ab-seg"><b id="abD">--</b><small>DAYS</small></div><span class="ab-colon">:</span>
+          <div class="ab-seg"><b id="abH">--</b><small>HRS</small></div><span class="ab-colon">:</span>
+          <div class="ab-seg"><b id="abM">--</b><small>MIN</small></div><span class="ab-colon">:</span>
+          <div class="ab-seg"><b id="abS">--</b><small>SEC</small></div>
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
+function abTick() {
+  const el = document.getElementById('abD');
+  if (!el) return;
+  let s = Math.max(0, Math.floor((abDeadline - Date.now()) / 1000));
+  const d = Math.floor(s / 86400); s -= d * 86400;
+  const h = Math.floor(s / 3600); s -= h * 3600;
+  const m = Math.floor(s / 60); s -= m * 60;
+  el.textContent = abPad(d);
+  document.getElementById('abH').textContent = abPad(h);
+  document.getElementById('abM').textContent = abPad(m);
+  document.getElementById('abS').textContent = abPad(s);
+}
+setInterval(abTick, 1000);
+
 function renderArena() {
   const battleRows = BATTLES.map((b, i) => `
     <li class="leaderboard-row" data-spectate="${i}" style="cursor:pointer">
@@ -8928,6 +9020,7 @@ function renderArena() {
         </div>
       </div>
     </section>
+    ${abBannerHTML()}
     ${arenaB.open ? builderHTML() : ''}
     ${myBattlesHTML()}
     ${machinesHTML()}
@@ -8938,6 +9031,7 @@ function renderArena() {
       <div class="challenge-grid">${cards}</div>
     </div>
     ${nationWarsHTML()}`;
+  abTick();
 }
 
 /* ---------------- Challenge detail — full terms + scout before you accept ---------------- */
