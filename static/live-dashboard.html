@@ -1967,6 +1967,32 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .tier-bar { height: 10px; border-radius: 5px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; }
 .tier-bar span { display: block; height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--accent-a), var(--accent-b)); }
 
+/* Arena hero — board-style panel: live map, fade, floating battle chips */
+
+.ar-hero { position: relative; overflow: hidden; background: var(--card); border-radius: 24px; box-shadow: var(--neu-out-sm); padding: 40px 44px; margin-bottom: 10px; min-height: 380px; display: flex; align-items: center; --wm-dot: rgba(24, 26, 34, .17); }
+body.dark .ar-hero { --wm-dot: rgba(255, 255, 255, .19); }
+.ar-map { position: absolute; inset: 0; display: flex; align-items: center; justify-content: flex-end; padding-right: 18px; pointer-events: none; }
+.ar-map svg { height: 96%; width: auto; max-width: none; }
+.ar-fade { position: absolute; inset: 0; background: linear-gradient(90deg, var(--card) 30%, rgba(255, 255, 255, 0) 64%); pointer-events: none; }
+body.dark .ar-fade { background: linear-gradient(90deg, var(--card) 30%, rgba(0, 0, 0, 0) 64%); }
+.ar-tx { position: relative; z-index: 2; max-width: 580px; }
+.ar-title { font-size: 37px; letter-spacing: -1.3px; margin: 12px 0 8px; }
+.ar-stats { display: flex; gap: 36px; margin: 0 0 24px; }
+.ar-stats b { display: block; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--text); }
+.ar-stats > div > span:last-child { font-size: 8px; letter-spacing: 0.12em; color: var(--text-faint); }
+.ar-ic { display: block; color: var(--lbA); margin-bottom: 7px; }
+.ar-ic svg { width: 14px; height: 14px; }
+.ar-chip { position: absolute; z-index: 3; display: flex; align-items: center; gap: 9px; cursor: pointer; font: inherit; text-align: left; background: color-mix(in srgb, var(--card) 84%, transparent); backdrop-filter: blur(8px); border: 1px solid var(--line); border-radius: 14px; padding: 8px 14px 8px 9px; box-shadow: 0 10px 26px rgba(40, 30, 70, 0.14); animation: arFloat 4.5s ease-in-out infinite alternate; transition: transform 0.2s ease; }
+.ar-chip:hover { transform: translateY(-3px); }
+body.dark .ar-chip { box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45); }
+.ar-chip-tx b { display: block; font-size: 12px; font-weight: 700; color: var(--text); }
+.ar-chip-tx small { font-size: 9px; color: var(--text-faint); letter-spacing: 0.06em; }
+@keyframes arFloat { from { margin-top: 0; } to { margin-top: -10px; } }
+@media (max-width: 1000px) { .ar-chip { display: none; } .ar-map { opacity: 0.3; } }
+.ar-big { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 34px; list-style: none; margin: 0; padding: 0; }
+.ar-big-foot { display: flex; justify-content: center; gap: 26px; margin-top: 16px; }
+@media (max-width: 900px) { .ar-big { grid-template-columns: 1fr; } }
+
 /* Gamified icon spots + per-section panels */
 
 .pk-panel { background: var(--card); border-radius: 26px; box-shadow: var(--neu-out); padding: 24px 26px 26px; margin: 0 0 10px; }
@@ -9239,47 +9265,55 @@ function renderArena() {
     </article>`;
   }).join('');
   viewEl('arena').innerHTML = `
-    <section class="hero">
-      <div class="hero-glow"></div>
-      <div class="hero-content">
-        <div class="hero-left">
-          <div class="live-badge"><span class="pulse-dot"></span><span class="mono">LIVE&nbsp;NOW</span></div>
-          <h2 class="hero-title">The <span class="hero-title-accent">Arena</span></h2>
-          <p class="hero-desc">Head-to-head trade-offs. Challenge anyone, pick the window — 15 minutes to a full year — and the higher return takes the escrowed pot, up to £1,000,000.</p>
-          <div class="hero-stats">
-            <div class="stat"><span class="stat-label mono">${IC.swords}BATTLES&nbsp;LIVE&nbsp;NOW</span><span class="stat-value">${odoHTML('ahBattles', battlesLiveN.toLocaleString('en-GB'))}</span></div>
-            <div class="stat"><span class="stat-label mono">${IC.vault}ESCROWED&nbsp;VOLUME</span><span class="stat-value">${odoHTML('ahEscrow', '£' + escrowVol.toFixed(1) + 'M')}</span></div>
-            <div class="stat"><span class="stat-label mono">${IC.trophy}BIGGEST&nbsp;POT&nbsp;LIVE</span><span class="stat-value">${odoHTML('ahBigPot', '£' + (bigPotLive / 1e6).toFixed(2) + 'M')}</span></div>
-            <div class="stat"><span class="stat-label mono">${IC.users}TRADERS&nbsp;DUELING</span><span class="stat-value">${odoHTML('ahDueling', duelingN.toLocaleString('en-GB'))}</span></div>
-          </div>
-          <div class="hero-actions">
-            <button class="btn-primary" data-abopen><span class="pulse-dot small light"></span>Start a battle</button>
-            <button class="btn-neu" data-invopen="duel">Challenge a friend</button>
-            <button class="btn-neu" data-nav="live"><span class="pulse-dot small"></span>Watch live battles</button>
-            <button class="btn-appstore" data-appstore aria-label="Download on the App Store">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.546,12.763c0.024-1.87,1.004-3.597,2.597-4.576c-1.009-1.442-2.64-2.323-4.399-2.378 c-1.851-0.194-3.645,1.107-4.588,1.107c-0.961,0-2.413-1.088-3.977-1.056C6.122,5.927,4.25,7.068,3.249,8.867 c-2.131,3.69-0.542,9.114,1.5,12.097c1.022,1.461,2.215,3.092,3.778,3.035c1.529-0.063,2.1-0.975,3.945-0.975 c1.828,0,2.364,0.975,3.958,0.938c1.64-0.027,2.674-1.467,3.66-2.942c0.734-1.041,1.299-2.191,1.673-3.408 C19.815,16.788,18.548,14.879,18.546,12.763z"/><path d="M15.535,3.847C16.429,2.773,16.87,1.393,16.763,0c-1.366,0.144-2.629,0.797-3.535,1.829 c-0.895,1.019-1.349,2.351-1.261,3.705C13.352,5.548,14.667,4.926,15.535,3.847z"/></svg>
-              <span class="as-tx"><small>Download on the</small><b>App&nbsp;Store</b></span>
-            </button>
-          </div>
-          <div class="hero-social">
-            <div class="avatar-stack">
-              <span class="stack-avatar" style="background:${AV_TINTS[0]}">T</span>
-              <span class="stack-avatar" style="background:${AV_TINTS[2]}">S</span>
-              <span class="stack-avatar" style="background:${AV_TINTS[4]}">G</span>
-            </div>
-            <p class="hero-social-text"><strong>@Theo4</strong>, <strong>@swisstony</strong> &amp; 2.5K traders dueling right now</p>
-          </div>
+    <section class="ar-hero">
+      <div class="ar-map" aria-hidden="true">${wmSVG()}</div>
+      <div class="ar-fade" aria-hidden="true"></div>
+      ${BATTLES.slice(0, 3).map((b, i) => `
+      <button class="ar-chip" data-spectate="${i}" style="animation-delay:${(i * 1.4).toFixed(1)}s;top:${[15, 45, 70][i]}%;right:${[5, 23, 3][i]}%">
+        <span class="vs-pair">${avatarHTML(b[0], 'thread-av')}${avatarHTML(b[2], 'thread-av')}</span>
+        <span class="ar-chip-tx"><b>${b[0]} v ${b[2]}</b><small class="mono">£${b[4].toLocaleString('en-GB')}&nbsp;POT&nbsp;·&nbsp;●&nbsp;${b[5]}&nbsp;WATCHING</small></span>
+      </button>`).join('')}
+      <div class="ar-tx">
+        <span class="live-tag"><span class="pulse-dot"></span><span class="mono">LIVE&nbsp;NOW&nbsp;·&nbsp;HEAD-TO-HEAD</span></span>
+        <h2 class="pt-title ar-title">The <span class="hero-title-accent">Arena</span></h2>
+        <p class="section-sub" style="margin:0 0 24px;max-width:470px">Challenge anyone, pick the window — 15 minutes to a full year — and the higher return sweeps the escrowed pot, up to £1,000,000.</p>
+        <div class="ar-stats mono">
+          <div><span class="ar-ic">${IC.swords}</span><b>${odoHTML('ahBattles', battlesLiveN.toLocaleString('en-GB'))}</b><span>BATTLES&nbsp;LIVE</span></div>
+          <div><span class="ar-ic">${IC.vault}</span><b>${odoHTML('ahEscrow', '£' + escrowVol.toFixed(1) + 'M')}</b><span>IN&nbsp;ESCROW</span></div>
+          <div><span class="ar-ic">${IC.trophy}</span><b>${odoHTML('ahBigPot', '£' + (bigPotLive / 1e6).toFixed(2) + 'M')}</b><span>BIGGEST&nbsp;POT</span></div>
+          <div><span class="ar-ic">${IC.users}</span><b>${odoHTML('ahDueling', duelingN.toLocaleString('en-GB'))}</b><span>DUELING</span></div>
         </div>
-        <div class="leaderboard">
-          <div class="leaderboard-head"><span class="pulse-dot purple"></span><span class="mono leaderboard-title">BIGGEST&nbsp;BATTLES&nbsp;LIVE</span></div>
-          <ul class="leaderboard-list">${battleRows}</ul>
-          <button class="link-btn" data-nav="live" style="margin-bottom:2px">All live battles</button>
-          <button class="link-btn" data-watch>Watch the £1M battle
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
+        <div class="hero-actions" style="margin-bottom:20px">
+          <button class="btn-primary" data-abopen><span class="pulse-dot small light"></span>Start a battle</button>
+          <button class="btn-neu" data-invopen="duel">Challenge a friend</button>
+          <button class="btn-neu" data-nav="live"><span class="pulse-dot small"></span>Watch live battles</button>
+          <button class="btn-appstore" data-appstore aria-label="Download on the App Store">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.546,12.763c0.024-1.87,1.004-3.597,2.597-4.576c-1.009-1.442-2.64-2.323-4.399-2.378 c-1.851-0.194-3.645,1.107-4.588,1.107c-0.961,0-2.413-1.088-3.977-1.056C6.122,5.927,4.25,7.068,3.249,8.867 c-2.131,3.69-0.542,9.114,1.5,12.097c1.022,1.461,2.215,3.092,3.778,3.035c1.529-0.063,2.1-0.975,3.945-0.975 c1.828,0,2.364,0.975,3.958,0.938c1.64-0.027,2.674-1.467,3.66-2.942c0.734-1.041,1.299-2.191,1.673-3.408 C19.815,16.788,18.548,14.879,18.546,12.763z"/><path d="M15.535,3.847C16.429,2.773,16.87,1.393,16.763,0c-1.366,0.144-2.629,0.797-3.535,1.829 c-0.895,1.019-1.349,2.351-1.261,3.705C13.352,5.548,14.667,4.926,15.535,3.847z"/></svg>
+            <span class="as-tx"><small>Download on the</small><b>App&nbsp;Store</b></span>
+          </button>
+        </div>
+        <div class="hero-social">
+          <div class="avatar-stack">
+            <span class="stack-avatar" style="background:${AV_TINTS[0]}">T</span>
+            <span class="stack-avatar" style="background:${AV_TINTS[2]}">S</span>
+            <span class="stack-avatar" style="background:${AV_TINTS[4]}">G</span>
+          </div>
+          <p class="hero-social-text"><strong>@Theo4</strong>, <strong>@swisstony</strong> &amp; 2.5K traders dueling right now</p>
         </div>
       </div>
     </section>
     ${pkpHTML()}
+    <div class="section">
+      ${shxHead('BIGGEST BATTLES LIVE', 'The table stakes are <em>real</em>.', 'The four biggest pots on the platform right now — tap a battle to pull up ringside.', true, 'flame')}
+      <div class="pk-panel">
+        <ul class="leaderboard-list ar-big">${battleRows}</ul>
+        <div class="ar-big-foot">
+          <button class="link-btn" data-nav="live">All live battles</button>
+          <button class="link-btn" data-watch>Watch the £1M battle
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+    </div>
     ${arenaB.open ? builderHTML() : ''}
     ${myBattlesHTML()}
     ${machinesHTML()}
