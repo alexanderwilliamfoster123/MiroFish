@@ -1967,6 +1967,23 @@ canvas.chart-sm { width: 100%; height: 220px; display: block; }
 .tier-bar { height: 10px; border-radius: 5px; background: var(--surface); box-shadow: var(--neu-in-sm); overflow: hidden; }
 .tier-bar span { display: block; height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--accent-a), var(--accent-b)); }
 
+/* Gamified icon spots + per-section panels */
+
+.pk-panel { background: var(--card); border-radius: 26px; box-shadow: var(--neu-out); padding: 24px 26px 26px; margin: 0 0 10px; }
+.asset-ic.sm { width: 19px; height: 19px; border-radius: 6px; font-size: 9px; }
+.lb-mkt { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--text); }
+.lb-tmatch .asset-ic.sm { margin-right: 2px; }
+.shx-kick { display: flex; justify-content: center; align-items: center; gap: 7px; }
+.shx-kick svg { width: 13px; height: 13px; color: var(--lbA); }
+.pkp-kick { display: inline-flex; align-items: center; gap: 7px; }
+.pkp-kick svg { width: 13px; height: 13px; color: var(--lbA); }
+.stat-label { display: inline-flex; align-items: center; gap: 6px; }
+.stat-label svg { width: 13px; height: 13px; color: var(--lbA); flex: none; }
+.hot-chip { display: inline-flex; align-items: center; gap: 4px; }
+.hot-chip svg { width: 10px; height: 10px; }
+.lr-flame { display: inline-flex; color: #ff7a45; margin-right: 6px; vertical-align: -1px; }
+.lr-flame svg { width: 12px; height: 12px; }
+
 /* Editorial section headers + main-event promo (Combo-Cup style, light) */
 
 .shx-head { position: relative; text-align: center; padding: 48px 20px 34px; }
@@ -8042,7 +8059,7 @@ function renderBoard() {
         </div>
       </div>
     </div>
-    ${shxHead('LEADERBOARD', 'Ranked by what they&#39;ve <em>banked</em>.', 'Crazy returns, crazier bragging rights — every rank stamped from settled, escrowed winnings.')}
+    ${shxHead('LEADERBOARD', 'Ranked by what they&#39;ve <em>banked</em>.', 'Crazy returns, crazier bragging rights — every rank stamped from settled, escrowed winnings.', false, 'trophy')}
     ${lbBoardHTML()}`;
 }
 
@@ -8084,7 +8101,7 @@ function myBattlesHTML() {
     const lead = Math.max(8, Math.min(92, 50 + (b.my - b.op) * 9));
     return `<article class="mb-card" data-bspec="${i}">
       <div class="mb-top"><span class="mb-live"><span class="pulse-dot tiny"></span>LIVE</span>
-        <span class="mono">${b.window.toUpperCase()}&nbsp;·&nbsp;${b.market.toUpperCase()}</span>
+        <span class="mono" style="display:inline-flex;align-items:center;gap:6px">${b.window.toUpperCase()}&nbsp;·&nbsp;${assetChip(b.market)}${b.market.toUpperCase()}</span>
         <span class="mb-watch mono">●&nbsp;${b.watching}&nbsp;WATCHING</span></div>
       <div class="mb-row">
         <div class="mb-side">
@@ -8102,9 +8119,8 @@ function myBattlesHTML() {
     </article>`;
   }).join('');
   return `<div class="section">
-    <div class="section-head"><div><h3 class="section-title">Your battles</h3>
-      <p class="section-sub"><span class="mono">${myBattles.length}&nbsp;LIVE</span><span class="dot-sep">·</span><span>every battle runs on its own funded account — the trades you close set your return</span></p></div></div>
-    <div class="mb-grid">${rows}</div></div>`;
+    ${shxHead('YOUR BATTLES', 'You&#39;re <em>live</em> in the arena.', myBattles.length + ' running — every battle trades on its own funded account, the trades you close set your return.', true, 'swords')}
+    <div class="pk-panel"><div class="mb-grid">${rows}</div></div></div>`;
 }
 
 /* ---------------- Trade Clans — team up, fly a banner, battle as one ---------------- */
@@ -8156,8 +8172,8 @@ function machinesHTML() {
       <button class="btn-mach" data-mbattle="${i}">Battle ${m.name} →</button>
     </article>`).join('');
   return `<div class="section">
-    ${shxHead('HOUSE-BACKED', 'Battle the <em>machines</em>.', 'The bots always have a table open — we put up the capital, beat them over the window and take the pot.')}
-    <div class="mach-grid">${cards}</div>
+    ${shxHead('HOUSE-BACKED', 'Battle the <em>machines</em>.', 'The bots always have a table open — we put up the capital, beat them over the window and take the pot.', false, 'bot')}
+    <div class="pk-panel"><div class="mach-grid">${cards}</div></div>
   </div>`;
 }
 
@@ -8683,6 +8699,7 @@ const LB_POTS = [500, 1000, 2500, 5000, 10000, 25000, 50000, 100000, 250000, 100
 
 function lbSeed(b) {
   const seed = hashName(String(b.a) + String(b.b) + 'lb') || 1;
+  b.mkt = Object.keys(INSTR)[seed % 6];
   b.sa = specSeries(b.ra, seed).slice(-40);
   b.sb = specSeries(b.rb, (seed * 23) % 2147483647 || 5).slice(-40);
   return b;
@@ -8958,8 +8975,9 @@ function renderLive() {
     const st = lbStats(b);
     return `<article class="lb-card" data-lbwatch="${b.i}">
       <div class="lb-top mono">
+        <span class="lb-mkt">${assetChip(b.mkt)}${b.mkt}</span>
         <span class="lb-kind${b.kind === 'clan' ? ' clan' : ''}">${b.kind === 'clan' ? 'CLAN WAR' : '1V1'}</span>
-        ${b.watching >= hotCut ? '<span class="hot-chip">HOT</span>' : ''}
+        ${b.watching >= hotCut ? `<span class="hot-chip">${IC.flame}HOT</span>` : ''}
         ${close ? '<span class="nn-chip">NECK &amp; NECK</span>' : ''}
         <span class="lb-watching" data-lbw="${b.i}">● ${b.watching.toLocaleString('en-GB')} watching</span>
       </div>
@@ -8988,7 +9006,7 @@ function renderLive() {
   const rows = list.map(b => {
     const lead = Math.max(8, Math.min(92, 50 + (b.ra - b.rb) * 9));
     return `<tr data-lbwatch="${b.i}">
-      <td><span class="lb-tmatch">${lbFace(b, 'a')}<span class="nw-vs mono">VS</span>${lbFace(b, 'b')}</span></td>
+      <td><span class="lb-tmatch">${assetChip(b.mkt)}${lbFace(b, 'a')}<span class="nw-vs mono">VS</span>${lbFace(b, 'b')}</span></td>
       <td><span class="lb-kind${b.kind === 'clan' ? ' clan' : ''} mono">${b.kind === 'clan' ? 'CLAN' : '1V1'}</span></td>
       <td><span class="lb-spark" data-lbspark="${b.i}">${lbSparkSVG(b)}</span></td>
       <td><span class="lb-ret odo" data-lba="${b.i}" data-odo="${fmtRet(b.ra)}" style="color:${b.ra >= b.rb ? 'var(--text)' : 'var(--text-faint)'}">${odoInner(fmtRet(b.ra))}</span></td>
@@ -9009,7 +9027,8 @@ function renderLive() {
   viewEl('live').innerHTML = `
     <button class="back-btn" data-nav="arena">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to Arena</button>
-    ${shxHead('LIVE NOW', 'Every battle. <em>Ringside.</em>', 'Filter the floor, pick a duel, pull up a seat — charts, tape and chat in real time.', true)}
+    ${shxHead('LIVE NOW', 'Every battle. <em>Ringside.</em>', 'Filter the floor, pick a duel, pull up a seat — charts, tape and chat in real time.', true, 'bolt')}
+    <div class="pk-panel">
     <div class="lb-bar">
       ${[['pot', 'Pot', LB_POT_L, lbf.pot, 'lbpot'], ['dur', 'Duration', LB_DUR_L, lbf.dur, 'lbdur'], ['sort', 'Sort', LB_SORT_L, lbf.sort, 'lbsort']].map(([k2, lab, L, cur, attr], gi) => `
         ${gi ? '<i class="lb-bar-div"></i>' : ''}
@@ -9023,6 +9042,7 @@ function renderLive() {
       </div>
     </div>
     ${board}
+    </div>
     <div class="lb-tip" id="lbTip"></div>`;
   document.querySelectorAll('[data-lbchart]').forEach(el => {
     const b = LIVE_B[+el.dataset.lbchart];
@@ -9115,8 +9135,28 @@ function renderTournamentsPage() {
 
 /* ---------------- Editorial headers + the £1M main-event promo ---------------- */
 
-const shxHead = (kick, title, sub, sm) => `<div class="shx-head${sm ? ' sm' : ''}">
-  <div class="shx-kick mono">${kick}</div>
+const IC = {
+  flame: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.5 3-.6 4.6-2 6-1.6 1.6-3 3.2-3 6a7 7 0 0 0 14 0c0-2.4-1-3.9-1.8-6-.3 1-.8 1.9-1.7 2.4.3-2.9-1.6-6.6-5.5-8.4z"/></svg>',
+  swords: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5L20.5 9.5M20.5 3.5L14.5 9.5M3.5 14.5l6 6M3.5 20.5l6-6M5 5l6.5 6.5M19 19l-6.5-6.5"/></svg>',
+  vault: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  trophy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 5H4a3 3 0 0 0 3 5M17 5h3a3 3 0 0 1-3 5"/></svg>',
+  users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><circle cx="16.5" cy="9.5" r="2.4"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5M14.5 14.6c2.2.3 3.9 1.8 4.4 4.4"/></svg>',
+  bolt: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4.5 13.5h5L11 22l8.5-11.5h-5L13 2z"/></svg>',
+  bot: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V4M9 4h6"/><circle cx="9" cy="13" r="1" fill="currentColor"/><circle cx="15" cy="13" r="1" fill="currentColor"/><path d="M9.5 16.5h5"/></svg>',
+  timer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg>',
+  target: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>',
+};
+
+function assetChip(tag) {
+  if (!tag) return '';
+  const k = String(tag).toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const a = INSTR[k];
+  if (a) return `<span class="asset-ic sm" style="background:${a.tint}">${a.ic}</span>`;
+  return `<span class="asset-ic sm" style="background:linear-gradient(135deg,#c4b5fd,#8b5cf6)">${k.charAt(0) || 'M'}</span>`;
+}
+
+const shxHead = (kick, title, sub, sm, ic) => `<div class="shx-head${sm ? ' sm' : ''}">
+  <div class="shx-kick mono">${ic && IC[ic] ? IC[ic] : ''}${kick}</div>
   <h2 class="shx-title">${title}</h2>
   ${sub ? `<p class="shx-sub">${sub}</p>` : ''}
 </div>`;
@@ -9140,7 +9180,7 @@ function pkpHTML() {
   </div>`;
   return `<section class="pkp">
     <div>
-      <div class="pkp-kick mono">THE&nbsp;MAIN&nbsp;EVENT&nbsp;SETTLES&nbsp;IN</div>
+      <div class="pkp-kick mono">${IC.timer}THE&nbsp;MAIN&nbsp;EVENT&nbsp;SETTLES&nbsp;IN</div>
       <div class="shx-count">
         <div class="shx-seg"><b id="ppD">--</b><small>DAYS</small></div>
         <div class="shx-dots"><i></i><i></i></div>
@@ -9166,7 +9206,7 @@ function renderArena() {
       <span class="row-rank mono">${String(i + 1).padStart(2, '0')}</span>
       <span class="vs-pair">${avatarHTML(b[0], 'thread-av')}${avatarHTML(b[2], 'thread-av')}</span>
       <span class="row-name">${b[0]} v ${b[2]}<span class="watching">● ${b[5]} watching</span></span>
-      <span class="row-value mono-num">£${b[4].toLocaleString('en-GB')}</span>
+      <span class="row-value mono-num">${b[4] >= 100000 ? `<i class="lr-flame">${IC.flame}</i>` : ''}£${b[4].toLocaleString('en-GB')}</span>
     </li>`).join('');
   const cards = challenges.map((c, i) => {
     const p = c.mine ? null : traderProfile(c.name);
@@ -9207,10 +9247,10 @@ function renderArena() {
           <h2 class="hero-title">The <span class="hero-title-accent">Arena</span></h2>
           <p class="hero-desc">Head-to-head trade-offs. Challenge anyone, pick the window — 15 minutes to a full year — and the higher return takes the escrowed pot, up to £1,000,000.</p>
           <div class="hero-stats">
-            <div class="stat"><span class="stat-label mono">BATTLES&nbsp;LIVE&nbsp;NOW</span><span class="stat-value">${odoHTML('ahBattles', battlesLiveN.toLocaleString('en-GB'))}</span></div>
-            <div class="stat"><span class="stat-label mono">ESCROWED&nbsp;VOLUME</span><span class="stat-value">${odoHTML('ahEscrow', '£' + escrowVol.toFixed(1) + 'M')}</span></div>
-            <div class="stat"><span class="stat-label mono">BIGGEST&nbsp;POT&nbsp;LIVE</span><span class="stat-value">${odoHTML('ahBigPot', '£' + (bigPotLive / 1e6).toFixed(2) + 'M')}</span></div>
-            <div class="stat"><span class="stat-label mono">TRADERS&nbsp;DUELING</span><span class="stat-value">${odoHTML('ahDueling', duelingN.toLocaleString('en-GB'))}</span></div>
+            <div class="stat"><span class="stat-label mono">${IC.swords}BATTLES&nbsp;LIVE&nbsp;NOW</span><span class="stat-value">${odoHTML('ahBattles', battlesLiveN.toLocaleString('en-GB'))}</span></div>
+            <div class="stat"><span class="stat-label mono">${IC.vault}ESCROWED&nbsp;VOLUME</span><span class="stat-value">${odoHTML('ahEscrow', '£' + escrowVol.toFixed(1) + 'M')}</span></div>
+            <div class="stat"><span class="stat-label mono">${IC.trophy}BIGGEST&nbsp;POT&nbsp;LIVE</span><span class="stat-value">${odoHTML('ahBigPot', '£' + (bigPotLive / 1e6).toFixed(2) + 'M')}</span></div>
+            <div class="stat"><span class="stat-label mono">${IC.users}TRADERS&nbsp;DUELING</span><span class="stat-value">${odoHTML('ahDueling', duelingN.toLocaleString('en-GB'))}</span></div>
           </div>
           <div class="hero-actions">
             <button class="btn-primary" data-abopen><span class="pulse-dot small light"></span>Start a battle</button>
@@ -9245,9 +9285,8 @@ function renderArena() {
     ${machinesHTML()}
     ${FEATURE_CLANS ? clansHTML() : ''}
     <div class="section">
-      <div class="section-head"><div><h3 class="section-title">Open challenges</h3>
-        <p class="section-sub"><span class="mono">${challenges.length}&nbsp;OPEN</span><span class="dot-sep">·</span><span>someone set the terms — take the other side and it locks in at kick-off</span></p></div></div>
-      <div class="challenge-grid">${cards}</div>
+      ${shxHead('OPEN CHALLENGES', 'Someone set the terms. <em>Take the other side.</em>', challenges.length + ' open right now — accept one and it locks in at kick-off.', false, 'target')}
+      <div class="pk-panel"><div class="challenge-grid">${cards}</div></div>
     </div>
     ${nationWarsHTML()}`;
   ppTick();
