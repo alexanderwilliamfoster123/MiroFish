@@ -3326,6 +3326,57 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
 .obadge.flat { color: var(--text-soft); background: var(--surface); box-shadow: var(--neu-in-sm); }
 .sf-amt.neu { color: var(--text-soft); }
 .spec-squad .down { color: var(--text-soft); }
+
+/* ---- hubs — discord-style communities ---- */
+.hub-wrap { display: grid; grid-template-columns: 68px 236px minmax(0, 1fr) 216px; gap: 14px; height: calc(100vh - 200px); min-height: 540px; }
+.hub-rail { display: flex; flex-direction: column; align-items: center; gap: 10px; background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 14px 0; overflow-y: auto; }
+.hr-ic { position: relative; width: 44px; height: 44px; border-radius: 16px; border: 0; cursor: pointer; color: #fff; font-size: 17px; font-weight: 800; font-family: inherit; transition: border-radius .2s ease, transform .15s ease; }
+.hr-ic:hover { transform: translateY(-2px); }
+.hr-ic.on { border-radius: 12px; outline: 2px solid var(--lbA); outline-offset: 3px; }
+.hr-dot { position: absolute; right: -2px; bottom: -2px; width: 11px; height: 11px; border-radius: 50%; background: #10b981; border: 2.5px solid var(--card); }
+.hr-add { background: var(--surface); box-shadow: var(--neu-in-sm); color: var(--lbA); }
+.hub-side { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 18px 14px; display: flex; flex-direction: column; overflow-y: auto; }
+.hs-head { padding: 0 6px 14px; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+.hs-head b { display: block; font-size: 15px; letter-spacing: -.01em; }
+.hs-head small { display: block; font-size: 10px; color: var(--text-faint); margin-top: 3px; }
+.hs-join { width: 100%; margin-top: 10px; padding: 10px; font-size: 12.5px; }
+.hs-in { display: inline-block; margin-top: 10px; font-size: 8px; letter-spacing: .12em; color: #10b981; font-weight: 800; }
+.hs-g { font-size: 7.5px; letter-spacing: .13em; color: var(--text-faint); font-weight: 700; margin: 12px 6px 5px; }
+.hs-ch { display: flex; align-items: center; gap: 8px; width: 100%; border: 0; background: none; cursor: pointer; font: inherit; font-size: 13px; color: var(--text-soft); padding: 7px 8px; border-radius: 10px; text-align: left; }
+.hs-ch:hover { background: var(--surface); }
+.hs-ch.on { background: var(--surface); box-shadow: var(--neu-in-sm); color: var(--text); font-weight: 700; }
+.hs-hash { color: var(--text-faint); font-size: 12px; }
+.hs-lock { margin-left: auto; color: var(--text-faint); }
+.hs-desc { font-size: 11px; color: var(--text-faint); line-height: 1.55; padding: 12px 6px 0; margin: auto 0 0; border-top: 1px solid var(--line); }
+.hub-main { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); display: flex; flex-direction: column; min-width: 0; }
+.hm-chead { display: flex; align-items: baseline; gap: 8px; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+.hm-chead b { font-size: 14.5px; }
+.hm-chead small { font-size: 10.5px; color: var(--text-faint); }
+.hub-msgs { flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 15px; }
+.hm-row { display: flex; gap: 11px; }
+.hm-body { min-width: 0; }
+.hm-head { display: flex; align-items: center; gap: 7px; }
+.hm-head b { font-size: 12.5px; }
+.hm-head small { font-size: 9.5px; color: var(--text-faint); }
+.hm-host { font-size: 6.5px; letter-spacing: .1em; font-weight: 800; color: var(--lbA); background: var(--surface); box-shadow: var(--neu-in-sm); padding: 2px 6px; border-radius: 999px; }
+.hm-body p { font-size: 13px; color: var(--text-soft); line-height: 1.5; margin: 3px 0 0; overflow-wrap: break-word; }
+.hm-composer { display: flex; gap: 10px; padding: 14px 20px; border-top: 1px solid var(--line); }
+.hm-composer input { flex: 1; border: 0; outline: 0; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 12px; padding: 11px 15px; font: inherit; font-size: 13px; color: var(--text); }
+.hm-composer input:disabled { opacity: .55; }
+.hm-gate { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--text-faint); text-align: center; padding: 20px; }
+.hm-gate b { color: var(--text); font-size: 15px; }
+.hm-gate span { font-size: 12px; max-width: 320px; line-height: 1.5; }
+.hm-gate .hs-join { width: auto; padding: 12px 26px; margin-top: 8px; }
+.hub-members { background: var(--card); border-radius: 20px; box-shadow: var(--neu-out-sm); padding: 16px 14px; overflow-y: auto; }
+.hmem-h { font-size: 7.5px; letter-spacing: .13em; color: var(--text-faint); font-weight: 700; margin: 0 6px 10px; }
+.hmem { display: flex; align-items: center; gap: 9px; padding: 6px; border-radius: 10px; cursor: pointer; }
+.hmem:hover { background: var(--surface); }
+.hmem-tx b { display: block; font-size: 12px; }
+.hmem-tx small { display: block; font-size: 9px; color: var(--text-faint); }
+.hmem-dot { margin-left: auto; width: 8px; height: 8px; border-radius: 50%; background: var(--lbBsoft); }
+.hmem-dot.on { background: #10b981; }
+@media (max-width: 1100px) { .hub-wrap { grid-template-columns: 68px 210px minmax(0, 1fr); } .hub-members { display: none; } }
+@media (max-width: 760px) { .hub-wrap { grid-template-columns: 60px minmax(0, 1fr); } .hub-side { display: none; } }
 .spec-ctl { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; }
 .spc-pill { border: 0; cursor: pointer; background: var(--card); box-shadow: var(--neu-out-sm); color: var(--text-faint); border-radius: 999px; padding: 6px 11px; font: inherit; font-size: 9.5px; font-weight: 700; letter-spacing: .06em; font-family: ui-monospace, Menlo, monospace; }
 .spc-pill.on { color: var(--lbA); box-shadow: var(--neu-in-sm); background: var(--surface); }
@@ -3495,6 +3546,7 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
     <div class="view" data-view="leaderboard"></div>
     <div class="view" data-view="board"></div>
     <div class="view" data-view="explore"></div>
+    <div class="view" data-view="hub"></div>
     <div class="view" data-view="ideas"></div>
     <div class="view" data-view="terminal"></div>
     <div class="view" data-view="social"></div>
@@ -3556,7 +3608,8 @@ const navItems = [
   { label: 'Trade', view: 'terminal', match: ['terminal', 'performance'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 15v-4M12 15V8M17 15v-6"/></svg>' },
   { label: 'Ideas', view: 'ideas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"/></svg>' },
   { label: 'Feed', view: 'social', match: ['social'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>' },
-  { label: 'Explore', view: 'explore', match: ['explore'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z"/></svg>' }
+  { label: 'Explore', view: 'explore', match: ['explore'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z"/></svg>' },
+  { label: 'Hubs', view: 'hub', match: ['hub'], icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><circle cx="16.5" cy="9.5" r="2.4"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5M14.5 14.6c2.2.3 3.9 1.8 4.4 4.4"/></svg>' }
 ];
 
 let prizePool = 4420000;
@@ -3835,6 +3888,24 @@ function updateWinningsPills() {
 
 function tickLiveNumbers() {
   updateWinningsPills();
+  if (currentView === 'hub' && Math.random() < 0.14) {
+    const h = HUBS[hubState.sel];
+    const key = h.id + '/' + hubState.chan;
+    if (hubMsgs[key]) {
+      const names = Object.keys(TRADER_AV);
+      const pool = hubState.chan === 'wins' || hubState.chan === 'results' ? HUB_WINS : HUB_CHAT;
+      const m = { who: names[Math.floor(Math.random() * names.length)], tx: pool[Math.floor(Math.random() * pool.length)], at: Date.now() };
+      hubMsgs[key].push(m);
+      if (hubMsgs[key].length > 40) hubMsgs[key].shift();
+      const box = document.getElementById('hubMsgs');
+      if (box) {
+        const stick = box.scrollTop + box.clientHeight > box.scrollHeight - 60;
+        box.insertAdjacentHTML('beforeend', hubMsgHTML(m, h));
+        while (box.children.length > 40) box.firstChild.remove();
+        if (stick) box.scrollTop = box.scrollHeight;
+      }
+    }
+  }
   if (!feedLive) return;
   /* the house always grows — every platform counter only climbs */
   prizePool += 120 + Math.floor(Math.random() * 900);
@@ -4066,6 +4137,7 @@ const TITLES = {
   leaderboard: ['Arena', '<span class="mono">LEADERBOARD</span><span class="dot-sep">·</span><span>live standings, resorted in real time</span>'],
   board: ['Leaderboard', '<span class="mono">VERIFIED&nbsp;TRACK&nbsp;RECORDS</span><span class="dot-sep">·</span><span>every trader on the platform, ranked by what they\'ve banked</span>'],
   explore: ['Explore', '<span class="mono">TRADER&nbsp;RADAR</span><span class="dot-sep">·</span><span>swipe through traders — follow the ones you rate, challenge the ones you don\'t</span>'],
+  hub: ['Hubs', '<span class="mono">COMMUNITIES</span><span class="dot-sep">·</span><span>trader-run rooms — lessons, signals and chat, all in one place</span>'],
   ideas: ['Trade Ideas', '<span class="mono">LIVE&nbsp;WIRE</span><span class="dot-sep">·</span><span>signals streaming from every market</span>'],
   terminal: ['Trade', '<span class="mono">TR-1001</span><span class="dot-sep">·</span><span>£100k competition balance</span>'],
   challenge: ['Challenge', '<span class="mono">OPEN&nbsp;CHALLENGE</span><span class="dot-sep">·</span><span>read the terms, scout the trader, take the other side</span>'],
@@ -7097,6 +7169,40 @@ function settleBattleAccount(b) {
   return pnl;
 }
 
+/* hub data must initialize before loadDB() restores joined/created communities */
+const HUB_CHANNELS = () => [
+  { g: 'EDUCATION', list: [{ id: 'lessons', name: 'lessons' }, { id: 'chart-school', name: 'chart-school', locked: true }] },
+  { g: 'SIGNALS', list: [{ id: 'calls', name: 'calls', locked: true }, { id: 'results', name: 'results' }] },
+  { g: 'GENERAL', list: [{ id: 'chat', name: 'chat' }, { id: 'wins', name: 'wins' }] },
+];
+
+let HUBS = [
+  { id: 'hq', name: 'Paktos HQ', host: 'Paktos', official: true, tint: 'linear-gradient(135deg,#6A2E9E,#9081DF)', desc: 'The official house — announcements, help and the big battles.', members: 48210, channels: HUB_CHANNELS() },
+  { id: 'war', name: "Theo's War Room", host: 'Theo4', tint: 'linear-gradient(135deg,#7c3aed,#d946ef)', desc: 'Process over outcome. Daily prep, session reviews, no hopium.', members: 12840, channels: HUB_CHANNELS() },
+  { id: 'fx', name: 'FX Degens', host: 'swisstony', tint: 'linear-gradient(135deg,#0ea5e9,#6366f1)', desc: 'London opens, New York closes, zero sleep in between.', members: 9310, channels: HUB_CHANNELS() },
+  { id: 'gold', name: 'Gold Bugs', host: 'mintblade', tint: 'linear-gradient(135deg,#f59e0b,#eab308)', desc: 'XAU or nothing. Stops mandatory, moonboys banned.', members: 477, channels: HUB_CHANNELS() },
+];
+
+const HUB_LESSONS = [
+  'Lesson 12 — position sizing: risk a fixed fraction, never a fixed feeling. 1% per idea means 20 losers in a row costs you 18%, not your account.',
+  'Journal rule: screenshot the chart BEFORE entry with your thesis written on it. Review Sunday. The trade you refuse to journal is the one that teaches the most.',
+  'Session opens 101: the first 15 minutes set the trap, the next 45 spring it. Wait for the sweep, then trade the reclaim.',
+  'R-multiples beat P&L. Track everything in R and your equity curve stops lying to you about position size.',
+  'Expectancy = (win% × avg win) − (loss% × avg loss). If you don\'t know yours, you\'re not trading — you\'re guessing with extra steps.',
+];
+const HUB_CALLS = [
+  'LONG BTC 118,420 · SL 117,880 · TP 119,940 — sweep of Asia low reclaimed, 1R risk, news in 3h.',
+  'SHORT NAS100 23,860 · SL 23,940 · TP 23,610 — third rejection at the weekly level, momentum fading.',
+  'LONG XAUUSD 3,394 · SL 3,386 · TP 3,415 — dollar softening into the print, gold coiled all session.',
+  'Flat into FOMC. Calls resume after the dust settles — protect the week.',
+];
+const HUB_CHAT = ['anyone else see that sweep on the open?', 'sized down today, spreads are wild', 'the lesson on R-multiples changed my whole month', 'who\'s in the £100 pool tonight?', 'that reclaim setup from #lessons printed again', 'welcome new joiners — read the pins first', 'green week, three to go', 'host live in 10 for chart review'];
+const HUB_WINS = ['+2.4R on the gold call — thank you #calls', 'first green month since joining. journaling works', 'took the NAS short for +1.8R, out before news', 'passed £10K banked today. five-figure club here we come'];
+
+let hubMsgs = {};
+let hubState = { sel: 0, chan: 'chat' };
+let hubJoined = new Set(['hq']);
+
 function saveDB() {
   try {
     localStorage.setItem('pkDB', JSON.stringify({
@@ -7106,7 +7212,9 @@ function saveDB() {
       ledger: pkLedger.slice(0, 30),
       trades: tradeLog.slice(0, 40),
       btlSeq, battleSeq,
-      pkCard: { bal: pkCard.bal, tx: pkCard.tx.slice(0, 24) }
+      pkCard: { bal: pkCard.bal, tx: pkCard.tx.slice(0, 24) },
+      hubsJoined: [...hubJoined],
+      myHubs: HUBS.filter(x => x.host === myProfile.name)
     }));
   } catch (e2) { }
 }
@@ -7127,6 +7235,8 @@ function loadDB() {
   if (d.battleSeq) battleSeq = d.battleSeq;
   if (typeof d.pkCard === 'number') pkCard.bal = d.pkCard;
   else if (d.pkCard && typeof d.pkCard.bal === 'number') { pkCard.bal = d.pkCard.bal; if (Array.isArray(d.pkCard.tx)) pkCard.tx = d.pkCard.tx; }
+  if (Array.isArray(d.hubsJoined)) hubJoined = new Set(d.hubsJoined);
+  if (Array.isArray(d.myHubs)) d.myHubs.forEach(x => { if (!HUBS.some(y => y.id === x.id)) HUBS.push(x); });
 }
 loadDB();
 
@@ -7423,6 +7533,102 @@ function lbbTableHTML() {
     <tbody>${rows.length ? rows : '<tr><td colspan="10" style="color:var(--text-faint);padding:22px">No traders match that search.</td></tr>'}</tbody>
   </table></div></div>`;
 }
+
+/* ---------------- Hubs — discord-style trader communities ---------------- */
+function hubSeed(h, chan) {
+  const key = h.id + '/' + chan;
+  if (hubMsgs[key]) return hubMsgs[key];
+  let s = hashName(key) || 1;
+  const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+  const pool = chan === 'lessons' || chan === 'chart-school' ? HUB_LESSONS : chan === 'calls' ? HUB_CALLS : chan === 'wins' || chan === 'results' ? HUB_WINS : HUB_CHAT;
+  const names = Object.keys(TRADER_AV);
+  const out = [];
+  const n = 5 + Math.floor(rnd() * 3);
+  for (let i = 0; i < n; i++) {
+    const who = (chan === 'lessons' || chan === 'calls') && rnd() < 0.7 ? h.host : names[Math.floor(rnd() * names.length)];
+    out.push({ who, tx: pool[Math.floor(rnd() * pool.length)], at: Date.now() - (n - i) * (9 + Math.floor(rnd() * 50)) * 60000 });
+  }
+  hubMsgs[key] = out;
+  return out;
+}
+
+function hubMsgHTML(m, h) {
+  const mins = Math.max(1, Math.round((Date.now() - m.at) / 60000));
+  return `<div class="hm-row">
+    ${avatarHTML(m.who, 'thread-av', `data-trader="${m.who}"`, 'cursor:pointer')}
+    <div class="hm-body"><div class="hm-head"><b data-trader="${m.who}" style="cursor:pointer">${m.who}</b>
+      ${m.who === h.host ? '<span class="hm-host mono">HOST</span>' : ''}${VERIFIED.has(m.who) ? BADGE : ''}
+      <small>${agoStr(mins)}</small></div>
+      <p>${m.tx}</p></div>
+  </div>`;
+}
+
+function renderHub() {
+  const h = HUBS[hubState.sel];
+  const joined = hubJoined.has(h.id);
+  const chanDef = h.channels.flatMap(g => g.list).find(c => c.id === hubState.chan) || h.channels[2].list[0];
+  hubState.chan = chanDef.id;
+  const gated = chanDef.locked && !joined;
+  const rail = HUBS.map((x, i) => `<button class="hr-ic${i === hubState.sel ? ' on' : ''}" data-hubsel="${i}" title="${x.name}" style="background:${x.tint}">${x.name.charAt(0)}${hubJoined.has(x.id) ? '<i class="hr-dot"></i>' : ''}</button>`).join('');
+  const side = h.channels.map(g => `<div class="hs-g mono">${g.g}</div>` + g.list.map(c => `
+    <button class="hs-ch${c.id === hubState.chan ? ' on' : ''}" data-hubchan="${c.id}">
+      <span class="hs-hash mono">#</span>${c.name}
+      ${c.locked ? '<svg class="hs-lock" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>' : ''}
+    </button>`).join('')).join('');
+  const msgs = gated ? '' : hubSeed(h, chanDef.id).map(m => hubMsgHTML(m, h)).join('');
+  const roster = [h.host, ...Object.keys(TRADER_AV).filter(n => n !== h.host).slice(0, 8)];
+  const members = roster.map((n, i) => `<div class="hmem" data-trader="${n}">
+    ${avatarHTML(n, 'thread-av')}<span class="hmem-tx"><b>${n}</b><small>${n === h.host ? 'Host' : i < 3 ? 'Moderator' : 'Member'}</small></span>
+    <i class="hmem-dot${i < 6 ? ' on' : ''}"></i>
+  </div>`).join('');
+  viewEl('hub').innerHTML = `<div class="hub-wrap">
+    <aside class="hub-rail">${rail}
+      <button class="hr-ic hr-add" data-hubcreate title="Host your own community"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></aside>
+    <aside class="hub-side">
+      <div class="hs-head"><b>${h.name}</b><small>${h.official ? 'Official' : 'Hosted by ' + h.host} · ${h.members.toLocaleString('en-GB')} members</small>
+        ${joined ? '<span class="hs-in mono">JOINED</span>' : `<button class="btn-mach hs-join" data-hubjoin>Join community</button>`}</div>
+      <div class="hs-chs">${side}</div>
+      <p class="hs-desc">${h.desc}</p>
+    </aside>
+    <main class="hub-main">
+      <div class="hm-chead"><span class="hs-hash mono">#</span><b>${chanDef.name}</b>
+        <small>${chanDef.locked ? 'members only · ' : ''}${{ lessons: 'social education — the host teaches, you level up', 'chart-school': 'annotated charts and homework', calls: 'live signals from the host — 1R risk, always a stop', results: 'every call tracked and settled', chat: 'the trading floor', wins: 'flex responsibly' }[chanDef.id] || ''}</small></div>
+      ${gated
+        ? `<div class="hm-gate"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <b>#${chanDef.name} is members-only</b><span>Join ${h.name} to unlock the host's ${chanDef.id === 'calls' ? 'live signals' : 'education channels'}.</span>
+          <button class="btn-mach hs-join" data-hubjoin>Join ${h.name} — free →</button></div>`
+        : `<div class="hub-msgs" id="hubMsgs">${msgs}</div>
+      <div class="hm-composer">
+        <input id="hubSay" placeholder="${joined ? 'Message #' + chanDef.name + '…' : 'Join to post — reading is free'}" maxlength="240" ${joined ? '' : 'disabled'}>
+        <button class="btn-primary" style="padding:11px 22px;font-size:13px" data-hubsend ${joined ? '' : 'disabled'}>Send</button>
+      </div>`}
+    </main>
+    <aside class="hub-members">
+      <div class="hmem-h mono">MEMBERS&nbsp;·&nbsp;${Math.min(9, h.members)}&nbsp;SHOWN</div>${members}
+    </aside>
+  </div>`;
+  const box = document.getElementById('hubMsgs');
+  if (box) box.scrollTop = box.scrollHeight;
+}
+
+function hubSend() {
+  const inp = document.getElementById('hubSay');
+  if (!inp || !inp.value.trim()) return;
+  const h = HUBS[hubState.sel];
+  const key = h.id + '/' + hubState.chan;
+  hubSeed(h, hubState.chan);
+  hubMsgs[key].push({ who: myProfile.name, tx: inp.value.trim(), at: Date.now() });
+  inp.value = '';
+  const box = document.getElementById('hubMsgs');
+  if (box) {
+    box.insertAdjacentHTML('beforeend', hubMsgHTML(hubMsgs[key][hubMsgs[key].length - 1], h));
+    box.scrollTop = box.scrollHeight;
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target && e.target.id === 'hubSay') hubSend();
+});
 
 /* ---- explore — swipe-to-follow trader fan (same system as Flick) ---- */
 let exOrder = null, exPos = 0;
@@ -9115,7 +9321,7 @@ function fireConfetti() {
 const RENDER = {
   terminal: renderTerminal, ideas: renderIdeas, social: renderSocial, inbox: renderInbox,
   performance: renderPerformance, trader: renderTrader,
-  leaderboard: renderLbPage, board: renderBoard, explore: renderExplore, arena: renderArena, tournaments: renderTournamentsPage, partner: renderPartner, spectate: renderSpectate, live: renderLive, clan: renderClan, challenge: renderChallenge
+  leaderboard: renderLbPage, board: renderBoard, explore: renderExplore, hub: renderHub, arena: renderArena, tournaments: renderTournamentsPage, partner: renderPartner, spectate: renderSpectate, live: renderLive, clan: renderClan, challenge: renderChallenge
 };
 
 document.addEventListener('click', e => {
@@ -9388,6 +9594,50 @@ document.addEventListener('click', e => {
     navigate('performance');
     requestAnimationFrame(() => document.querySelector('.pkc-grid')?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
     return;
+  }
+  if ((el = q('[data-hubsel]'))) { hubState.sel = +el.dataset.hubsel; hubState.chan = 'chat'; return renderHub(); }
+  if ((el = q('[data-hubchan]'))) { hubState.chan = el.dataset.hubchan; return renderHub(); }
+  if ((el = q('[data-hubjoin]'))) {
+    const h = HUBS[hubState.sel];
+    hubJoined.add(h.id);
+    h.members += 1;
+    saveDB();
+    toast(`Welcome to ${h.name} — channels unlocked`);
+    addNotif('H', `Joined ${h.name}`, `${h.official ? 'The official Paktos community' : 'Hosted by ' + h.host} — lessons, signals and chat are yours now.`);
+    return renderHub();
+  }
+  if ((el = q('[data-hubsend]'))) return hubSend();
+  if ((el = q('[data-hubcreate]'))) {
+    if (!document.getElementById('hubVeil')) {
+      const v = document.createElement('div'); v.className = 'pk-veil'; v.id = 'hubVeil';
+      document.body.appendChild(v);
+    }
+    document.getElementById('hubVeil').innerHTML = `<div class="pk-modal" style="width:min(430px,92vw)">
+      <div class="pk-modal-h">Host your own community</div>
+      <div class="pk-modal-s">Your rules, your channels — lessons, signals and chat come built in. Free while we're in beta.</div>
+      <div class="inv-row"><div class="b-label mono">COMMUNITY&nbsp;NAME</div>
+        <div class="inv-link"><input id="hubName" placeholder="e.g. The Breakout Room" maxlength="28" style="border:0;outline:0;background:none;font:inherit;font-size:13.5px;color:var(--text);width:100%"></div></div>
+      <div class="pk-actions">
+        <button class="btn-mach" style="flex:1" data-hubmake>Create community →</button>
+        <button class="btn-neu" data-hubveilclose>Cancel</button>
+      </div>
+    </div>`;
+    return;
+  }
+  if (e.target && e.target.id === 'hubVeil') return document.getElementById('hubVeil')?.remove();
+  if ((el = q('[data-hubveilclose]'))) return document.getElementById('hubVeil')?.remove();
+  if ((el = q('[data-hubmake]'))) {
+    const name = (document.getElementById('hubName')?.value || '').trim();
+    if (!name) return toast('Give your community a name first');
+    const id = 'u' + Date.now().toString(36);
+    HUBS.push({ id, name, host: myProfile.name, tint: CLAN_TINTS[HUBS.length % CLAN_TINTS.length], desc: 'Hosted by ' + myProfile.name + ' — fresh off the press.', members: 1, channels: HUB_CHANNELS() });
+    hubJoined.add(id);
+    hubState.sel = HUBS.length - 1;
+    hubState.chan = 'chat';
+    saveDB();
+    document.getElementById('hubVeil')?.remove();
+    toast(`${name} is live — invite your crew from the envelope up top`);
+    return renderHub();
   }
   if ((el = q('[data-sprng]'))) { spec.rng = el.dataset.sprng; spec.hov = null; return specChartRefresh(); }
   if ((el = q('[data-spunit]'))) { spec.unit = el.dataset.spunit; return specChartRefresh(); }
