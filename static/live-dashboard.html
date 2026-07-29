@@ -3313,6 +3313,10 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
 .spec-cols .sf-list { min-height: 168px; }
 .spec-cols .spec-load:last-child { margin-top: auto; }
 .spec-cols .spec-brief { min-height: 40px; }
+.spec-ctl { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; }
+.spc-pill { border: 0; cursor: pointer; background: var(--card); box-shadow: var(--neu-out-sm); color: var(--text-faint); border-radius: 999px; padding: 6px 11px; font: inherit; font-size: 9.5px; font-weight: 700; letter-spacing: .06em; font-family: ui-monospace, Menlo, monospace; }
+.spc-pill.on { color: var(--lbA); box-shadow: var(--neu-in-sm); background: var(--surface); }
+.spc-div { width: 1px; height: 16px; background: var(--line); margin: 0 3px; }
 
 /* ---- polymarket-style battle history ---- */
 .pmh-table tbody tr:nth-child(odd) td { background: var(--surface); }
@@ -3905,7 +3909,8 @@ function tickLiveNumbers() {
     }
     else { spec.ra += (Math.random() - 0.48) * 0.3; spec.rb += (Math.random() - 0.5) * 0.3; spec.watching += Math.floor(Math.random() * 60); }
     spec.sa.push(+spec.ra.toFixed(3)); spec.sb.push(+spec.rb.toFixed(3));
-    if (spec.sa.length > 140) { spec.sa.shift(); spec.sb.shift(); }
+    if (spec.x && spec.x.bench) spec.x.bench.push(+(spec.x.bench[spec.x.bench.length - 1] + (Math.random() - 0.5) * 0.25).toFixed(3));
+    if (spec.sa.length > 140) { spec.sa.shift(); spec.sb.shift(); if (spec.x && spec.x.bench.length > 140) spec.x.bench.shift(); }
     const ch = document.getElementById('specChart');
     if (ch) ch.innerHTML = specChartSVG();
     const ra = document.getElementById('specRa'), rb = document.getElementById('specRb');
@@ -7950,11 +7955,19 @@ function openNation(i) {
   navigate('spectate');
 }
 
+function specRngN() {
+  const R = { all: 9999, h4: 60, h1: 30, m15: 12 };
+  return Math.max(2, Math.min(spec.sa.length, R[spec.rng || 'all']));
+}
+
 function specChartSVG() {
   const box = document.getElementById('specChart');
-  const W = Math.max(560, box ? box.clientWidth : 920), H = 262, padL = 16, padR = 64, padT = 20, padB = 30;
+  const W = Math.max(560, box ? box.clientWidth : 920), H = 262, padL = 16, padR = 68, padT = 20, padB = 30;
   const iw = W - padL - padR, ih = H - padT - padB;
-  const all = spec.sa.concat(spec.sb);
+  const n0 = specRngN();
+  const sa = spec.sa.slice(-n0), sb = spec.sb.slice(-n0);
+  const bench = spec.bench && spec.x ? spec.x.bench.slice(-n0) : null;
+  const all = sa.concat(sb).concat(bench || []);
   const min = Math.min(...all), max = Math.max(...all);
   const pad = (max - min) * 0.14 || 1;
   const lo = min - pad, hi = max + pad, rng = hi - lo;
@@ -7962,17 +7975,18 @@ function specChartSVG() {
   const Y = v => padT + (1 - (v - lo) / rng) * ih;
   const path = sr => sr.map((v, i2) => `${i2 ? 'L' : 'M'}${X(i2, sr.length).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
   const A = lbCol('a'), B = lbCol('b');
+  const fmtV = v => spec.unit === 'gbp' ? '£' + Math.round(BATTLE_CAPITAL * (1 + v / 100) / 10) / 100 + 'K'.replace('', '') : v.toFixed(1) + '%';
+  const axisV = v => spec.unit === 'gbp' ? '£' + (BATTLE_CAPITAL * (1 + v / 100) / 1000).toFixed(2) + 'K' : v.toFixed(1) + '%';
   let grid = '';
   for (let g = 0; g <= 4; g++) {
     const v = lo + rng * g / 4, y = Y(v).toFixed(1);
     grid += `<line x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}" stroke="currentColor" opacity=".07" stroke-dasharray="2 7"/>`
-      + `<text x="${W - padR + 10}" y="${+y + 3}" text-anchor="start" fill="currentColor" opacity=".4" font-size="9.5" font-family="ui-monospace,Menlo,monospace">${v.toFixed(1)}%</text>`;
+      + `<text x="${W - padR + 10}" y="${+y + 3}" text-anchor="start" fill="currentColor" opacity=".4" font-size="9" font-family="ui-monospace,Menlo,monospace">${axisV(v)}</text>`;
   }
-  /* name + live return pills pinned to the line ends — polymarket style */
-  let ya = Y(spec.sa[spec.sa.length - 1]), yb = Y(spec.sb[Math.min(spec.sa.length, spec.sb.length) - 1]);
+  let ya = Y(sa[sa.length - 1]), yb = Y(sb[sb.length - 1]);
   if (Math.abs(ya - yb) < 26) { const mid = (ya + yb) / 2, d2 = ya <= yb ? 1 : -1; ya = mid - 13 * d2; yb = mid + 13 * d2; }
   const pill = (name, v, y, col) => {
-    const label = `${name} ${fmtRet(v)}`;
+    const label = `${name} ${spec.unit === 'gbp' ? axisV(v) : fmtRet(v)}`;
     const w2 = label.length * 6.6 + 30;
     const x2 = W - padR - 16 - w2;
     const yy = Math.max(padT + 11, Math.min(H - padB - 11, y));
@@ -7981,26 +7995,48 @@ function specChartSVG() {
       <text x="${(x2 + 20).toFixed(1)}" y="${(yy + 3.6).toFixed(1)}" font-size="10.5" font-weight="700" fill="currentColor" font-family="inherit">${label}</text></g>`;
   };
   const endDot = (sr, col) => `<circle cx="${X(sr.length - 1, sr.length).toFixed(1)}" cy="${Y(sr[sr.length - 1]).toFixed(1)}" r="4.5" fill="${col}" stroke="#fff" stroke-width="2" filter="url(#spDot)"/>`;
+  const benchLine = bench
+    ? `<path d="${path(bench)}" fill="none" stroke="currentColor" opacity=".28" stroke-width="1.5" stroke-dasharray="5 5" stroke-linejoin="round"/>
+       <text x="${(W - padR - 8).toFixed(1)}" y="${(Y(bench[bench.length - 1]) - 6).toFixed(1)}" text-anchor="end" fill="currentColor" opacity=".38" font-size="8.5" font-family="ui-monospace,Menlo,monospace">BTC/USD</text>`
+    : '';
   let hover = '';
   if (spec.hov != null) {
-    const n = spec.sa.length;
-    const idx = Math.max(0, Math.min(n - 1, spec.hov));
-    const hx = X(idx, n).toFixed(1);
+    const idx = Math.max(0, Math.min(n0 - 1, spec.hov));
+    const hx = X(idx, n0).toFixed(1);
     hover = `<line x1="${hx}" x2="${hx}" y1="${padT}" y2="${H - padB}" stroke="currentColor" opacity=".2"/>`
-      + `<circle cx="${hx}" cy="${Y(spec.sa[idx]).toFixed(1)}" r="4.5" fill="${A}" stroke="#fff" stroke-width="2" filter="url(#spDot)"/>`
-      + `<circle cx="${hx}" cy="${Y(spec.sb[Math.min(idx, spec.sb.length - 1)]).toFixed(1)}" r="4.5" fill="${B}" stroke="#fff" stroke-width="2" filter="url(#spDot)"/>`;
+      + `<circle cx="${hx}" cy="${Y(sa[idx]).toFixed(1)}" r="4.5" fill="${A}" stroke="#fff" stroke-width="2" filter="url(#spDot)"/>`
+      + `<circle cx="${hx}" cy="${Y(sb[Math.min(idx, sb.length - 1)]).toFixed(1)}" r="4.5" fill="${B}" stroke="#fff" stroke-width="2" filter="url(#spDot)"/>`;
   }
+  const fromLabel = { all: 'KICK-OFF', h4: '4H AGO', h1: '1H AGO', m15: '15M AGO' }[spec.rng || 'all'];
   return `<svg viewBox="0 0 ${W} ${H}">
     <defs><filter id="spDot" x="-60%" y="-60%" width="220%" height="220%"><feDropShadow dx="1" dy="2" stdDeviation="2.4" flood-color="rgba(0,0,0,.3)"/></filter></defs>
     ${grid}
-    <path d="${path(spec.sa)}" fill="none" stroke="${A}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
-    <path d="${path(spec.sb)}" fill="none" stroke="${B}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
-    ${endDot(spec.sa, A)}${endDot(spec.sb, B)}
+    ${benchLine}
+    <path d="${path(sa)}" fill="none" stroke="${A}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="${path(sb)}" fill="none" stroke="${B}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+    ${endDot(sa, A)}${endDot(sb, B)}
     ${hover}
-    ${pill(spec.a.name, spec.ra, ya, A)}${pill(spec.b.name, spec.rb, yb, B)}
-    <text x="${padL}" y="${H - 8}" fill="currentColor" opacity=".35" font-size="8.5" font-family="ui-monospace,Menlo,monospace">KICK-OFF</text>
+    ${pill(spec.a.name, sa[sa.length - 1], ya, A)}${pill(spec.b.name, sb[sb.length - 1], yb, B)}
+    <text x="${padL}" y="${H - 8}" fill="currentColor" opacity=".35" font-size="8.5" font-family="ui-monospace,Menlo,monospace">${fromLabel}</text>
     <text x="${W - padR}" y="${H - 8}" text-anchor="end" fill="currentColor" opacity=".35" font-size="8.5" font-family="ui-monospace,Menlo,monospace">NOW</text>
   </svg>`;
+}
+
+function specCtlHTML() {
+  const rngs = [['m15', '15M'], ['h1', '1H'], ['h4', '4H'], ['all', 'MAX']];
+  return `${rngs.map(([k, l]) => `<button class="spc-pill${(spec.rng || 'all') === k ? ' on' : ''}" data-sprng="${k}">${l}</button>`).join('')}
+    <i class="spc-div"></i>
+    <button class="spc-pill${spec.unit !== 'gbp' ? ' on' : ''}" data-spunit="pct">%</button>
+    <button class="spc-pill${spec.unit === 'gbp' ? ' on' : ''}" data-spunit="gbp">£</button>
+    <i class="spc-div"></i>
+    <button class="spc-pill${spec.bench ? ' on' : ''}" data-spbench>vs&nbsp;BTC</button>`;
+}
+
+function specChartRefresh() {
+  const box = document.getElementById('specChart');
+  if (box) box.innerHTML = specChartSVG();
+  const ctl = document.getElementById('specCtl');
+  if (ctl) ctl.innerHTML = specCtlHTML();
 }
 
 function bindSpecChart() {
@@ -8010,15 +8046,16 @@ function bindSpecChart() {
   box.onpointermove = e => {
     if (!spec) return;
     const r = box.getBoundingClientRect();
-    const frac = ((e.clientX - r.left) - 48) / (r.width - 68);
-    spec.hov = Math.max(0, Math.min(spec.sa.length - 1, Math.round(frac * (spec.sa.length - 1))));
+    const frac = ((e.clientX - r.left) - 16) / (r.width - 84);
+    const n0 = specRngN();
+    spec.hov = Math.max(0, Math.min(n0 - 1, Math.round(frac * (n0 - 1))));
     box.innerHTML = specChartSVG();
     const tip = document.getElementById('specTip');
     if (tip) {
-      const i2 = spec.hov;
-      tip.innerHTML = `<div class="spt-r"><i style="background:${lbCol('a')}"></i>${spec.a.name}<b>${fmtRet(spec.sa[i2])}</b></div>
-        <div class="spt-r"><i style="background:${lbCol('b')}"></i>${spec.b.name}<b>${fmtRet(spec.sb[Math.min(i2, spec.sb.length - 1)])}</b></div>`;
-      const px = 48 + frac * (r.width - 68);
+      const i2 = spec.hov, s0 = spec.sa.slice(-specRngN()), s1 = spec.sb.slice(-specRngN());
+      tip.innerHTML = `<div class="spt-r"><i style="background:${lbCol('a')}"></i>${spec.a.name}<b>${fmtRet(s0[i2])}</b></div>
+        <div class="spt-r"><i style="background:${lbCol('b')}"></i>${spec.b.name}<b>${fmtRet(s1[Math.min(i2, s1.length - 1)])}</b></div>`;
+      const px = 16 + frac * (r.width - 84);
       tip.style.left = Math.min(Math.max(8, px + 14), r.width - 160) + 'px';
       tip.classList.add('on');
     }
@@ -8100,6 +8137,7 @@ function initSpecExtras() {
     comments: seedC,
     feedA: Array.from({ length: 6 }, () => specTrade(true)),
     feedB: Array.from({ length: 6 }, () => specTrade(false)),
+    bench: specSeries((spec.ra + spec.rb) * 0.3, hashName(spec.a.name + spec.b.name + 'btc') || 7),
   };
 }
 
@@ -8129,12 +8167,13 @@ syncUserCard();
           <span>${odoHTML('specPot', '£' + spec.pot.toLocaleString('en-GB'))}&nbsp;pot</span>
           <span>${odoHTML('specWatch', spec.watching.toLocaleString('en-GB'))}&nbsp;watching</span>
           <span>ends ${spec.ends}</span>
+          <span class="spec-leadtxt mono" id="specLeadTxt" style="margin:0">${leader}&nbsp;LEADS</span>
         </div>
       </div>
       <div class="spec-lg2">
         <span class="spec-lg2-it"><i style="background:${lbCol('a')}"></i>${spec.a.name}<b id="specLga">${fmtRet(spec.ra)}</b></span>
         <span class="spec-lg2-it"><i style="background:${lbCol('b')}"></i>${spec.b.name}<b id="specLgb">${fmtRet(spec.rb)}</b></span>
-        <span class="spec-leadtxt mono" id="specLeadTxt" style="margin:0 0 0 auto">${leader}&nbsp;LEADS</span>
+        <span class="spec-ctl" id="specCtl">${specCtlHTML()}</span>
       </div>
       <div class="spec-chart" id="specChart">${specChartSVG()}</div><div class="spec-tip" id="specTip"></div>
     </div>
@@ -9336,6 +9375,9 @@ document.addEventListener('click', e => {
     requestAnimationFrame(() => document.querySelector('.pkc-grid')?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
     return;
   }
+  if ((el = q('[data-sprng]'))) { spec.rng = el.dataset.sprng; spec.hov = null; return specChartRefresh(); }
+  if ((el = q('[data-spunit]'))) { spec.unit = el.dataset.spunit; return specChartRefresh(); }
+  if ((el = q('[data-spbench]'))) { spec.bench = !spec.bench; return specChartRefresh(); }
   if ((el = q('[data-pctop]'))) {
     const amt = +el.dataset.pctop;
     if (ACCTS[0].bal < amt) return toast('Not enough in your Paktos balance for that top-up');
