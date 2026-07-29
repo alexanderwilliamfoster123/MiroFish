@@ -3308,6 +3308,11 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
 .spec-lg2-it { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
 .spec-lg2-it i { width: 9px; height: 9px; border-radius: 50%; }
 .spec-lg2-it b { font-variant-numeric: tabular-nums; font-weight: 800; }
+.spec-cols { align-items: stretch; }
+.spec-cols .panel-card { display: flex; flex-direction: column; }
+.spec-cols .sf-list { min-height: 168px; }
+.spec-cols .spec-load:last-child { margin-top: auto; }
+.spec-cols .spec-brief { min-height: 40px; }
 
 /* ---- polymarket-style battle history ---- */
 .pmh-table tbody tr:nth-child(odd) td { background: var(--surface); }
@@ -8093,8 +8098,8 @@ function initSpecExtras() {
     trA: 14 + Math.floor(Math.random() * 30), trB: 14 + Math.floor(Math.random() * 30),
     stA: 1 + Math.floor(Math.random() * 5), stB: 1 + Math.floor(Math.random() * 5),
     comments: seedC,
-    feedA: Array.from({ length: 4 }, () => specTrade(true)),
-    feedB: Array.from({ length: 4 }, () => specTrade(false)),
+    feedA: Array.from({ length: 6 }, () => specTrade(true)),
+    feedB: Array.from({ length: 6 }, () => specTrade(false)),
   };
 }
 
@@ -8137,7 +8142,7 @@ syncUserCard();
       <button class="cheer-btn a" data-cheer="a">▲ Cheer ${spec.a.name} · ${odoHTML('specChA', spec.x.cheersA.toLocaleString('en-GB'))}</button>
       <button class="cheer-btn b" data-cheer="b">▲ Cheer ${spec.b.name} · ${odoHTML('specChB', spec.x.cheersB.toLocaleString('en-GB'))}</button>
     </div>
-    <div class="two-col" style="margin-top:22px">${specSideCard('a')}${specSideCard('b')}</div>
+    <div class="two-col spec-cols" style="margin-top:22px">${specSideCard('a')}${specSideCard('b')}</div>
     <div class="panel-card" style="margin-top:22px">
       <div class="spec-load-t mono" style="margin-bottom:12px">RINGSIDE&nbsp;·&nbsp;${odoHTML('specWatch2', spec.watching.toLocaleString('en-GB'))}&nbsp;WATCHING&nbsp;LIVE</div>
       <div class="sc-list" id="specComments">${spec.x.comments.map(specCommentRow).join('')}</div>
