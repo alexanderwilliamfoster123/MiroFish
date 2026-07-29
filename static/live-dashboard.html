@@ -3312,7 +3312,20 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
 .spec-cols .panel-card { display: flex; flex-direction: column; }
 .spec-cols .sf-list { min-height: 168px; }
 .spec-cols .spec-load:last-child { margin-top: auto; }
-.spec-cols .spec-brief { min-height: 40px; }
+.spec-cols .sp-bio { min-height: 34px; }
+.sp-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+.sp-who { min-width: 0; }
+.sp-bio { font-size: 12px; color: var(--text-faint); line-height: 1.5; margin: 8px 0 0; }
+.sp-retwrap { text-align: right; flex: none; }
+.sp-retwrap small { display: block; font-size: 7.5px; letter-spacing: .12em; font-weight: 700; color: var(--text-faint); margin-bottom: 2px; }
+.spec-ret.down { color: var(--text-soft); }
+.sp-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; margin-bottom: 16px; }
+.sp-tiles > div { background: var(--card); box-shadow: var(--neu-out-sm); border-radius: 12px; padding: 9px 12px; min-width: 0; }
+.sp-tiles span.mono { display: block; font-size: 7px; letter-spacing: .1em; color: var(--text-faint); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-tiles b { display: block; font-size: 14px; font-weight: 800; margin-top: 3px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.obadge.flat { color: var(--text-soft); background: var(--surface); box-shadow: var(--neu-in-sm); }
+.sf-amt.neu { color: var(--text-soft); }
+.spec-squad .down { color: var(--text-soft); }
 .spec-ctl { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; }
 .spc-pill { border: 0; cursor: pointer; background: var(--card); box-shadow: var(--neu-out-sm); color: var(--text-faint); border-radius: 999px; padding: 6px 11px; font: inherit; font-size: 9.5px; font-weight: 700; letter-spacing: .06em; font-family: ui-monospace, Menlo, monospace; }
 .spc-pill.on { color: var(--lbA); box-shadow: var(--neu-in-sm); background: var(--surface); }
@@ -8081,23 +8094,24 @@ function specSideCard(side) {
   const load = side === 'a' ? spec.loadA : spec.loadB;
   const squad = side === 'a' ? spec.squadA : spec.squadB;
   const p = spec.kind === 'duel' ? traderProfile(s.name) : null;
+  const x = spec.x;
+  const tr = side === 'a' ? x.trA : x.trB, st = side === 'a' ? x.stA : x.stB;
   return `<div class="panel-card">
-    <div class="spec-side-head">${specFaceHTML(side, col)}
-      <span class="spec-ret odo ${ret >= 0 ? 'up' : 'down'}" id="specR${side}" data-odo="${fmtRet(ret)}">${odoInner(fmtRet(ret))}</span></div>
-    ${p ? `
-    <div class="spec-brief">${p.bio}</div>
-    <div class="spec-mini mono">
-      <span>${p.winRate}% WIN</span><span>${p.followers} FOLLOWERS</span><span>LV ${traderTier(p.winnings).lv} ${traderTier(p.winnings).name.toUpperCase()}</span><span>${p.trades.toLocaleString('en-GB')} TRADES</span>
+    <div class="sp-head">
+      <div class="sp-who">${specFaceHTML(side, col)}
+        <p class="sp-bio">${p ? p.bio : squad.length + '-trader squad — higher average return at window close takes the pot.'}</p></div>
+      <div class="sp-retwrap"><small class="mono">BATTLE&nbsp;RETURN</small>
+        <span class="spec-ret odo ${ret >= 0 ? 'up' : 'down'}" id="specR${side}" data-odo="${fmtRet(ret)}">${fmtRet(ret)}</span></div>
+    </div>
+    ${p ? `<div class="sp-tiles">
+      <div><span class="mono">WIN&nbsp;RATE</span><b>${p.winRate}%</b></div>
+      <div><span class="mono">THIS&nbsp;BATTLE</span><b><span id="specTr${side}">${tr}</span>&nbsp;trades</b></div>
+      <div><span class="mono">WIN&nbsp;STREAK</span><b>W${st}</b></div>
+      <div><span class="mono">FOLLOWERS</span><b>${p.followers}</b></div>
     </div>` : `
-    <div class="spec-brief">${squad.length}-trader squad · higher average return when the window closes takes the pot for the whole ${spec.kind === "clan" ? "clan" : "nation"}.</div>
     <table class="trades-table spec-squad"><thead><tr class="mono"><th>TOP&nbsp;MOVERS</th><th style="text-align:right">RETURN</th></tr></thead>
       <tbody>${squad.map(m => `<tr data-trader="${m.name}" style="cursor:pointer"><td><b>${m.name}</b></td>
         <td style="text-align:right" class="${m.ret >= 0 ? 'up' : 'down'}"><b>${fmtRet(m.ret)}</b></td></tr>`).join('')}</tbody></table>`}
-    <div class="spec-mini mono" style="margin-bottom:12px">
-      <span>STREAK&nbsp;W${side === 'a' ? spec.x.stA : spec.x.stB}</span>
-      <span>TRADES&nbsp;${odoHTML('specTr' + side, String(side === 'a' ? spec.x.trA : spec.x.trB))}</span>
-      <span>XP&nbsp;${odoHTML('specXp' + side, (side === 'a' ? spec.x.xpA : spec.x.xpB).toLocaleString('en-GB'))}</span>
-    </div>
     <div class="spec-load" style="border-top:0;padding-top:0;margin-bottom:13px">
       <div class="spec-load-t mono">LIVE&nbsp;TAPE · CLOSED&nbsp;TRADES</div>
       <div class="sf-list" id="specFeed${side}">${(side === 'a' ? spec.x.feedA : spec.x.feedB).map(specFillRow).join('')}</div>
@@ -8142,9 +8156,9 @@ function initSpecExtras() {
 }
 
 const specFillRow = t => `<div class="sf-row">
-  <span class="obadge ${t.win ? 'target' : 'stopped'}">${t.win ? 'Win' : 'Loss'}</span>
+  <span class="obadge ${t.win ? 'target' : 'flat'}">${t.win ? 'Win' : 'Loss'}</span>
   <span class="sf-sym"><b>${t.sym}</b> · ${t.dir}</span>
-  <span class="sf-amt ${t.amt >= 0 ? 'up' : 'down'}">${t.amt >= 0 ? '+' : '−'}£${Math.abs(t.amt).toLocaleString('en-GB')}</span>
+  <span class="sf-amt ${t.amt >= 0 ? 'up' : 'neu'}">${t.amt >= 0 ? '+' : '−'}£${Math.abs(t.amt).toLocaleString('en-GB')}</span>
 </div>`;
 
 const specCommentRow = ([who, tx]) => `<div class="sc-row">${avatarHTML(who, 'thread-av', `data-trader="${who}"`, 'width:26px;height:26px;cursor:pointer')}
