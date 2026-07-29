@@ -3110,6 +3110,10 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 /* ---- topbar winnings pills ---- */
 .tw-pill { display: inline-flex; align-items: center; gap: 8px; background: var(--card); box-shadow: var(--neu-out-sm); border-radius: 999px; padding: 10px 16px; font-size: 12.5px; color: var(--text-faint); white-space: nowrap; }
 .tw-pill b { color: var(--text); font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.tw-pill { cursor: pointer; transition: transform .15s ease; }
+.tw-pill:hover { transform: translateY(-1px); }
+.acct-dd-side { padding: 10px 18px; font-size: 12.5px; margin-left: 12px; }
+.acct-dd { display: flex; align-items: center; }
 
 /* ---- global leaderboard table ---- */
 .lbb-search { display: flex; align-items: center; gap: 8px; background: var(--surface); box-shadow: var(--neu-in-sm); border-radius: 12px; padding: 9px 14px; min-width: 230px; }
@@ -3399,8 +3403,8 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
       </div>
 
       <div class="topbar-right">
-        <span class="tw-pill">Total winnings <b id="twTotal">£0</b></span>
-        <span class="tw-pill">Active winnings <b id="twActive">£0</b></span>
+        <span class="tw-pill" data-wallet title="Open your performance & Paktos Card">Total winnings <b id="twTotal">£0</b></span>
+        <span class="tw-pill" data-wallet title="Open your performance & Paktos Card">Active winnings <b id="twActive">£0</b></span>
         <!-- Partner portal parked for launch — remove [hidden] to bring the toggle back -->
         <label class="segmented" aria-label="Account mode" hidden>
           <input type="checkbox" class="segmented-state" />
@@ -4394,6 +4398,7 @@ function renderTerminal() {
           <span class="ad-bal mono">£${Math.round(i === term.acct ? term.bal : ac.bal).toLocaleString('en-GB')}</span>
         </button>`).join('')}
       </div>
+      <button class="btn-neu acct-dd-side" data-nav="performance">Performance &amp; Card →</button>
     </div>
     <div class="tile-row">
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#34d399,#10b981)">£</span>
@@ -9267,6 +9272,11 @@ document.addEventListener('click', e => {
     return toast(`Switched to ${ACCTS[i].id} — ${ACCTS[i].label}`);
   }
   if (e.target && e.target.id === 'btVeil') { btFlow = null; return e.target.remove(); }
+  if ((el = q('[data-wallet]'))) {
+    navigate('performance');
+    requestAnimationFrame(() => document.querySelector('.pkc-grid')?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+    return;
+  }
   if ((el = q('[data-pctop]'))) {
     const amt = +el.dataset.pctop;
     if (ACCTS[0].bal < amt) return toast('Not enough in your Paktos balance for that top-up');
