@@ -2997,7 +2997,7 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .stk-row { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: var(--text-soft); line-height: 1.5; }
 .stk-ri { width: 26px; height: 26px; flex: none; border-radius: 9px; background: var(--surface); box-shadow: var(--neu-in-sm); display: flex; align-items: center; justify-content: center; color: var(--lbA); }
 .stk-ri svg { width: 13px; height: 13px; }
-.perf-duo { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; align-items: start; margin-top: 16px; }
+.perf-duo { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; margin-top: 16px; }
 @media (max-width: 1100px) { .perf-duo { grid-template-columns: 1fr; } }
 
 /* Escrow ticket — the receipt for locked terms */
@@ -3171,6 +3171,20 @@ body.dark .bd-fade { background: linear-gradient(90deg, var(--card) 26%, rgba(0,
 .pkc-sub { font-size: 12.5px; color: var(--text-soft); line-height: 1.55; margin: 0 0 14px; }
 .pkc-chips { display: flex; gap: 8px; flex-wrap: wrap; }
 .bt-pm-ic svg { width: 16px; height: 12px; display: block; }
+.pkc-acct { font-size: 9px; letter-spacing: .1em; color: var(--text-faint); margin: 2px 0 10px; }
+.pkc-wd { padding: 8px 16px; font-size: 12px; }
+.pkc-tx { background: var(--card); border-radius: 18px; box-shadow: var(--neu-out-sm); padding: 16px 20px 8px; margin-top: 14px; }
+.pkc-tx-h { display: flex; justify-content: space-between; font-size: 8.5px; letter-spacing: .12em; font-weight: 700; color: var(--text-faint); padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.pkc-tx-row { display: flex; align-items: center; gap: 13px; padding: 11px 2px; border-bottom: 1px dashed var(--line); }
+.pkc-tx-row:last-child { border-bottom: none; }
+.pkc-tx-ic { width: 28px; height: 28px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; background: var(--surface); box-shadow: var(--neu-in-sm); color: var(--text-soft); }
+.pkc-tx-ic.in { color: #10b981; }
+.pkc-tx-tx { flex: 1; min-width: 0; }
+.pkc-tx-tx b { display: block; font-size: 12.5px; font-weight: 700; }
+.pkc-tx-tx small { display: block; font-size: 10px; color: var(--text-faint); margin-top: 1px; }
+.pkc-tx-amt { font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--text-soft); }
+.pkc-tx-amt.up { color: #10b981; }
+.pkc-tx-after { font-size: 11px; color: var(--text-faint); width: 84px; text-align: right; }
 @media (max-width: 900px) { .bd-map { opacity: .35; } }
 
 /* ---- explore — the trader fan (same system as Flick) ---- */
@@ -3782,7 +3796,12 @@ const fmtRet = v => (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
 const SEED_WINNINGS = 266900; /* winnings banked before the local ledger existed */
 
 /* the Paktos Card — a points balance you top up yourself and spend on battle stakes */
-let pkCard = { bal: 2500, num: '4471 0092 7001 8842' };
+let pkCard = { bal: 2500, num: '4471 0092 7001 8842', tx: [] };
+
+function pkcTx(t, desc, amt) {
+  pkCard.tx.unshift({ t, desc, amt, at: Date.now(), after: pkCard.bal });
+  if (pkCard.tx.length > 24) pkCard.tx.pop();
+}
 
 function updateWinningsPills() {
   const won = pkLedger.filter(l => l.won).reduce((a, l) => a + l.pot, 0);
@@ -5463,9 +5482,8 @@ function renderPerformance() {
       <div class="sg-cell"><div class="sg-l mono">CURRENCY</div><div class="sg-v">GBP</div></div>
       <div class="sg-cell"><div class="sg-l mono">BROKER</div><div class="sg-v">Paktos Markets</div></div>
     </div>
-    ${streakCardHTML()}
-    ${pkCardHTML()}
-    </div>`;
+    </div>
+    ${pkCardHTML()}`;
   viewEl('performance').innerHTML = `
     <button class="back-btn" data-nav="terminal">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to Trade</button>
@@ -6808,7 +6826,7 @@ function commitBattleFlow() {
   btFlow = null;
   if (f.ref) { const ix = challenges.indexOf(f.ref); if (ix > -1) challenges.splice(ix, 1); }
   if (btPm === 'bal') { ACCTS[0].bal -= f.yourStake; }
-  if (btPm === 'pcard') { pkCard.bal -= f.yourStake; saveDB(); }
+  if (btPm === 'pcard') { pkCard.bal -= f.yourStake; pkcTx('out', `Battle stake — vs ${f.opp}`, f.yourStake); saveDB(); }
   const pmName = { card: 'card ••••4471', apple: 'Apple Pay', bank: 'bank transfer', bal: 'Paktos balance', pcard: 'Paktos Card points' }[btPm] || 'card';
   startBattle({
     opp: f.opp, av: f.av, tint: f.tint, machine: f.machine, mic: f.mic, mtint: f.mtint,
@@ -7065,7 +7083,7 @@ function saveDB() {
       ledger: pkLedger.slice(0, 30),
       trades: tradeLog.slice(0, 40),
       btlSeq, battleSeq,
-      pkCard: pkCard.bal
+      pkCard: { bal: pkCard.bal, tx: pkCard.tx.slice(0, 24) }
     }));
   } catch (e2) { }
 }
@@ -7085,6 +7103,7 @@ function loadDB() {
   if (d.btlSeq) btlSeq = d.btlSeq;
   if (d.battleSeq) battleSeq = d.battleSeq;
   if (typeof d.pkCard === 'number') pkCard.bal = d.pkCard;
+  else if (d.pkCard && typeof d.pkCard.bal === 'number') { pkCard.bal = d.pkCard.bal; if (Array.isArray(d.pkCard.tx)) pkCard.tx = d.pkCard.tx; }
 }
 loadDB();
 
@@ -7126,10 +7145,35 @@ function markStreak() {
 const STK_FLAME = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>';
 const STK_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
 
-function pkCardHTML() {
+function pkcSeed() {
+  if (pkCard.tx.length) return;
+  const h = 3600000, now = Date.now();
+  pkCard.tx = [
+    { t: 'out', desc: 'Battle stake — vs Fredi9999', amt: 250, at: now - 5 * h, after: 2500 },
+    { t: 'in', desc: 'Top up from Paktos balance', amt: 1000, at: now - 26 * h, after: 2750 },
+    { t: 'out', desc: 'Battle stake — vs GPT-5', amt: 250, at: now - 49 * h, after: 1750 },
+    { t: 'in', desc: 'Top up from Paktos balance', amt: 2000, at: now - 72 * h, after: 2000 },
+  ];
+}
+
+function pkCardInner() {
+  pkcSeed();
+  const acctNo = pkCard.num.replace(/\s/g, '').slice(-8);
+  const sort = pkCard.num.slice(0, 2) + '-' + pkCard.num.slice(2, 4) + '-' + pkCard.num.slice(5, 7);
+  const txRows = pkCard.tx.map(t => {
+    const mins = Math.max(1, Math.round((Date.now() - t.at) / 60000));
+    return `<div class="pkc-tx-row">
+      <span class="pkc-tx-ic ${t.t}">${t.t === 'in'
+        ? '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>'
+        : '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>'}</span>
+      <span class="pkc-tx-tx"><b>${t.desc}</b><small>${agoStr(mins)}</small></span>
+      <span class="pkc-tx-amt ${t.t === 'in' ? 'up' : ''}">${t.t === 'in' ? '+' : '−'}£${t.amt.toLocaleString('en-GB')}</span>
+      <span class="pkc-tx-after mono">£${t.after.toLocaleString('en-GB')}</span>
+    </div>`;
+  }).join('');
   return `<div class="section" style="margin-top:22px">
     <div class="section-head"><div><h3 class="section-title">Paktos Card</h3>
-      <p class="section-sub"><span class="mono">POINTS&nbsp;CARD</span><span class="dot-sep">·</span><span>top it up from your balance, spend it on battle stakes at checkout</span></p></div></div>
+      <p class="section-sub"><span class="mono">POINTS&nbsp;ACCOUNT</span><span class="dot-sep">·</span><span>a balance you run like a bank account — top up, spend on battle stakes, withdraw any time</span></p></div></div>
     <div class="pkc-grid">
       <div class="pkc">
         <div class="pkc-wash" aria-hidden="true"></div>
@@ -7140,15 +7184,25 @@ function pkCardHTML() {
         <div class="pkc-circ" aria-hidden="true"><i></i><i></i></div>
       </div>
       <div class="pkc-panel">
-        <div class="pkc-ey mono">POINTS&nbsp;BALANCE</div>
+        <div class="pkc-ey mono">AVAILABLE&nbsp;BALANCE</div>
         <div class="pkc-bal" id="pkcBal">£${pkCard.bal.toLocaleString('en-GB')}</div>
-        <p class="pkc-sub">Top up from your Paktos balance — <b id="pkcSrc">£${Math.round(ACCTS[0].bal).toLocaleString('en-GB')}</b> available. Points cover battle stakes at checkout and never expire.</p>
+        <div class="pkc-acct mono">ACCOUNT&nbsp;${acctNo}&nbsp;·&nbsp;SORT&nbsp;${sort}&nbsp;·&nbsp;GBP</div>
+        <p class="pkc-sub">Top up from your Paktos balance — <b id="pkcSrc">£${Math.round(ACCTS[0].bal).toLocaleString('en-GB')}</b> available. Points cover battle stakes at checkout, withdraw back to your balance any time.</p>
         <div class="pkc-chips">
           ${[100, 500, 1000, 5000].map(v => `<button class="pill-btn" data-pctop="${v}">+£${v.toLocaleString('en-GB')}</button>`).join('')}
+          <button class="btn-neu pkc-wd" data-pcwd>Withdraw all →</button>
         </div>
       </div>
     </div>
+    <div class="pkc-tx">
+      <div class="pkc-tx-h mono"><span>STATEMENT</span><span>AMOUNT&nbsp;·&nbsp;BALANCE&nbsp;AFTER</span></div>
+      ${txRows || '<div class="pkc-tx-row" style="color:var(--text-faint)">No transactions yet — top up to get started.</div>'}
+    </div>
   </div>`;
+}
+
+function pkCardHTML() {
+  return `<div id="pkcWrap">${pkCardInner()}</div>`;
 }
 
 function streakCardHTML() {
@@ -9282,11 +9336,22 @@ document.addEventListener('click', e => {
     if (ACCTS[0].bal < amt) return toast('Not enough in your Paktos balance for that top-up');
     ACCTS[0].bal -= amt;
     pkCard.bal += amt;
+    pkcTx('in', 'Top up from Paktos balance', amt);
     saveDB();
-    const b2 = document.getElementById('pkcBal'), s2 = document.getElementById('pkcSrc');
-    if (b2) b2.textContent = '£' + pkCard.bal.toLocaleString('en-GB');
-    if (s2) s2.textContent = '£' + Math.round(ACCTS[0].bal).toLocaleString('en-GB');
+    const w = document.getElementById('pkcWrap');
+    if (w) w.innerHTML = pkCardInner();
     return toast(`£${amt.toLocaleString('en-GB')} loaded onto your Paktos Card`);
+  }
+  if ((el = q('[data-pcwd]'))) {
+    const amt = pkCard.bal;
+    if (!amt) return toast('Nothing on the card to withdraw');
+    ACCTS[0].bal += amt;
+    pkCard.bal = 0;
+    pkcTx('out', 'Withdraw to Paktos balance', amt);
+    saveDB();
+    const w = document.getElementById('pkcWrap');
+    if (w) w.innerHTML = pkCardInner();
+    return toast(`£${amt.toLocaleString('en-GB')} withdrawn to your Paktos balance`);
   }
   if ((el = q('[data-exskip]'))) return exDecide(-1);
   if ((el = q('[data-exfollow]'))) return exDecide(1);
