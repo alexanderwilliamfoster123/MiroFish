@@ -39,6 +39,28 @@ renderer.toneMappingExposure = 1.12;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000000);
 
+// procedural studio environment: a few emissive strips baked to a PMREM so
+// the plastic shells pick up believable reflections
+{
+  const envScene = new THREE.Scene();
+  const strip = (w, h, rgb, position, lookAt) => {
+    const mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(w, h),
+      new THREE.MeshBasicMaterial({ color: new THREE.Color().setRGB(...rgb), side: THREE.DoubleSide })
+    );
+    mesh.position.set(...position);
+    mesh.lookAt(...lookAt);
+    envScene.add(mesh);
+  };
+  strip(14, 4, [5.5, 5.1, 4.5], [0, 7, 3], [0, 0, 0]);      // warm overhead softbox
+  strip(3, 9, [1.1, 1.4, 2.0], [-8, 2, -3], [0, 1, 0]);     // cool side strip
+  strip(2.4, 7, [1.4, 1.2, 0.9], [8, 1.5, 2], [0, 1, 0]);   // faint warm return
+  strip(16, 8, [0.35, 0.34, 0.32], [0, -5, 2], [0, 0, 0]);  // dim floor bounce
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(envScene, 0.06).texture;
+  pmrem.dispose();
+}
+
 const camera = new THREE.PerspectiveCamera(33, window.innerWidth / window.innerHeight, 0.1, 60);
 const CAMERA_Z = 8.5;
 const CAMERA_Y = 1.55;
@@ -48,7 +70,7 @@ camera.position.set(0, CAMERA_Y, CAMERA_Z);
 const hemi = new THREE.HemisphereLight(0x2c2e33, 0x050506, 0.55);
 scene.add(hemi);
 
-const key = new THREE.DirectionalLight(0xfff2e2, 2.1);
+const key = new THREE.DirectionalLight(0xfff2e2, 1.75);
 key.castShadow = true;
 key.shadow.mapSize.set(2048, 2048);
 key.shadow.camera.left = -9;
