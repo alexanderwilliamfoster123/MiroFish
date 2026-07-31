@@ -9,13 +9,26 @@
 <script type="importmap">
 {
   "imports": {
-    "three": "./vendor/three.module.min.js"
+    "three": "./vendor/three.module.min.js",
+    "@paper-design/shaders": "./vendor/paper-shaders.js"
   }
 }
 </script>
 </head>
 <body>
 <canvas id="scene" aria-label="3d tape shelf"></canvas>
+
+<div class="landing" id="landing">
+  <div class="landing-inner">
+    <span class="landing-wordmark">library</span>
+    <div id="enterMount"></div>
+    <div class="mode-pick" role="radiogroup" aria-label="appearance">
+      <button class="mode active" data-mode="dark" aria-pressed="true">dark</button>
+      <span class="mode-sep" aria-hidden="true">/</span>
+      <button class="mode" data-mode="light" aria-pressed="false">light</button>
+    </div>
+  </div>
+</div>
 
 <header class="chrome">
   <nav class="tabs" aria-label="sections">

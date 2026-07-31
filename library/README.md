@@ -17,6 +17,14 @@ python3 -m http.server 8080
 (Opening the file directly with `file://` will not work because the page uses
 ES module imports.)
 
+## Landing
+
+The page opens on a landing screen: a liquid-metal "enter" button (a vanilla
+port of the supplied LiquidMetalButton component, using
+`@paper-design/shaders`) and a dark / light choice. The chosen appearance
+themes the whole site — page chrome and the 3D scene — and is remembered in
+localStorage.
+
 ## Businesses tab
 
 The header has two tabs: `library` (the tape shelf) and `businesses` — a row

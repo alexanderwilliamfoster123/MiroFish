@@ -3,6 +3,7 @@ import { BOOKS } from "./books.js";
 import { BUSINESSES } from "./businesses.js";
 import { createBook } from "./tapeFactory.js";
 import { createCard } from "./cardFactory.js";
+import { createLiquidMetalButton } from "./liquidButton.js";
 
 const canvas = document.getElementById("scene");
 const markersEl = document.getElementById("markers");
@@ -147,21 +148,19 @@ cardsGroup.visible = false;
 
 let books = tapesCol.items;
 
+let shelfBoardMat;
+let shelfEdgeMat;
 {
   const boardLen = tapesCol.span + 3.2;
-  const board = new THREE.Mesh(
-    new THREE.BoxGeometry(boardLen, 0.16, 2.1),
-    new THREE.MeshStandardMaterial({ color: 0x1b1c1e, roughness: 0.55, metalness: 0.15 })
-  );
+  shelfBoardMat = new THREE.MeshStandardMaterial({ color: 0x1b1c1e, roughness: 0.55, metalness: 0.15 });
+  const board = new THREE.Mesh(new THREE.BoxGeometry(boardLen, 0.16, 2.1), shelfBoardMat);
   board.position.y = -0.08;
   board.receiveShadow = true;
   shelfGroup.add(board);
 
   // thin light rule along the shelf's front edge
-  const edge = new THREE.Mesh(
-    new THREE.BoxGeometry(boardLen, 0.012, 0.012),
-    new THREE.MeshBasicMaterial({ color: 0x6d685c })
-  );
+  shelfEdgeMat = new THREE.MeshBasicMaterial({ color: 0x6d685c });
+  const edge = new THREE.Mesh(new THREE.BoxGeometry(boardLen, 0.012, 0.012), shelfEdgeMat);
   edge.position.set(0, 0.002, 1.05);
   shelfGroup.add(edge);
 }
@@ -400,6 +399,7 @@ prevBtn.addEventListener("click", () => goTo(focusIndex - 1));
 nextBtn.addEventListener("click", () => goTo(focusIndex + 1));
 
 window.addEventListener("keydown", (e) => {
+  if (!entered) return;
   if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
     const dir = e.key === "ArrowLeft" ? -1 : 1;
     if (mode === "browse") {
@@ -507,6 +507,7 @@ canvas.addEventListener("pointercancel", (e) => pointers.delete(e.pointerId));
 canvas.addEventListener("contextmenu", (e) => e.preventDefault());
 
 window.addEventListener("wheel", (e) => {
+  if (!entered) return;
   if (e.target.closest && e.target.closest(".browse, .inspect")) return;
   if (mode === "browse") {
     const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
@@ -595,6 +596,54 @@ function animate() {
   runTweens(tweenDt);
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
+}
+
+// ----------------------------------------------------- landing + theme
+let entered = false;
+
+function applyTheme(name) {
+  const light = name === "light";
+  document.body.classList.toggle("light", light);
+  scene.background.set(light ? 0xf0efeb : 0x000000);
+  veil.material.color.set(light ? 0xf0efeb : 0x000000);
+  shelfBoardMat.color.set(light ? 0xdedcd5 : 0x1b1c1e);
+  shelfEdgeMat.color.set(light ? 0x4a473f : 0x6d685c);
+  hemi.intensity = light ? 1.1 : 0.55;
+  hemi.color.set(light ? 0x9a9c9e : 0x2c2e33);
+  try { localStorage.setItem("library-theme", name); } catch { /* private mode */ }
+}
+
+{
+  const landing = document.getElementById("landing");
+  const modeButtons = [...landing.querySelectorAll(".mode")];
+  let theme = "dark";
+  try { theme = localStorage.getItem("library-theme") || "dark"; } catch { /* private mode */ }
+  applyTheme(theme);
+  for (const btn of modeButtons) {
+    btn.classList.toggle("active", btn.dataset.mode === theme);
+    btn.setAttribute("aria-pressed", String(btn.dataset.mode === theme));
+    btn.addEventListener("click", () => {
+      theme = btn.dataset.mode;
+      applyTheme(theme);
+      for (const b of modeButtons) {
+        b.classList.toggle("active", b === btn);
+        b.setAttribute("aria-pressed", String(b === btn));
+      }
+    });
+  }
+  const enter = createLiquidMetalButton({
+    label: "enter",
+    onClick: () => {
+      if (entered) return;
+      entered = true;
+      landing.classList.add("gone");
+      setTimeout(() => {
+        enter.destroy();
+        landing.remove();
+      }, 1000);
+    }
+  });
+  document.getElementById("enterMount").appendChild(enter.el);
 }
 
 if (location.hash === "#businesses") switchTab("businesses");
