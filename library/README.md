@@ -17,6 +17,13 @@ python3 -m http.server 8080
 (Opening the file directly with `file://` will not work because the page uses
 ES module imports.)
 
+## Businesses tab
+
+The header has two tabs: `library` (the tape shelf) and `businesses` — a row
+of floating 3D cards recreated from a Spline reference card, one per
+business. Edit `js/businesses.js` (name, tagline, url); "visit" opens the
+url while a card is inspected. `#businesses` deep-links to the tab.
+
 ## Link your videos
 
 Edit `js/books.js`. Each entry is one tape on the shelf, left to right:
@@ -42,6 +49,10 @@ shell tone drift are derived deterministically from each entry's position.
 
 - `vendor/three.module.min.js` is a pinned copy of three r165; `fonts/`
   self-hosts Inter 400 (the only weight used anywhere).
+- The business cards in `js/cardFactory.js` are a Three.js recreation of the
+  user's Spline card (dark rounded card, holographic triangle emblem) so each
+  card can carry its own text; the original `.spline` scene is not loaded at
+  runtime.
 - The cassettes are procedural stand-ins generated in `js/tapeFactory.js`. They
   were built locally because the Mint MCP asset pipeline was not reachable
   from the build session; a Mint-generated 19-piece asset pack can replace

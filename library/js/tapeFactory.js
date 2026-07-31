@@ -377,10 +377,11 @@ export function createBook(index, entry) {
   return {
     index,
     title: entry.title,
-    youtubeUrl: entry.youtubeUrl,
+    url: entry.youtubeUrl,
     pivot,
     height,
     thickness,
-    depth
+    depth,
+    linkLabel: "watch on youtube ↗"
   };
 }

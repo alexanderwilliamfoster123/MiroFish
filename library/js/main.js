@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { BOOKS } from "./books.js";
+import { BUSINESSES } from "./businesses.js";
 import { createBook } from "./tapeFactory.js";
+import { createCard } from "./cardFactory.js";
 
 const canvas = document.getElementById("scene");
 const markersEl = document.getElementById("markers");
@@ -12,7 +14,8 @@ const inspectTitle = document.getElementById("inspectTitle");
 const watchLink = document.getElementById("watchLink");
 const browseNav = document.querySelector(".browse");
 const hintEl = document.getElementById("hint");
-document.getElementById("volumeCount").textContent = `${BOOKS.length} tapes`;
+const volumeCountEl = document.getElementById("volumeCount");
+const tabButtons = [...document.querySelectorAll(".tab")];
 
 const MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0.25 : 1;
 
@@ -97,41 +100,55 @@ scene.add(inspectAmbient);
 const shelfGroup = new THREE.Group();
 scene.add(shelfGroup);
 
-// ------------------------------------------------------------------- books
-const books = [];
-{
+// ---------------------------------------------------- item collections
+const tapesGroup = new THREE.Group();
+const cardsGroup = new THREE.Group();
+scene.add(tapesGroup, cardsGroup);
+
+function buildCollection(entries, factory, group, gapFn) {
+  const items = [];
   let cursor = 0;
-  const seededGap = (i) => 0.1 + ((i * 37) % 7) * 0.012;
-  for (let i = 0; i < BOOKS.length; i++) {
-    const book = createBook(i, BOOKS[i]);
+  for (let i = 0; i < entries.length; i++) {
+    const item = factory(i, entries[i]);
     const slot = new THREE.Group();
     const tilt = new THREE.Group();
     slot.add(tilt);
-    tilt.add(book.pivot);
+    tilt.add(item.pivot);
 
-    cursor += book.thickness / 2;
-    slot.position.set(cursor, book.height / 2, 0);
-    cursor += book.thickness / 2 + seededGap(i);
+    cursor += item.thickness / 2;
+    slot.position.set(cursor, item.height / 2 + (item.lift || 0), 0);
+    cursor += item.thickness / 2 + gapFn(i);
 
-    book.slot = slot;
-    book.tilt = tilt;
-    book.baseX = slot.position.x;
-    book.baseY = slot.position.y;
-    // slight push-in/out and lean so the row of identical shells reads lived-in
-    book.restZ = (((i * 53) % 9) - 4) * 0.014;
-    slot.position.z = book.restZ;
-    slot.rotation.y = (((i * 31) % 7) - 3) * 0.006;
-    scene.add(slot);
-    books.push(book);
+    item.slot = slot;
+    item.tilt = tilt;
+    item.baseX = slot.position.x;
+    item.baseY = slot.position.y;
+    item.restZ = 0;
+    group.add(slot);
+    items.push(item);
   }
-  const span = cursor;
-  const offset = span / 2 - books[0].thickness / 2 - 0.05;
-  for (const book of books) {
-    book.slot.position.x -= offset;
-    book.baseX -= offset;
+  const offset = cursor / 2 - items[0].thickness / 2 - 0.05;
+  for (const item of items) {
+    item.slot.position.x -= offset;
+    item.baseX -= offset;
   }
+  return { items, span: cursor };
+}
 
-  const boardLen = span + 3.2;
+const tapesCol = buildCollection(BOOKS, createBook, tapesGroup, (i) => 0.1 + ((i * 37) % 7) * 0.012);
+// slight push-in/out and lean so the row of identical shells reads lived-in
+for (const item of tapesCol.items) {
+  item.restZ = (((item.index * 53) % 9) - 4) * 0.014;
+  item.slot.position.z = item.restZ;
+  item.slot.rotation.y = (((item.index * 31) % 7) - 3) * 0.006;
+}
+const cardsCol = buildCollection(BUSINESSES, createCard, cardsGroup, () => 0.55);
+cardsGroup.visible = false;
+
+let books = tapesCol.items;
+
+{
+  const boardLen = tapesCol.span + 3.2;
   const board = new THREE.Mesh(
     new THREE.BoxGeometry(boardLen, 0.16, 2.1),
     new THREE.MeshStandardMaterial({ color: 0x1b1c1e, roughness: 0.55, metalness: 0.15 })
@@ -181,14 +198,35 @@ function runTweens(dt) {
 }
 
 // ------------------------------------------------------------------- state
-const minX = books[0].baseX;
-const maxX = books[books.length - 1].baseX;
+const collections = {
+  library: {
+    items: tapesCol.items,
+    group: tapesGroup,
+    shelf: true,
+    label: `${tapesCol.items.length} tapes`,
+    hint: "drag, scroll or use arrow keys · select a tape to inspect",
+    scroll: null
+  },
+  businesses: {
+    items: cardsCol.items,
+    group: cardsGroup,
+    shelf: false,
+    label: `${cardsCol.items.length} cards`,
+    hint: "drag, scroll or use arrow keys · select a card to inspect",
+    scroll: null
+  }
+};
+let activeTab = "library";
+
+let minX = books[0].baseX;
+let maxX = books[books.length - 1].baseX;
 
 const startIndex = Math.floor(books.length / 2);
 let scrollTarget = books[startIndex].baseX;
 let scrollX = scrollTarget;
 let scrollVel = 0;
 let focusIndex = startIndex;
+volumeCountEl.textContent = collections.library.label;
 
 // mode: "browse" | "opening" | "inspect" | "closing"
 let mode = "browse";
@@ -199,27 +237,75 @@ const INSPECT_Y = CAMERA_Y + 0.14;
 const INSPECT_YAW = -Math.PI * 0.34;
 
 // ----------------------------------------------------------------- markers
-const markerButtons = BOOKS.map((entry, i) => {
-  const btn = document.createElement("button");
-  btn.className = "marker";
-  btn.setAttribute("aria-label", `${entry.title.toLowerCase()}, position ${i + 1}`);
-  btn.appendChild(document.createElement("span"));
-  btn.addEventListener("click", () => {
-    if (mode === "inspect") switchTo(books[i]);
-    else if (mode === "browse") goTo(i);
+let markerButtons = [];
+
+function buildMarkers() {
+  markersEl.innerHTML = "";
+  markerButtons = books.map((item, i) => {
+    const btn = document.createElement("button");
+    btn.className = "marker";
+    btn.setAttribute("aria-label", `${item.title.toLowerCase()}, position ${i + 1}`);
+    btn.appendChild(document.createElement("span"));
+    btn.addEventListener("click", () => {
+      if (mode === "inspect") switchTo(books[i]);
+      else if (mode === "browse") goTo(i);
+    });
+    markersEl.appendChild(btn);
+    return btn;
   });
-  markersEl.appendChild(btn);
-  return btn;
-});
+  if (markerButtons[focusIndex]) markerButtons[focusIndex].classList.add("active");
+}
 
 function setFocus(i) {
   i = THREE.MathUtils.clamp(i, 0, books.length - 1);
   if (i === focusIndex) return;
-  markerButtons[focusIndex].classList.remove("active");
+  if (markerButtons[focusIndex]) markerButtons[focusIndex].classList.remove("active");
   focusIndex = i;
-  markerButtons[focusIndex].classList.add("active");
+  if (markerButtons[focusIndex]) markerButtons[focusIndex].classList.add("active");
 }
-markerButtons[focusIndex].classList.add("active");
+buildMarkers();
+
+// -------------------------------------------------------------------- tabs
+function switchTab(name) {
+  if (!collections[name] || name === activeTab) return;
+  if (mode === "inspect") {
+    closeInspect(() => {
+      hintEl.classList.remove("hidden-ui");
+      browseNav.classList.remove("hidden-ui");
+      switchTab(name);
+    });
+    return;
+  }
+  if (mode !== "browse") return;
+
+  collections[activeTab].scroll = { target: scrollTarget, x: scrollX, focus: focusIndex };
+  activeTab = name;
+  const col = collections[name];
+  books = col.items;
+  minX = books[0].baseX;
+  maxX = books[books.length - 1].baseX;
+  tapesGroup.visible = col.group === tapesGroup;
+  cardsGroup.visible = col.group === cardsGroup;
+  shelfGroup.visible = col.shelf;
+
+  const saved = col.scroll;
+  focusIndex = saved ? saved.focus : Math.floor(books.length / 2);
+  scrollTarget = saved ? saved.target : books[focusIndex].baseX;
+  scrollX = saved ? saved.x : scrollTarget;
+  scrollVel = 0;
+
+  buildMarkers();
+  volumeCountEl.textContent = col.label;
+  hintEl.textContent = col.hint;
+  for (const btn of tabButtons) btn.classList.toggle("active", btn.dataset.tab === name);
+  if (history.replaceState) {
+    history.replaceState(null, "", name === "library" ? location.pathname : "#" + name);
+  }
+}
+
+for (const btn of tabButtons) {
+  btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+}
 
 function goTo(i) {
   i = THREE.MathUtils.clamp(i, 0, books.length - 1);
@@ -246,20 +332,24 @@ function openInspect(book) {
   orbit.panY = 0;
 
   veil.visible = true;
-  const fromY = book.baseY;
+  const fromY = book.slot.position.y;
   const fromZ = book.slot.position.z;
+  const fromYaw = book.pivot.rotation.y;
+  const openYaw = book.openYaw ?? INSPECT_YAW;
+  orbit.baseYaw = openYaw;
   const veilFrom = veil.material.opacity;
   tween(0.9, (e) => {
     book.slot.position.z = THREE.MathUtils.lerp(fromZ, INSPECT_Z, e);
     book.slot.position.y = THREE.MathUtils.lerp(fromY, INSPECT_Y, e);
-    book.pivot.rotation.y = THREE.MathUtils.lerp(0, INSPECT_YAW, e);
+    book.pivot.rotation.y = THREE.MathUtils.lerp(fromYaw, openYaw, e);
     veil.material.opacity = THREE.MathUtils.lerp(veilFrom, 0.84, e);
   }, () => {
     mode = "inspect";
   });
 
   inspectTitle.textContent = book.title.toLowerCase();
-  watchLink.href = book.youtubeUrl;
+  watchLink.textContent = book.linkLabel || "watch on youtube ↗";
+  watchLink.href = book.url;
   inspectUI.hidden = false;
   requestAnimationFrame(() => inspectUI.classList.add("visible"));
   closeBtn.focus({ preventScroll: true });
@@ -436,6 +526,7 @@ window.addEventListener("resize", () => {
 
 // -------------------------------------------------------------------- loop
 const clock = new THREE.Clock();
+let elapsed = 0;
 
 function animate() {
   const rawDt = clock.getDelta();
@@ -474,11 +565,16 @@ function animate() {
   inspectLight.intensity = veil.material.opacity * 2.6;
   inspectAmbient.intensity = veil.material.opacity * 0.9;
 
-  // gentle pull-forward on the focused book while browsing
+  // gentle pull-forward on the focused item, idle sway for floating cards
+  elapsed += dt;
   for (const book of books) {
     if (book === inspected) continue;
     const targetZ = book.restZ + (mode === "browse" && book.index === focusIndex ? 0.24 : 0);
     book.slot.position.z += (targetZ - book.slot.position.z) * Math.min(dt * 7, 1);
+    if (book.sway) {
+      book.slot.rotation.y = Math.sin(elapsed * 0.6 + book.index * 1.7) * 0.055;
+      book.slot.position.y = book.baseY + Math.sin(elapsed * 0.85 + book.index * 2.3) * 0.024;
+    }
   }
 
   // inspect orbit
@@ -489,7 +585,7 @@ function animate() {
     orbit.pitchVel *= Math.pow(0.0001, dt);
     orbit.dist += (orbit.distTarget - orbit.dist) * Math.min(dt * 8, 1);
 
-    inspected.pivot.rotation.y = INSPECT_YAW + orbit.yaw;
+    inspected.pivot.rotation.y = (orbit.baseYaw ?? INSPECT_YAW) + orbit.yaw;
     inspected.tilt.rotation.x = orbit.pitch;
     inspected.slot.position.z = orbit.dist;
     inspected.slot.position.x = scrollX + orbit.panX;
@@ -500,6 +596,8 @@ function animate() {
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
+
+if (location.hash === "#businesses") switchTab("businesses");
 
 animate();
 
