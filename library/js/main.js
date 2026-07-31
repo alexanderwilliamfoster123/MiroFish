@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { BOOKS } from "./books.js";
-import { createBook } from "./bookFactory.js";
+import { createBook } from "./tapeFactory.js";
 
 const canvas = document.getElementById("scene");
 const markersEl = document.getElementById("markers");
@@ -12,7 +12,7 @@ const inspectTitle = document.getElementById("inspectTitle");
 const watchLink = document.getElementById("watchLink");
 const browseNav = document.querySelector(".browse");
 const hintEl = document.getElementById("hint");
-document.getElementById("volumeCount").textContent = `${BOOKS.length} volumes`;
+document.getElementById("volumeCount").textContent = `${BOOKS.length} tapes`;
 
 const MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0.25 : 1;
 
@@ -63,6 +63,14 @@ scene.add(key, key.target);
 const rim = new THREE.DirectionalLight(0xbfd0e8, 1.1);
 scene.add(rim, rim.target);
 
+// camera-axis fill that fades in with the veil so an inspected shell never
+// silhouettes into the black background while orbiting
+const inspectLight = new THREE.DirectionalLight(0xfff4e6, 0);
+scene.add(inspectLight, inspectLight.target);
+// flat ambient floor for inspection so no orientation reads as a silhouette
+const inspectAmbient = new THREE.AmbientLight(0xf2ede2, 0);
+scene.add(inspectAmbient);
+
 // ------------------------------------------------------------------- shelf
 const shelfGroup = new THREE.Group();
 scene.add(shelfGroup);
@@ -87,6 +95,10 @@ const books = [];
     book.tilt = tilt;
     book.baseX = slot.position.x;
     book.baseY = slot.position.y;
+    // slight push-in/out and lean so the row of identical shells reads lived-in
+    book.restZ = (((i * 53) % 9) - 4) * 0.014;
+    slot.position.z = book.restZ;
+    slot.rotation.y = (((i * 31) % 7) - 3) * 0.006;
     scene.add(slot);
     books.push(book);
   }
@@ -213,9 +225,10 @@ function openInspect(book) {
 
   veil.visible = true;
   const fromY = book.baseY;
+  const fromZ = book.slot.position.z;
   const veilFrom = veil.material.opacity;
   tween(0.9, (e) => {
-    book.slot.position.z = THREE.MathUtils.lerp(0, INSPECT_Z, e);
+    book.slot.position.z = THREE.MathUtils.lerp(fromZ, INSPECT_Z, e);
     book.slot.position.y = THREE.MathUtils.lerp(fromY, INSPECT_Y, e);
     book.pivot.rotation.y = THREE.MathUtils.lerp(0, INSPECT_YAW, e);
     veil.material.opacity = THREE.MathUtils.lerp(veilFrom, 0.84, e);
@@ -243,7 +256,7 @@ function closeInspect(done) {
     veil: veil.material.opacity
   };
   tween(0.8, (e) => {
-    book.slot.position.z = THREE.MathUtils.lerp(from.z, 0, e);
+    book.slot.position.z = THREE.MathUtils.lerp(from.z, book.restZ, e);
     book.slot.position.y = THREE.MathUtils.lerp(from.y, book.baseY, e);
     book.slot.position.x = THREE.MathUtils.lerp(from.x, book.baseX, e);
     book.pivot.rotation.y = THREE.MathUtils.lerp(from.yaw, 0, e);
@@ -434,11 +447,15 @@ function animate() {
   rim.position.set(scrollX - 3.4, 4.2, -4.6);
   rim.target.position.set(scrollX, 1.4, 0);
   veil.position.x = scrollX;
+  inspectLight.position.set(scrollX + 0.6, CAMERA_Y + 0.9, CAMERA_Z);
+  inspectLight.target.position.set(scrollX, CAMERA_Y, INSPECT_Z);
+  inspectLight.intensity = veil.material.opacity * 2.6;
+  inspectAmbient.intensity = veil.material.opacity * 0.9;
 
   // gentle pull-forward on the focused book while browsing
   for (const book of books) {
     if (book === inspected) continue;
-    const targetZ = mode === "browse" && book.index === focusIndex ? 0.24 : 0;
+    const targetZ = book.restZ + (mode === "browse" && book.index === focusIndex ? 0.24 : 0);
     book.slot.position.z += (targetZ - book.slot.position.z) * Math.min(dt * 7, 1);
   }
 
