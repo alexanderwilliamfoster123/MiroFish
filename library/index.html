@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>library</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23000'/%3E%3Crect x='4' y='3' width='2.6' height='10' fill='%23b6ad97'/%3E%3Crect x='7.6' y='4.4' width='2.2' height='8.6' fill='%236d685c'/%3E%3Crect x='10.8' y='3.6' width='2.4' height='9.4' fill='%23938c7a'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./styles.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.module.min.js"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="scene" aria-label="3d bookshelf"></canvas>
+
+<header class="chrome">
+  <span class="wordmark">library</span>
+  <span class="muted" id="volumeCount"></span>
+</header>
+
+<nav class="browse" aria-label="shelf navigation">
+  <button class="nav-btn" id="prevBtn" aria-label="previous book">&larr;</button>
+  <div class="markers" id="markers" role="tablist" aria-label="book positions"></div>
+  <button class="nav-btn" id="nextBtn" aria-label="next book">&rarr;</button>
+</nav>
+
+<p class="hint" id="hint">drag, scroll or use arrow keys &middot; select a book to inspect</p>
+
+<div class="inspect" id="inspectUI" hidden>
+  <button class="close-btn" id="closeBtn" aria-label="close inspection">&times;</button>
+  <div class="caption">
+    <span class="title" id="inspectTitle"></span>
+    <a class="watch" id="watchLink" target="_blank" rel="noopener noreferrer">watch on youtube &#8599;</a>
+    <span class="muted small">drag to orbit &middot; scroll to zoom &middot; shift-drag to pan &middot; esc to close</span>
+  </div>
+</div>
+
+<div class="fallback" id="fallback" hidden>
+  <p>this library needs webgl, which your browser could not provide.</p>
+</div>
+
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>

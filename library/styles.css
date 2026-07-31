@@ -1,0 +1,260 @@
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/inter-latin-400-normal.woff2") format("woff2");
+}
+
+:root {
+  --fg: rgba(235, 233, 228, 0.92);
+  --fg-dim: rgba(235, 233, 228, 0.42);
+  --fg-faint: rgba(235, 233, 228, 0.22);
+  --bg: #000000;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-weight: 400;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  -webkit-font-smoothing: antialiased;
+}
+
+#scene {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: grab;
+}
+
+#scene.dragging {
+  cursor: grabbing;
+}
+
+#scene.over-book {
+  cursor: pointer;
+}
+
+.chrome {
+  position: fixed;
+  top: 28px;
+  left: 32px;
+  right: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.wordmark {
+  letter-spacing: 0.22em;
+  text-transform: lowercase;
+}
+
+.muted {
+  color: var(--fg-dim);
+}
+
+.small {
+  font-size: 11px;
+}
+
+.browse {
+  position: fixed;
+  bottom: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  z-index: 3;
+  transition: opacity 0.4s ease;
+}
+
+.browse.hidden-ui,
+.hint.hidden-ui {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--fg-dim);
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 6px 10px;
+  transition: color 0.25s ease;
+}
+
+.nav-btn:hover,
+.nav-btn:focus-visible {
+  color: var(--fg);
+  outline: none;
+}
+
+.markers {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.marker {
+  background: none;
+  border: none;
+  padding: 8px 1px;
+  cursor: pointer;
+}
+
+.marker span {
+  display: block;
+  width: 1px;
+  height: 12px;
+  background: var(--fg-faint);
+  transition: background 0.25s ease, height 0.25s ease;
+}
+
+.marker:hover span,
+.marker:focus-visible span {
+  background: var(--fg-dim);
+}
+
+.marker:focus-visible {
+  outline: none;
+}
+
+.marker.active span {
+  background: var(--fg);
+  height: 17px;
+}
+
+.hint {
+  position: fixed;
+  bottom: 82px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--fg-faint);
+  font-size: 11px;
+  white-space: nowrap;
+  z-index: 3;
+  transition: opacity 0.6s ease;
+}
+
+.inspect {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.inspect.visible {
+  opacity: 1;
+}
+
+.close-btn {
+  position: absolute;
+  top: 22px;
+  right: 26px;
+  background: none;
+  border: none;
+  color: var(--fg-dim);
+  font: inherit;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 8px;
+  pointer-events: auto;
+  transition: color 0.25s ease;
+}
+
+.close-btn:hover,
+.close-btn:focus-visible {
+  color: var(--fg);
+  outline: none;
+}
+
+.caption {
+  position: absolute;
+  bottom: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  text-align: center;
+  pointer-events: auto;
+}
+
+.caption .title {
+  font-size: 15px;
+  letter-spacing: 0.1em;
+}
+
+.watch {
+  color: var(--fg-dim);
+  text-decoration: none;
+  border-bottom: 1px solid var(--fg-faint);
+  padding-bottom: 2px;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.watch:hover,
+.watch:focus-visible {
+  color: var(--fg);
+  border-color: var(--fg-dim);
+  outline: none;
+}
+
+.fallback {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg-dim);
+  z-index: 5;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 640px) {
+  .chrome {
+    top: 20px;
+    left: 20px;
+    right: 20px;
+  }
+
+  .hint {
+    display: none;
+  }
+
+  .markers {
+    gap: 5px;
+  }
+
+  .caption .small {
+    display: none;
+  }
+}
