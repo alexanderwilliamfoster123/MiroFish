@@ -1,10 +1,24 @@
 import Hero from "../components/qsigma/Hero";
+import StatsBar from "../components/qsigma/StatsBar";
+import Strategies from "../components/qsigma/Strategies";
+import HowItWorks from "../components/qsigma/HowItWorks";
+import Performance from "../components/qsigma/Performance";
+import Pricing from "../components/qsigma/Pricing";
+import CtaSection from "../components/qsigma/CtaSection";
+import Footer from "../components/qsigma/Footer";
 
 const Index = () => {
   return (
     <main>
       <h1 className="sr-only">QSigma — A New Standard in Wealth Management</h1>
       <Hero />
+      <StatsBar />
+      <Strategies />
+      <HowItWorks />
+      <Performance />
+      <Pricing />
+      <CtaSection />
+      <Footer />
     </main>
   );
 };

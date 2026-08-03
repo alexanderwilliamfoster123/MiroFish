@@ -1,6 +1,11 @@
 import { Globe } from "lucide-react";
 
-const NAV_LINKS = ["DASHBOARD", "ASSETS", "ANALYTICS", "MARKETS"];
+const NAV_LINKS = [
+  { label: "PLATFORM", href: "#platform" },
+  { label: "STRATEGIES", href: "#strategies" },
+  { label: "PERFORMANCE", href: "#performance" },
+  { label: "PRICING", href: "#pricing" },
+];
 
 const Navbar = () => {
   return (
@@ -34,8 +39,8 @@ const Navbar = () => {
       <div className="justify-self-center hidden md:flex">
         {NAV_LINKS.map((link) => (
           <a
-            key={link}
-            href="#"
+            key={link.label}
+            href={link.href}
             className="transition-opacity duration-200 hover:opacity-55"
             style={{
               fontWeight: 600,
@@ -46,7 +51,7 @@ const Navbar = () => {
               textDecoration: "none",
             }}
           >
-            {link}
+            {link.label}
           </a>
         ))}
       </div>

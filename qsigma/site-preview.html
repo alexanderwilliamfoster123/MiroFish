@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QSigma — A New Standard in Wealth Management</title>
+<meta name="description" content="Take full control of your assets with a unified platform for investing, tracking, and growing your portfolio in real time." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body {
+    background: #F2F2F0;
+    font-family: "Inter Tight", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  button { font-family: inherit; }
+
+  /* ---------- Scroll-reveal ---------- */
+  .fade {
+    opacity: 0; transform: translateY(32px); filter: blur(8px);
+    transition: opacity .7s ease-out, transform .7s ease-out, filter .7s ease-out;
+  }
+  .fade.vis { opacity: 1; transform: translateY(0); filter: blur(0); }
+  .fade.d1 { transition-delay: .08s; }
+  .fade.d2 { transition-delay: .16s; }
+
+  /* ---------- Shared section furniture ---------- */
+  .eyebrow-s {
+    font-weight: 500; font-size: 12px; margin-bottom: 12px; text-align: center;
+    color: rgba(0,0,0,0.50);
+  }
+  .h2-s {
+    font-weight: 500; font-size: 32px; letter-spacing: -1.2px; line-height: 1.05;
+    text-align: center;
+  }
+  .h2-s .ghost { display: block; color: rgba(0,0,0,0.20); }
+  .h2-s .solid { display: block; color: #05050C; }
+  .dark .eyebrow-s { color: rgba(255,255,255,0.50); }
+  .dark .h2-s .ghost { color: rgba(255,255,255,0.25); }
+  .dark .h2-s .solid { color: #FFFFFF; }
+  @media (min-width: 640px)  { .h2-s { font-size: 40px; } .eyebrow-s { font-size: 13px; } }
+  @media (min-width: 768px)  { .h2-s { font-size: 52px; } .eyebrow-s { font-size: 14px; margin-bottom: 16px; } }
+  .pill-btn {
+    display: inline-block; background: #111111; color: #FFF;
+    font-weight: 600; font-size: 13px; border: none; border-radius: 9999px;
+    padding: 12px 20px; cursor: pointer; transition: background 200ms;
+    text-align: center;
+  }
+  .pill-btn:hover { background: #333333; }
+
+  /* ---------- Navbar ---------- */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center;
+    background: rgba(242,242,240,0.85);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    padding: 16px 40px;
+  }
+  .nav-logo {
+    justify-self: start; text-decoration: none;
+    font-weight: 700; font-size: 22px; letter-spacing: -0.5px;
+    color: #05050C; line-height: 28px;
+  }
+  .nav-links { justify-self: center; display: flex; }
+  .nav-links a {
+    font-weight: 600; font-size: 13px; letter-spacing: 1.5px;
+    color: #111111; padding: 8px 14px; text-decoration: none;
+    transition: opacity 200ms; white-space: nowrap;
+  }
+  .nav-links a:hover { opacity: 0.55; }
+  .nav-right { justify-self: end; display: flex; align-items: center; gap: 16px; }
+  .nav-lang { display: flex; align-items: center; gap: 8px; }
+  .nav-lang svg { width: 16px; height: 16px; stroke: #111; }
+  .nav-lang span { font-weight: 400; font-size: 13px; color: #111; }
+  .cta {
+    display: flex; align-items: center; gap: 8px;
+    background: #111111; border: none; border-radius: 9999px;
+    padding: 10px 20px; cursor: pointer; transition: background 200ms;
+  }
+  .cta:hover { background: #333333; }
+  .cta-ring {
+    width: 18px; height: 18px; border-radius: 9999px;
+    background: rgba(255,255,255,0.20);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cta-dot { width: 6px; height: 6px; border-radius: 9999px; background: #FFF; }
+  .cta-label { font-weight: 600; font-size: 13px; color: #FFF; }
+  @media (max-width: 860px) { .nav-links { display: none; } }
+  @media (max-width: 639px) { .nav-lang { display: none; } }
+
+  /* ---------- Hero ---------- */
+  .hero { position: relative; min-height: 100vh; overflow: hidden; background: #F2F2F0; }
+  .halo {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(220,220,215,0.6) 0%, transparent 70%);
+  }
+  .content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: 90px 24px 0;
+  }
+  .eyebrow {
+    font-weight: 500; font-size: 12px; color: rgba(0,0,0,0.50);
+    margin-bottom: 12px;
+    animation: blurUp16 0.6s ease-out 0.1s both;
+  }
+  .headline { font-weight: 500; font-size: 34px; letter-spacing: -1.36px; line-height: 1.05; }
+  .headline .line1 { display: block; color: rgba(0,0,0,0.20); animation: blurUp24 0.7s ease-out 0.2s both; }
+  .headline .line2 { display: block; color: #05050C; animation: blurUp24 0.7s ease-out 0.32s both; }
+  .subhead {
+    font-weight: 500; font-size: 14px; color: rgba(0,0,0,0.20);
+    max-width: 460px; margin-top: 16px;
+    animation: blurUp20 0.7s ease-out 0.45s both;
+  }
+  @media (min-width: 640px) {
+    .content { padding-top: 110px; }
+    .eyebrow { font-size: 13px; }
+    .headline { font-size: 44px; }
+    .subhead { font-size: 16px; }
+  }
+  @media (min-width: 768px) {
+    .content { padding-top: 140px; }
+    .eyebrow { font-size: 14px; margin-bottom: 16px; }
+    .headline { font-size: 56px; }
+    .subhead { font-size: 18px; margin-top: 20px; }
+  }
+  @media (min-width: 1024px) { .headline { font-size: 68px; line-height: 73.088px; } }
+  @keyframes blurUp16 {
+    from { opacity: 0; transform: translateY(16px); filter: blur(8px); }
+    to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+  }
+  @keyframes blurUp24 {
+    from { opacity: 0; transform: translateY(24px); filter: blur(12px); }
+    to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+  }
+  @keyframes blurUp20 {
+    from { opacity: 0; transform: translateY(20px); filter: blur(8px); }
+    to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+  }
+
+  .stone-wrap { position: absolute; bottom: 0; width: fit-content; cursor: crosshair; }
+  .stone-wrap.left  { left: 0; }
+  .stone-wrap.right { right: 0; }
+  .stone-wrap img {
+    display: block; height: 280px; width: auto;
+    object-fit: contain; user-select: none; -webkit-user-drag: none;
+  }
+  @media (min-width: 640px)  { .stone-wrap img { height: 380px; } }
+  @media (min-width: 768px)  { .stone-wrap img { height: 500px; } }
+  @media (min-width: 1024px) { .stone-wrap img { height: 600px; } }
+  @media (min-width: 1280px) { .stone-wrap img { height: 680px; } }
+  .stone-wrap.left  img { object-position: left bottom; }
+  .stone-wrap.right img { object-position: right bottom; }
+  .stone-base { position: relative; }
+  .stone-wrap.left  .stone-base { z-index: 1; animation: stoneInLeft 0.9s ease-out 0.5s both; }
+  .stone-wrap.right .stone-base { z-index: 4; animation: stoneInRight 0.9s ease-out 0.5s both; }
+  .stone-grass {
+    position: absolute; inset: 0; pointer-events: none;
+    -webkit-mask-image: radial-gradient(circle 0px at 50% 50%, black 0%, black 40%, transparent 100%);
+    mask-image: radial-gradient(circle 0px at 50% 50%, black 0%, black 40%, transparent 100%);
+  }
+  .stone-wrap.left  .stone-grass { z-index: 2; }
+  .stone-wrap.right .stone-grass { z-index: 5; }
+  @keyframes stoneInLeft  { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes stoneInRight { from { opacity: 0; transform: translateX(40px); }  to { opacity: 1; transform: translateX(0); } }
+
+  .dash-outer {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+    display: flex; justify-content: center; pointer-events: none;
+  }
+  .dash-inner { width: 92vw; max-width: 944px; animation: dashRise 1.0s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both; }
+  @media (min-width: 640px)  { .dash-inner { width: 72vw; } }
+  @media (min-width: 768px)  { .dash-inner { width: 60vw; } }
+  @media (min-width: 1024px) { .dash-inner { width: 54vw; } }
+  .dash-inner img {
+    display: block; width: 100%; height: auto; object-fit: contain;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -8px 80px rgba(0,0,0,0.12), 0 40px 120px rgba(0,0,0,0.10);
+  }
+  @keyframes dashRise {
+    from { opacity: 0; transform: translateY(80px); filter: blur(8px); }
+    to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+  }
+
+  .dark-fade {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 6;
+    height: 220px; pointer-events: none;
+    background: linear-gradient(to top, rgba(5,5,12,0.85) 0%, rgba(5,5,12,0.5) 40%, transparent 100%);
+  }
+
+  .scroll-hint {
+    position: absolute; bottom: 10px; left: 0; right: 0; z-index: 20;
+    margin: 0 auto; width: fit-content;
+    display: flex; align-items: center; gap: 8px;
+    text-decoration: none;
+    animation: hintIn 0.6s ease-out 1.2s both, bob 2.5s ease-in-out 1.2s infinite;
+  }
+  .scroll-hint img { width: 14px; height: 14px; animation: spin 4s ease-in-out infinite; }
+  .scroll-hint span { font-weight: 500; font-size: 14px; letter-spacing: -0.28px; color: #FFF; }
+  @keyframes hintIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  /* ---------- Stats bar ---------- */
+  .stats { background: #05050C; padding: 96px 24px; }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px 0; }
+  @media (min-width: 1024px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+  .stat { text-align: center; }
+  .stat-value { font-weight: 500; font-size: 36px; letter-spacing: -1px; line-height: 1.1; color: #FFF; }
+  .stat-value.accent { color: #A3B18A; }
+  .stat-label { margin-top: 8px; font-weight: 500; font-size: 13px; color: rgba(255,255,255,0.45); }
+  @media (min-width: 640px) { .stat-value { font-size: 44px; } }
+  @media (min-width: 768px) { .stat-value { font-size: 52px; } .stat-label { font-size: 14px; } }
+
+  /* ---------- Strategies ---------- */
+  .strategies { background: #F2F2F0; padding: 120px 24px; }
+  .sect-sub {
+    margin: 16px auto 0; font-weight: 500; font-size: 14px; text-align: center;
+    color: rgba(0,0,0,0.40); max-width: 520px;
+  }
+  @media (min-width: 640px) { .sect-sub { font-size: 16px; margin-top: 20px; } }
+  .cards { margin-top: 56px; display: grid; grid-template-columns: 1fr; gap: 20px; }
+  @media (min-width: 768px)  { .cards { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) { .cards { grid-template-columns: 1fr 1fr 1fr; } }
+  .card {
+    display: flex; flex-direction: column; height: 100%;
+    background: #FFF; border: 1px solid rgba(0,0,0,0.07); border-radius: 16px;
+    padding: 28px; transition: transform .3s, box-shadow .3s;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 24px 60px rgba(5,5,12,0.10); }
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .card h3 { font-weight: 600; font-size: 18px; color: #05050C; }
+  .card-cat { margin-top: 4px; font-weight: 500; font-size: 13px; color: rgba(0,0,0,0.45); }
+  .risk-tag {
+    white-space: nowrap; font-weight: 600; font-size: 11px; letter-spacing: 0.5px;
+    text-transform: uppercase; color: rgba(0,0,0,0.55);
+    border: 1px solid rgba(0,0,0,0.12); border-radius: 9999px; padding: 5px 10px;
+  }
+  .card-mid { margin-top: 24px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+  .card-ret { font-weight: 500; font-size: 32px; letter-spacing: -0.8px; line-height: 1; color: #5F7052; }
+  .card-ret-sub { margin-top: 6px; font-weight: 500; font-size: 12px; color: rgba(0,0,0,0.40); }
+  .card-meta {
+    margin-top: 24px; display: flex; align-items: center; justify-content: space-between;
+    font-weight: 500; font-size: 13px; color: rgba(0,0,0,0.45);
+    border-top: 1px solid rgba(0,0,0,0.07); padding-top: 16px;
+  }
+  .card .pill-btn { margin-top: 20px; width: 100%; }
+  .cards-note {
+    margin-top: 40px; text-align: center; font-weight: 500; font-size: 13px; color: rgba(0,0,0,0.35);
+  }
+
+  /* ---------- How it works ---------- */
+  .how { background: #ECECEA; padding: 120px 24px; }
+  .steps { margin-top: 64px; display: grid; grid-template-columns: 1fr; gap: 48px; }
+  @media (min-width: 768px) { .steps { grid-template-columns: 1fr 1fr 1fr; gap: 32px; } }
+  .step-num { font-weight: 500; font-size: 64px; letter-spacing: -2px; line-height: 1; color: rgba(0,0,0,0.12); }
+  @media (min-width: 768px) { .step-num { font-size: 80px; } }
+  .step h3 { margin-top: 16px; font-weight: 600; font-size: 20px; color: #05050C; }
+  .step p { margin-top: 12px; font-weight: 500; font-size: 14px; color: rgba(0,0,0,0.45); line-height: 1.6; max-width: 340px; }
+  @media (min-width: 640px) { .step p { font-size: 15px; } }
+
+  /* ---------- Performance ---------- */
+  .perf { background: #05050C; padding: 120px 24px; }
+  .chart-box {
+    margin-top: 56px; border: 1px solid rgba(255,255,255,0.10); border-radius: 16px;
+    padding: 28px 24px 20px; background: rgba(255,255,255,0.02);
+  }
+  .chart-legend { margin-bottom: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; padding: 0 4px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 13px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 9999px; display: inline-block; }
+  .chart-caption { margin-left: auto; font-weight: 500; font-size: 12px; color: rgba(255,255,255,0.35); }
+  .chart-box svg { width: 100%; height: auto; display: block; }
+  .chart-line { stroke-linecap: round; stroke-linejoin: round; fill: none; }
+  .vis .chart-line { animation: draw 1.6s ease-out both; }
+  .vis .chart-line.bench { animation-duration: 1.4s; }
+  .vis .chart-line.main { animation-delay: .15s; }
+  @keyframes draw { from { stroke-dashoffset: var(--len); } to { stroke-dashoffset: 0; } }
+  .perf-stats { margin-top: 48px; display: grid; grid-template-columns: 1fr; gap: 40px; }
+  @media (min-width: 640px) { .perf-stats { grid-template-columns: 1fr 1fr 1fr; } }
+  .perf-stat { text-align: center; }
+  .perf-value { font-weight: 500; font-size: 36px; letter-spacing: -1px; line-height: 1.1; color: #FFF; }
+  .perf-value.accent { color: #A3B18A; }
+  @media (min-width: 768px) { .perf-value { font-size: 44px; } }
+  .perf-label { margin-top: 6px; font-weight: 500; font-size: 14px; color: rgba(255,255,255,0.60); }
+  .perf-sub { margin-top: 2px; font-weight: 500; font-size: 12px; color: rgba(255,255,255,0.35); }
+
+  /* ---------- Pricing ---------- */
+  .pricing { background: #F2F2F0; padding: 120px 24px; }
+  .tiers { margin-top: 56px; display: grid; grid-template-columns: 1fr; gap: 20px; }
+  @media (min-width: 768px) { .tiers { grid-template-columns: 1fr 1fr 1fr; } }
+  .tier {
+    position: relative; display: flex; flex-direction: column; height: 100%;
+    background: #FFF; border: 1px solid rgba(0,0,0,0.07); border-radius: 16px;
+    padding: 32px 28px;
+  }
+  .tier.dark-tier { background: #05050C; border-color: #05050C; }
+  .tier h3 { font-weight: 600; font-size: 16px; color: #05050C; }
+  .dark-tier h3 { color: rgba(255,255,255,0.85); }
+  .tier-price { margin-top: 16px; display: flex; align-items: baseline; gap: 4px; }
+  .tier-amount { font-weight: 500; font-size: 44px; letter-spacing: -1.5px; line-height: 1; color: #05050C; }
+  .dark-tier .tier-amount { color: #FFF; }
+  .tier-period { font-weight: 500; font-size: 14px; color: rgba(0,0,0,0.40); }
+  .dark-tier .tier-period { color: rgba(255,255,255,0.45); }
+  .tier-blurb { margin-top: 12px; font-weight: 500; font-size: 14px; color: rgba(0,0,0,0.45); }
+  .dark-tier .tier-blurb { color: rgba(255,255,255,0.55); }
+  .tier ul { margin-top: 24px; list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .tier li { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 14px; color: rgba(0,0,0,0.60); }
+  .dark-tier li { color: rgba(255,255,255,0.75); }
+  .tier li svg { flex-shrink: 0; }
+  .tier .pill-btn { margin-top: auto; padding-top: 12px; width: 100%; }
+  .tier-cta-space { height: 32px; }
+  .dark-tier .pill-btn { background: #FFF; color: #05050C; }
+  .dark-tier .pill-btn:hover { background: #E8E8E4; }
+  .popular-tag {
+    position: absolute; right: 24px; top: 24px;
+    font-weight: 600; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase;
+    color: #A3B18A; border: 1px solid rgba(163,177,138,0.4); border-radius: 9999px; padding: 5px 10px;
+  }
+
+  /* ---------- CTA ---------- */
+  .cta-sect { position: relative; overflow: hidden; background: #F2F2F0; padding: 140px 24px; }
+  .cta-halo {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(220,220,215,0.7) 0%, transparent 70%);
+  }
+  .cta-inner { position: relative; max-width: 720px; margin: 0 auto; text-align: center; }
+  .cta-form {
+    margin: 32px auto 0; display: flex; flex-direction: column; gap: 12px;
+    width: 100%; max-width: 440px;
+  }
+  @media (min-width: 640px) { .cta-form { flex-direction: row; } }
+  .cta-form input {
+    flex: 1; font-family: inherit; font-weight: 500; font-size: 14px; color: #05050C;
+    background: #FFF; border: 1px solid rgba(0,0,0,0.12); border-radius: 9999px;
+    padding: 13px 22px; outline: none; min-width: 0;
+  }
+  .cta-form .pill-btn { padding: 13px 26px; white-space: nowrap; }
+  .cta-note { margin-top: 16px; font-weight: 500; font-size: 13px; color: rgba(0,0,0,0.35); }
+  .cta-done { margin-top: 32px; font-weight: 500; font-size: 15px; color: #5F7052; display: none; }
+
+  /* ---------- Footer ---------- */
+  .footer { background: #05050C; padding: 72px 40px 40px; }
+  .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  @media (min-width: 768px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; } }
+  .footer-brand { grid-column: span 2; }
+  @media (min-width: 768px) { .footer-brand { grid-column: span 1; } }
+  .footer-logo { font-weight: 700; font-size: 22px; letter-spacing: -0.5px; color: #FFF; }
+  .footer-tag { margin-top: 12px; font-weight: 500; font-size: 13px; color: rgba(255,255,255,0.40); max-width: 280px; line-height: 1.6; }
+  .footer h3 {
+    font-weight: 600; font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+  }
+  .footer ul { margin-top: 16px; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer ul a {
+    font-weight: 500; font-size: 14px; color: rgba(255,255,255,0.75);
+    text-decoration: none; transition: opacity 200ms;
+  }
+  .footer ul a:hover { opacity: 0.6; }
+  .footer-bottom {
+    margin-top: 64px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  @media (min-width: 768px) { .footer-bottom { flex-direction: row; align-items: center; justify-content: space-between; } }
+  .footer-bottom p { font-weight: 500; font-size: 12px; color: rgba(255,255,255,0.30); line-height: 1.6; }
+  @media (min-width: 768px) { .footer-bottom p:last-child { max-width: 560px; text-align: right; } }
+</style>
+</head>
+<body>
+<main>
+  <h1 class="sr-only">QSigma — A New Standard in Wealth Management</h1>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <nav class="nav">
+      <a class="nav-logo" href="#" aria-label="QSigma home">QSigma</a>
+      <div class="nav-links">
+        <a href="#platform">PLATFORM</a>
+        <a href="#strategies">STRATEGIES</a>
+        <a href="#performance">PERFORMANCE</a>
+        <a href="#pricing">PRICING</a>
+      </div>
+      <div class="nav-right">
+        <div class="nav-lang">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+            <path d="M2 12h20"/>
+          </svg>
+          <span>English</span>
+        </div>
+        <button class="cta">
+          <span class="cta-ring"><span class="cta-dot"></span></span>
+          <span class="cta-label">Launch app</span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="halo" aria-hidden="true"></div>
+
+    <div class="content">
+      <p class="eyebrow">Finance Reimagined</p>
+      <h2 class="headline">
+        <span class="line1">A New Standard</span>
+        <span class="line2">in Wealth Management</span>
+      </h2>
+      <p class="subhead">Take full control of your assets with a unified platform for investing, tracking, and growing your portfolio in real time.</p>
+    </div>
+
+    <div class="stone-wrap left" data-stone>
+      <img class="stone-base" src="https://qclay.design/lovable/synex/stone-left.png" alt="" draggable="false" />
+      <img class="stone-grass" src="https://qclay.design/lovable/synex/stone-g-left.png" alt="" draggable="false" />
+    </div>
+
+    <div class="dash-outer">
+      <div class="dash-inner">
+        <img src="https://qclay.design/lovable/synex/Dashboard.png" alt="QSigma wealth management dashboard" />
+      </div>
+    </div>
+
+    <div class="stone-wrap right" data-stone>
+      <img class="stone-base" src="https://qclay.design/lovable/synex/stone-right.png" alt="" draggable="false" />
+      <img class="stone-grass" src="https://qclay.design/lovable/synex/stone-g-right.png" alt="" draggable="false" />
+    </div>
+
+    <div class="dark-fade" aria-hidden="true"></div>
+
+    <a class="scroll-hint" href="#stats">
+      <img src="https://qclay.design/lovable/synex/star.svg" alt="" />
+      <span>Scroll to explore</span>
+    </a>
+  </section>
+
+  <!-- ================= STATS ================= -->
+  <section class="stats" id="stats">
+    <div class="wrap stats-grid">
+      <div class="stat fade"><div class="stat-value">$2.4B</div><div class="stat-label">Assets under strategy</div></div>
+      <div class="stat fade d1"><div class="stat-value">31,000+</div><div class="stat-label">Active subscribers</div></div>
+      <div class="stat fade d2"><div class="stat-value">12</div><div class="stat-label">Live AI strategies</div></div>
+      <div class="stat fade d2"><div class="stat-value accent">+11.2%</div><div class="stat-label">Avg. annual outperformance</div></div>
+    </div>
+  </section>
+
+  <!-- ================= STRATEGIES ================= -->
+  <section class="strategies" id="strategies">
+    <div class="wrap">
+      <div class="fade">
+        <p class="eyebrow-s">Strategies</p>
+        <h2 class="h2-s">
+          <span class="ghost">Subscribe to</span>
+          <span class="solid">Market-Beating Intelligence</span>
+        </h2>
+        <p class="sect-sub">Every QSigma strategy is researched, executed, and rebalanced end-to-end by our AI engine. Pick the ones that fit your goals and subscribe in one tap.</p>
+      </div>
+
+      <div class="cards" id="cards"></div>
+
+      <p class="cards-note fade">Returns shown are illustrative, net of fees, since strategy inception. Past performance does not guarantee future results.</p>
+    </div>
+  </section>
+
+  <!-- ================= HOW IT WORKS ================= -->
+  <section class="how" id="platform">
+    <div class="wrap">
+      <div class="fade">
+        <p class="eyebrow-s">How It Works</p>
+        <h2 class="h2-s">
+          <span class="ghost">Three Steps to</span>
+          <span class="solid">Autonomous Investing</span>
+        </h2>
+      </div>
+      <div class="steps">
+        <div class="step fade">
+          <div class="step-num">01</div>
+          <h3>Fund your account</h3>
+          <p>Connect a bank or transfer an existing portfolio in minutes. Your capital stays in your name, held with regulated custodians.</p>
+        </div>
+        <div class="step fade d1">
+          <div class="step-num">02</div>
+          <h3>Subscribe to strategies</h3>
+          <p>Browse live performance, risk profiles, and holdings. Allocate to any mix of strategies with a single tap — and switch anytime.</p>
+        </div>
+        <div class="step fade d2">
+          <div class="step-num">03</div>
+          <h3>Let the AI compound</h3>
+          <p>QSigma's engine trades, hedges, and rebalances around the clock. You watch your portfolio grow in real time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PERFORMANCE ================= -->
+  <section class="perf dark" id="performance">
+    <div class="wrap">
+      <div class="fade">
+        <p class="eyebrow-s">Track Record</p>
+        <h2 class="h2-s">
+          <span class="ghost">Numbers That</span>
+          <span class="solid">Speak for Themselves</span>
+        </h2>
+      </div>
+
+      <div class="chart-box fade" id="chart-box">
+        <div class="chart-legend">
+          <span class="legend-item" style="color: rgba(255,255,255,0.85);">
+            <span class="legend-dot" style="background:#A3B18A;"></span> QSigma Composite
+          </span>
+          <span class="legend-item" style="color: rgba(255,255,255,0.45);">
+            <span class="legend-dot" style="background:rgba(255,255,255,0.30);"></span> S&amp;P 500
+          </span>
+          <span class="chart-caption">Growth of $100 · since 2022</span>
+        </div>
+        <svg id="chart" viewBox="0 0 760 300" fill="none" role="img" aria-label="Chart comparing QSigma composite growth to the S&P 500"></svg>
+      </div>
+
+      <div class="perf-stats">
+        <div class="perf-stat fade">
+          <div class="perf-value accent">+214%</div>
+          <div class="perf-label">Cumulative return</div>
+          <div class="perf-sub">vs S&amp;P 500 +87%</div>
+        </div>
+        <div class="perf-stat fade d1">
+          <div class="perf-value">-9.8%</div>
+          <div class="perf-label">Max drawdown</div>
+          <div class="perf-sub">vs S&amp;P 500 -25.4%</div>
+        </div>
+        <div class="perf-stat fade d2">
+          <div class="perf-value">1.8</div>
+          <div class="perf-label">Composite Sharpe</div>
+          <div class="perf-sub">since inception</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PRICING ================= -->
+  <section class="pricing" id="pricing">
+    <div class="wrap">
+      <div class="fade">
+        <p class="eyebrow-s">Membership</p>
+        <h2 class="h2-s">
+          <span class="ghost">One Subscription,</span>
+          <span class="solid">Every Strategy</span>
+        </h2>
+      </div>
+      <div class="tiers" id="tiers"></div>
+    </div>
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="cta-sect">
+    <div class="cta-halo" aria-hidden="true"></div>
+    <div class="cta-inner">
+      <div class="fade">
+        <p class="eyebrow-s">Get Started</p>
+        <h2 class="h2-s">
+          <span class="ghost">Your Money,</span>
+          <span class="solid">Managed by Intelligence</span>
+        </h2>
+      </div>
+      <div class="fade d1">
+        <form class="cta-form" id="cta-form">
+          <input type="email" required placeholder="Your email" aria-label="Email address" />
+          <button type="submit" class="pill-btn">Request access</button>
+        </form>
+        <p class="cta-done" id="cta-done">You're on the list — we'll be in touch shortly.</p>
+        <p class="cta-note">No lock-ups. Withdraw anytime.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo">QSigma</span>
+          <p class="footer-tag">AI-run wealth management. Subscribe to strategies, let the engine do the rest.</p>
+        </div>
+        <div>
+          <h3>Platform</h3>
+          <ul>
+            <li><a href="#strategies">Strategies</a></li>
+            <li><a href="#performance">Performance</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#">Security</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Company</h3>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Press</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Legal</h3>
+          <ul>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Disclosures</a></li>
+            <li><a href="#">Licenses</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 QSigma. All rights reserved.</p>
+        <p>Investing involves risk, including possible loss of principal. Past performance does not guarantee future results. Strategy returns shown are illustrative.</p>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<script>
+  // ---------- Mossy stone reveal (spring stiffness 200, damping 25) ----------
+  document.querySelectorAll("[data-stone]").forEach((wrap) => {
+    const grass = wrap.querySelector(".stone-grass");
+    let x = 0, y = 0, radius = 0, target = 0, velocity = 0;
+    let rafId = null, lastT = null;
+    const STIFFNESS = 200, DAMPING = 25;
+    function tick(t) {
+      if (lastT === null) lastT = t;
+      const dt = Math.min((t - lastT) / 1000, 1 / 30);
+      lastT = t;
+      velocity += (STIFFNESS * (target - radius) - DAMPING * velocity) * dt;
+      radius += velocity * dt;
+      const mask = `radial-gradient(circle ${radius}px at ${x}px ${y}px, black 0%, black 40%, transparent 100%)`;
+      grass.style.webkitMaskImage = mask;
+      grass.style.maskImage = mask;
+      if (Math.abs(target - radius) > 0.05 || Math.abs(velocity) > 0.05) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        radius = target; velocity = 0; rafId = null; lastT = null;
+      }
+    }
+    function start() { if (rafId === null) { lastT = null; rafId = requestAnimationFrame(tick); } }
+    wrap.addEventListener("mouseenter", () => { target = 120; start(); });
+    wrap.addEventListener("mouseleave", () => { target = 0; start(); });
+    wrap.addEventListener("mousemove", (e) => {
+      const rect = wrap.getBoundingClientRect();
+      x = e.clientX - rect.left; y = e.clientY - rect.top;
+      start();
+    });
+  });
+
+  // ---------- Strategy cards ----------
+  const STRATEGIES = [
+    { name: "Momentum Alpha", category: "US Equities", risk: "Aggressive", ret: "+34.2%", vs: "vs S&P 500 +11.8%", sharpe: "1.9", min: "$1,000",
+      spark: [10, 14, 12, 18, 16, 24, 22, 30, 27, 36, 34, 44] },
+    { name: "Global Macro AI", category: "Multi-asset", risk: "Balanced", ret: "+21.7%", vs: "vs 60/40 +8.9%", sharpe: "1.6", min: "$1,000",
+      spark: [10, 12, 15, 13, 17, 16, 20, 22, 21, 25, 27, 30] },
+    { name: "Volatility Harvest", category: "Index Options", risk: "Market-neutral", ret: "+18.9%", vs: "vs T-bills +14.1%", sharpe: "2.1", min: "$5,000",
+      spark: [10, 11, 13, 14, 14, 16, 17, 17, 19, 20, 22, 23] },
+    { name: "Blue-Chip Compounder", category: "US Equities", risk: "Conservative", ret: "+16.4%", vs: "vs S&P 500 +4.6%", sharpe: "1.4", min: "$500",
+      spark: [10, 11, 12, 12, 14, 15, 15, 17, 18, 19, 21, 22] },
+    { name: "Digital Assets Quant", category: "Crypto", risk: "Aggressive", ret: "+52.8%", vs: "vs BTC +19.3%", sharpe: "1.3", min: "$1,000",
+      spark: [10, 16, 13, 22, 18, 30, 25, 38, 32, 48, 42, 58] },
+    { name: "Rates & Arbitrage", category: "Fixed Income", risk: "Conservative", ret: "+12.6%", vs: "vs Agg +7.2%", sharpe: "2.4", min: "$500",
+      spark: [10, 10.8, 11.5, 12, 12.8, 13.2, 14, 14.6, 15.1, 15.9, 16.4, 17.2] },
+  ];
+
+  function sparkline(data) {
+    const w = 120, h = 36;
+    const min = Math.min(...data), max = Math.max(...data);
+    const pts = data.map((v, i) =>
+      `${((i / (data.length - 1)) * w).toFixed(1)},${(h - 2 - ((v - min) / (max - min || 1)) * (h - 4)).toFixed(1)}`
+    ).join(" ");
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" fill="none" aria-hidden="true"><polyline points="${pts}" stroke="#5F7052" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  }
+
+  document.getElementById("cards").innerHTML = STRATEGIES.map((s, i) => `
+    <article class="card fade d${i % 3}">
+      <div class="card-top">
+        <div>
+          <h3>${s.name}</h3>
+          <p class="card-cat">${s.category}</p>
+        </div>
+        <span class="risk-tag">${s.risk}</span>
+      </div>
+      <div class="card-mid">
+        <div>
+          <div class="card-ret">${s.ret}</div>
+          <div class="card-ret-sub">annualized · ${s.vs}</div>
+        </div>
+        ${sparkline(s.spark)}
+      </div>
+      <div class="card-meta"><span>Sharpe ${s.sharpe}</span><span>From ${s.min}</span></div>
+      <button class="pill-btn">Subscribe</button>
+    </article>`).join("");
+
+  // ---------- Performance chart ----------
+  const QSIGMA = [100, 108, 118, 115, 132, 150, 146, 170, 192, 188, 214, 240, 236, 268, 290, 314];
+  const SP500  = [100, 104, 99, 110, 118, 112, 124, 131, 127, 138, 150, 146, 158, 171, 178, 187];
+  const W = 760, H = 300, PAD = 8;
+  const cMin = Math.min(...SP500, ...QSIGMA), cMax = Math.max(...SP500, ...QSIGMA);
+  const toPath = (data) => data.map((v, i) => {
+    const px = PAD + (i / (data.length - 1)) * (W - PAD * 2);
+    const py = H - PAD - ((v - cMin) / (cMax - cMin)) * (H - PAD * 2);
+    return `${i === 0 ? "M" : "L"} ${px.toFixed(1)} ${py.toFixed(1)}`;
+  }).join(" ");
+  const qPath = toPath(QSIGMA), sPath = toPath(SP500);
+  const chart = document.getElementById("chart");
+  chart.innerHTML = `
+    <defs>
+      <linearGradient id="qsigma-area" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="rgba(163,177,138,0.22)"/>
+        <stop offset="100%" stop-color="rgba(163,177,138,0)"/>
+      </linearGradient>
+    </defs>
+    ${[0.25, 0.5, 0.75].map((t) => `<line x1="${PAD}" x2="${W - PAD}" y1="${H * t}" y2="${H * t}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`).join("")}
+    <path d="${qPath} L ${W - PAD} ${H - PAD} L ${PAD} ${H - PAD} Z" fill="url(#qsigma-area)"/>
+    <path class="chart-line bench" d="${sPath}" stroke="rgba(255,255,255,0.30)" stroke-width="2"/>
+    <path class="chart-line main" d="${qPath}" stroke="#A3B18A" stroke-width="2.5"/>`;
+  chart.querySelectorAll(".chart-line").forEach((p) => {
+    const len = p.getTotalLength();
+    p.style.setProperty("--len", len);
+    p.style.strokeDasharray = len;
+    p.style.strokeDashoffset = len;
+  });
+
+  // ---------- Pricing tiers ----------
+  const TIERS = [
+    { name: "Core", price: "$0", period: "/month", blurb: "Learn the platform with zero commitment.", cta: "Start free",
+      features: ["Paper-trade every strategy", "Live performance tracking", "Weekly AI market brief", "Community insights"] },
+    { name: "Plus", price: "$29", period: "/month", blurb: "Full access to every live strategy.", cta: "Get Plus", dark: true,
+      features: ["All 12 strategies, live capital", "Unlimited allocation changes", "Real-time execution alerts", "Automated tax-lot reporting", "Priority support"] },
+    { name: "Private", price: "0.75%", period: "/year AUM", blurb: "For portfolios above $250,000.", cta: "Talk to us",
+      features: ["Everything in Plus", "Custom AI mandates", "Tax-loss harvesting", "Dedicated advisor"] },
+  ];
+  const check = (dark) => `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke="${dark ? "#A3B18A" : "#5F7052"}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  document.getElementById("tiers").innerHTML = TIERS.map((t, i) => `
+    <article class="tier${t.dark ? " dark-tier" : ""} fade d${i}">
+      ${t.dark ? '<span class="popular-tag">Most popular</span>' : ""}
+      <h3>${t.name}</h3>
+      <div class="tier-price"><span class="tier-amount">${t.price}</span><span class="tier-period">${t.period}</span></div>
+      <p class="tier-blurb">${t.blurb}</p>
+      <ul>${t.features.map((f) => `<li>${check(t.dark)}${f}</li>`).join("")}</ul>
+      <div class="tier-cta-space"></div>
+      <button class="pill-btn">${t.cta}</button>
+    </article>`).join("");
+
+  // ---------- CTA form ----------
+  document.getElementById("cta-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    e.currentTarget.style.display = "none";
+    document.getElementById("cta-done").style.display = "block";
+  });
+
+  // ---------- Scroll reveal ----------
+  const observer = new IntersectionObserver(
+    (entries) => entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("vis");
+        observer.unobserve(entry.target);
+      }
+    }),
+    { rootMargin: "-80px 0px" }
+  );
+  document.querySelectorAll(".fade").forEach((el) => observer.observe(el));
+</script>
+</body>
+</html>
