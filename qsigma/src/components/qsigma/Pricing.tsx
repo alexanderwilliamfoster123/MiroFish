@@ -110,7 +110,8 @@ const Pricing = () => {
               style={{ fontWeight: 500, color: "rgba(255,255,255,0.55)" }}
             >
               50 basis points, billed monthly on average assets under
-              management. That's the whole price.
+              management, plus a one-time $2,497 onboarding. Every fee
+              disclosed — nothing hidden.
             </p>
 
             <ul className="mt-7 flex flex-col gap-3">
