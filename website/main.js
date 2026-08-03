@@ -2,7 +2,7 @@
  * MiroFish marketing site — original scroll + WebGL transition engine.
  *
  * Native scrolling (with CSS scroll-snap) drives a smoothed progress value.
- * Each section owns a procedural fragment-shader scene; adjacent scenes are
+ * Each section owns a raymarched, frost-white 3D scene; adjacent scenes are
  * rendered to offscreen targets and composited through a noise-cut wipe with
  * spectral chromatic aberration, mild barrel distortion, and film grain.
  * No external libraries. All shader code authored for this project.
@@ -43,8 +43,6 @@
   // Raw progress in [0, N-1]: how far down the page we are, in sections.
   function rawProgress() {
     const y = window.scrollY;
-    // Panels are uniform full-viewport blocks; derive progress from offsets
-    // so mobile URL-bar resizing can't desync us.
     for (let i = 0; i < N - 1; i++) {
       const a = panels[i].offsetTop;
       const b = panels[i + 1].offsetTop;
@@ -53,7 +51,7 @@
     return N - 1;
   }
 
-  let smooth = rawProgress(); // eased progress driving shaders + parallax
+  let smooth = rawProgress();
   let vel = 0;
 
   /* ---------- DOM parallax + nav state ---------- */
@@ -67,7 +65,7 @@
     nav.classList.toggle("nav--solid", smooth > 0.35);
     if (reducedMotion) return;
     for (let i = 0; i < N; i++) {
-      const d = i - smooth; // 0 when centered, ±1 one screen away
+      const d = i - smooth;
       if (Math.abs(d) > 1.25) continue;
       inners[i].style.transform = `translateY(${d * -7}vh)`;
       inners[i].style.opacity = String(Math.max(0, 1 - Math.abs(d) * 1.25));
@@ -130,10 +128,9 @@
     }
     return s;
   }
-  mat2 rot(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
   `;
 
-  /* ---------- scene shader: six procedural backgrounds ---------- */
+  /* ---------- scene shader: six raymarched frost-white scenes ---------- */
 
   const SCENE_FRAG = `#version 300 es
   precision highp float;
@@ -145,204 +142,191 @@
   uniform vec2 uMouse;
   ${HELPERS}
 
-  const vec3 DEEP  = vec3(0.014, 0.027, 0.058);
-  const vec3 NAVY  = vec3(0.045, 0.093, 0.165);
-  const vec3 ICE   = vec3(0.66, 0.85, 0.96);
-  const vec3 STEEL = vec3(0.29, 0.47, 0.68);
-  const vec3 GOLD  = vec3(0.90, 0.71, 0.35);
+  const vec3 PAPER   = vec3(0.930, 0.948, 0.962);
+  const vec3 PAPER_LO= vec3(0.845, 0.885, 0.918);
+  const vec3 INK     = vec3(0.055, 0.105, 0.170);
+  const vec3 STEEL   = vec3(0.290, 0.470, 0.680);
+  const vec3 GOLD    = vec3(0.760, 0.560, 0.240);
 
-  // Elongated glow "fish" oriented along its heading.
-  float fishDash(vec2 d, vec2 dir, float stretch) {
-    d = mat2(dir.x, dir.y, -dir.y, dir.x) * d;
-    d.x *= stretch;
-    return exp(-dot(d, d) * 2400.0);
+  mat3 rotY(float a) {
+    float c = cos(a), s = sin(a);
+    return mat3(c, 0.0, s, 0.0, 1.0, 0.0, -s, 0.0, c);
+  }
+  mat3 rotX(float a) {
+    float c = cos(a), s = sin(a);
+    return mat3(1.0, 0.0, 0.0, 0.0, c, -s, 0.0, s, c);
   }
 
-  /* 0 — Abyss: light rays from above, a shoal crossing the frame. */
-  vec3 scene0(vec2 p, float t) {
-    vec3 col = mix(NAVY * 1.25, DEEP * 0.55, smoothstep(-0.85, 0.9, p.y * -1.0 + 0.2));
-    col = mix(col, NAVY * 1.6, smoothstep(0.15, 1.0, p.y)); // brighter surface
-    vec2 q = rot(0.28) * p;
-    float rays = fbm(vec2(q.x * 3.2 - t * 0.06, q.y * 0.35));
-    rays *= smoothstep(-1.1, 0.9, p.y);
-    col += ICE * rays * 0.12;
-    float glow = 0.0;
-    for (int i = 0; i < 26; i++) {
-      float fi = float(i);
-      float h = hash11(fi * 7.31);
-      float h2 = hash11(fi * 3.77 + 5.0);
-      float sp = 0.09 + 0.12 * h;
-      float ph = t * sp + h * 37.0;
-      vec2 c = vec2(
-        -1.45 + mod(ph, 2.9),
-        (h2 - 0.5) * 1.15 + 0.16 * sin(ph * 2.2 + fi));
-      vec2 dir = normalize(vec2(1.0, 0.35 * cos(ph * 2.2 + fi)));
-      glow += fishDash(p - c, dir, 0.42) * (0.35 + 0.65 * h2);
-    }
-    col += mix(STEEL, ICE, 0.55) * glow * 0.85;
-    float dust = smoothstep(0.985, 1.0, vnoise(p * 42.0 + t * 0.12));
-    col += ICE * dust * 0.25;
-    return col;
+  /* Faceted gem: intersection of slab planes (a generalized distance fn). */
+  float sdCrystal(vec3 p, float r) {
+    float d = abs(p.x);
+    d = max(d, abs(p.y));
+    d = max(d, abs(p.z));
+    float k = 0.57735;
+    d = max(d, abs(dot(p, vec3( k,  k,  k))));
+    d = max(d, abs(dot(p, vec3(-k,  k,  k))));
+    d = max(d, abs(dot(p, vec3( k, -k,  k))));
+    d = max(d, abs(dot(p, vec3( k,  k, -k))));
+    float a = 0.850, b = 0.526;
+    d = max(d, abs(dot(p, vec3(0.0,  a,  b))));
+    d = max(d, abs(dot(p, vec3( b, 0.0,  a))));
+    d = max(d, abs(dot(p, vec3( a,  b, 0.0))));
+    return d - r;
+  }
+  float sdOcta(vec3 p, float s) {
+    p = abs(p);
+    return (p.x + p.y + p.z - s) * 0.57735;
+  }
+  float sdSphere(vec3 p, float r) { return length(p) - r; }
+  float sdTorus(vec3 p, vec2 t) {
+    vec2 q = vec2(length(p.xz) - t.x, p.y);
+    return length(q) - t.y;
+  }
+  float sdRBox(vec3 p, vec3 b, float r) {
+    vec3 q = abs(p) - b;
+    return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0) - r;
   }
 
-  /* 1 — Seed graph: a constellation crystallizing out of the dark. */
-  vec3 scene1(vec2 p, float t) {
-    vec3 col = mix(DEEP, NAVY * 0.9, fbm(p * 1.4 + 3.0) * 0.8);
-    vec2 drift = vec2(t * 0.02, t * -0.013);
-    vec2 g = (p + uMouse * 0.04) * 3.1 + drift;
-    vec2 cell = floor(g);
-    float pts = 0.0, lines = 0.0;
-    vec2 sites[9];
-    int k = 0;
-    for (int y = -1; y <= 1; y++)
-    for (int x = -1; x <= 1; x++) {
-      vec2 c = cell + vec2(float(x), float(y));
-      vec2 j = hash22(c);
-      sites[k++] = c + 0.5 + 0.38 * sin(t * 0.35 + j * 6.283);
-    }
-    for (int i = 0; i < 9; i++) {
-      float d = length(g - sites[i]);
-      pts += exp(-d * d * 60.0);
-      for (int j2 = i + 1; j2 < 9; j2++) {
-        vec2 a = sites[i], b = sites[j2];
-        float seg = length(b - a);
-        if (seg > 1.35) continue;
-        vec2 pa = g - a, ba = b - a;
-        float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
-        float dl = length(pa - ba * h);
-        lines += exp(-dl * dl * 900.0) * (1.0 - seg / 1.35) * 0.5;
+  /* Distance + material id for the active scene. */
+  vec2 map(vec3 pos, float t) {
+    mat3 R = rotY(t * 0.22 + uMouse.x * 0.45) * rotX(sin(t * 0.14) * 0.18 - uMouse.y * 0.3);
+    vec3 q = R * pos;
+    float d = 1e5, m = 0.0;
+
+    if (uId == 0) {
+      d = sdCrystal(q, 0.82);
+
+    } else if (uId == 1) {
+      d = sdOcta(q, 1.02);
+      vec3 c = vec3(cos(t * 0.7), 0.35 * sin(t * 0.9), sin(t * 0.7)) * 1.05;
+      float d2 = sdSphere(q - c, 0.11);
+      if (d2 < d) { d = d2; m = 1.0; }
+
+    } else if (uId == 2) {
+      for (int i = 0; i < 9; i++) {
+        float fi = float(i);
+        float ang = fi * 0.6981 + t * 0.35;
+        vec3 c = vec3(cos(ang) * 0.85, 0.16 * sin(t * 1.1 + fi * 2.0), sin(ang) * 0.85);
+        float d2 = sdOcta(q - c, 0.17 + 0.04 * hash11(fi));
+        d = min(d, d2);
       }
+      float dc = sdSphere(q, 0.20);
+      if (dc < d) { d = dc; m = 1.0; }
+
+    } else if (uId == 3) {
+      float d1 = sdTorus(q, vec2(0.82, 0.018));
+      float d2 = sdTorus(rotX(1.05) * q, vec2(0.82, 0.018));
+      float d3 = sdTorus(rotX(-1.05) * rotY(0.5) * q, vec2(0.82, 0.018));
+      d = min(d1, min(d2, d3));
+      float ang = t * 0.9;
+      vec3 c = vec3(cos(ang), 0.0, sin(ang)) * 0.82;
+      float dm = sdSphere(q - c, 0.09);
+      if (dm < d) { d = dm; m = 2.0; }
+      float dc = sdOcta(q, 0.34);
+      if (dc < d) { d = dc; m = 0.0; }
+
+    } else if (uId == 4) {
+      float d1 = sdRBox(q - vec3(-0.55, 0.0, 0.0), vec3(0.30), 0.03);
+      float pulse = 1.0 + 0.05 * sin(t * 1.6);
+      float d2 = sdSphere(q - vec3(0.58, 0.0, 0.0), 0.34 * pulse);
+      d = d1; m = 0.0;
+      if (d2 < d) { d = d2; m = 2.0; }
+
+    } else {
+      vec3 a = pos - vec3(0.0, 0.42, 0.0);
+      float d1 = sdCrystal(R * a, 0.55);
+      vec3 mp = vec3(pos.x, -0.84 - pos.y, pos.z);
+      mp.x += sin(pos.y * 14.0 + t * 1.2) * 0.012;
+      vec3 b = mp - vec3(0.0, 0.42, 0.0);
+      float d2 = sdCrystal(R * b, 0.55);
+      d = d1; m = 0.0;
+      if (d2 < d) { d = d2; m = 3.0; }
     }
-    col += STEEL * lines * 0.55;
-    col += ICE * pts * 0.5;
-    // the "seed": one bright pulsing core off-center
-    float core = exp(-dot(p - vec2(-0.35, 0.1), p - vec2(-0.35, 0.1)) * 6.0);
-    col += ICE * core * (0.10 + 0.05 * sin(t * 1.7));
-    return col;
+    return vec2(d, m);
   }
 
-  /* 2 — Murmuration: a flowing field of thousands of tiny agents. */
-  vec3 scene2(vec2 p, float t) {
-    vec3 col = mix(DEEP * 0.8, NAVY, smoothstep(-1.0, 1.0, p.x * 0.4 - p.y * 0.3));
-    vec2 w = p + uMouse * 0.05;
-    float n1 = fbm(w * 1.7 + vec2(0.0, t * 0.09));
-    w += 0.45 * vec2(n1 - 0.5, fbm(w * 1.7 + 4.7) - 0.5);
-    float streak = smoothstep(0.55, 0.95, fbm(w * vec2(1.4, 5.5) + vec2(t * 0.22, 0.0)));
-    col += STEEL * streak * 0.4;
-    // dense agent sparkles advected by the same field
-    vec2 sg = w * 34.0;
-    vec2 sc = floor(sg);
-    vec2 sj = hash22(sc);
-    float tw = 0.5 + 0.5 * sin(t * (1.0 + sj.x * 3.0) + sj.y * 6.283);
-    float sd = length(fract(sg) - 0.5 - 0.3 * (sj - 0.5));
-    float spark = exp(-sd * sd * 120.0) * step(0.55, sj.x) * tw;
-    col += ICE * spark * streak * 1.6;
-    // soft swarm mass drifting through
-    vec2 m1 = vec2(0.5 * sin(t * 0.21), 0.3 * cos(t * 0.17));
-    vec2 m2 = vec2(0.45 * sin(t * 0.16 + 2.0), 0.35 * cos(t * 0.23 + 1.0));
-    float mass = exp(-dot(p - m1, p - m1) * 3.5) + exp(-dot(p - m2, p - m2) * 4.5);
-    col += STEEL * mass * 0.14;
-    return col;
-  }
-
-  /* 3 — Trajectories: futures diverging from a single present. */
-  vec3 scene3(vec2 p, float t) {
-    vec3 col = mix(DEEP, vec3(0.03, 0.06, 0.11), smoothstep(-1.0, 1.0, p.y));
-    vec2 origin = vec2(-0.85, 0.0);
-    float x = p.x - origin.x;
-    float reach = smoothstep(0.0, 0.25, x);
-    for (int i = 0; i < 7; i++) {
-      float fi = float(i);
-      float slope = (fi - 3.0) * 0.16;
-      float wob = (vnoise(vec2(x * 2.5 + fi * 9.0, t * 0.15 + fi)) - 0.5) * 0.28 * x;
-      float y = origin.y + slope * x * x * 0.9 + slope * x * 0.35 + wob;
-      float d = abs(p.y - y);
-      bool hot = (i == 4);
-      float w = hot ? 3800.0 : 9000.0;
-      float g = exp(-d * d * w) * reach * step(0.0, x) * step(x, 2.2);
-      col += (hot ? GOLD : STEEL) * g * (hot ? 0.75 : 0.35);
-      // comet running along the line
-      float cx = mod(t * (0.16 + 0.03 * fi) + fi * 0.37, 1.9);
-      vec2 cp = vec2(origin.x + cx, origin.y + slope * cx * cx * 0.9 + slope * cx * 0.35
-                     + (vnoise(vec2(cx * 2.5 + fi * 9.0, t * 0.15 + fi)) - 0.5) * 0.28 * cx);
-      float cd = length(p - cp);
-      col += (hot ? GOLD : ICE) * exp(-cd * cd * 2600.0) * 0.8;
-    }
-    float core = exp(-dot(p - origin, p - origin) * 30.0);
-    col += ICE * core * (0.5 + 0.15 * sin(t * 2.2));
-    return col;
-  }
-
-  /* 4 — Two rooms: rectilinear macro-lab vs. warm playful bokeh. */
-  vec3 scene4(vec2 p, float t) {
-    float cut = p.x * 0.75 + p.y * 0.55 + (fbm(p * 2.6 + t * 0.05) - 0.5) * 0.3;
-    float side = smoothstep(-0.05, 0.05, cut);
-    // macro: cool blueprint grid
-    vec3 lab = mix(DEEP, NAVY * 0.95, 0.6);
-    vec2 gg = p * 5.0 + vec2(0.0, t * 0.04);
-    vec2 gf = abs(fract(gg) - 0.5);
-    float grid = exp(-min(gf.x, gf.y) * min(gf.x, gf.y) * 900.0);
-    lab += STEEL * grid * 0.22;
-    float blip = exp(-length(fract(gg * 0.5) - 0.5) * 14.0)
-               * step(0.93, hash21(floor(gg * 0.5) + floor(t * 0.5)));
-    lab += ICE * blip * 0.9;
-    // micro: warm drifting bokeh
-    vec3 play = mix(DEEP, vec3(0.10, 0.07, 0.03), 0.8);
-    for (int i = 0; i < 10; i++) {
-      float fi = float(i);
-      float h = hash11(fi * 3.1);
-      vec2 c = vec2(
-        sin(t * (0.1 + h * 0.1) + fi * 2.4) * 0.8,
-        cos(t * (0.08 + h * 0.12) + fi * 1.7) * 0.6);
-      float d = length(p - c);
-      float r = 0.05 + h * 0.16;
-      play += GOLD * smoothstep(r, r * 0.5, d) * 0.10 * (0.4 + 0.6 * h);
-    }
-    return mix(lab, play, side);
-  }
-
-  /* 5 — The mirror: a calm horizon reflecting a moving shoal. */
-  vec3 scene5(vec2 p, float t) {
-    float below = smoothstep(0.015, -0.015, p.y);
-    vec2 q = vec2(p.x, abs(p.y));
-    if (p.y < 0.0) q.x += (vnoise(vec2(p.x * 6.0, t * 0.5)) - 0.5) * 0.05 * min(1.0, -p.y * 4.0);
-    vec3 col = mix(DEEP, NAVY * 1.5, exp(-q.y * 2.2));
-    // stars / plankton
-    vec2 sg = q * 26.0 + vec2(t * 0.01, 0.0);
-    vec2 sj = hash22(floor(sg));
-    float sd = length(fract(sg) - 0.5 - 0.3 * (sj - 0.5));
-    float star = exp(-sd * sd * 160.0) * step(0.8, sj.y)
-               * (0.5 + 0.5 * sin(t * (1.0 + sj.x * 2.0) + sj.y * 9.0));
-    col += ICE * star * 0.7;
-    // small shoal drifting above the mirror line
-    float glow = 0.0;
-    for (int i = 0; i < 12; i++) {
-      float fi = float(i);
-      float h = hash11(fi * 5.9);
-      float ph = t * (0.07 + 0.08 * h) + h * 29.0;
-      vec2 c = vec2(-1.45 + mod(ph, 2.9), 0.18 + h * 0.55 + 0.08 * sin(ph * 2.0 + fi));
-      vec2 dir = normalize(vec2(1.0, 0.3 * cos(ph * 2.0 + fi)));
-      glow += fishDash(q - c, dir, 0.45) * (0.4 + 0.6 * h);
-    }
-    col += mix(STEEL, ICE, 0.5) * glow * 0.8;
-    // mirror line
-    col += ICE * exp(-p.y * p.y * 900.0) * 0.35;
-    col = mix(col, col * 0.55 + DEEP * 0.2, below);
-    return col;
+  vec3 calcNormal(vec3 p, float t) {
+    const vec2 e = vec2(0.0018, -0.0018);
+    return normalize(
+      e.xyy * map(p + e.xyy, t).x + e.yyx * map(p + e.yyx, t).x +
+      e.yxy * map(p + e.yxy, t).x + e.xxx * map(p + e.xxx, t).x);
   }
 
   void main() {
     vec2 uv = vUv;
-    vec2 p = (uv - 0.5) * vec2(uRes.x / uRes.y, 1.0) * 2.0;
-    p += uMouse * 0.03;
+    float aspect = uRes.x / uRes.y;
+    vec2 p = (uv - 0.5) * vec2(aspect, 1.0) * 2.0;
     float t = uTime;
-    vec3 col =
-      uId == 0 ? scene0(p, t) :
-      uId == 1 ? scene1(p, t) :
-      uId == 2 ? scene2(p, t) :
-      uId == 3 ? scene3(p, t) :
-      uId == 4 ? scene4(p, t) :
-                 scene5(p, t);
+
+    /* Object placement: right of the copy on wide screens, above it on tall. */
+    vec2 off = aspect > 1.05 ? vec2(0.58, -0.02) : vec2(0.0, 0.45);
+    if (uId == 5) off = vec2(0.0, 0.05);
+    vec2 sp = p - off;
+
+    /* --- background: paper gradient, dot grid, drifting motes --- */
+    vec3 col = mix(PAPER, PAPER_LO, clamp(uv.y * 0.9 + fbm(p * 1.3) * 0.25 - 0.1, 0.0, 1.0));
+    vec2 gg = p * 9.0;
+    vec2 gf = fract(gg) - 0.5;
+    float dotg = exp(-dot(gf, gf) * 90.0);
+    col = mix(col, STEEL, dotg * 0.045);
+    for (int i = 0; i < 8; i++) {
+      float fi = float(i);
+      float h = hash11(fi * 9.7);
+      vec2 c = vec2(
+        mod(h * 7.0 + t * (0.01 + 0.02 * h), 2.4 * max(aspect, 1.0)) - 1.2 * max(aspect, 1.0),
+        fract(h * 3.7 + t * (0.008 + 0.012 * h)) * 2.4 - 1.2);
+      float dd = length(p - c);
+      col = mix(col, STEEL, exp(-dd * dd * 3000.0) * 0.35);
+    }
+
+    /* --- raymarch the centerpiece --- */
+    vec3 ro = vec3(0.0, 0.0, 3.0);
+    vec3 rd = normalize(vec3(sp, -2.05));
+    float bR = uId == 5 ? 2.3 : 1.7;
+    float bb = dot(rd, -ro);
+    float cc = dot(ro, ro) - bb * bb;
+    float hit = 0.0;
+    vec3 pos = vec3(0.0);
+    float mat = 0.0;
+
+    if (cc < bR * bR) {
+      float tt = max(0.0, bb - bR);
+      float tmax = bb + bR;
+      for (int i = 0; i < 80; i++) {
+        pos = ro + rd * tt;
+        vec2 dm = map(pos, t);
+        if (dm.x < 0.0022) { hit = 1.0; mat = dm.y; break; }
+        tt += dm.x;
+        if (tt > tmax) break;
+      }
+    }
+
+    if (hit > 0.5) {
+      vec3 n = calcNormal(pos, t);
+      vec3 L = normalize(vec3(0.55, 0.85, 0.55));
+      float key = clamp(dot(n, L), 0.0, 1.0);
+      float back = clamp(dot(n, normalize(vec3(-0.6, -0.2, 0.4))), 0.0, 1.0);
+      vec3 base = mix(vec3(0.665, 0.745, 0.825), vec3(0.985, 0.995, 1.0), key);
+      base += vec3(0.06, 0.09, 0.12) * back;
+      float fr = pow(1.0 - clamp(dot(n, -rd), 0.0, 1.0), 3.0);
+      base = mix(base, STEEL * 0.85, fr * 0.45);
+      float spec = pow(clamp(dot(reflect(-L, n), -rd), 0.0, 1.0), 42.0);
+      base += vec3(1.0) * spec * 0.55;
+      if (mat > 0.5 && mat < 1.5) base = mix(base, STEEL, 0.65) + spec * 0.3;
+      if (mat > 1.5 && mat < 2.5) base = mix(base, GOLD, 0.60) + spec * 0.3;
+      if (mat > 2.5) base = mix(base, PAPER_LO, 0.55); /* reflection copy, washed out */
+      col = base;
+    } else {
+      /* soft contact shadow under the object */
+      float sh = exp(-(sp.x * sp.x * 2.6 + (sp.y + 0.72) * (sp.y + 0.72) * 26.0));
+      col *= 1.0 - sh * 0.16;
+      if (uId == 5) {
+        /* mirror line */
+        col = mix(col, STEEL, exp(-(p.y + 0.42) * (p.y + 0.42) * 2200.0) * 0.25);
+        col = mix(col, PAPER_LO, smoothstep(-0.42, -1.2, p.y) * 0.5);
+      }
+    }
+
     fragColor = vec4(col, 1.0);
   }`;
 
@@ -354,8 +338,8 @@
   out vec4 fragColor;
   uniform sampler2D tA;
   uniform sampler2D tB;
-  uniform float uProg;   // 0..1 between the two scenes
-  uniform float uVel;    // smoothed scroll velocity
+  uniform float uProg;
+  uniform float uVel;
   uniform float uTime;
   uniform vec2 uRes;
   ${HELPERS}
@@ -384,9 +368,9 @@
     // Diagonal cut, edge broken up by fbm so it reads as a shard of ice.
     float noise = fbm(uv * vec2(3.0, 2.2) + 7.0) - 0.5;
     float coord = uv.x * 0.32 + (1.0 - uv.y) * 0.68 + noise * 0.22;
-    float thr = t * 1.5 - 0.25;            // sweeps [-0.25, 1.25]
-    float m = smoothstep(thr + 0.055, thr - 0.055, coord); // 1 = show B
-    float band = exp(-pow((coord - thr) * 5.0, 2.0));      // near-edge weight
+    float thr = t * 1.5 - 0.25;
+    float m = smoothstep(thr + 0.055, thr - 0.055, coord);
+    float band = exp(-pow((coord - thr) * 5.0, 2.0));
 
     // Barrel distortion, strongest mid-transition and with velocity.
     vec2 c = uv - 0.5;
@@ -403,13 +387,14 @@
     vec3 colB = spectral(tB, clamp(uvB, 0.001, 0.999), dir, ca);
     vec3 col = mix(colA, colB, m);
 
-    // Edge glint along the cut.
-    col += vec3(0.66, 0.85, 0.96) * band * 0.10 * (0.5 + v);
+    // Frost shadow along the cut (a dark seam reads better on white).
+    col *= 1.0 - band * 0.13 * (0.6 + v);
+    col = mix(col, vec3(0.29, 0.47, 0.68), band * 0.05);
 
-    // Vignette + animated grain (hides banding in the gradients).
-    col *= 1.0 - 0.32 * dot(c, c) * 1.6;
+    // Cool corners + animated grain (hides banding in the gradients).
+    col = mix(col, col * vec3(0.955, 0.975, 1.0), dot(c, c) * 1.9);
     float g = hash21(uv * uRes + fract(uTime) * 373.7) - 0.5;
-    col += g * 0.028;
+    col += g * 0.017;
 
     fragColor = vec4(col, 1.0);
   }`;
@@ -451,7 +436,7 @@
   gl.bindBuffer(gl.ARRAY_BUFFER, quad);
   gl.bufferData(
     gl.ARRAY_BUFFER,
-    new Float32Array([-1, -1, 3, -1, -1, 3]), // fullscreen triangle
+    new Float32Array([-1, -1, 3, -1, -1, 3]),
     gl.STATIC_DRAW
   );
   gl.enableVertexAttribArray(0);
@@ -521,13 +506,12 @@
   }
 
   let last = performance.now();
-  let frozenTime = 40.0; // pleasant static frame for reduced-motion users
+  const frozenTime = 40.0; // pleasant static frame for reduced-motion users
 
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
 
-    // Frame-rate-independent damping toward the raw scroll position.
     const target = rawProgress();
     const k = 1 - Math.exp(-dt * 7.5);
     const prev = smooth;
@@ -542,7 +526,7 @@
 
     const a = Math.min(N - 2, Math.max(0, Math.floor(smooth)));
     let t = smooth - a;
-    if (reducedMotion) t = Math.round(t); // hard cut, no swirl
+    if (reducedMotion) t = Math.round(t);
     const time = reducedMotion ? frozenTime : now / 1000;
 
     renderScene(targetA, a, time);
