@@ -3,18 +3,49 @@ import { useEffect, useRef, useState } from "react";
 
 const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
 
-type Item = { id: string; icon: string };
+// SnapTrade-supported brokerages (https://snaptrade.com/brokerage-integrations)
+const SNAPTRADE_BROKERAGES = [
+  "Robinhood",
+  "Fidelity",
+  "Charles Schwab",
+  "E*TRADE",
+  "Interactive Brokers",
+  "Webull",
+  "Vanguard",
+  "Alpaca",
+  "Tradier",
+  "Tastytrade",
+  "Public",
+  "Moomoo",
+  "SoFi Invest",
+  "Ally Invest",
+  "Questrade",
+  "Wealthsimple",
+  "Trading 212",
+  "DEGIRO",
+  "Stake",
+  "Zerodha",
+  "eToro",
+  "Coinbase",
+  "Kraken",
+  "Gemini",
+  "Binance.US",
+  "Crypto.com",
+];
 
+type Item = { id: string; short: string; color: string };
+
+// Arc carousel cycles through the major SnapTrade brokerages
 const INITIAL_ITEMS: Item[] = [
-  { id: "pointpay", icon: "https://qclay.design/lovable/synex/pointpay.svg" },
-  { id: "binance", icon: "https://qclay.design/lovable/synex/binance.svg" },
-  { id: "fox", icon: "https://qclay.design/lovable/synex/fox.svg" },
-  { id: "shield", icon: "https://qclay.design/lovable/synex/shield.svg" },
-  { id: "core", icon: "https://qclay.design/lovable/synex/coreBG.png" }, // CENTER
-  { id: "kukoin", icon: "https://qclay.design/lovable/synex/kukoin.svg" },
-  { id: "71", icon: "https://qclay.design/lovable/synex/71.svg" },
-  { id: "S", icon: "https://qclay.design/lovable/synex/S.svg" },
-  { id: "bitcoinshield", icon: "https://qclay.design/lovable/synex/bitcoinshield.svg" },
+  { id: "robinhood", short: "RH", color: "#00C805" },
+  { id: "fidelity", short: "Fi", color: "#4F9E20" },
+  { id: "schwab", short: "CS", color: "#00A0DF" },
+  { id: "ibkr", short: "IB", color: "#D91222" },
+  { id: "core", short: "", color: "" }, // CENTER
+  { id: "webull", short: "Wb", color: "#0057FF" },
+  { id: "coinbase", short: "Cb", color: "#0052FF" },
+  { id: "vanguard", short: "Vg", color: "#96151D" },
+  { id: "etrade", short: "ET", color: "#6633CC" },
 ];
 
 // Indices 0..8 map to slot positions -4..+4 relative to center (index 4).
@@ -81,15 +112,15 @@ export default function Integrations() {
             viewport={{ once: true, amount: 0.6 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="text-black/50 text-sm font-medium">INTEGRATIONS</span>
+            <span className="text-black/50 text-sm font-medium">INTEGRATIONS · POWERED BY SNAPTRADE</span>
           </motion.div>
           <h2 className="mt-[25px] text-4xl md:text-5xl font-medium leading-[1.15] text-black">
-            {"Seamlessly connected".split(" ").map((w, i) => (
+            {"Trade from the brokerage".split(" ").map((w, i) => (
               <RevealWord key={`h1-${i}`} text={w} delay={0.15 + i * 0.08} />
             ))}
             <br />
-            {"to your financial ecosystem".split(" ").map((w, i) => (
-              <RevealWord key={`h2-${i}`} text={w} delay={0.15 + (2 + i) * 0.08} />
+            {"you already use".split(" ").map((w, i) => (
+              <RevealWord key={`h2-${i}`} text={w} delay={0.15 + (3 + i) * 0.08} />
             ))}
           </h2>
         </div>
@@ -167,18 +198,24 @@ export default function Integrations() {
                 className="absolute flex items-center justify-center overflow-hidden shadow-md bg-white pointer-events-none"
                 style={{ zIndex: isCenter ? 20 : 10 }}
               >
-                {/* Icon layer — fades out when slot becomes center */}
-                <motion.img
-                  src={item.icon}
-                  alt={item.id}
+                {/* Brokerage monogram — fades out when slot becomes center */}
+                <motion.span
                   animate={{ opacity: isCenter ? 0 : 1 }}
                   transition={
                     isWrapping
                       ? { duration: 0 }
                       : { duration: 0.5, ease: "easeInOut" }
                   }
-                  className="absolute inset-0 m-auto w-1/2 h-1/2 object-contain"
-                />
+                  className="absolute inset-0 flex items-center justify-center font-bold"
+                  style={{
+                    fontFamily: FONT,
+                    fontSize: 18,
+                    letterSpacing: "-0.5px",
+                    color: item.color || "#111",
+                  }}
+                >
+                  {item.short}
+                </motion.span>
                 {/* Core background layer — fades in when slot becomes center */}
                 <motion.img
                   src="https://qclay.design/lovable/synex/coreBG.png"
@@ -196,17 +233,40 @@ export default function Integrations() {
           })}
         </div>
 
+        {/* Full SnapTrade brokerage marquee */}
+        <div className="relative mt-[50px] overflow-hidden" aria-label="All supported brokerages">
+          <div
+            className="pointer-events-none absolute inset-y-0 left-0 w-24 z-10"
+            style={{ background: "linear-gradient(to right, #FFFFFF, rgba(255,255,255,0))" }}
+          />
+          <div
+            className="pointer-events-none absolute inset-y-0 right-0 w-24 z-10"
+            style={{ background: "linear-gradient(to left, #FFFFFF, rgba(255,255,255,0))" }}
+          />
+          <div className="marquee-track flex w-max items-center gap-3">
+            {[...SNAPTRADE_BROKERAGES, ...SNAPTRADE_BROKERAGES].map((name, i) => (
+              <span
+                key={`${name}-${i}`}
+                className="whitespace-nowrap rounded-full border border-black/10 bg-white px-4 py-2 text-[13px] font-medium text-black/60 shadow-sm"
+                style={{ fontFamily: FONT }}
+              >
+                {name}
+              </span>
+            ))}
+          </div>
+        </div>
+
         {/* Bottom text */}
-        <div className="mt-[60px] flex flex-col items-center text-center">
+        <div className="mt-[50px] flex flex-col items-center text-center">
           <p className="text-black text-lg font-medium">
-            {"30+ integrations. Real-time sync. Zero fragmentation."
+            {"Every SnapTrade brokerage. Real-time sync. Zero fragmentation."
               .split(" ")
               .map((w, i) => (
                 <RevealWord key={`b1-${i}`} text={w} delay={i * 0.06} />
               ))}
           </p>
           <p className="mt-[15px] max-w-[475px] text-black/30 text-lg font-medium">
-            {"Connect exchanges, custodians, on-chain wallets, and data providers — all synchronized in one unified system for real-time visibility and control."
+            {"Connect Robinhood, Fidelity, Schwab, Interactive Brokers, Coinbase, and every other SnapTrade-supported brokerage. Trades execute in your own account — synchronized in real time."
               .split(" ")
               .map((w, i) => (
                 <RevealWord key={`b2-${i}`} text={w} delay={0.2 + i * 0.04} />

@@ -112,7 +112,7 @@ export default function IntelligenceLayers() {
   const idIndex = Object.fromEntries(NODES.map((n, i) => [n.id, i]));
 
   return (
-    <section className="relative w-full bg-white overflow-hidden">
+    <section id="platform" className="relative w-full bg-white overflow-hidden">
       {/* Grid overlay with fading mask */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -157,7 +157,7 @@ export default function IntelligenceLayers() {
             </span>
             <br />
             <span className="text-black">
-              {"Multiple intelligence layers.".split(" ").map((w, i) => (
+              {"Every signal on Earth.".split(" ").map((w, i) => (
                 <RevealWord key={`b-${i}`} text={w} delay={(2 + i) * 0.08} />
               ))}
             </span>
@@ -248,11 +248,11 @@ export default function IntelligenceLayers() {
                 className="absolute -translate-x-1/2 text-center whitespace-nowrap text-black/30 text-[12px] leading-[16px]"
                 style={{ fontFamily: FONT, fontWeight: 500, left: 0, top: 50 }}
               >
-                Unified capital system
+                Self-evolving model swarm
                 <br />
-                AI-powered orchestration
+                11,000+ signal streams fused
                 <br />
-                Central intelligence layer
+                Decisions in microseconds
               </div>
             </NodeWrap>
 
@@ -268,9 +268,9 @@ export default function IntelligenceLayers() {
                 className="absolute -translate-x-1/2 text-black/60 text-[13px] uppercase text-center leading-tight"
                 style={{ fontFamily: FONT, fontWeight: 500, left: 0, top: 22 }}
               >
-                AI
+                Macro &amp; Rates
                 <br />
-                Intelligence
+                Radar
               </div>
             </NodeWrap>
 
@@ -290,9 +290,9 @@ export default function IntelligenceLayers() {
                 className="absolute -translate-x-1/2 text-black/60 text-[13px] uppercase text-center leading-tight"
                 style={{ fontFamily: FONT, fontWeight: 500, left: 0, top: 22 }}
               >
-                Web3
+                Satellite &amp;
                 <br />
-                Layer
+                Geospatial
               </div>
             </NodeWrap>
 
@@ -308,9 +308,9 @@ export default function IntelligenceLayers() {
                 className="absolute -translate-x-1/2 text-black/60 text-[13px] uppercase text-center leading-tight"
                 style={{ fontFamily: FONT, fontWeight: 500, left: 0, top: 20 }}
               >
-                Data
+                Alternative Data
                 <br />
-                Infrastructure
+                Exhaust
               </div>
             </NodeWrap>
 
@@ -326,9 +326,9 @@ export default function IntelligenceLayers() {
                 className="absolute -translate-x-1/2 text-black/60 text-[13px] uppercase text-center leading-tight"
                 style={{ fontFamily: FONT, fontWeight: 500, left: 0, top: 22 }}
               >
-                Traditional
+                Sentiment &amp;
                 <br />
-                Markets
+                Dark Flows
               </div>
             </NodeWrap>
 
@@ -383,18 +383,18 @@ export default function IntelligenceLayers() {
             {[
               {
                 icon: "https://qclay.design/lovable/synex/global.svg",
-                title: "Unified infrastructure",
-                desc: "All financial layers connected into one structured system",
+                title: "Planetary-scale scanning",
+                desc: "Satellite imagery of ports and parking lots, shipping manifests, power-grid draw, and freight rates — digested in real time",
               },
               {
                 icon: "https://qclay.design/lovable/synex/chart-2.svg",
-                title: "Cross-market intelligence",
-                desc: "Analyze and operate across Web3, traditional finance, and data systems",
+                title: "Macro & micro fusion",
+                desc: "Central-bank language drift, yield-curve microstructure, options skew, dark-pool prints, and insider filings fused into one model",
               },
               {
                 icon: "https://qclay.design/lovable/synex/zap-1.svg",
-                title: "Seamless execution",
-                desc: "From insight to action — everything happens in one environment.",
+                title: "Environmental & event intel",
+                desc: "Weather systems, crop yields, geopolitical risk feeds, and supply-chain shocks — priced before the market reacts",
               },
             ].map((item, i) => (
               <motion.div

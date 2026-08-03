@@ -8,7 +8,6 @@ import IntelligenceLayers from "../components/qsigma/IntelligenceLayers";
 import Integrations from "../components/qsigma/Integrations";
 import WhyQSigma from "../components/qsigma/WhyQSigma";
 import Strategies from "../components/qsigma/Strategies";
-import Performance from "../components/qsigma/Performance";
 import Calculator from "../components/qsigma/Calculator";
 import Comparison from "../components/qsigma/Comparison";
 import Pricing from "../components/qsigma/Pricing";
@@ -47,7 +46,6 @@ const Index = () => {
           <Integrations />
           <WhyQSigma />
           <Strategies />
-          <Performance />
           <Calculator />
           <Comparison />
           <Pricing />

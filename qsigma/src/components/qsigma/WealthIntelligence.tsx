@@ -503,30 +503,39 @@ export default function WealthIntelligence() {
               title="Global capital flow"
               right={<img src="https://qclay.design/lovable/synex/groupDot.svg" alt="" className="h-2 w-auto opacity-90" />}
             />
-            <div className="px-5 mt-5 text-white">
+            <div className="px-5 mt-5 text-white relative z-10 flex flex-col">
               <CountUp
                 value="$ 52,480,000"
                 delay={0.1}
                 duration={1.8}
-                className="block"
-                style={{ fontFamily: FONT, fontWeight: 500, fontSize: 30, letterSpacing: "-0.02em" }}
+                className="block whitespace-nowrap"
+                style={{
+                  fontFamily: FONT,
+                  fontWeight: 500,
+                  fontSize: 28,
+                  lineHeight: "38px",
+                  letterSpacing: "-0.02em",
+                }}
               />
               {/* solid divider under price */}
-              <div className="border-t border-white/25 mt-3" />
+              <div className="border-t border-white/25" style={{ marginTop: 14 }} />
               {/* label — 10px below divider */}
               <FadeIn delay={0.45} className="flex items-center gap-2" style={{ marginTop: 10 }}>
                 <span
-                  className="inline-block w-2 h-2 rounded-full"
+                  className="inline-block w-2 h-2 rounded-full shrink-0"
                   style={{ backgroundColor: "#FF8E3D" }}
                 />
-                <span className="text-[11px] text-white/70 uppercase tracking-wider" style={{ fontFamily: FONT }}>
+                <span className="text-[11px] text-white/70 uppercase tracking-wider whitespace-nowrap" style={{ fontFamily: FONT }}>
                   Total allocated capital
                 </span>
               </FadeIn>
             </div>
 
-            {/* Map raised higher */}
-            <div className="absolute inset-x-0 flex justify-center pointer-events-none px-5" style={{ bottom: 40 }}>
+            {/* Map anchored low, capped so it can never ride up into the price block */}
+            <div
+              className="absolute inset-x-0 flex justify-center pointer-events-none px-5 z-0"
+              style={{ bottom: 24, maxHeight: "52%", overflow: "hidden", alignItems: "flex-end" }}
+            >
               <img src="https://qclay.design/lovable/synex/Union.svg" alt="" className="w-full opacity-90" />
             </div>
           </Card>

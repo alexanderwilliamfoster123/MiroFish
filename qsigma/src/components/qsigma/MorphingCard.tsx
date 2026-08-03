@@ -100,8 +100,9 @@ export default function MorphingCard() {
   });
   const p = useSpring(scrollYProgress, { stiffness: 60, damping: 28, mass: 0.5 });
 
-  // Morph progress 0→1 across phase (scaled for 115vh section)
-  const morph = useTransform(p, [0.026, 0.248], [0, 1]);
+  // Morph progress 0→1 across phase (scaled for 115vh section).
+  // Compressed range so the card settles — and its text becomes readable — earlier in the scroll.
+  const morph = useTransform(p, [0.02, 0.14], [0, 1]);
   const cardVisibility = useTransform(p, (v) => (v > 0.001 ? 1 : 0));
 
   // Hide the source green card in section 2 the moment the morph card appears
@@ -117,11 +118,11 @@ export default function MorphingCard() {
       anchorEl.style.opacity = "";
     };
   }, [cardVisibility]);
-  const oldOverlayOpacity = useTransform(p, [0.0, 0.065, 0.339], [0, 1, 0]);
-  const contentOpacity = useTransform(p, [0.274, 0.443], [0, 1]);
-  const tooltipOpacity = useTransform(p, [0.391, 0.535], [0, 1]);
-  const tooltipLeftX = useTransform(p, [0.391, 0.535], [-30, 0]);
-  const tooltipRightX = useTransform(p, [0.391, 0.535], [30, 0]);
+  const oldOverlayOpacity = useTransform(p, [0.0, 0.05, 0.19], [0, 1, 0]);
+  const contentOpacity = useTransform(p, [0.13, 0.22], [0, 1]);
+  const tooltipOpacity = useTransform(p, [0.18, 0.28], [0, 1]);
+  const tooltipLeftX = useTransform(p, [0.18, 0.28], [-30, 0]);
+  const tooltipRightX = useTransform(p, [0.18, 0.28], [30, 0]);
   // Pointer-driven 3D tilt
   const rxRaw = useMotionValue(0);
   const ryRaw = useMotionValue(0);
@@ -178,7 +179,7 @@ export default function MorphingCard() {
   });
   const top = useTransform(p, (pv) => {
     if (!anchor) return viewport.h / 2 - BIG_H / 2;
-    const m = Math.min(1, Math.max(0, (pv - 0.026) / (0.248 - 0.026)));
+    const m = Math.min(1, Math.max(0, (pv - 0.02) / (0.14 - 0.02)));
     // Once the section has scrolled past the morph endpoint, follow it so the
     // card stays anchored to the third section instead of sticking to viewport.
     const scrollPast = Math.max(0, viewport.h - sectionBottomRef.current);
