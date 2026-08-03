@@ -115,13 +115,6 @@ export default function WhyQSigma() {
               ))}
             </span>
           </h2>
-          <p className="mt-6 max-w-[475px] text-black/55 text-lg font-medium">
-            {"One upfront cost of $2,497 — not $10,000 — with regulated US brokerages, CPA-audited returns, and AI that actually evolves."
-              .split(" ")
-              .map((w, i) => (
-                <RevealWord key={`d-${i}`} text={w} delay={i * 0.04} />
-              ))}
-          </p>
         </div>
 
         {/* Comparison table */}

@@ -59,9 +59,10 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
             }}
             onClick={close}
           />
+          {/* Whisper of a veil — keeps the moss vibrant while lifting card contrast */}
           <div
             className="absolute inset-0 pointer-events-none"
-            style={{ background: "rgba(5, 5, 12, 0.45)" }}
+            style={{ background: "rgba(5, 5, 12, 0.10)" }}
           />
 
           <motion.div
@@ -80,7 +81,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
               <X size={16} />
             </button>
 
-            <GlassCard className="w-full">
+            <GlassCard className="w-full bg-black/45 border-white/25 shadow-[0_30px_80px_rgba(5,5,12,0.35)]">
               {done ? (
                 <GlassCardContent className="py-10 text-center">
                   <GlassCardTitle className="text-lg">
