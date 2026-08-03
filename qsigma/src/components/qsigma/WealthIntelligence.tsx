@@ -120,7 +120,7 @@ function WordsReveal({
   return (
     <span className={className} style={style}>
       {words.map((w, i) => (
-        <span key={i} style={{ display: "inline-block", overflow: "hidden" }}>
+        <span key={i} style={{ display: "inline-block", overflow: "hidden", paddingTop: "0.08em", paddingBottom: "0.15em" }}>
           <motion.span
             style={{ display: "inline-block", willChange: "transform, filter, opacity" }}
             initial={{ opacity: 0, filter: "blur(12px)", y: "0.4em" }}

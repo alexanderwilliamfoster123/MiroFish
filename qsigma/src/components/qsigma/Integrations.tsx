@@ -120,7 +120,7 @@ export default function Integrations() {
             viewport={{ once: true, amount: 0.6 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="text-black/50 text-sm font-medium">INTEGRATIONS · POWERED BY SNAPTRADE</span>
+            <span className="text-black/50 text-sm font-medium">INTEGRATIONS</span>
           </motion.div>
           <h2 className="mt-[25px] text-4xl md:text-5xl font-medium leading-[1.15] text-black">
             {"Trade from the brokerage".split(" ").map((w, i) => (
@@ -242,7 +242,7 @@ export default function Integrations() {
         </div>
 
         {/* Full SnapTrade brokerage marquee */}
-        <div className="relative mt-[50px] overflow-hidden" aria-label="All supported brokerages">
+        <div className="relative mt-[50px] overflow-hidden" aria-label="Supported brokerages">
           <div
             className="pointer-events-none absolute inset-y-0 left-0 w-24 z-10"
             style={{ background: "linear-gradient(to right, #FFFFFF, rgba(255,255,255,0))" }}
@@ -273,14 +273,14 @@ export default function Integrations() {
         {/* Bottom text */}
         <div className="mt-[50px] flex flex-col items-center text-center">
           <p className="text-black text-lg font-medium">
-            {"Every SnapTrade brokerage. Real-time sync. Zero fragmentation."
+            {"30+ brokerages. Real-time sync. Zero fragmentation."
               .split(" ")
               .map((w, i) => (
                 <RevealWord key={`b1-${i}`} text={w} delay={i * 0.06} />
               ))}
           </p>
           <p className="mt-[15px] max-w-[475px] text-black/30 text-lg font-medium">
-            {"Connect Robinhood, Fidelity, Schwab, Chase, Citi, Interactive Brokers, Coinbase, and every other SnapTrade-supported brokerage. Trades execute in your own account — synchronized in real time."
+            {"Connect Robinhood, Fidelity, Schwab, Chase, Citi, Interactive Brokers, Coinbase, and every other major brokerage. Trades execute in your own account — synchronized in real time."
               .split(" ")
               .map((w, i) => (
                 <RevealWord key={`b2-${i}`} text={w} delay={0.2 + i * 0.04} />
@@ -294,7 +294,7 @@ export default function Integrations() {
 
 function RevealWord({ text, delay = 0 }: { text: string; delay?: number }) {
   return (
-    <span style={{ display: "inline-block", overflow: "hidden" }}>
+    <span style={{ display: "inline-block", overflow: "hidden", paddingTop: "0.08em", paddingBottom: "0.15em" }}>
       <motion.span
         style={{ display: "inline-block", willChange: "transform, filter, opacity" }}
         initial={{ opacity: 0, filter: "blur(12px)", y: "0.4em" }}

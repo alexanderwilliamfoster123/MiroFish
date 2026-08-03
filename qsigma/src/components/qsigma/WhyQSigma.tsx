@@ -94,24 +94,28 @@ export default function WhyQSigma() {
         {/* Header */}
         <div className="flex flex-col items-center text-center">
           <motion.div
-            className="px-3 py-1.5 rounded-md border border-white/20 bg-transparent"
+            className="px-3 py-1.5 rounded-md border border-black/25 bg-transparent"
             initial={{ scale: 0, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="text-white/60 text-sm font-medium">WHY QSIGMA</span>
+            <span className="text-black/60 text-sm font-medium">WHY QSIGMA</span>
           </motion.div>
-          <h2 className="mt-6 text-4xl md:text-5xl font-medium leading-[1.15] text-white">
-            {"Same category,".split(" ").map((w, i) => (
-              <RevealWord key={`h1-${i}`} text={w} delay={0.15 + i * 0.08} />
-            ))}
+          <h2 className="mt-6 text-4xl md:text-5xl font-medium leading-[1.15]">
+            <span className="text-black/35">
+              {"Same category,".split(" ").map((w, i) => (
+                <RevealWord key={`h1-${i}`} text={w} delay={0.15 + i * 0.08} />
+              ))}
+            </span>
             <br />
-            {"different league".split(" ").map((w, i) => (
-              <RevealWord key={`h2-${i}`} text={w} delay={0.15 + (2 + i) * 0.08} />
-            ))}
+            <span className="text-[#05050C]">
+              {"different league".split(" ").map((w, i) => (
+                <RevealWord key={`h2-${i}`} text={w} delay={0.15 + (2 + i) * 0.08} />
+              ))}
+            </span>
           </h2>
-          <p className="mt-6 max-w-[475px] text-white/75 text-lg font-medium">
+          <p className="mt-6 max-w-[475px] text-black/55 text-lg font-medium">
             {"No upfront fees, regulated US brokerages, CPA-audited returns, and AI that actually evolves — compare us to the rest."
               .split(" ")
               .map((w, i) => (
@@ -130,11 +134,11 @@ export default function WhyQSigma() {
         >
           {/* Column headers */}
           <div className="grid grid-cols-[3fr_1fr_1fr] items-end mb-3 px-1">
-            <div className="text-white/75 text-sm font-medium pl-7">
+            <div className="text-black/60 text-sm font-medium pl-7">
               Core capabilities
             </div>
             <div />
-            <div className="text-white/75 text-sm font-medium text-center">
+            <div className="text-black/60 text-sm font-medium text-center">
               Typical competitors
             </div>
           </div>
@@ -142,7 +146,7 @@ export default function WhyQSigma() {
           {/* Row container — left + right glass plate, with center column overlapping */}
           <div className="relative">
             {/* Left + right glass plate (single block) */}
-            <div className="grid grid-cols-[3fr_1fr_1fr] bg-black/25 backdrop-blur-2xl rounded-2xl border border-white/20 overflow-hidden">
+            <div className="grid grid-cols-[3fr_1fr_1fr] bg-black/40 backdrop-blur-2xl rounded-2xl border border-white/20 overflow-hidden">
               {/* Left column — labels */}
               <div className="flex flex-col py-7 px-3 sm:px-7">
                 {ROWS.map((r, i) => (
@@ -289,7 +293,7 @@ export default function WhyQSigma() {
 
 function RevealWord({ text, delay = 0 }: { text: string; delay?: number }) {
   return (
-    <span style={{ display: "inline-block", overflow: "hidden" }}>
+    <span style={{ display: "inline-block", overflow: "hidden", paddingTop: "0.08em", paddingBottom: "0.15em" }}>
       <motion.span
         style={{ display: "inline-block", willChange: "transform, filter, opacity" }}
         initial={{ opacity: 0, filter: "blur(12px)", y: "0.4em" }}

@@ -127,7 +127,7 @@ export default function TakeControl({ onRequestAccess }: { onRequestAccess?: () 
 
 function RevealWord({ text, delay = 0 }: { text: string; delay?: number }) {
   return (
-    <span style={{ display: "inline-block", overflow: "hidden" }}>
+    <span style={{ display: "inline-block", overflow: "hidden", paddingTop: "0.08em", paddingBottom: "0.15em" }}>
       <motion.span
         style={{ display: "inline-block", willChange: "transform, filter, opacity" }}
         initial={{ opacity: 0, filter: "blur(12px)", y: "0.4em" }}
