@@ -31,7 +31,7 @@ const Index = () => {
 
   return (
     <main>
-      <h1 className="sr-only">QSigma — A New Standard in Wealth Management</h1>
+      <h1 className="sr-only">QSigma — A New Standard in Algorithmic Trading</h1>
       <Navbar dark={dark} onLaunch={() => setAuthOpen(true)} />
       <div className="relative">
         <div className="sticky top-0 z-0" style={{ height: "calc(100vh + 80px)" }}>

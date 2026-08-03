@@ -64,7 +64,7 @@ const Hero = () => {
             className="block"
             style={{ color: "#05050C" }}
           >
-            in Wealth Management
+            in Algorithmic Trading
           </motion.span>
         </h2>
 
@@ -104,7 +104,7 @@ const Hero = () => {
         >
           <img
             src={ASSETS.dashboard}
-            alt="QSigma wealth management dashboard"
+            alt="QSigma algorithmic trading dashboard"
             className="w-full h-auto object-contain"
             style={{
               borderRadius: "12px 12px 0 0",
