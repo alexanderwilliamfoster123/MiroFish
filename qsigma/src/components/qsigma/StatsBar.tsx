@@ -13,7 +13,8 @@ const StatsBar = () => {
       id="stats"
       style={{ backgroundColor: "#05050C", padding: "96px 24px" }}
     >
-      <div className="mx-auto grid max-w-[1100px] grid-cols-2 gap-y-12 lg:grid-cols-4">
+      <div className="mx-auto grid max-w-[1100px] grid-cols-2 gap-y-12 lg:grid-cols-4"
+      >
         {STATS.map((stat, i) => (
           <FadeUp key={stat.label} delay={i * 0.08} className="text-center">
             <div
@@ -36,6 +37,22 @@ const StatsBar = () => {
           </FadeUp>
         ))}
       </div>
+      <FadeUp className="mt-14 text-center" delay={0.3}>
+        <a
+          href="#strategies"
+          className="text-[13px] transition-colors duration-200"
+          style={{
+            fontWeight: 500,
+            letterSpacing: "0.5px",
+            color: "rgba(255,255,255,0.50)",
+            textDecoration: "none",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.50)")}
+        >
+          See the strategies behind the numbers →
+        </a>
+      </FadeUp>
     </section>
   );
 };

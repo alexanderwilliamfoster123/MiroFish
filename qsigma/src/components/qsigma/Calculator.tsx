@@ -314,6 +314,18 @@ const Calculator = () => {
             </p>
           </div>
         </FadeUp>
+
+        <FadeUp className="mt-10 text-center" delay={0.15}>
+          <a
+            href="#strategies"
+            className="text-[14px] transition-colors duration-200"
+            style={{ fontWeight: 500, color: "rgba(255,255,255,0.55)", textDecoration: "none" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
+          >
+            Stop rewinding — pick your portfolio →
+          </a>
+        </FadeUp>
       </div>
     </section>
   );

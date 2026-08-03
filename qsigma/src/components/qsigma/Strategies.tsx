@@ -3,6 +3,7 @@ import FadeUp from "./FadeUp";
 import FactsheetModal, { FactsheetData } from "./FactsheetModal";
 import PortfolioCard from "@/components/ui/portfolio-card";
 import StrategyTicker, { StrategyTickerProps } from "@/components/ui/strategy-ticker";
+import { openCheckout } from "@/lib/checkout";
 
 type PortfolioData = FactsheetData;
 
@@ -315,7 +316,7 @@ const Strategies = () => {
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           {FLAGSHIPS.map((p, i) => (
             <FadeUp key={p.name} delay={i * 0.08}>
-              <PortfolioCard {...p} onOpenFactsheet={() => setSheet(p)} />
+              <PortfolioCard {...p} onOpenFactsheet={() => setSheet(p)} onSubscribe={() => openCheckout(p.name)} />
             </FadeUp>
           ))}
         </div>
@@ -325,7 +326,7 @@ const Strategies = () => {
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           {PORTFOLIOS.map((p, i) => (
             <FadeUp key={p.name} delay={(i % 3) * 0.08}>
-              <PortfolioCard {...p} onOpenFactsheet={() => setSheet(p)} />
+              <PortfolioCard {...p} onOpenFactsheet={() => setSheet(p)} onSubscribe={() => openCheckout(p.name)} />
             </FadeUp>
           ))}
         </div>
@@ -362,7 +363,7 @@ const Strategies = () => {
         <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           {POLITICIANS.map((p, i) => (
             <FadeUp key={p.name} delay={(i % 3) * 0.08}>
-              <StrategyTicker {...p} />
+              <StrategyTicker {...p} onSubscribe={() => openCheckout(p.name)} />
             </FadeUp>
           ))}
         </div>
@@ -382,7 +383,11 @@ const Strategies = () => {
       <FactsheetModal
         portfolio={sheet}
         onClose={() => setSheet(null)}
-        onSubscribe={() => setSheet(null)}
+        onSubscribe={() => {
+          const name = sheet?.name;
+          setSheet(null);
+          if (name) openCheckout(name);
+        }}
       />
     </section>
   );

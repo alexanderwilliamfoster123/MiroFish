@@ -1,4 +1,5 @@
 import FadeUp from "./FadeUp";
+import { openCheckout } from "@/lib/checkout";
 
 const FEATURES = [
   "Every strategy and flagship portfolio, live capital",
@@ -128,6 +129,7 @@ const Pricing = () => {
             </ul>
 
             <button
+              onClick={() => openCheckout("QSigma All Access")}
               className="mt-9 w-full transition-colors duration-200 hover:bg-[#E8E8E4]"
               style={{
                 backgroundColor: "#FFFFFF",

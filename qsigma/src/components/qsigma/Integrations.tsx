@@ -286,6 +286,17 @@ export default function Integrations() {
                 <RevealWord key={`b2-${i}`} text={w} delay={0.2 + i * 0.04} />
               ))}
           </p>
+          <motion.a
+            href="#pricing"
+            className="relative z-40 mt-8 inline-block rounded-full bg-black px-6 py-3 text-[13px] font-semibold text-white transition-colors duration-200 hover:bg-zinc-800"
+            style={{ fontFamily: FONT, textDecoration: "none" }}
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          >
+            Connect your brokerage
+          </motion.a>
         </div>
       </div>
     </section>

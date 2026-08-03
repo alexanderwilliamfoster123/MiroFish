@@ -13,10 +13,21 @@ import Pricing from "../components/qsigma/Pricing";
 import TakeControl from "../components/qsigma/TakeControl";
 import Footer from "../components/qsigma/Footer";
 import AuthModal from "../components/qsigma/AuthModal";
+import CheckoutModal from "../components/qsigma/CheckoutModal";
+import { CHECKOUT_EVENT } from "@/lib/checkout";
 
 const Index = () => {
   const [dark, setDark] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
+  const [checkout, setCheckout] = useState<string | null>(null);
+
+  useEffect(() => {
+    const onCheckout = (e: Event) => {
+      setCheckout((e as CustomEvent<{ name: string }>).detail.name);
+    };
+    window.addEventListener(CHECKOUT_EVENT, onCheckout);
+    return () => window.removeEventListener(CHECKOUT_EVENT, onCheckout);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -52,6 +63,7 @@ const Index = () => {
         </div>
       </div>
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
+      <CheckoutModal portfolio={checkout} onClose={() => setCheckout(null)} />
     </main>
   );
 };

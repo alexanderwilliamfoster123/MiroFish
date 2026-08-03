@@ -414,6 +414,22 @@ export default function IntelligenceLayers() {
             ))}
           </div>
         </div>
+
+        <motion.div
+          className="relative z-10 mt-16 text-center"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <a
+            href="#strategies"
+            className="text-[14px] transition-opacity duration-200 hover:opacity-60"
+            style={{ fontFamily: FONT, fontWeight: 500, color: "#05050C", textDecoration: "none" }}
+          >
+            Put the engine to work →
+          </a>
+        </motion.div>
       </div>
     </section>
   );
