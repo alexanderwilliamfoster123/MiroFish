@@ -4,7 +4,7 @@ const STATS = [
   { value: "$2.4B", label: "Assets under strategy" },
   { value: "31,000+", label: "Active subscribers" },
   { value: "12", label: "Live AI strategies" },
-  { value: "+11.2%", label: "Avg. annual outperformance", accent: true },
+  { value: "+33.27%", label: "Avg. annual return", accent: true },
 ];
 
 const StatsBar = () => {
