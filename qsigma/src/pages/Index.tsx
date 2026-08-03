@@ -3,6 +3,8 @@ import StatsBar from "../components/qsigma/StatsBar";
 import Strategies from "../components/qsigma/Strategies";
 import HowItWorks from "../components/qsigma/HowItWorks";
 import Performance from "../components/qsigma/Performance";
+import Calculator from "../components/qsigma/Calculator";
+import Comparison from "../components/qsigma/Comparison";
 import Pricing from "../components/qsigma/Pricing";
 import CtaSection from "../components/qsigma/CtaSection";
 import Footer from "../components/qsigma/Footer";
@@ -16,6 +18,8 @@ const Index = () => {
       <Strategies />
       <HowItWorks />
       <Performance />
+      <Calculator />
+      <Comparison />
       <Pricing />
       <CtaSection />
       <Footer />

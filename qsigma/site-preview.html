@@ -292,6 +292,63 @@
   .perf-label { margin-top: 6px; font-weight: 500; font-size: 14px; color: rgba(255,255,255,0.60); }
   .perf-sub { margin-top: 2px; font-weight: 500; font-size: 12px; color: rgba(255,255,255,0.35); }
 
+  /* ---------- Calculator ---------- */
+  .calc { background: #05050C; padding: 120px 24px; border-top: 1px solid rgba(255,255,255,0.07); }
+  .calc-box {
+    margin-top: 56px; border: 1px solid rgba(255,255,255,0.10); border-radius: 16px;
+    padding: 36px 28px 24px; background: rgba(255,255,255,0.02);
+  }
+  .calc-sentence {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+    font-weight: 500; font-size: 16px; color: rgba(255,255,255,0.55); line-height: 1.6;
+  }
+  @media (min-width: 640px) { .calc-sentence { font-size: 18px; } }
+  .calc-input, .calc-select {
+    font-family: inherit; font-weight: 500; font-size: 16px; color: #FFF;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 10px; padding: 10px 14px; outline: none;
+  }
+  .calc-select { cursor: pointer; }
+  .calc-select option { color: #05050C; }
+  .calc-amount-wrap {
+    display: inline-flex; align-items: center;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 10px;
+  }
+  .calc-amount-wrap .prefix { padding-left: 14px; color: rgba(255,255,255,0.45); font-weight: 500; font-size: 16px; }
+  .calc-amount-wrap input {
+    font-family: inherit; font-weight: 500; font-size: 16px; color: #FFF;
+    background: transparent; border: none; outline: none;
+    padding: 10px 14px 10px 6px; width: 110px;
+  }
+  .calc-out {
+    display: inline-block; font-weight: 500; font-size: 16px; color: #A3B18A;
+    border: 1px solid rgba(163,177,138,0.45); border-radius: 10px;
+    padding: 10px 14px; white-space: nowrap;
+  }
+  .calc-legend { margin: 32px 0 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; padding: 0 4px; }
+  .calc-box svg { width: 100%; height: auto; display: block; }
+  .calc-ticks {
+    margin-top: 8px; display: flex; justify-content: space-between;
+    font-weight: 500; font-size: 12px; color: rgba(255,255,255,0.35);
+  }
+  .calc-note { margin-top: 24px; font-weight: 500; font-size: 12px; color: rgba(255,255,255,0.30); line-height: 1.6; }
+
+  /* ---------- Comparison ---------- */
+  .compare { background: #05050C; padding: 120px 24px; border-top: 1px solid rgba(255,255,255,0.07); }
+  .compare-scroll { margin-top: 56px; overflow-x: auto; }
+  .compare table { width: 100%; min-width: 640px; border-collapse: collapse; border: 1px solid rgba(255,255,255,0.08); }
+  .compare th, .compare td { padding: 22px 24px; }
+  .compare tr { border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .compare th + th, .compare td + td { border-left: 1px solid rgba(255,255,255,0.08); }
+  .compare th { text-align: center; }
+  .compare .th-q { font-weight: 700; font-size: 16px; letter-spacing: -0.4px; color: #FFF; width: 33%; }
+  .compare .th-c { font-weight: 500; font-size: 14px; color: rgba(255,255,255,0.40); width: 33%; }
+  .compare .row-label { font-weight: 500; font-size: 15px; color: rgba(255,255,255,0.85); width: 34%; }
+  .compare .cell { display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 500; font-size: 14px; text-align: center; }
+  .compare .cell.q { color: #FFF; }
+  .compare .cell.c { color: rgba(255,255,255,0.40); }
+
   /* ---------- Pricing ---------- */
   .pricing { background: #F2F2F0; padding: 120px 24px; }
   .tiers { margin-top: 56px; display: grid; grid-template-columns: 1fr; gap: 20px; }
@@ -385,6 +442,7 @@
         <a href="#platform">PLATFORM</a>
         <a href="#strategies">STRATEGIES</a>
         <a href="#performance">PERFORMANCE</a>
+        <a href="#calculator">CALCULATOR</a>
         <a href="#pricing">PRICING</a>
       </div>
       <div class="nav-right">
@@ -536,6 +594,75 @@
           <div class="perf-label">Composite Sharpe</div>
           <div class="perf-sub">since inception</div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CALCULATOR ================= -->
+  <section class="calc dark" id="calculator">
+    <div class="wrap">
+      <div class="fade">
+        <p class="eyebrow-s">Backtested Since 2013</p>
+        <h2 class="h2-s">
+          <span class="ghost">Rewind the Clock,</span>
+          <span class="solid">Run the Numbers</span>
+        </h2>
+        <p class="sect-sub" style="color: rgba(255,255,255,0.40); max-width: 540px;">Every QSigma strategy has been running in our backtesting environment since January 2013. Choose one, pick your starting point, and see what disciplined compounding would have done.</p>
+      </div>
+
+      <div class="calc-box fade">
+        <div class="calc-sentence">
+          <span>If you had deployed</span>
+          <span class="calc-amount-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="calc-amount" min="0" step="500" value="5000" aria-label="Amount deployed" />
+          </span>
+          <span>in</span>
+          <select class="calc-select" id="calc-strat" aria-label="Strategy"></select>
+          <span>in</span>
+          <select class="calc-select" id="calc-month" aria-label="Start month"></select>
+          <select class="calc-select" id="calc-year" aria-label="Start year"></select>
+          <span>your balance today would be</span>
+          <span class="calc-out" id="calc-balance"></span>
+          <span>— a profit of</span>
+          <span class="calc-out" id="calc-profit"></span>
+          <span class="calc-out" id="calc-pct"></span>
+        </div>
+
+        <div class="calc-legend">
+          <span class="legend-item" style="color: rgba(255,255,255,0.85);">
+            <span class="legend-dot" style="background:#A3B18A;"></span> <span id="calc-legend-name"></span>
+          </span>
+          <span class="legend-item" style="color: rgba(255,255,255,0.45);">
+            <span class="legend-dot" style="background:rgba(255,255,255,0.30);"></span> S&amp;P 500
+          </span>
+        </div>
+
+        <svg id="calc-chart" viewBox="0 0 760 300" fill="none" role="img" aria-label="Hypothetical growth of the selected strategy versus the S&P 500"></svg>
+        <div class="calc-ticks" id="calc-ticks"></div>
+
+        <p class="calc-note">Hypothetical growth assuming monthly compounding at each strategy's average backtested rate, benchmarked against S&amp;P 500 total return. Backtested performance has inherent limitations and does not represent actual trading or future results.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COMPARISON ================= -->
+  <section class="compare dark" id="compare">
+    <div class="wrap">
+      <div class="fade">
+        <p class="eyebrow-s">Why QSigma</p>
+        <h2 class="h2-s">
+          <span class="ghost">Same Category,</span>
+          <span class="solid">Different League</span>
+        </h2>
+      </div>
+      <div class="compare-scroll fade">
+        <table>
+          <thead>
+            <tr><th></th><th class="th-q">QSigma</th><th class="th-c">Typical Competitors</th></tr>
+          </thead>
+          <tbody id="compare-rows"></tbody>
+        </table>
       </div>
     </div>
   </section>
@@ -747,6 +874,100 @@
       <div class="tier-cta-space"></div>
       <button class="pill-btn">${t.cta}</button>
     </article>`).join("");
+
+  // ---------- Backtest calculator ----------
+  const CALC_STRATS = [
+    { name: "Momentum Alpha", monthly: 0.0248 },
+    { name: "Global Macro AI", monthly: 0.0165 },
+    { name: "Volatility Harvest", monthly: 0.0145 },
+    { name: "Blue-Chip Compounder", monthly: 0.0127 },
+    { name: "Digital Assets Quant", monthly: 0.0359 },
+    { name: "Rates & Arbitrage", monthly: 0.0099 },
+  ];
+  const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const BENCH_MONTHLY = 0.0083; // S&P 500 total return, ~10.4% annualized
+  const CALC_START_YEAR = 2013; // strategies began in the backtesting environment
+
+  const $ = (id) => document.getElementById(id);
+  const stratSel = $("calc-strat"), monthSel = $("calc-month"), yearSel = $("calc-year"), amountInput = $("calc-amount");
+
+  stratSel.innerHTML = CALC_STRATS.map((s, i) => `<option value="${i}">${s.name}</option>`).join("");
+  monthSel.innerHTML = MONTH_NAMES.map((m, i) => `<option value="${i}">${m}</option>`).join("");
+  const NOW = new Date();
+  const yearOpts = [];
+  for (let y = CALC_START_YEAR; y <= NOW.getFullYear(); y++) yearOpts.push(y);
+  yearSel.innerHTML = yearOpts.map((y) => `<option value="${y}">${y}</option>`).join("");
+
+  const fmtUsd = (v) => "$" + Math.round(v).toLocaleString("en-US");
+
+  function renderCalc() {
+    const amount = Math.max(Number(amountInput.value) || 0, 0);
+    const strat = Number(stratSel.value);
+    const month = Number(monthSel.value);
+    const year = Number(yearSel.value);
+    const n = Math.max((NOW.getFullYear() - year) * 12 + (NOW.getMonth() - month), 1);
+    const r = CALC_STRATS[strat].monthly;
+    const series = [], bench = [];
+    for (let i = 0; i <= n; i++) {
+      series.push(amount * Math.pow(1 + r, i));
+      bench.push(amount * Math.pow(1 + BENCH_MONTHLY, i));
+    }
+    const maxVal = series[series.length - 1] || 1;
+    const CW = 760, CH = 300, CP = 8;
+    const path = (data) => data.map((v, i) =>
+      `${i === 0 ? "M" : "L"} ${(CP + (i / n) * (CW - CP * 2)).toFixed(1)} ${(CH - CP - (v / maxVal) * (CH - CP * 2)).toFixed(1)}`
+    ).join(" ");
+    const qPath = path(series), bPath = path(bench);
+
+    const balance = series[series.length - 1];
+    const profit = balance - amount;
+    const pct = amount > 0 ? (profit / amount) * 100 : 0;
+    $("calc-balance").textContent = fmtUsd(balance);
+    $("calc-profit").textContent = fmtUsd(profit);
+    $("calc-pct").textContent = "+" + pct.toLocaleString("en-US", { maximumFractionDigits: 1 }) + "%";
+    $("calc-legend-name").textContent = CALC_STRATS[strat].name;
+
+    $("calc-chart").innerHTML = `
+      <defs>
+        <linearGradient id="calc-area" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(163,177,138,0.22)"/>
+          <stop offset="100%" stop-color="rgba(163,177,138,0)"/>
+        </linearGradient>
+      </defs>
+      ${[0.25, 0.5, 0.75].map((t) => `<line x1="${CP}" x2="${CW - CP}" y1="${CH * t}" y2="${CH * t}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`).join("")}
+      <path d="${qPath} L ${CW - CP} ${CH - CP} L ${CP} ${CH - CP} Z" fill="url(#calc-area)"/>
+      <path d="${bPath}" stroke="rgba(255,255,255,0.30)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="${qPath}" stroke="#A3B18A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+    $("calc-ticks").innerHTML = [0, 1 / 3, 2 / 3, 1].map((k) => {
+      const idx = Math.round(n * k);
+      const m = (month + idx) % 12;
+      const y = year + Math.floor((month + idx) / 12);
+      return `<span>${MONTH_NAMES[m].slice(0, 3)} ${y}</span>`;
+    }).join("");
+  }
+
+  [amountInput, stratSel, monthSel, yearSel].forEach((el) => {
+    el.addEventListener("input", renderCalc);
+    el.addEventListener("change", renderCalc);
+  });
+  renderCalc();
+
+  // ---------- Comparison table ----------
+  const COMPARE_ROWS = [
+    { label: "Upfront fees", q: "None", c: "$10,000–$20,000" },
+    { label: "Brokerage", q: "Regulated US brokers", c: "Offshore, unregulated" },
+    { label: "Audited returns", q: "US CPA-audited", c: "None" },
+    { label: "The “AI”", q: "Real — self-evolving models", c: "Set-and-forget marketing" },
+  ];
+  const checkIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="#A3B18A" stroke-width="1.8"/><path d="m8.5 12.5 2.3 2.3 4.7-5.3" stroke="#A3B18A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const xIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="rgba(255,255,255,0.30)" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+  document.getElementById("compare-rows").innerHTML = COMPARE_ROWS.map((r) => `
+    <tr>
+      <td class="row-label">${r.label}</td>
+      <td><span class="cell q">${checkIcon}${r.q}</span></td>
+      <td><span class="cell c">${xIcon}${r.c}</span></td>
+    </tr>`).join("");
 
   // ---------- CTA form ----------
   document.getElementById("cta-form").addEventListener("submit", (e) => {

@@ -4,6 +4,7 @@ const NAV_LINKS = [
   { label: "PLATFORM", href: "#platform" },
   { label: "STRATEGIES", href: "#strategies" },
   { label: "PERFORMANCE", href: "#performance" },
+  { label: "CALCULATOR", href: "#calculator" },
   { label: "PRICING", href: "#pricing" },
 ];
 
