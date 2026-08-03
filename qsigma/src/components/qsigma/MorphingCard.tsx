@@ -254,19 +254,19 @@ export default function MorphingCard() {
             }}
             className="absolute inset-0 pointer-events-none"
           />
-          {/* NEW left-to-right black fade */}
+          {/* NEW content scrim — left fade plus bottom lift so text stays legible over the green */}
           <motion.div
             className="absolute inset-0 pointer-events-none"
             style={{
               opacity: contentOpacity,
               background:
-                "linear-gradient(270deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.85) 100%)",
+                "linear-gradient(270deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.62) 55%, rgba(0,0,0,0.88) 100%), linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0.10) 80%, transparent 100%)",
             }}
           />
 
           {/* New content */}
           <motion.div
-            style={{ opacity: contentOpacity }}
+            style={{ opacity: contentOpacity, textShadow: "0 1px 12px rgba(0,0,0,0.45)" }}
             className="relative w-full h-full text-white"
           >
             <div className="absolute left-1/2 -translate-x-1/2 bottom-[184px] w-[85%] flex flex-col items-stretch gap-[20px]">

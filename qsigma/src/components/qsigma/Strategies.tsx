@@ -1,8 +1,10 @@
+import { useState } from "react";
 import FadeUp from "./FadeUp";
-import PortfolioCard, { PortfolioCardProps } from "@/components/ui/portfolio-card";
+import FactsheetModal, { FactsheetData } from "./FactsheetModal";
+import PortfolioCard from "@/components/ui/portfolio-card";
 import StrategyTicker, { StrategyTickerProps } from "@/components/ui/strategy-ticker";
 
-type PortfolioData = Omit<PortfolioCardProps, "onSubscribe">;
+type PortfolioData = FactsheetData;
 
 const FLAGSHIPS: PortfolioData[] = [
   {
@@ -20,6 +22,57 @@ const FLAGSHIPS: PortfolioData[] = [
     seed: 641,
     drift: 0.0075,
     vol: 0.045,
+    // Full factsheet detail (Portfolio Research, as of 30 Jul 2026)
+    asOf: "30 Jul 2026",
+    period: "14 May 2013 – 30 Jul 2026",
+    sessions: "3,321",
+    assets: "50",
+    minInvestment: "$2,100",
+    totalReturn: "4,344.20%",
+    avgMonth: "+2.54%",
+    winningMonths: "69.2%",
+    sortino: "2.63",
+    targetOrders: "10,931",
+    ordersPerMonth: "68.7",
+    avgHolding: "44.0 days",
+    turnover: "50.2x",
+    beta: "0.69",
+    correlation: "0.81",
+    var95: "-1.70%",
+    cvar95: "-2.51%",
+    calmar: "1.75",
+    alpha: "16.41%",
+    infoRatio: "0.83",
+    bestDay: "+9.86%",
+    worstDay: "-7.48%",
+    thesis:
+      "Master Max applies a bounded capital-efficiency overlay rather than a new return forecast. The 1.90x NAV multiplier preserves Master's risk-on, defensive, and cash states instead of forcing every book to full gross. Marginable equities consume 50% outside-session initial margin and BTC consumes 100%, so the multiplier is reduced whenever the instrument mix would exceed the 95% ceiling.",
+    role:
+      "An aggressive companion to Master Portfolio for accounts that explicitly prioritize maximum deployment and can tolerate materially larger drawdowns and margin usage.",
+    construction:
+      "Dynamic equal weights across available children, netted at ticker level and multiplied by no more than 1.90x. Child cash remains cash; embedded leverage or non-marginable BTC can force a lower multiplier.",
+    signals:
+      "Build Master's revision-aware active-child set and equal-weight ticker lookthrough, net duplicate symbols, apply the 1.90x NAV multiplier, then reduce it only if any session event breaches the outside or regular-session margin ceiling.",
+    execution:
+      "Net child targets, cap the NAV multiplier at 1.90x, and reduce it whenever the 95% margin ceiling binds.",
+    risks:
+      "Margin amplifies child drawdowns, financing drag, liquidity demand, and correlated stress. Broker house margin, hard-to-borrow treatment, or instrument eligibility can be stricter than the research envelope.",
+    monthly: [
+      { year: "2013", months: [null, null, null, null, "-0.2%", "-0.4%", "+0.2%", "-3.8%", "+1.5%", "+6.1%", "+2.8%", "+3.1%"], total: "+9.5%" },
+      { year: "2014", months: ["-2.3%", "+3.2%", "+0.9%", "-0.2%", "+1.0%", "+1.6%", "-4.9%", "+5.6%", "-0.6%", "+10.2%", "+4.0%", "-1.6%"], total: "+17.4%" },
+      { year: "2015", months: ["-0.0%", "+4.4%", "-3.3%", "+1.4%", "+0.6%", "-1.8%", "+1.5%", "-6.7%", "-2.9%", "+17.2%", "-1.0%", "-3.3%"], total: "+4.4%" },
+      { year: "2016", months: ["-3.8%", "+3.4%", "+9.5%", "+2.0%", "+3.4%", "-0.3%", "+5.3%", "+0.9%", "+4.0%", "-0.2%", "+8.6%", "+4.3%"], total: "+43.1%" },
+      { year: "2017", months: ["+4.2%", "+5.2%", "-0.4%", "+1.3%", "+2.3%", "-0.2%", "+3.1%", "+1.6%", "+0.5%", "+2.9%", "+2.1%", "+3.3%"], total: "+28.8%" },
+      { year: "2018", months: ["+9.0%", "-2.9%", "-2.2%", "+1.1%", "+1.9%", "+1.3%", "+4.2%", "+2.7%", "+0.3%", "-3.9%", "+2.8%", "-6.6%"], total: "+7.0%" },
+      { year: "2019", months: ["+9.9%", "+3.2%", "+4.0%", "+3.5%", "-7.9%", "+10.5%", "+3.2%", "+4.1%", "+1.6%", "+3.1%", "+2.2%", "+6.5%"], total: "+52.1%" },
+      { year: "2020", months: ["-1.0%", "-2.9%", "+1.5%", "+18.1%", "+9.1%", "+7.7%", "+11.1%", "+8.7%", "-3.2%", "-4.3%", "+20.2%", "+7.2%"], total: "+95.2%" },
+      { year: "2021", months: ["+1.4%", "+3.5%", "+6.1%", "+3.6%", "+3.1%", "+1.2%", "+2.8%", "+3.0%", "-3.7%", "+10.0%", "-1.2%", "+3.9%"], total: "+38.8%" },
+      { year: "2022", months: ["-4.9%", "-1.8%", "+5.1%", "-4.7%", "+2.2%", "-3.0%", "+7.7%", "-2.9%", "-10.2%", "+10.5%", "+7.5%", "-1.0%"], total: "+2.7%" },
+      { year: "2023", months: ["+8.9%", "-2.8%", "+6.9%", "+0.6%", "+0.9%", "+4.6%", "+3.4%", "-2.5%", "-4.2%", "+1.4%", "+9.8%", "+9.3%"], total: "+41.4%" },
+      { year: "2024", months: ["-0.7%", "+8.7%", "+5.9%", "-4.6%", "+5.4%", "+0.3%", "+7.2%", "+3.2%", "+7.7%", "-0.7%", "+12.8%", "-4.8%"], total: "+46.3%" },
+      { year: "2025", months: ["+5.5%", "-1.0%", "+0.1%", "+3.7%", "+7.5%", "+5.7%", "+3.8%", "+2.4%", "+10.3%", "+7.6%", "+2.0%", "+1.8%"], total: "+61.3%" },
+      { year: "2026", months: ["+11.1%", "+9.0%", "-11.4%", "+9.6%", "+2.8%", "-0.1%", "-1.6%", null, null, null, null, null], total: "+19.0%" },
+    ],
   },
   {
     name: "Master Portfolio",
@@ -221,6 +274,8 @@ function GroupTitle({ children }: { children: string }) {
 }
 
 const Strategies = () => {
+  const [sheet, setSheet] = useState<PortfolioData | null>(null);
+
   return (
     <section
       id="strategies"
@@ -260,7 +315,7 @@ const Strategies = () => {
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           {FLAGSHIPS.map((p, i) => (
             <FadeUp key={p.name} delay={i * 0.08}>
-              <PortfolioCard {...p} />
+              <PortfolioCard {...p} onOpenFactsheet={() => setSheet(p)} />
             </FadeUp>
           ))}
         </div>
@@ -270,7 +325,7 @@ const Strategies = () => {
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           {PORTFOLIOS.map((p, i) => (
             <FadeUp key={p.name} delay={(i % 3) * 0.08}>
-              <PortfolioCard {...p} />
+              <PortfolioCard {...p} onOpenFactsheet={() => setSheet(p)} />
             </FadeUp>
           ))}
         </div>
@@ -323,6 +378,12 @@ const Strategies = () => {
           </p>
         </FadeUp>
       </div>
+
+      <FactsheetModal
+        portfolio={sheet}
+        onClose={() => setSheet(null)}
+        onSubscribe={() => setSheet(null)}
+      />
     </section>
   );
 };

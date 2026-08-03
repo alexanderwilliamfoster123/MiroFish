@@ -35,6 +35,8 @@ export interface PortfolioCardProps {
   vol: number;
   cta?: string;
   onSubscribe?: () => void;
+  /** Opens the on-brand factsheet for this portfolio */
+  onOpenFactsheet?: () => void;
 }
 
 function buildSeries(seed: number, drift: number, vol: number) {
@@ -107,6 +109,7 @@ export default function PortfolioCard({
   vol,
   cta = "Subscribe",
   onSubscribe,
+  onOpenFactsheet,
 }: PortfolioCardProps) {
   const [data, setData] = useState<number[]>(() => buildSeries(seed, drift, vol));
   const [hover, setHover] = useState<number | null>(null);
@@ -157,7 +160,10 @@ export default function PortfolioCard({
 
   return (
     <article
-      className="group flex h-full flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(5,5,12,0.10)]"
+      className={`group flex h-full flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(5,5,12,0.10)] ${
+        onOpenFactsheet ? "cursor-pointer" : ""
+      }`}
+      onClick={onOpenFactsheet}
       style={{
         fontFamily: FONT,
         backgroundColor: "#FFFFFF",
@@ -293,23 +299,50 @@ export default function PortfolioCard({
       </div>
 
       <div className="h-5" style={{ marginTop: "auto" }} />
-      <button
-        onClick={onSubscribe}
-        className="w-full transition-colors duration-200 hover:bg-[#333333]"
-        style={{
-          backgroundColor: "#111111",
-          color: "#FFFFFF",
-          fontFamily: "inherit",
-          fontWeight: 600,
-          fontSize: "13px",
-          borderRadius: "9999px",
-          border: "none",
-          padding: "12px 20px",
-          cursor: "pointer",
-        }}
-      >
-        {cta}
-      </button>
+      <div className="flex gap-2">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onSubscribe?.();
+          }}
+          className="flex-1 transition-colors duration-200 hover:bg-[#333333]"
+          style={{
+            backgroundColor: "#111111",
+            color: "#FFFFFF",
+            fontFamily: "inherit",
+            fontWeight: 600,
+            fontSize: "13px",
+            borderRadius: "9999px",
+            border: "none",
+            padding: "12px 20px",
+            cursor: "pointer",
+          }}
+        >
+          {cta}
+        </button>
+        {onOpenFactsheet && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenFactsheet();
+            }}
+            className="flex-1 transition-colors duration-200 hover:bg-black/5"
+            style={{
+              backgroundColor: "transparent",
+              color: "#05050C",
+              fontFamily: "inherit",
+              fontWeight: 600,
+              fontSize: "13px",
+              borderRadius: "9999px",
+              border: "1px solid rgba(0,0,0,0.15)",
+              padding: "12px 20px",
+              cursor: "pointer",
+            }}
+          >
+            Factsheet
+          </button>
+        )}
+      </div>
     </article>
   );
 }
