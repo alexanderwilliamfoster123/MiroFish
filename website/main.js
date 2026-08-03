@@ -1,11 +1,15 @@
 /* =========================================================================
- * MiroFish marketing site — original scroll + WebGL transition engine.
+ * MiroFish site — "frost" engine.
  *
- * Native scrolling (with CSS scroll-snap) drives a smoothed progress value.
- * Each section owns a procedural fragment-shader scene; adjacent scenes are
- * rendered to offscreen targets and composited through a noise-cut wipe with
- * spectral chromatic aberration, mild barrel distortion, and film grain.
- * No external libraries. All shader code authored for this project.
+ * A light, monochrome, igloo-in-a-blizzard aesthetic built from scratch:
+ *  - per-section terrain backdrops (layered ridge noise, snowfall, fog)
+ *  - one persistent 3D centerpiece: a shoal-fish sculpted from ~110 glowing
+ *    ice blocks (instanced rounded cubes) that morphs into a new formation
+ *    for every section
+ *  - sections composite through a noise-cut wipe with spectral chromatic
+ *    aberration, barrel distortion and grain, driven by damped native scroll
+ *
+ * No libraries; raw WebGL2. All shader code and geometry authored here.
  * ========================================================================= */
 
 (() => {
@@ -16,7 +20,7 @@
   const N = panels.length;
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- section dots ---------- */
+  /* ---------- section dots + counter ---------- */
 
   const dotsWrap = document.getElementById("dots");
   const dots = panels.map((_, i) => {
@@ -28,6 +32,7 @@
     dotsWrap.appendChild(b);
     return b;
   });
+  const hudCounter = document.getElementById("hudCounter");
 
   document.querySelectorAll("[data-goto]").forEach((el) => {
     el.addEventListener("click", (e) => {
@@ -40,11 +45,8 @@
 
   /* ---------- scroll model ---------- */
 
-  // Raw progress in [0, N-1]: how far down the page we are, in sections.
   function rawProgress() {
     const y = window.scrollY;
-    // Panels are uniform full-viewport blocks; derive progress from offsets
-    // so mobile URL-bar resizing can't desync us.
     for (let i = 0; i < N - 1; i++) {
       const a = panels[i].offsetTop;
       const b = panels[i + 1].offsetTop;
@@ -53,21 +55,23 @@
     return N - 1;
   }
 
-  let smooth = rawProgress(); // eased progress driving shaders + parallax
+  let smooth = rawProgress();
   let vel = 0;
 
-  /* ---------- DOM parallax + nav state ---------- */
+  /* ---------- DOM parallax ---------- */
 
   const inners = panels.map((p) => p.querySelector(".panel__inner"));
-  const nav = document.getElementById("nav");
 
   function updateDOM() {
     const active = Math.round(smooth);
     dots.forEach((d, i) => d.classList.toggle("active", i === active));
-    nav.classList.toggle("nav--solid", smooth > 0.35);
+    if (hudCounter) {
+      hudCounter.textContent =
+        String(active + 1).padStart(2, "0") + " / " + String(N).padStart(2, "0");
+    }
     if (reducedMotion) return;
     for (let i = 0; i < N; i++) {
-      const d = i - smooth; // 0 when centered, ±1 one screen away
+      const d = i - smooth;
       if (Math.abs(d) > 1.25) continue;
       inners[i].style.transform = `translateY(${d * -7}vh)`;
       inners[i].style.opacity = String(Math.max(0, 1 - Math.abs(d) * 1.25));
@@ -93,7 +97,7 @@
     return;
   }
 
-  const VERT = `#version 300 es
+  const QUAD_VERT = `#version 300 es
   layout(location=0) in vec2 aPos;
   out vec2 vUv;
   void main() {
@@ -101,7 +105,6 @@
     gl_Position = vec4(aPos, 0.0, 1.0);
   }`;
 
-  /* Shared GLSL helpers (hash / value noise / fbm), written for this site. */
   const HELPERS = `
   float hash11(float n) { return fract(sin(n * 127.1) * 43758.5453); }
   float hash21(vec2 p) {
@@ -130,12 +133,11 @@
     }
     return s;
   }
-  mat2 rot(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
   `;
 
-  /* ---------- scene shader: six procedural backgrounds ---------- */
+  /* ---------- terrain backdrop: bright frost mountains ---------- */
 
-  const SCENE_FRAG = `#version 300 es
+  const TERRAIN_FRAG = `#version 300 es
   precision highp float;
   in vec2 vUv;
   out vec4 fragColor;
@@ -145,208 +147,166 @@
   uniform vec2 uMouse;
   ${HELPERS}
 
-  const vec3 DEEP  = vec3(0.014, 0.027, 0.058);
-  const vec3 NAVY  = vec3(0.045, 0.093, 0.165);
-  const vec3 ICE   = vec3(0.66, 0.85, 0.96);
-  const vec3 STEEL = vec3(0.29, 0.47, 0.68);
-  const vec3 GOLD  = vec3(0.90, 0.71, 0.35);
-
-  // Elongated glow "fish" oriented along its heading.
-  float fishDash(vec2 d, vec2 dir, float stretch) {
-    d = mat2(dir.x, dir.y, -dir.y, dir.x) * d;
-    d.x *= stretch;
-    return exp(-dot(d, d) * 2400.0);
+  // Layered ridge silhouettes with distance fog — reads as snowy ranges.
+  vec3 ranges(vec2 p, float t, float seed, out float groundMask) {
+    vec3 sky = mix(vec3(0.775, 0.805, 0.845), vec3(0.93, 0.945, 0.955),
+                   smoothstep(-0.25, 0.95, p.y));
+    // high haze band
+    sky += vec3(0.05) * fbm(vec2(p.x * 1.5 + seed, p.y * 3.0)) * smoothstep(0.0, 0.6, p.y);
+    vec3 col = sky;
+    groundMask = 0.0;
+    for (int k = 4; k >= 0; k--) {
+      float fk = float(k);
+      float base = 0.30 - fk * 0.105;                       // nearer layers lower
+      float freq = 1.1 + (4.0 - fk) * 0.5;
+      float amp = 0.16 + (4.0 - fk) * 0.035;
+      float n = fbm(vec2(p.x * freq + fk * 13.7 + seed * 3.1, fk * 7.7 + seed));
+      float ridge = 1.0 - abs(n - 0.5) * 2.0;               // sharp crests
+      float h = base + (mix(n, ridge, 0.55) - 0.5) * amp;
+      float m = smoothstep(h + 0.003, h - 0.003, p.y);
+      float depth = fk / 4.0;                               // 1 = farthest
+      float tone = mix(0.62, 0.85, depth);
+      // faceted rock shading
+      float facet = fbm(p * vec2(7.0, 9.0) + fk * 31.0 + seed);
+      vec3 rock = vec3(tone) * (0.86 + 0.26 * facet);
+      rock = mix(rock, sky, depth * 0.55);                  // aerial fog
+      // sun-kissed crest line
+      rock += vec3(0.10) * exp(-(h - p.y) * 60.0) * (1.0 - depth * 0.6);
+      col = mix(col, rock, m);
+      if (k == 0) groundMask = m;
+    }
+    return col;
   }
 
-  /* 0 — Abyss: light rays from above, a shoal crossing the frame. */
-  vec3 scene0(vec2 p, float t) {
-    vec3 col = mix(NAVY * 1.25, DEEP * 0.55, smoothstep(-0.85, 0.9, p.y * -1.0 + 0.2));
-    col = mix(col, NAVY * 1.6, smoothstep(0.15, 1.0, p.y)); // brighter surface
-    vec2 q = rot(0.28) * p;
-    float rays = fbm(vec2(q.x * 3.2 - t * 0.06, q.y * 0.35));
-    rays *= smoothstep(-1.1, 0.9, p.y);
-    col += ICE * rays * 0.12;
-    float glow = 0.0;
-    for (int i = 0; i < 26; i++) {
+  // Screen-space snowfall, three parallax layers.
+  float snowfall(vec2 uv, float t) {
+    float acc = 0.0;
+    for (int i = 0; i < 3; i++) {
       float fi = float(i);
-      float h = hash11(fi * 7.31);
-      float h2 = hash11(fi * 3.77 + 5.0);
-      float sp = 0.09 + 0.12 * h;
-      float ph = t * sp + h * 37.0;
-      vec2 c = vec2(
-        -1.45 + mod(ph, 2.9),
-        (h2 - 0.5) * 1.15 + 0.16 * sin(ph * 2.2 + fi));
-      vec2 dir = normalize(vec2(1.0, 0.35 * cos(ph * 2.2 + fi)));
-      glow += fishDash(p - c, dir, 0.42) * (0.35 + 0.65 * h2);
+      float scale = 18.0 + fi * 14.0;
+      vec2 q = uv * scale + vec2(t * (0.15 + fi * 0.1) * 0.3, t * (0.55 + fi * 0.35));
+      vec2 cell = floor(q);
+      vec2 j = hash22(cell);
+      vec2 f = fract(q) - 0.5 - (j - 0.5) * 0.55;
+      float d = dot(f, f);
+      acc += exp(-d * 260.0) * (0.25 + 0.55 * j.y) / (1.0 + fi);
     }
-    col += mix(STEEL, ICE, 0.55) * glow * 0.85;
-    float dust = smoothstep(0.985, 1.0, vnoise(p * 42.0 + t * 0.12));
-    col += ICE * dust * 0.25;
-    return col;
-  }
-
-  /* 1 — Seed graph: a constellation crystallizing out of the dark. */
-  vec3 scene1(vec2 p, float t) {
-    vec3 col = mix(DEEP, NAVY * 0.9, fbm(p * 1.4 + 3.0) * 0.8);
-    vec2 drift = vec2(t * 0.02, t * -0.013);
-    vec2 g = (p + uMouse * 0.04) * 3.1 + drift;
-    vec2 cell = floor(g);
-    float pts = 0.0, lines = 0.0;
-    vec2 sites[9];
-    int k = 0;
-    for (int y = -1; y <= 1; y++)
-    for (int x = -1; x <= 1; x++) {
-      vec2 c = cell + vec2(float(x), float(y));
-      vec2 j = hash22(c);
-      sites[k++] = c + 0.5 + 0.38 * sin(t * 0.35 + j * 6.283);
-    }
-    for (int i = 0; i < 9; i++) {
-      float d = length(g - sites[i]);
-      pts += exp(-d * d * 60.0);
-      for (int j2 = i + 1; j2 < 9; j2++) {
-        vec2 a = sites[i], b = sites[j2];
-        float seg = length(b - a);
-        if (seg > 1.35) continue;
-        vec2 pa = g - a, ba = b - a;
-        float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
-        float dl = length(pa - ba * h);
-        lines += exp(-dl * dl * 900.0) * (1.0 - seg / 1.35) * 0.5;
-      }
-    }
-    col += STEEL * lines * 0.55;
-    col += ICE * pts * 0.5;
-    // the "seed": one bright pulsing core off-center
-    float core = exp(-dot(p - vec2(-0.35, 0.1), p - vec2(-0.35, 0.1)) * 6.0);
-    col += ICE * core * (0.10 + 0.05 * sin(t * 1.7));
-    return col;
-  }
-
-  /* 2 — Murmuration: a flowing field of thousands of tiny agents. */
-  vec3 scene2(vec2 p, float t) {
-    vec3 col = mix(DEEP * 0.8, NAVY, smoothstep(-1.0, 1.0, p.x * 0.4 - p.y * 0.3));
-    vec2 w = p + uMouse * 0.05;
-    float n1 = fbm(w * 1.7 + vec2(0.0, t * 0.09));
-    w += 0.45 * vec2(n1 - 0.5, fbm(w * 1.7 + 4.7) - 0.5);
-    float streak = smoothstep(0.55, 0.95, fbm(w * vec2(1.4, 5.5) + vec2(t * 0.22, 0.0)));
-    col += STEEL * streak * 0.4;
-    // dense agent sparkles advected by the same field
-    vec2 sg = w * 34.0;
-    vec2 sc = floor(sg);
-    vec2 sj = hash22(sc);
-    float tw = 0.5 + 0.5 * sin(t * (1.0 + sj.x * 3.0) + sj.y * 6.283);
-    float sd = length(fract(sg) - 0.5 - 0.3 * (sj - 0.5));
-    float spark = exp(-sd * sd * 120.0) * step(0.55, sj.x) * tw;
-    col += ICE * spark * streak * 1.6;
-    // soft swarm mass drifting through
-    vec2 m1 = vec2(0.5 * sin(t * 0.21), 0.3 * cos(t * 0.17));
-    vec2 m2 = vec2(0.45 * sin(t * 0.16 + 2.0), 0.35 * cos(t * 0.23 + 1.0));
-    float mass = exp(-dot(p - m1, p - m1) * 3.5) + exp(-dot(p - m2, p - m2) * 4.5);
-    col += STEEL * mass * 0.14;
-    return col;
-  }
-
-  /* 3 — Trajectories: futures diverging from a single present. */
-  vec3 scene3(vec2 p, float t) {
-    vec3 col = mix(DEEP, vec3(0.03, 0.06, 0.11), smoothstep(-1.0, 1.0, p.y));
-    vec2 origin = vec2(-0.85, 0.0);
-    float x = p.x - origin.x;
-    float reach = smoothstep(0.0, 0.25, x);
-    for (int i = 0; i < 7; i++) {
-      float fi = float(i);
-      float slope = (fi - 3.0) * 0.16;
-      float wob = (vnoise(vec2(x * 2.5 + fi * 9.0, t * 0.15 + fi)) - 0.5) * 0.28 * x;
-      float y = origin.y + slope * x * x * 0.9 + slope * x * 0.35 + wob;
-      float d = abs(p.y - y);
-      bool hot = (i == 4);
-      float w = hot ? 3800.0 : 9000.0;
-      float g = exp(-d * d * w) * reach * step(0.0, x) * step(x, 2.2);
-      col += (hot ? GOLD : STEEL) * g * (hot ? 0.75 : 0.35);
-      // comet running along the line
-      float cx = mod(t * (0.16 + 0.03 * fi) + fi * 0.37, 1.9);
-      vec2 cp = vec2(origin.x + cx, origin.y + slope * cx * cx * 0.9 + slope * cx * 0.35
-                     + (vnoise(vec2(cx * 2.5 + fi * 9.0, t * 0.15 + fi)) - 0.5) * 0.28 * cx);
-      float cd = length(p - cp);
-      col += (hot ? GOLD : ICE) * exp(-cd * cd * 2600.0) * 0.8;
-    }
-    float core = exp(-dot(p - origin, p - origin) * 30.0);
-    col += ICE * core * (0.5 + 0.15 * sin(t * 2.2));
-    return col;
-  }
-
-  /* 4 — Two rooms: rectilinear macro-lab vs. warm playful bokeh. */
-  vec3 scene4(vec2 p, float t) {
-    float cut = p.x * 0.75 + p.y * 0.55 + (fbm(p * 2.6 + t * 0.05) - 0.5) * 0.3;
-    float side = smoothstep(-0.05, 0.05, cut);
-    // macro: cool blueprint grid
-    vec3 lab = mix(DEEP, NAVY * 0.95, 0.6);
-    vec2 gg = p * 5.0 + vec2(0.0, t * 0.04);
-    vec2 gf = abs(fract(gg) - 0.5);
-    float grid = exp(-min(gf.x, gf.y) * min(gf.x, gf.y) * 900.0);
-    lab += STEEL * grid * 0.22;
-    float blip = exp(-length(fract(gg * 0.5) - 0.5) * 14.0)
-               * step(0.93, hash21(floor(gg * 0.5) + floor(t * 0.5)));
-    lab += ICE * blip * 0.9;
-    // micro: warm drifting bokeh
-    vec3 play = mix(DEEP, vec3(0.10, 0.07, 0.03), 0.8);
-    for (int i = 0; i < 10; i++) {
-      float fi = float(i);
-      float h = hash11(fi * 3.1);
-      vec2 c = vec2(
-        sin(t * (0.1 + h * 0.1) + fi * 2.4) * 0.8,
-        cos(t * (0.08 + h * 0.12) + fi * 1.7) * 0.6);
-      float d = length(p - c);
-      float r = 0.05 + h * 0.16;
-      play += GOLD * smoothstep(r, r * 0.5, d) * 0.10 * (0.4 + 0.6 * h);
-    }
-    return mix(lab, play, side);
-  }
-
-  /* 5 — The mirror: a calm horizon reflecting a moving shoal. */
-  vec3 scene5(vec2 p, float t) {
-    float below = smoothstep(0.015, -0.015, p.y);
-    vec2 q = vec2(p.x, abs(p.y));
-    if (p.y < 0.0) q.x += (vnoise(vec2(p.x * 6.0, t * 0.5)) - 0.5) * 0.05 * min(1.0, -p.y * 4.0);
-    vec3 col = mix(DEEP, NAVY * 1.5, exp(-q.y * 2.2));
-    // stars / plankton
-    vec2 sg = q * 26.0 + vec2(t * 0.01, 0.0);
-    vec2 sj = hash22(floor(sg));
-    float sd = length(fract(sg) - 0.5 - 0.3 * (sj - 0.5));
-    float star = exp(-sd * sd * 160.0) * step(0.8, sj.y)
-               * (0.5 + 0.5 * sin(t * (1.0 + sj.x * 2.0) + sj.y * 9.0));
-    col += ICE * star * 0.7;
-    // small shoal drifting above the mirror line
-    float glow = 0.0;
-    for (int i = 0; i < 12; i++) {
-      float fi = float(i);
-      float h = hash11(fi * 5.9);
-      float ph = t * (0.07 + 0.08 * h) + h * 29.0;
-      vec2 c = vec2(-1.45 + mod(ph, 2.9), 0.18 + h * 0.55 + 0.08 * sin(ph * 2.0 + fi));
-      vec2 dir = normalize(vec2(1.0, 0.3 * cos(ph * 2.0 + fi)));
-      glow += fishDash(q - c, dir, 0.45) * (0.4 + 0.6 * h);
-    }
-    col += mix(STEEL, ICE, 0.5) * glow * 0.8;
-    // mirror line
-    col += ICE * exp(-p.y * p.y * 900.0) * 0.35;
-    col = mix(col, col * 0.55 + DEEP * 0.2, below);
-    return col;
+    return acc;
   }
 
   void main() {
     vec2 uv = vUv;
     vec2 p = (uv - 0.5) * vec2(uRes.x / uRes.y, 1.0) * 2.0;
-    p += uMouse * 0.03;
+    p += uMouse * 0.025;
     float t = uTime;
-    vec3 col =
-      uId == 0 ? scene0(p, t) :
-      uId == 1 ? scene1(p, t) :
-      uId == 2 ? scene2(p, t) :
-      uId == 3 ? scene3(p, t) :
-      uId == 4 ? scene4(p, t) :
-                 scene5(p, t);
+    float seed = float(uId) * 4.7;
+
+    vec3 col;
+    float ground;
+    if (uId == 5) {
+      // Outro: frozen mirror — the ranges reflect around the horizon line.
+      float horizon = -0.12;
+      vec2 q = vec2(p.x, horizon + abs(p.y - horizon));
+      q.x += (p.y < horizon)
+        ? (vnoise(vec2(p.x * 7.0, t * 0.4)) - 0.5) * 0.05 * min(1.0, (horizon - p.y) * 3.0)
+        : 0.0;
+      col = ranges(q, t, seed, ground);
+      if (p.y < horizon) {
+        col = mix(col, vec3(0.70, 0.735, 0.775), 0.45);      // dimmer, milkier ice
+        col *= 0.94;
+      }
+      col += vec3(0.9) * exp(-(p.y - horizon) * (p.y - horizon) * 1400.0) * 0.22;
+    } else {
+      col = ranges(p, t, seed, ground);
+    }
+
+    // Section flavor tweaks, kept monochrome.
+    if (uId == 1) {
+      // seed: faint survey grid over the ground
+      vec2 gg = abs(fract(p * 4.0 + vec2(0.0, t * 0.01)) - 0.5);
+      col -= vec3(0.05) * exp(-min(gg.x, gg.y) * min(gg.x, gg.y) * 2200.0) * ground;
+    }
+    if (uId == 3) {
+      // rehearse: low sweeping light shafts
+      float shaft = fbm(vec2(p.x * 2.0 - t * 0.06, p.y * 6.0));
+      col += vec3(0.07) * shaft * smoothstep(0.4, -0.4, p.y);
+    }
+
+    // soft contact shadow under the centerpiece
+    vec2 sc = (p - vec2(0.0, -0.42)) * vec2(1.0, 2.6);
+    col *= 1.0 - exp(-dot(sc, sc) * 3.0) * 0.16;
+
+    // snowfall + sparkle
+    col += vec3(1.0) * snowfall(uv, t) * 0.5;
+    float glint = smoothstep(0.988, 1.0, vnoise(p * 60.0 + floor(t * 2.0) * 7.0));
+    col += vec3(0.5) * glint * (1.0 - smoothstep(-0.4, 0.4, p.y));
+
     fragColor = vec4(col, 1.0);
   }`;
 
-  /* ---------- composite shader: the flip/wipe transition ---------- */
+  /* ---------- ice block centerpiece ---------- */
+
+  const CUBE_VERT = `#version 300 es
+  layout(location=0) in vec3 aPos;
+  layout(location=1) in vec3 aNorm;
+  layout(location=2) in vec3 iPos;
+  layout(location=3) in vec2 iData;   // x: scale, y: seed
+  uniform mat4 uProj;
+  uniform float uSpin;
+  uniform vec2 uMouse;
+  uniform float uTime;
+  uniform float uShell;               // 0 solid pass, 1 glow shell pass
+  out vec3 vNorm;
+  out vec3 vView;
+  out float vSeed;
+
+  mat3 rotY(float a) { float c = cos(a), s = sin(a); return mat3(c,0.,s, 0.,1.,0., -s,0.,c); }
+  mat3 rotX(float a) { float c = cos(a), s = sin(a); return mat3(1.,0.,0., 0.,c,-s, 0.,s,c); }
+
+  void main() {
+    float seed = iData.y;
+    float scale = iData.x * (1.0 + uShell * 0.18);
+    // blocks stay roughly aligned — a built structure, not debris
+    mat3 R = rotY((seed - 0.5) * 0.55 + uTime * 0.05 * (seed - 0.5))
+           * rotX((fract(seed * 7.31) - 0.5) * 0.4);
+    vec3 pos = R * (aPos * scale) + iPos;
+    // slow scene orbit + pointer parallax
+    mat3 W = rotX(0.14 + uMouse.y * -0.05) * rotY(uSpin + uMouse.x * 0.1);
+    pos = W * pos;
+    pos += vec3(0.0, -0.18, 0.0);
+    vec3 eye = pos + vec3(0.0, 0.0, 3.3);
+    vNorm = W * (R * aNorm);
+    vView = normalize(-eye);
+    vSeed = seed;
+    gl_Position = uProj * vec4(eye.xy, -eye.z, 1.0);
+  }`;
+
+  const CUBE_FRAG = `#version 300 es
+  precision highp float;
+  in vec3 vNorm;
+  in vec3 vView;
+  in float vSeed;
+  uniform float uShell;
+  out vec4 fragColor;
+
+  void main() {
+    vec3 n = normalize(vNorm);
+    vec3 v = normalize(vView);
+    float fres = pow(1.0 - abs(dot(n, v)), 2.2);
+    if (uShell > 0.5) {
+      // additive halo shell — cheap bloom
+      fragColor = vec4(vec3(1.0), fres * 0.17);
+      return;
+    }
+    float ndl = dot(n, normalize(vec3(0.45, 0.85, 0.55))) * 0.5 + 0.5;
+    vec3 base = mix(vec3(0.60, 0.65, 0.72), vec3(1.02, 1.03, 1.05), ndl);
+    // some blocks burn brighter, like lit ice
+    float hot = step(0.62, vSeed) * (0.18 + 0.22 * vSeed);
+    vec3 col = base + fres * 0.5 + hot;
+    fragColor = vec4(col, 1.0);
+  }`;
+
+  /* ---------- composite: the frost flip ---------- */
 
   const COMP_FRAG = `#version 300 es
   precision highp float;
@@ -354,14 +314,12 @@
   out vec4 fragColor;
   uniform sampler2D tA;
   uniform sampler2D tB;
-  uniform float uProg;   // 0..1 between the two scenes
-  uniform float uVel;    // smoothed scroll velocity
+  uniform float uProg;
+  uniform float uVel;
   uniform float uTime;
   uniform vec2 uRes;
   ${HELPERS}
 
-  // Spectral 5-tap sample: red taps lead, blue taps trail, so the fringe
-  // splits into a rainbow instead of a flat RGB shift.
   vec3 spectral(sampler2D tex, vec2 uv, vec2 dir, float amt) {
     vec3 acc = vec3(0.0), wsum = vec3(0.0);
     for (int i = 0; i < 5; i++) {
@@ -381,35 +339,34 @@
     float t = uProg;
     float v = clamp(abs(uVel), 0.0, 1.0);
 
-    // Diagonal cut, edge broken up by fbm so it reads as a shard of ice.
     float noise = fbm(uv * vec2(3.0, 2.2) + 7.0) - 0.5;
     float coord = uv.x * 0.32 + (1.0 - uv.y) * 0.68 + noise * 0.22;
-    float thr = t * 1.5 - 0.25;            // sweeps [-0.25, 1.25]
-    float m = smoothstep(thr + 0.055, thr - 0.055, coord); // 1 = show B
-    float band = exp(-pow((coord - thr) * 5.0, 2.0));      // near-edge weight
+    float thr = t * 1.7 - 0.35;
+    float m = smoothstep(thr + 0.05, thr - 0.05, coord);
+    // edge effects must die completely when a section is at rest
+    float gate = smoothstep(0.0, 0.06, t) * smoothstep(1.0, 0.94, t);
+    float band = exp(-pow((coord - thr) * 5.0, 2.0)) * gate;
 
-    // Barrel distortion, strongest mid-transition and with velocity.
     vec2 c = uv - 0.5;
-    float bulge = (band * 0.10 + v * 0.06) * dot(c, c);
+    float bulge = (band * 0.09 + v * 0.05) * dot(c, c);
     vec2 buv = uv - c * bulge;
 
-    // Slight parallax: outgoing scene drifts up, incoming settles down.
-    vec2 uvA = buv + vec2(0.0, t * 0.05) + vec2(0.0, -1.0) * band * 0.02;
-    vec2 uvB = buv - vec2(0.0, (1.0 - t) * 0.05) + vec2(0.0, 1.0) * band * 0.02;
+    vec2 uvA = buv + vec2(0.0, t * 0.045);
+    vec2 uvB = buv - vec2(0.0, (1.0 - t) * 0.045);
 
     vec2 dir = normalize(c + 1e-5);
-    float ca = band * 0.012 + v * 0.010;
+    float ca = band * 0.010 + v * 0.008;
     vec3 colA = spectral(tA, clamp(uvA, 0.001, 0.999), dir, ca);
     vec3 colB = spectral(tB, clamp(uvB, 0.001, 0.999), dir, ca);
     vec3 col = mix(colA, colB, m);
 
-    // Edge glint along the cut.
-    col += vec3(0.66, 0.85, 0.96) * band * 0.10 * (0.5 + v);
+    // the cut edge flashes white, like light through a crack in ice
+    col += vec3(1.0) * band * 0.16 * (0.4 + v);
 
-    // Vignette + animated grain (hides banding in the gradients).
-    col *= 1.0 - 0.32 * dot(c, c) * 1.6;
+    // gentle photographic vignette + grain
+    col *= 1.0 - 0.16 * dot(c, c) * 1.6;
     float g = hash21(uv * uRes + fract(uTime) * 373.7) - 0.5;
-    col += g * 0.028;
+    col += g * 0.02;
 
     fragColor = vec4(col, 1.0);
   }`;
@@ -426,9 +383,9 @@
     return s;
   }
 
-  function program(fragSrc) {
+  function program(vertSrc, fragSrc) {
     const p = gl.createProgram();
-    gl.attachShader(p, compile(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(p, compile(gl.VERTEX_SHADER, vertSrc));
     gl.attachShader(p, compile(gl.FRAGMENT_SHADER, fragSrc));
     gl.linkProgram(p);
     if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
@@ -437,35 +394,261 @@
     return p;
   }
 
-  let sceneProg, compProg;
+  let terrainProg, cubeProg, compProg;
   try {
-    sceneProg = program(SCENE_FRAG);
-    compProg = program(COMP_FRAG);
+    terrainProg = program(QUAD_VERT, TERRAIN_FRAG);
+    cubeProg = program(CUBE_VERT, CUBE_FRAG);
+    compProg = program(QUAD_VERT, COMP_FRAG);
   } catch (err) {
     console.error("MiroFish site: shader failure, falling back.", err);
     document.body.classList.add("no-webgl");
     return;
   }
 
-  const quad = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, quad);
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new Float32Array([-1, -1, 3, -1, -1, 3]), // fullscreen triangle
-    gl.STATIC_DRAW
-  );
-  gl.enableVertexAttribArray(0);
-  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-
   const U = (prog, name) => gl.getUniformLocation(prog, name);
-  const su = {
-    res: U(sceneProg, "uRes"), time: U(sceneProg, "uTime"),
-    id: U(sceneProg, "uId"), mouse: U(sceneProg, "uMouse"),
+  const tu = {
+    res: U(terrainProg, "uRes"), time: U(terrainProg, "uTime"),
+    id: U(terrainProg, "uId"), mouse: U(terrainProg, "uMouse"),
+  };
+  const ku = {
+    proj: U(cubeProg, "uProj"), spin: U(cubeProg, "uSpin"),
+    mouse: U(cubeProg, "uMouse"), time: U(cubeProg, "uTime"),
+    shell: U(cubeProg, "uShell"),
   };
   const cu = {
     a: U(compProg, "tA"), b: U(compProg, "tB"), prog: U(compProg, "uProg"),
     vel: U(compProg, "uVel"), time: U(compProg, "uTime"), res: U(compProg, "uRes"),
   };
+
+  /* fullscreen triangle */
+  const quadVao = gl.createVertexArray();
+  gl.bindVertexArray(quadVao);
+  const quadBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);
+  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+
+  /* ---------- rounded-cube mesh (built from 6 face grids) ---------- */
+
+  function buildRoundedCube(segments, cubify) {
+    const verts = [];
+    const idx = [];
+    const faces = [
+      { u: [1, 0, 0], v: [0, 1, 0], w: [0, 0, 1] },
+      { u: [-1, 0, 0], v: [0, 1, 0], w: [0, 0, -1] },
+      { u: [0, 0, -1], v: [0, 1, 0], w: [1, 0, 0] },
+      { u: [0, 0, 1], v: [0, 1, 0], w: [-1, 0, 0] },
+      { u: [1, 0, 0], v: [0, 0, -1], w: [0, 1, 0] },
+      { u: [1, 0, 0], v: [0, 0, 1], w: [0, -1, 0] },
+    ];
+    const point = (f, s, t2) => {
+      const c = [
+        f.u[0] * s + f.v[0] * t2 + f.w[0],
+        f.u[1] * s + f.v[1] * t2 + f.w[1],
+        f.u[2] * s + f.v[2] * t2 + f.w[2],
+      ];
+      const len = Math.hypot(c[0], c[1], c[2]);
+      const sph = [c[0] / len, c[1] / len, c[2] / len];
+      // blend sphere → cube: rounded block
+      return [
+        (sph[0] + (c[0] - sph[0]) * cubify) * 0.5,
+        (sph[1] + (c[1] - sph[1]) * cubify) * 0.5,
+        (sph[2] + (c[2] - sph[2]) * cubify) * 0.5,
+      ];
+    };
+    for (const f of faces) {
+      const baseIndex = verts.length / 6;
+      for (let j = 0; j <= segments; j++) {
+        for (let i = 0; i <= segments; i++) {
+          const s = (i / segments) * 2 - 1;
+          const t2 = (j / segments) * 2 - 1;
+          const p = point(f, s, t2);
+          // normal from finite-difference tangents
+          const e = 0.01;
+          const pu = point(f, s + e, t2);
+          const pv = point(f, s, t2 + e);
+          const du = [pu[0] - p[0], pu[1] - p[1], pu[2] - p[2]];
+          const dv = [pv[0] - p[0], pv[1] - p[1], pv[2] - p[2]];
+          let n = [
+            du[1] * dv[2] - du[2] * dv[1],
+            du[2] * dv[0] - du[0] * dv[2],
+            du[0] * dv[1] - du[1] * dv[0],
+          ];
+          const nl = Math.hypot(n[0], n[1], n[2]) || 1;
+          n = [n[0] / nl, n[1] / nl, n[2] / nl];
+          // ensure outward
+          if (n[0] * p[0] + n[1] * p[1] + n[2] * p[2] < 0) n = [-n[0], -n[1], -n[2]];
+          verts.push(p[0], p[1], p[2], n[0], n[1], n[2]);
+        }
+      }
+      for (let j = 0; j < segments; j++) {
+        for (let i = 0; i < segments; i++) {
+          const a = baseIndex + j * (segments + 1) + i;
+          const b = a + 1;
+          const c2 = a + segments + 1;
+          const d = c2 + 1;
+          idx.push(a, c2, b, b, c2, d);
+        }
+      }
+    }
+    return { verts: new Float32Array(verts), idx: new Uint16Array(idx) };
+  }
+
+  const mesh = buildRoundedCube(5, 0.78);
+
+  /* ---------- formations: one per section ---------- */
+
+  const COUNT = 110;
+  const rand = (i, k) => {
+    // deterministic pseudo-random per instance/channel
+    const x = Math.sin(i * 127.1 + k * 311.7) * 43758.5453;
+    return x - Math.floor(x);
+  };
+
+  // Grid-packed cells inside a left-facing fish silhouette — blocks stack
+  // like masonry so the shape reads even from a wall of cubes.
+  const fishCells = (() => {
+    const cells = [];
+    const pitch = 0.145;
+    for (let gy = -4; gy <= 4; gy++) {
+      for (let gx = -7; gx <= 7; gx++) {
+        const x = gx * pitch + (gy % 2 ? pitch * 0.5 : 0); // brick offset
+        const y = gy * pitch;
+        const inBody = ((x + 0.2) ** 2) / (0.7 ** 2) + (y ** 2) / (0.34 ** 2) < 1;
+        const inTail = x > 0.42 && x < 1.0 && Math.abs(y) < 0.32 * ((x - 0.42) / 0.58);
+        const inFin = y > 0.3 && y < 0.3 + Math.max(0, 0.26 - Math.abs(x + 0.3) * 1.1);
+        if (inBody || inTail || inFin) cells.push([x, y]);
+      }
+    }
+    return cells;
+  })();
+
+  function fishPoint(i, scale, salt) {
+    const cell = fishCells[i % fishCells.length];
+    const layer = Math.floor(i / fishCells.length) % 2 ? -0.07 : 0.07;
+    return [
+      (cell[0] + (rand(i, 31 + salt) - 0.5) * 0.05) * scale,
+      (cell[1] + (rand(i, 32 + salt) - 0.5) * 0.05) * scale,
+      (layer + (rand(i, 33 + salt) - 0.5) * 0.05) * scale,
+    ];
+  }
+
+  const formations = [
+    // 0 — hero: the block-built fish
+    (i) => fishPoint(i, 1.15, 0),
+    // 1 — seed: fibonacci lattice sphere (a world crystallizing)
+    (i) => {
+      const g = (1 + Math.sqrt(5)) / 2;
+      const th = (2 * Math.PI * i) / g;
+      const ph = Math.acos(1 - (2 * (i + 0.5)) / COUNT);
+      const r = 0.92;
+      return [
+        r * Math.sin(ph) * Math.cos(th),
+        r * Math.cos(ph),
+        r * Math.sin(ph) * Math.sin(th),
+      ];
+    },
+    // 2 — swarm: tilted vortex ring
+    (i) => {
+      const a = (i / COUNT) * Math.PI * 2 * 3 + rand(i, 3);
+      const R = 0.85 + (rand(i, 4) - 0.5) * 0.22;
+      const y = (rand(i, 5) - 0.5) * 0.4;
+      const p = [Math.cos(a) * R, y, Math.sin(a) * R];
+      const tilt = 0.5;
+      return [
+        p[0],
+        p[1] * Math.cos(tilt) - p[2] * Math.sin(tilt) * 0.4,
+        p[1] * Math.sin(tilt) * 0.4 + p[2] * Math.cos(tilt),
+      ];
+    },
+    // 3 — rehearse: futures fanning out from one origin
+    (i) => {
+      const line = i % 7;
+      const along = Math.floor(i / 7) / Math.floor(COUNT / 7);
+      const slope = (line - 3) * 0.28;
+      const x = -1.0 + along * 2.1;
+      const s2 = (x + 1.0) / 2.1;
+      return [
+        x,
+        slope * s2 * s2 * 1.1 + (rand(i, 6) - 0.5) * 0.06,
+        (rand(i, 7) - 0.5) * 0.3 * s2,
+      ];
+    },
+    // 4 — cases: ordered lab grid vs. loose playful cloud
+    (i) => {
+      if (i % 2 === 0) {
+        const k = i / 2;
+        const gx = k % 4, gy = Math.floor(k / 4) % 4, gz = Math.floor(k / 16);
+        return [-0.95 + gx * 0.21, -0.32 + gy * 0.21, -0.2 + gz * 0.21];
+      }
+      const r = 0.55 * Math.cbrt(rand(i, 8));
+      const th = rand(i, 9) * Math.PI * 2;
+      const ph = Math.acos(rand(i, 10) * 2 - 1);
+      return [
+        0.75 + r * Math.sin(ph) * Math.cos(th),
+        r * Math.cos(ph) * 0.8,
+        r * Math.sin(ph) * Math.sin(th),
+      ];
+    },
+    // 5 — outro: the fish meets its reflection
+    (i) => {
+      const p = fishPoint(Math.floor(i / 2), 0.95, 40);
+      const mirrored = i % 2 === 1;
+      return [
+        p[0] + (mirrored ? (rand(i, 11) - 0.5) * 0.1 : 0),
+        mirrored ? -0.62 - p[1] : 0.62 + p[1],
+        p[2],
+      ];
+    },
+  ];
+
+  /* Per-formation placement: keep the sculpture clear of the copy on wide
+   * screens; xFactor squeezes it back toward center on narrow viewports. */
+  const FORM_OFF = [
+    [0.85, 0.05, 0], [0.82, 0.0, 0], [0.78, 0.0, 0],
+    [0.42, 0.0, 0], [0.35, 0.42, 0], [0.0, 0.12, 0],
+  ];
+  const FORM_SCALE = [0.95, 0.9, 0.85, 0.95, 0.72, 0.78];
+
+  /* instance state: positions ease toward the active formation */
+  const cur = new Float32Array(COUNT * 3);
+  const scales = new Float32Array(COUNT);
+  const seeds = new Float32Array(COUNT);
+  for (let i = 0; i < COUNT; i++) {
+    const p = formations[0](i);
+    cur.set(p, i * 3);
+    scales[i] = 0.105 + rand(i, 20) * 0.05;
+    seeds[i] = rand(i, 21);
+  }
+
+  /* cube VAO with per-instance buffer */
+  const cubeVao = gl.createVertexArray();
+  gl.bindVertexArray(cubeVao);
+  const vb = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vb);
+  gl.bufferData(gl.ARRAY_BUFFER, mesh.verts, gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);
+  gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 24, 0);
+  gl.enableVertexAttribArray(1);
+  gl.vertexAttribPointer(1, 3, gl.FLOAT, false, 24, 12);
+  const ib = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, mesh.idx, gl.STATIC_DRAW);
+
+  const instBuf = gl.createBuffer();
+  const instData = new Float32Array(COUNT * 5); // pos.xyz, scale, seed
+  gl.bindBuffer(gl.ARRAY_BUFFER, instBuf);
+  gl.bufferData(gl.ARRAY_BUFFER, instData.byteLength, gl.DYNAMIC_DRAW);
+  gl.enableVertexAttribArray(2);
+  gl.vertexAttribPointer(2, 3, gl.FLOAT, false, 20, 0);
+  gl.vertexAttribDivisor(2, 1);
+  gl.enableVertexAttribArray(3);
+  gl.vertexAttribPointer(3, 2, gl.FLOAT, false, 20, 12);
+  gl.vertexAttribDivisor(3, 1);
+  gl.bindVertexArray(null);
+
+  /* ---------- render targets (color + depth) ---------- */
 
   function makeTarget() {
     const tex = gl.createTexture();
@@ -474,13 +657,24 @@
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    const fbo = gl.createFramebuffer();
-    return { tex, fbo, w: 0, h: 0 };
+    return { tex, fbo: gl.createFramebuffer(), depth: gl.createRenderbuffer() };
   }
   const targetA = makeTarget();
   const targetB = makeTarget();
 
   let W = 0, H = 0;
+  const proj = new Float32Array(16);
+
+  function perspective(out, fovy, aspect, near, far) {
+    const f = 1 / Math.tan(fovy / 2);
+    out.fill(0);
+    out[0] = f / aspect;
+    out[5] = f;
+    out[10] = (far + near) / (near - far);
+    out[11] = -1;
+    out[14] = (2 * far * near) / (near - far);
+  }
+
   function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 1.8);
     W = Math.max(2, Math.floor(innerWidth * dpr));
@@ -490,16 +684,19 @@
     for (const t of [targetA, targetB]) {
       gl.bindTexture(gl.TEXTURE_2D, t.tex);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, W, H, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      gl.bindRenderbuffer(gl.RENDERBUFFER, t.depth);
+      gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, W, H);
       gl.bindFramebuffer(gl.FRAMEBUFFER, t.fbo);
       gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, t.tex, 0);
-      t.w = W; t.h = H;
+      gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, t.depth);
     }
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    perspective(proj, 0.66, W / H, 0.1, 20);
   }
   resize();
   addEventListener("resize", resize);
 
-  /* ---------- pointer parallax ---------- */
+  /* ---------- pointer ---------- */
 
   const mouse = { x: 0, y: 0, sx: 0, sy: 0 };
   addEventListener("pointermove", (e) => {
@@ -507,27 +704,55 @@
     mouse.y = (e.clientY / innerHeight) * -2 + 1;
   }, { passive: true });
 
-  /* ---------- render loop ---------- */
+  /* ---------- render passes ---------- */
 
-  function renderScene(target, id, time) {
+  function renderInto(target, id, time, spin) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, target.fbo);
     gl.viewport(0, 0, W, H);
-    gl.useProgram(sceneProg);
-    gl.uniform2f(su.res, W, H);
-    gl.uniform1f(su.time, time);
-    gl.uniform1i(su.id, id);
-    gl.uniform2f(su.mouse, mouse.sx, mouse.sy);
+
+    // 1. terrain backdrop
+    gl.disable(gl.DEPTH_TEST);
+    gl.disable(gl.BLEND);
+    gl.useProgram(terrainProg);
+    gl.bindVertexArray(quadVao);
+    gl.uniform2f(tu.res, W, H);
+    gl.uniform1f(tu.time, time);
+    gl.uniform1i(tu.id, id);
+    gl.uniform2f(tu.mouse, mouse.sx, mouse.sy);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+    // 2. ice blocks
+    gl.enable(gl.DEPTH_TEST);
+    gl.clear(gl.DEPTH_BUFFER_BIT);
+    gl.useProgram(cubeProg);
+    gl.bindVertexArray(cubeVao);
+    gl.uniformMatrix4fv(ku.proj, false, proj);
+    gl.uniform1f(ku.spin, spin);
+    gl.uniform2f(ku.mouse, mouse.sx, mouse.sy);
+    gl.uniform1f(ku.time, time);
+    gl.uniform1f(ku.shell, 0);
+    gl.drawElementsInstanced(gl.TRIANGLES, mesh.idx.length, gl.UNSIGNED_SHORT, 0, COUNT);
+
+    // 3. glow shells (additive)
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    gl.depthMask(false);
+    gl.uniform1f(ku.shell, 1);
+    gl.drawElementsInstanced(gl.TRIANGLES, mesh.idx.length, gl.UNSIGNED_SHORT, 0, COUNT);
+    gl.depthMask(true);
+    gl.disable(gl.BLEND);
+    gl.bindVertexArray(null);
   }
 
+  /* ---------- main loop ---------- */
+
   let last = performance.now();
-  let frozenTime = 40.0; // pleasant static frame for reduced-motion users
+  const frozenTime = 40.0;
 
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
 
-    // Frame-rate-independent damping toward the raw scroll position.
     const target = rawProgress();
     const k = 1 - Math.exp(-dt * 7.5);
     const prev = smooth;
@@ -542,15 +767,42 @@
 
     const a = Math.min(N - 2, Math.max(0, Math.floor(smooth)));
     let t = smooth - a;
-    if (reducedMotion) t = Math.round(t); // hard cut, no swirl
+    if (reducedMotion) t = Math.round(t);
     const time = reducedMotion ? frozenTime : now / 1000;
 
-    renderScene(targetA, a, time);
-    if (t > 0.0005) renderScene(targetB, a + 1, time);
+    // morph instances toward the blended formation target
+    const ease = t * t * (3 - 2 * t);
+    const mk = reducedMotion ? 1 : 1 - Math.exp(-dt * 3.4);
+    const xf = Math.min(1, (W / H) * 0.62); // recenter on narrow screens
+    const b = Math.min(a + 1, N - 1);
+    for (let i = 0; i < COUNT; i++) {
+      const pa = formations[a](i);
+      const pb = formations[b](i);
+      for (let c = 0; c < 3; c++) {
+        const ga = pa[c] * FORM_SCALE[a] + FORM_OFF[a][c] * (c === 0 ? xf : 1);
+        const gb = pb[c] * FORM_SCALE[b] + FORM_OFF[b][c] * (c === 0 ? xf : 1);
+        const goal = ga + (gb - ga) * ease;
+        cur[i * 3 + c] += (goal - cur[i * 3 + c]) * mk;
+      }
+      instData[i * 5] = cur[i * 3];
+      instData[i * 5 + 1] = cur[i * 3 + 1];
+      instData[i * 5 + 2] = cur[i * 3 + 2];
+      instData[i * 5 + 3] = scales[i];
+      instData[i * 5 + 4] = seeds[i];
+    }
+    gl.bindBuffer(gl.ARRAY_BUFFER, instBuf);
+    gl.bufferSubData(gl.ARRAY_BUFFER, 0, instData);
 
+    const spin = reducedMotion ? 0 : Math.sin(time * 0.22) * 0.2;
+    renderInto(targetA, a, time, spin);
+    if (t > 0.0005) renderInto(targetB, a + 1, time, spin);
+
+    // composite
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, W, H);
+    gl.disable(gl.DEPTH_TEST);
     gl.useProgram(compProg);
+    gl.bindVertexArray(quadVao);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, targetA.tex);
     gl.activeTexture(gl.TEXTURE1);
@@ -562,6 +814,7 @@
     gl.uniform1f(cu.time, time);
     gl.uniform2f(cu.res, W, H);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
+    gl.bindVertexArray(null);
 
     requestAnimationFrame(frame);
   }

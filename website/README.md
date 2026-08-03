@@ -1,9 +1,11 @@
 # MiroFish Marketing Site
 
 A dependency-free, single-page marketing site for MiroFish with a scroll-driven
-WebGL experience: six procedural shader scenes (one per section), a noise-cut
-flip transition between them, spectral chromatic aberration, pointer parallax,
-and film grain — all implemented from scratch in raw WebGL2 for this project.
+WebGL experience in a bright "frost" aesthetic: layered snowy-mountain shader
+backdrops, a persistent 3D centerpiece — a fish sculpted from ~110 glowing ice
+blocks that morphs into a new formation for every section — a noise-cut flip
+transition with spectral chromatic aberration, snowfall, pointer parallax, and
+film grain. All implemented from scratch in raw WebGL2 for this project.
 
 ## Run it
 
