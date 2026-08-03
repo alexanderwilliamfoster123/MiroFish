@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
 
 const ROWS = [
-  { label: "Upfront cost — $2,497, once", other: "$10,000+" },
+  { label: "No upfront cost — one simple AUM fee", other: "$10,000+ upfront" },
+  { label: "Fully transparent — every fee disclosed", other: "Hidden brokerage fees" },
   { label: "Regulated US brokerages", other: "Offshore, unregulated" },
   { label: "US CPA-audited returns", other: "None" },
   { label: "Real, self-evolving AI", other: "Set-and-forget marketing" },
