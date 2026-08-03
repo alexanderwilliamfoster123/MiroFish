@@ -1,5 +1,6 @@
 import { CSSProperties, useMemo, useState } from "react";
 import FadeUp from "./FadeUp";
+import ProjectionFan from "@/components/ui/projection-fan";
 
 // Average monthly rates derived from each portfolio's backtested CAGR
 const STRATS = [
@@ -98,7 +99,41 @@ const Calculator = () => {
       const y = year + Math.floor((month + idx) / 12);
       return `${MONTHS[m].slice(0, 3)} ${y}`;
     });
-    return { qPath, bPath, areaPath, balance, profit, pct, ticks };
+
+    // Backwards table — balance at each calendar year end
+    const yearRows: { year: number; balance: number; cum: number }[] = [];
+    for (let Y = year; Y <= now.getFullYear(); Y++) {
+      const i = Math.min(n, (Y - year + 1) * 12 - month);
+      if (i <= 0) continue;
+      yearRows.push({
+        year: Y,
+        balance: series[i],
+        cum: safeAmount > 0 ? (series[i] / safeAmount - 1) * 100 : 0,
+      });
+    }
+
+    // Forward projections — low / expected / aggressive off the strategy's avg annual rate
+    const annual = Math.pow(1 + r, 12) - 1;
+    const rates = { low: annual * 0.5, mid: annual, agg: annual * 1.5 };
+    const fwdRows = [1, 3, 5, 10].map((yrs) => ({
+      yrs,
+      low: balance * Math.pow(1 + rates.low, yrs),
+      mid: balance * Math.pow(1 + rates.mid, yrs),
+      agg: balance * Math.pow(1 + rates.agg, yrs),
+    }));
+
+    // Fan chart inputs — downsampled history + 12-month targets, high → low
+    const step = Math.max(1, Math.floor(series.length / 60));
+    const fanHistory = series.filter((_, i) => i % step === 0);
+    if (fanHistory[fanHistory.length - 1] !== balance) fanHistory.push(balance);
+    const fanTargets = [
+      { key: "Aggressive", value: balance * (1 + rates.agg), color: "#7FD4B4", sub: `+${(rates.agg * 100).toFixed(1)}% /yr` },
+      { key: "Expected", value: balance * (1 + rates.mid), color: "#A3B18A", sub: `+${(rates.mid * 100).toFixed(1)}% /yr` },
+      { key: "Conservative", value: balance * (1 + rates.low), color: "#C9A25E", sub: `+${(rates.low * 100).toFixed(1)}% /yr` },
+    ];
+    const startLabel = `${MONTHS[month].slice(0, 3)} ${year}`;
+
+    return { qPath, bPath, areaPath, balance, profit, pct, ticks, yearRows, rates, fwdRows, fanHistory, fanTargets, startLabel };
   }, [amount, strat, month, year, now]);
 
   return (
@@ -314,6 +349,147 @@ const Calculator = () => {
             </p>
           </div>
         </FadeUp>
+
+        {/* Forward projection fan */}
+        <FadeUp className="mt-5" delay={0.1}>
+          <div
+            style={{
+              border: "1px solid rgba(255, 255, 255, 0.10)",
+              borderRadius: "16px",
+              padding: "28px 24px 20px",
+              background: "rgba(255, 255, 255, 0.02)",
+            }}
+          >
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2 px-1">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.12em]" style={{ color: "rgba(255,255,255,0.45)" }}>
+                Forward projection — next 12 months
+              </span>
+              <div className="flex items-center gap-4 text-[12px] font-medium">
+                {calc.fanTargets.map((t) => (
+                  <span key={t.key} className="flex items-center gap-1.5" style={{ color: "rgba(255,255,255,0.60)" }}>
+                    <span className="h-2 w-2 rounded-full" style={{ backgroundColor: t.color }} />
+                    {t.key}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <ProjectionFan
+              history={calc.fanHistory}
+              current={calc.balance}
+              targets={calc.fanTargets}
+              startLabel={calc.startLabel}
+              endLabel="+12 mo"
+              fmt={fmtUsd}
+            />
+          </div>
+        </FadeUp>
+
+        {/* Backwards + forwards tables */}
+        <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+          <FadeUp delay={0.1}>
+            <div
+              className="h-full"
+              style={{
+                border: "1px solid rgba(255, 255, 255, 0.10)",
+                borderRadius: "16px",
+                padding: "24px",
+                background: "rgba(255, 255, 255, 0.02)",
+              }}
+            >
+              <span className="text-[11px] font-semibold uppercase tracking-[0.12em]" style={{ color: "rgba(255,255,255,0.45)" }}>
+                Backtest — year by year
+              </span>
+              <div className="mt-3 max-h-[300px] overflow-y-auto pr-1">
+                <table className="w-full" style={{ borderCollapse: "collapse" }}>
+                  <thead>
+                    <tr>
+                      {["Year", "Balance", "Cumulative"].map((h, i) => (
+                        <th
+                          key={h}
+                          className={`py-1.5 text-[10px] font-semibold uppercase tracking-wide ${i === 0 ? "text-left" : "text-right"}`}
+                          style={{ color: "rgba(255,255,255,0.40)" }}
+                        >
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {calc.yearRows.map((row) => (
+                      <tr key={row.year} style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+                        <td className="py-2 text-[13px] font-semibold tabular-nums" style={{ color: "rgba(255,255,255,0.85)" }}>
+                          {row.year}
+                        </td>
+                        <td className="py-2 text-right text-[13px] font-medium tabular-nums" style={{ color: "rgba(255,255,255,0.70)" }}>
+                          {fmtUsd(row.balance)}
+                        </td>
+                        <td className="py-2 text-right text-[13px] font-semibold tabular-nums" style={{ color: "#A3B18A" }}>
+                          +{row.cum.toLocaleString("en-US", { maximumFractionDigits: 1 })}%
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </FadeUp>
+
+          <FadeUp delay={0.18}>
+            <div
+              className="h-full"
+              style={{
+                border: "1px solid rgba(255, 255, 255, 0.10)",
+                borderRadius: "16px",
+                padding: "24px",
+                background: "rgba(255, 255, 255, 0.02)",
+              }}
+            >
+              <span className="text-[11px] font-semibold uppercase tracking-[0.12em]" style={{ color: "rgba(255,255,255,0.45)" }}>
+                Projected balance
+              </span>
+              <table className="mt-3 w-full" style={{ borderCollapse: "collapse" }}>
+                <thead>
+                  <tr>
+                    <th className="py-1.5 text-left text-[10px] font-semibold uppercase tracking-wide" style={{ color: "rgba(255,255,255,0.40)" }}>
+                      Horizon
+                    </th>
+                    {calc.fanTargets
+                      .slice()
+                      .reverse()
+                      .map((t) => (
+                        <th key={t.key} className="py-1.5 text-right text-[10px] font-semibold uppercase tracking-wide" style={{ color: t.color }}>
+                          {t.key}
+                        </th>
+                      ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {calc.fwdRows.map((row) => (
+                    <tr key={row.yrs} style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+                      <td className="py-2.5 text-[13px] font-semibold tabular-nums" style={{ color: "rgba(255,255,255,0.85)" }}>
+                        +{row.yrs} {row.yrs === 1 ? "year" : "years"}
+                      </td>
+                      <td className="py-2.5 text-right text-[13px] font-medium tabular-nums" style={{ color: "#C9A25E" }}>
+                        {fmtUsd(row.low)}
+                      </td>
+                      <td className="py-2.5 text-right text-[13px] font-medium tabular-nums" style={{ color: "#A3B18A" }}>
+                        {fmtUsd(row.mid)}
+                      </td>
+                      <td className="py-2.5 text-right text-[13px] font-medium tabular-nums" style={{ color: "#7FD4B4" }}>
+                        {fmtUsd(row.agg)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className="mt-4 text-[11px] font-medium leading-[1.6]" style={{ color: "rgba(255,255,255,0.30)" }}>
+                Projections compound the strategy's average backtested annual
+                return at 0.5x (conservative), 1x (expected), and 1.5x
+                (aggressive). Illustrative only — not a forecast or guarantee.
+              </p>
+            </div>
+          </FadeUp>
+        </div>
 
         <FadeUp className="mt-10 text-center" delay={0.15}>
           <a
