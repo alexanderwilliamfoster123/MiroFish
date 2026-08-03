@@ -126,6 +126,26 @@ body {
   transform: scale(1.35);
 }
 
+/* ---------- HUD corner furniture ---------- */
+
+.hud__item {
+  position: fixed;
+  z-index: 20;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  pointer-events: none;
+  user-select: none;
+}
+.hud__item--bl { left: clamp(1.2rem, 4vw, 3rem); bottom: 1.4rem; }
+.hud__item--br { right: clamp(1.2rem, 4vw, 3rem); bottom: 1.4rem; }
+
+@media (max-width: 640px) {
+  .hud__item--br { display: none; }
+}
+
 /* ---------- Panels ---------- */
 
 .panel {

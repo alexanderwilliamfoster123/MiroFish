@@ -58,10 +58,15 @@
 
   const inners = panels.map((p) => p.querySelector(".panel__inner"));
   const nav = document.getElementById("nav");
+  const hudCounter = document.getElementById("hudCounter");
 
   function updateDOM() {
     const active = Math.round(smooth);
     dots.forEach((d, i) => d.classList.toggle("active", i === active));
+    if (hudCounter) {
+      hudCounter.textContent =
+        String(active + 1).padStart(2, "0") + " / " + String(N).padStart(2, "0");
+    }
     nav.classList.toggle("nav--solid", smooth > 0.35);
     if (reducedMotion) return;
     for (let i = 0; i < N; i++) {
