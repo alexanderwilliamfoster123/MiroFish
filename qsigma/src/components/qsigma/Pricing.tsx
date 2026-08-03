@@ -52,8 +52,8 @@ const Pricing = () => {
             className="mx-auto mt-4 md:mt-5 text-[14px] sm:text-[16px]"
             style={{ fontWeight: 500, color: "rgba(0, 0, 0, 0.40)", maxWidth: "480px" }}
           >
-            No tiers, no seats, no surprises — a single AUM-based fee that
-            scales with your account.
+            No tiers, no seats, no surprises — one transparent price to join,
+            and every fee disclosed.
           </p>
         </FadeUp>
 
@@ -97,22 +97,22 @@ const Pricing = () => {
                   color: "#FFFFFF",
                 }}
               >
-                0.50%
+                $2,497
               </span>
               <span
                 className="text-[15px]"
                 style={{ fontWeight: 500, color: "rgba(255,255,255,0.45)" }}
               >
-                of AUM / month
+                once — lifetime access
               </span>
             </div>
             <p
-              className="mt-3 text-[14px]"
-              style={{ fontWeight: 500, color: "rgba(255,255,255,0.55)" }}
+              className="mt-3 text-[13px]"
+              style={{ fontWeight: 500, color: "rgba(255,255,255,0.45)" }}
             >
-              50 basis points, billed monthly on average assets under
-              management, plus a one-time $2,497 onboarding. Every fee
-              disclosed — nothing hidden.
+              One transparent onboarding fee, then a light 0.50% of AUM per
+              month billed on average assets. Every fee disclosed — nothing
+              hidden.
             </p>
 
             <ul className="mt-7 flex flex-col gap-3">

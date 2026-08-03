@@ -8,40 +8,79 @@ import { Label } from "@/components/ui/label";
 const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
 const MOSS = "#5F7052";
 
+const VisaIcon = () => (
+  <span
+    className="flex h-8 w-12 items-center justify-center rounded-md"
+    style={{ backgroundColor: "#F4F6FA", border: "1px solid rgba(0,0,0,0.06)" }}
+  >
+    <svg width="34" height="12" viewBox="0 0 34 12" aria-label="Visa" role="img">
+      <text
+        x="17"
+        y="10.5"
+        textAnchor="middle"
+        fontFamily="Helvetica, Arial, sans-serif"
+        fontWeight="800"
+        fontStyle="italic"
+        fontSize="12"
+        letterSpacing="0.5"
+        fill="#1A1F71"
+      >
+        VISA
+      </text>
+    </svg>
+  </span>
+);
+
+const MastercardIcon = () => (
+  <span
+    className="flex h-8 w-12 items-center justify-center rounded-md"
+    style={{ backgroundColor: "#F4F6FA", border: "1px solid rgba(0,0,0,0.06)" }}
+  >
+    <svg width="30" height="20" viewBox="0 0 30 20" aria-label="Mastercard" role="img">
+      <circle cx="11.5" cy="10" r="8" fill="#EB001B" />
+      <circle cx="18.5" cy="10" r="8" fill="#F79E1B" />
+      <path
+        d="M15 3.7a8 8 0 0 1 0 12.6 8 8 0 0 1 0-12.6Z"
+        fill="#FF5F00"
+      />
+    </svg>
+  </span>
+);
+
+const PayPalIcon = () => (
+  <span
+    className="flex h-8 w-12 items-center justify-center rounded-md"
+    style={{ backgroundColor: "#F4F6FA", border: "1px solid rgba(0,0,0,0.06)" }}
+  >
+    <svg width="16" height="18" viewBox="0 0 24 28" aria-label="PayPal" role="img">
+      <path
+        d="M19.9 3.2C18.6 1.7 16.3 1 13.4 1H5.9c-.5 0-1 .4-1.1.9L1.7 21.5c-.1.4.2.8.6.8h4.6l1.2-7.4-.1.5c.1-.5.6-.9 1.1-.9h2.3c4.6 0 8.1-1.9 9.2-7.2v-.5c-.1-1.2-.3-2.1-.7-2.6Z"
+        fill="#253B80"
+      />
+      <path
+        d="M20.6 5.8v.5c-1 5.4-4.6 7.2-9.2 7.2H9.1c-.5 0-1 .4-1.1.9L6.8 22l-.4 2.3c0 .4.3.7.6.7h4.1c.5 0 .9-.3 1-.8v-.2l.8-4.9v-.3c.1-.5.5-.8 1-.8h.6c4 0 7.1-1.6 8-6.3.4-2 .2-3.6-.8-4.8-.3-.4-.7-.8-1.1-1.1Z"
+        fill="#179BD7"
+      />
+    </svg>
+  </span>
+);
+
 const PAYMENT_METHODS = [
   {
     id: "visa",
-    icon: (
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png"
-        alt="Visa"
-        className="h-7 w-11 object-contain"
-      />
-    ),
+    icon: <VisaIcon />,
     label: "Visa **** 0912",
     description: "Pay with your Visa card",
   },
   {
     id: "mastercard",
-    icon: (
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mastercard_2019_logo.svg/1200px-Mastercard_2019_logo.svg.png"
-        alt="Mastercard"
-        className="h-7 w-11 object-contain"
-      />
-    ),
+    icon: <MastercardIcon />,
     label: "Mastercard **** 0912",
     description: "Pay with your Mastercard",
   },
   {
     id: "paypal",
-    icon: (
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/b/b7/PayPal_Logo_Icon_2014.svg"
-        alt="PayPal"
-        className="h-7 w-11 object-contain"
-      />
-    ),
+    icon: <PayPalIcon />,
     label: "Pay with PayPal",
     description: "Checkout with your PayPal account",
   },

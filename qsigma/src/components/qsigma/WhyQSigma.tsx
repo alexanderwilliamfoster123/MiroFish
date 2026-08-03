@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 
 const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
 
-const ROWS = [
-  { label: "$2,497 upfront, once", other: "$10,000+ upfront" },
-  { label: "Fully transparent — every fee disclosed", other: "Hidden brokerage fees" },
+const ROWS: { label: string; other: string; value?: string }[] = [
+  { label: "Cost to get started", value: "$2,497, once", other: "$10,000+ upfront" },
+  { label: "Fee transparency", value: "Every fee disclosed", other: "Hidden brokerage fees" },
   { label: "Regulated US brokerages", other: "Offshore, unregulated" },
   { label: "US CPA-audited returns", other: "None" },
   { label: "Real, self-evolving AI", other: "Marketing stunt" },
@@ -216,9 +216,9 @@ export default function WhyQSigma() {
                       qsigma
                     </span>
                   </div>
-                  {/* Checks aligned to left row heights */}
+                  {/* Values / checks aligned to left row heights */}
                   <div className="flex flex-col w-full">
-                    {ROWS.map((_, i) => (
+                    {ROWS.map((r, i) => (
                       <motion.div
                         key={i}
                         initial={{ opacity: 0, scale: 0.4 }}
@@ -228,7 +228,16 @@ export default function WhyQSigma() {
                         className="flex items-center justify-center"
                         style={{ height: ROW_H }}
                       >
-                        <CheckIcon className="text-black" />
+                        {r.value ? (
+                          <span
+                            className="text-center text-[13px] leading-tight"
+                            style={{ fontWeight: 600, color: "#0A0A0A" }}
+                          >
+                            {r.value}
+                          </span>
+                        ) : (
+                          <CheckIcon className="text-black" />
+                        )}
                       </motion.div>
                     ))}
                   </div>
