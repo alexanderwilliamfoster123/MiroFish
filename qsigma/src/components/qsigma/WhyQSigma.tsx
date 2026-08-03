@@ -262,7 +262,7 @@ export default function WhyQSigma() {
                     viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 0.6, delay: baseDelay + 0.14, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <span>$29</span>
+                    <span>0.50% AUM</span>
                     <span className="text-white/90"> / month</span>
                   </motion.div>
                   <motion.div
