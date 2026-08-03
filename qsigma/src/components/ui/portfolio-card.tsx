@@ -342,6 +342,27 @@ export default function PortfolioCard({
             Factsheet
           </button>
         )}
+        <a
+          href="https://alphaledger.ai"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="flex-1 text-center transition-colors duration-200 hover:bg-black/5"
+          style={{
+            backgroundColor: "transparent",
+            color: "#05050C",
+            fontFamily: "inherit",
+            fontWeight: 600,
+            fontSize: "13px",
+            borderRadius: "9999px",
+            border: "1px solid rgba(0,0,0,0.15)",
+            padding: "12px 20px",
+            cursor: "pointer",
+            textDecoration: "none",
+          }}
+        >
+          Audit
+        </a>
       </div>
     </article>
   );

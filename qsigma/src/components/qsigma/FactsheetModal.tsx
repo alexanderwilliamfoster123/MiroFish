@@ -453,24 +453,44 @@ export default function FactsheetModal({ portfolio: p, onClose, onSubscribe }: F
                   performance does not guarantee future results. Investing
                   involves risk, including possible loss of principal.
                 </p>
-                <button
-                  type="button"
-                  onClick={onSubscribe}
-                  className="shrink-0 transition-colors duration-200 hover:bg-[#333333]"
-                  style={{
-                    backgroundColor: "#111111",
-                    color: "#FFFFFF",
-                    fontFamily: "inherit",
-                    fontWeight: 600,
-                    fontSize: "13px",
-                    borderRadius: "9999px",
-                    border: "none",
-                    padding: "12px 28px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Subscribe to {p.name}
-                </button>
+                <div className="flex shrink-0 items-center gap-2">
+                  <a
+                    href="https://alphaledger.ai"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-colors duration-200 hover:bg-black/5"
+                    style={{
+                      color: "#05050C",
+                      fontFamily: "inherit",
+                      fontWeight: 600,
+                      fontSize: "13px",
+                      borderRadius: "9999px",
+                      border: "1px solid rgba(0,0,0,0.15)",
+                      padding: "12px 24px",
+                      textDecoration: "none",
+                    }}
+                  >
+                    Audit
+                  </a>
+                  <button
+                    type="button"
+                    onClick={onSubscribe}
+                    className="transition-colors duration-200 hover:bg-[#333333]"
+                    style={{
+                      backgroundColor: "#111111",
+                      color: "#FFFFFF",
+                      fontFamily: "inherit",
+                      fontWeight: 600,
+                      fontSize: "13px",
+                      borderRadius: "9999px",
+                      border: "none",
+                      padding: "12px 28px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Subscribe to {p.name}
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>

@@ -14,8 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
-const BG =
-  "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+const BG = "https://qclay.design/lovable/synex/GrassTree.png";
 
 interface AuthModalProps {
   open: boolean;
@@ -53,6 +52,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
           <div
             className="absolute inset-0"
             style={{
+              backgroundColor: "#F2F2F0",
               backgroundImage: `url(${BG})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
@@ -61,7 +61,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
           />
           <div
             className="absolute inset-0 pointer-events-none"
-            style={{ background: "rgba(5, 5, 12, 0.35)" }}
+            style={{ background: "rgba(5, 5, 12, 0.45)" }}
           />
 
           <motion.div
