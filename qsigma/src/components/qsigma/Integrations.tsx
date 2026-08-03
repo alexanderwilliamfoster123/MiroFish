@@ -3,49 +3,57 @@ import { useEffect, useRef, useState } from "react";
 
 const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
 
-// SnapTrade-supported brokerages (https://snaptrade.com/brokerage-integrations)
+// SnapTrade brokerage integrations (https://snaptrade.com/brokerage-integrations)
+// name + brand-colored logo mark (glyph)
 const SNAPTRADE_BROKERAGES = [
-  "Robinhood",
-  "Fidelity",
-  "Charles Schwab",
-  "E*TRADE",
-  "Interactive Brokers",
-  "Webull",
-  "Vanguard",
-  "Alpaca",
-  "Tradier",
-  "Tastytrade",
-  "Public",
-  "Moomoo",
-  "SoFi Invest",
-  "Ally Invest",
-  "Questrade",
-  "Wealthsimple",
-  "Trading 212",
-  "DEGIRO",
-  "Stake",
-  "Zerodha",
-  "eToro",
-  "Coinbase",
-  "Kraken",
-  "Gemini",
-  "Binance.US",
-  "Crypto.com",
+  { name: "AJ Bell", color: "#C8102E", glyph: "AJ" },
+  { name: "Alpaca", color: "#F2C218", glyph: "A" },
+  { name: "Binance", color: "#F3BA2F", glyph: "B" },
+  { name: "BUX", color: "#111111", glyph: "BX" },
+  { name: "Chase", color: "#117ACA", glyph: "Ch" },
+  { name: "Citi", color: "#1D66DD", glyph: "C" },
+  { name: "Coinbase", color: "#0052FF", glyph: "C" },
+  { name: "Commsec", color: "#E3B505", glyph: "CS" },
+  { name: "DEGIRO", color: "#009EE2", glyph: "D" },
+  { name: "E*TRADE", color: "#6633CC", glyph: "E" },
+  { name: "Edward Jones", color: "#D9A400", glyph: "EJ" },
+  { name: "Empower", color: "#C8102E", glyph: "Em" },
+  { name: "eToro", color: "#13C636", glyph: "e" },
+  { name: "Fidelity", color: "#568203", glyph: "F" },
+  { name: "Interactive Brokers", color: "#D91222", glyph: "IB" },
+  { name: "Kraken", color: "#5741D9", glyph: "K" },
+  { name: "Moomoo", color: "#FF6907", glyph: "M" },
+  { name: "PNC", color: "#F58025", glyph: "P" },
+  { name: "Public", color: "#3D3DF5", glyph: "Pb" },
+  { name: "Questrade", color: "#00A950", glyph: "Q" },
+  { name: "Robinhood", color: "#00C805", glyph: "R" },
+  { name: "Schwab", color: "#009CDE", glyph: "S" },
+  { name: "Stake AUS", color: "#111111", glyph: "St" },
+  { name: "tastytrade", color: "#E31837", glyph: "t" },
+  { name: "TD Direct Investing", color: "#54B948", glyph: "TD" },
+  { name: "TIAA", color: "#005EB8", glyph: "T" },
+  { name: "TradeStation", color: "#0075E2", glyph: "TS" },
+  { name: "Tradier", color: "#7A4CE0", glyph: "Tr" },
+  { name: "Trading 212", color: "#00A7E1", glyph: "T2" },
+  { name: "Transamerica", color: "#E4002B", glyph: "Ta" },
+  { name: "Vanguard", color: "#96151D", glyph: "V" },
+  { name: "Wealthsimple", color: "#111111", glyph: "W" },
+  { name: "Webull", color: "#0B7CFF", glyph: "Wb" },
 ];
 
 type Item = { id: string; short: string; color: string };
 
 // Arc carousel cycles through the major SnapTrade brokerages
 const INITIAL_ITEMS: Item[] = [
-  { id: "robinhood", short: "RH", color: "#00C805" },
-  { id: "fidelity", short: "Fi", color: "#4F9E20" },
-  { id: "schwab", short: "CS", color: "#00A0DF" },
+  { id: "robinhood", short: "R", color: "#00C805" },
+  { id: "fidelity", short: "F", color: "#568203" },
+  { id: "schwab", short: "S", color: "#009CDE" },
   { id: "ibkr", short: "IB", color: "#D91222" },
   { id: "core", short: "", color: "" }, // CENTER
-  { id: "webull", short: "Wb", color: "#0057FF" },
-  { id: "coinbase", short: "Cb", color: "#0052FF" },
-  { id: "vanguard", short: "Vg", color: "#96151D" },
-  { id: "etrade", short: "ET", color: "#6633CC" },
+  { id: "chase", short: "Ch", color: "#117ACA" },
+  { id: "coinbase", short: "C", color: "#0052FF" },
+  { id: "binance", short: "B", color: "#F3BA2F" },
+  { id: "etrade", short: "E", color: "#6633CC" },
 ];
 
 // Indices 0..8 map to slot positions -4..+4 relative to center (index 4).
@@ -244,13 +252,19 @@ export default function Integrations() {
             style={{ background: "linear-gradient(to left, #FFFFFF, rgba(255,255,255,0))" }}
           />
           <div className="marquee-track flex w-max items-center gap-3">
-            {[...SNAPTRADE_BROKERAGES, ...SNAPTRADE_BROKERAGES].map((name, i) => (
+            {[...SNAPTRADE_BROKERAGES, ...SNAPTRADE_BROKERAGES].map((b, i) => (
               <span
-                key={`${name}-${i}`}
-                className="whitespace-nowrap rounded-full border border-black/10 bg-white px-4 py-2 text-[13px] font-medium text-black/60 shadow-sm"
+                key={`${b.name}-${i}`}
+                className="flex items-center gap-2.5 whitespace-nowrap rounded-full border border-black/10 bg-white py-1.5 pl-1.5 pr-4 text-[13px] font-medium text-black/70 shadow-sm"
                 style={{ fontFamily: FONT }}
               >
-                {name}
+                <span
+                  className="flex h-7 w-7 items-center justify-center rounded-lg text-[11px] font-bold text-white"
+                  style={{ backgroundColor: b.color }}
+                >
+                  {b.glyph}
+                </span>
+                {b.name}
               </span>
             ))}
           </div>
@@ -266,7 +280,7 @@ export default function Integrations() {
               ))}
           </p>
           <p className="mt-[15px] max-w-[475px] text-black/30 text-lg font-medium">
-            {"Connect Robinhood, Fidelity, Schwab, Interactive Brokers, Coinbase, and every other SnapTrade-supported brokerage. Trades execute in your own account — synchronized in real time."
+            {"Connect Robinhood, Fidelity, Schwab, Chase, Citi, Interactive Brokers, Coinbase, and every other SnapTrade-supported brokerage. Trades execute in your own account — synchronized in real time."
               .split(" ")
               .map((w, i) => (
                 <RevealWord key={`b2-${i}`} text={w} delay={0.2 + i * 0.04} />

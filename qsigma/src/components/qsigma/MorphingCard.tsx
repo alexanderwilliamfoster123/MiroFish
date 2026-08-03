@@ -34,6 +34,11 @@ export default function MorphingCard() {
   const [anchor, setAnchor] = useState<Rect | null>(null);
   const [viewport, setViewport] = useState({ w: 0, h: 0 });
   const sectionBottomRef = useRef(0);
+  // 1 only while #morph-scroll-target actually intersects the viewport.
+  // Guards against Framer's useScroll measuring the section before layout
+  // settles (stale progress > 0 at load would otherwise flash the card
+  // over the hero before any scrolling happens).
+  const sectionNear = useMotionValue(0);
 
   // Track anchor rect (in viewport coords) and viewport size, rAF-throttled
   useEffect(() => {
@@ -58,7 +63,9 @@ export default function MorphingCard() {
       }
       const sec = document.getElementById("morph-scroll-target");
       if (sec) {
-        sectionBottomRef.current = sec.getBoundingClientRect().bottom;
+        const sr = sec.getBoundingClientRect();
+        sectionBottomRef.current = sr.bottom;
+        sectionNear.set(sr.top < window.innerHeight && sr.bottom > 0 ? 1 : 0);
       }
       setViewport((prev) => {
         const w = window.innerWidth;
@@ -103,7 +110,10 @@ export default function MorphingCard() {
   // Morph progress 0→1 across phase (scaled for 115vh section).
   // Compressed range so the card settles — and its text becomes readable — earlier in the scroll.
   const morph = useTransform(p, [0.02, 0.14], [0, 1]);
-  const cardVisibility = useTransform(p, (v) => (v > 0.001 ? 1 : 0));
+  const cardVisibility = useTransform(
+    [p, sectionNear],
+    (values: number[]) => (values[0] > 0.001 && values[1] > 0 ? 1 : 0)
+  );
 
   // Hide the source green card in section 2 the moment the morph card appears
   useEffect(() => {
