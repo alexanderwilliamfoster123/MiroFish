@@ -88,6 +88,58 @@ const STRATEGIES: Omit<StrategyTickerProps, "onSubscribe">[] = [
   },
 ];
 
+// Politician portfolio trackers — rebuilt from public STOCK Act disclosures
+const POLITICIANS: (Omit<StrategyTickerProps, "onSubscribe"> & { avatarColor: string; cta: string })[] = [
+  {
+    name: "Pelosi Tracker",
+    category: "D — California · House",
+    risk: "Most followed",
+    annualReturn: "+46.9%",
+    vsBenchmark: "vs S&P 500 +24.5%",
+    sharpe: "1.5",
+    minimum: "$100",
+    aum: "$823M",
+    flow30d: "+$92.4M",
+    seed: 517,
+    drift: 0.0095,
+    vol: 0.05,
+    avatarColor: "linear-gradient(135deg, #4A6FA5 0%, #2E4A78 100%)",
+    cta: "Follow",
+  },
+  {
+    name: "Crenshaw Tracker",
+    category: "R — Texas · House",
+    risk: "Trending",
+    annualReturn: "+38.7%",
+    vsBenchmark: "vs S&P 500 +16.3%",
+    sharpe: "1.4",
+    minimum: "$100",
+    aum: "$214M",
+    flow30d: "+$18.9M",
+    seed: 839,
+    drift: 0.0085,
+    vol: 0.045,
+    avatarColor: "linear-gradient(135deg, #A55555 0%, #78302E 100%)",
+    cta: "Follow",
+  },
+  {
+    name: "Greene Tracker",
+    category: "R — Georgia · House",
+    risk: "New",
+    annualReturn: "+27.4%",
+    vsBenchmark: "vs S&P 500 +5.0%",
+    sharpe: "1.2",
+    minimum: "$100",
+    aum: "$96M",
+    flow30d: "+$7.1M",
+    seed: 293,
+    drift: 0.007,
+    vol: 0.04,
+    avatarColor: "linear-gradient(135deg, #A55555 0%, #78302E 100%)",
+    cta: "Follow",
+  },
+];
+
 const Strategies = () => {
   return (
     <section
@@ -131,10 +183,49 @@ const Strategies = () => {
           ))}
         </div>
 
+        {/* Politician portfolio trackers */}
+        <FadeUp className="mt-24 text-center">
+          <p
+            className="text-[12px] sm:text-[13px] md:text-[14px] mb-3 md:mb-4"
+            style={{ fontWeight: 500, color: "rgba(0, 0, 0, 0.50)" }}
+          >
+            Politician Portfolios
+          </p>
+          <h3
+            className="text-[28px] sm:text-[34px] md:text-[44px]"
+            style={{ fontWeight: 500, letterSpacing: "-1px", lineHeight: 1.05 }}
+          >
+            <span className="block" style={{ color: "rgba(0, 0, 0, 0.20)" }}>
+              Follow the Smart Money
+            </span>
+            <span className="block" style={{ color: "#05050C" }}>
+              in Washington
+            </span>
+          </h3>
+          <p
+            className="mx-auto mt-4 text-[14px] sm:text-[16px]"
+            style={{ fontWeight: 500, color: "rgba(0, 0, 0, 0.40)", maxWidth: "540px" }}
+          >
+            Mirror the personal portfolios of Congress's most-watched traders —
+            rebuilt from public STOCK Act disclosures the moment they're filed,
+            and executed automatically in your account.
+          </p>
+        </FadeUp>
+
+        <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {POLITICIANS.map((p, i) => (
+            <FadeUp key={p.name} delay={(i % 3) * 0.08}>
+              <StrategyTicker {...p} />
+            </FadeUp>
+          ))}
+        </div>
+
         <FadeUp className="mt-10 text-center">
           <p className="text-[13px]" style={{ fontWeight: 500, color: "rgba(0, 0, 0, 0.35)" }}>
-            Live tickers show simulated strategy NAV series. Returns shown are
-            illustrative, net of fees, since strategy inception. Past
+            Live tickers show simulated NAV series. Returns shown are
+            illustrative, net of fees, since inception. Politician portfolios
+            are constructed from public congressional disclosure filings and
+            are not affiliated with or endorsed by any individual named. Past
             performance does not guarantee future results.
           </p>
         </FadeUp>

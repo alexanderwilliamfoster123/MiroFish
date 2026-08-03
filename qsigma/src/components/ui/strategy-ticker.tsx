@@ -28,6 +28,10 @@ export interface StrategyTickerProps {
   seed: number;
   drift: number;
   vol: number;
+  /** Button label — defaults to "Subscribe" */
+  cta?: string;
+  /** Avatar background — defaults to the moss gradient */
+  avatarColor?: string;
   onSubscribe?: () => void;
 }
 
@@ -59,6 +63,8 @@ export default function StrategyTicker({
   seed,
   drift,
   vol,
+  cta = "Subscribe",
+  avatarColor,
   onSubscribe,
 }: StrategyTickerProps) {
   const [data, setData] = useState<number[]>(() => buildSeries(seed, drift, vol));
@@ -138,7 +144,7 @@ export default function StrategyTicker({
           <div
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-[13px] font-bold text-white"
             style={{
-              background: "linear-gradient(135deg, #7A8B68 0%, #4C5A40 100%)",
+              background: avatarColor ?? "linear-gradient(135deg, #7A8B68 0%, #4C5A40 100%)",
               letterSpacing: "0.5px",
             }}
           >
@@ -325,7 +331,7 @@ export default function StrategyTicker({
           cursor: "pointer",
         }}
       >
-        Subscribe
+        {cta}
       </button>
     </article>
   );
