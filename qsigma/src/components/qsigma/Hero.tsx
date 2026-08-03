@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import Navbar from "./Navbar";
 import StoneReveal from "./StoneReveal";
 
 const ASSETS = {
@@ -20,11 +19,9 @@ const blurUp = (delay: number, yOffset: number, blur: number, duration: number) 
 const Hero = () => {
   return (
     <section
-      className="relative overflow-hidden"
+      className="relative h-full overflow-hidden"
       style={{ minHeight: "100vh", backgroundColor: "#F2F2F0" }}
     >
-      <Navbar />
-
       {/* Background radial halo */}
       <div
         aria-hidden
