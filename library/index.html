@@ -34,6 +34,7 @@
   <nav class="tabs" aria-label="sections">
     <button class="tab active" data-tab="library">library</button>
     <button class="tab" data-tab="businesses">businesses</button>
+    <button class="tab" data-tab="contact">contact</button>
   </nav>
   <span class="muted" id="volumeCount"></span>
 </header>
@@ -54,6 +55,16 @@
     <span class="muted small">drag to orbit &middot; scroll to zoom &middot; shift-drag to pan &middot; esc to close</span>
   </div>
 </div>
+
+<section class="contact-view" id="contactView" hidden aria-label="contact">
+  <div class="contact-inner">
+    <p class="contact-line" id="contactLine">
+      <span class="email-text" id="emailText"></span><span class="email-caret" aria-hidden="true"></span>
+    </p>
+    <p class="contact-status" id="contactStatus">click the keys to type your email &middot; return to send</p>
+    <div class="keyboard-mount" id="keyboardMount"></div>
+  </div>
+</section>
 
 <div class="fallback" id="fallback" hidden>
   <p>this library needs webgl, which your browser could not provide.</p>

@@ -32,6 +32,15 @@ of floating 3D cards recreated from a Spline reference card, one per
 business. Edit `js/businesses.js` (name, tagline, url); "visit" opens the
 url while a card is inspected. `#businesses` deep-links to the tab.
 
+## Contact tab
+
+`contact` shows a minimal email line above a MacBook keyboard (a vanilla,
+data-driven port of the supplied MacBookKeyboard component). The field can
+only be filled by clicking the on-screen keys — the physical keyboard does
+nothing there; shift/caps work, shift+2 gives @, return validates. The
+"thanks" confirmation is front-end only: wire the submitted address to a
+real endpoint or mailing list when one exists.
+
 ## Link your videos
 
 Edit `js/books.js`. Each entry is one tape on the shelf, left to right:

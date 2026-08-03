@@ -4,6 +4,7 @@ import { BUSINESSES } from "./businesses.js";
 import { createBook } from "./tapeFactory.js";
 import { createCard } from "./cardFactory.js";
 import { createLiquidMetalButton } from "./liquidButton.js";
+import { createMacKeyboard } from "./keyboard.js";
 
 const canvas = document.getElementById("scene");
 const markersEl = document.getElementById("markers");
@@ -216,6 +217,7 @@ const collections = {
   }
 };
 let activeTab = "library";
+let last3D = "library";
 
 let minX = books[0].baseX;
 let maxX = books[books.length - 1].baseX;
@@ -265,8 +267,10 @@ function setFocus(i) {
 buildMarkers();
 
 // -------------------------------------------------------------------- tabs
+const contactView = document.getElementById("contactView");
+
 function switchTab(name) {
-  if (!collections[name] || name === activeTab) return;
+  if ((!collections[name] && name !== "contact") || name === activeTab) return;
   if (mode === "inspect") {
     closeInspect(() => {
       hintEl.classList.remove("hidden-ui");
@@ -277,25 +281,45 @@ function switchTab(name) {
   }
   if (mode !== "browse") return;
 
-  collections[activeTab].scroll = { target: scrollTarget, x: scrollX, focus: focusIndex };
-  activeTab = name;
-  const col = collections[name];
-  books = col.items;
-  minX = books[0].baseX;
-  maxX = books[books.length - 1].baseX;
-  tapesGroup.visible = col.group === tapesGroup;
-  cardsGroup.visible = col.group === cardsGroup;
-  shelfGroup.visible = col.shelf;
+  if (name === "contact") {
+    collections[last3D].scroll = { target: scrollTarget, x: scrollX, focus: focusIndex };
+    activeTab = "contact";
+    contactView.hidden = false;
+    requestAnimationFrame(() => contactView.classList.add("visible"));
+    browseNav.classList.add("hidden-ui");
+    hintEl.classList.add("hidden-ui");
+    volumeCountEl.textContent = "say hi";
+  } else {
+    contactView.classList.remove("visible");
+    setTimeout(() => {
+      if (activeTab !== "contact") contactView.hidden = true;
+    }, 500);
 
-  const saved = col.scroll;
-  focusIndex = saved ? saved.focus : Math.floor(books.length / 2);
-  scrollTarget = saved ? saved.target : books[focusIndex].baseX;
-  scrollX = saved ? saved.x : scrollTarget;
-  scrollVel = 0;
+    const col = collections[name];
+    if (books !== col.items) {
+      collections[last3D].scroll = { target: scrollTarget, x: scrollX, focus: focusIndex };
+      books = col.items;
+      minX = books[0].baseX;
+      maxX = books[books.length - 1].baseX;
+      tapesGroup.visible = col.group === tapesGroup;
+      cardsGroup.visible = col.group === cardsGroup;
+      shelfGroup.visible = col.shelf;
 
-  buildMarkers();
-  volumeCountEl.textContent = col.label;
-  hintEl.textContent = col.hint;
+      const saved = col.scroll;
+      focusIndex = saved ? saved.focus : Math.floor(books.length / 2);
+      scrollTarget = saved ? saved.target : books[focusIndex].baseX;
+      scrollX = saved ? saved.x : scrollTarget;
+      scrollVel = 0;
+      buildMarkers();
+    }
+    activeTab = name;
+    last3D = name;
+    browseNav.classList.remove("hidden-ui");
+    hintEl.classList.remove("hidden-ui");
+    volumeCountEl.textContent = col.label;
+    hintEl.textContent = col.hint;
+  }
+
   for (const btn of tabButtons) btn.classList.toggle("active", btn.dataset.tab === name);
   if (history.replaceState) {
     history.replaceState(null, "", name === "library" ? location.pathname : "#" + name);
@@ -304,6 +328,41 @@ function switchTab(name) {
 
 for (const btn of tabButtons) {
   btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+}
+
+// ----------------------------------------------------------------- contact
+{
+  const emailText = document.getElementById("emailText");
+  const statusEl = document.getElementById("contactStatus");
+  const defaultStatus = statusEl.textContent;
+  let email = "";
+  const render = () => {
+    emailText.textContent = email;
+    statusEl.textContent = defaultStatus;
+    statusEl.classList.remove("ok");
+  };
+  const keyboard = createMacKeyboard({
+    onChar: (ch) => {
+      if (email.length < 64) {
+        email += ch;
+        render();
+      }
+    },
+    onDelete: () => {
+      email = email.slice(0, -1);
+      render();
+    },
+    onReturn: () => {
+      if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        statusEl.textContent = "thanks · we’ll be in touch";
+        statusEl.classList.add("ok");
+      } else {
+        statusEl.textContent = "that’s not a full email yet · keep clicking";
+        statusEl.classList.remove("ok");
+      }
+    }
+  });
+  document.getElementById("keyboardMount").appendChild(keyboard.el);
 }
 
 function goTo(i) {
@@ -399,7 +458,7 @@ prevBtn.addEventListener("click", () => goTo(focusIndex - 1));
 nextBtn.addEventListener("click", () => goTo(focusIndex + 1));
 
 window.addEventListener("keydown", (e) => {
-  if (!entered) return;
+  if (!entered || activeTab === "contact") return;
   if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
     const dir = e.key === "ArrowLeft" ? -1 : 1;
     if (mode === "browse") {
@@ -507,7 +566,7 @@ canvas.addEventListener("pointercancel", (e) => pointers.delete(e.pointerId));
 canvas.addEventListener("contextmenu", (e) => e.preventDefault());
 
 window.addEventListener("wheel", (e) => {
-  if (!entered) return;
+  if (!entered || activeTab === "contact") return;
   if (e.target.closest && e.target.closest(".browse, .inspect")) return;
   if (mode === "browse") {
     const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
@@ -647,6 +706,7 @@ function applyTheme(name) {
 }
 
 if (location.hash === "#businesses") switchTab("businesses");
+else if (location.hash === "#contact") switchTab("contact");
 
 animate();
 
