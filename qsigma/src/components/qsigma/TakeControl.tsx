@@ -2,41 +2,6 @@ import { motion } from "framer-motion";
 
 const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
 
-const ACTIVITIES = [
-  {
-    icon: "https://qclay.design/lovable/synex/refresh-square-2.svg",
-    title: "Unified infrastructure",
-    sub: "+ 2.4% performance impact",
-  },
-  {
-    icon: "https://qclay.design/lovable/synex/status-up.svg",
-    title: "New market signal detected",
-    sub: "Volatility decreasing across equities",
-  },
-  {
-    icon: "https://qclay.design/lovable/synex/bitcoin-btc.svg",
-    title: "Crypto allocation updated",
-    sub: "BTC exposure increased to 32%",
-  },
-  {
-    icon: "https://qclay.design/lovable/synex/cpu.svg",
-    title: "AI recommendation applied",
-    sub: "Risk reduced across portfolio",
-  },
-];
-
-function DotCluster() {
-  // descending dots, right side
-  return (
-    <div className="flex items-center gap-1.5">
-      <span className="block w-[3px] h-[3px] rounded-full bg-black/60" />
-      <span className="block w-[4px] h-[4px] rounded-full bg-black/70" />
-      <span className="block w-[5px] h-[5px] rounded-full bg-black/80" />
-      <span className="block w-[7px] h-[7px] rounded-full bg-black" />
-    </div>
-  );
-}
-
 export default function TakeControl({ onRequestAccess }: { onRequestAccess?: () => void }) {
   return (
     <section
@@ -154,44 +119,7 @@ export default function TakeControl({ onRequestAccess }: { onRequestAccess?: () 
           </motion.button>
         </div>
 
-        {/* Live System Activity */}
-        <div className="mt-32 w-full flex flex-col">
-          <div className="flex items-center justify-between">
-            <span className="text-black/75 text-base font-medium">
-              {"Live system activity".split(" ").map((w, i) => (
-                <RevealWord key={`lsa-${i}`} text={w} delay={i * 0.08} />
-              ))}
-            </span>
-            <DotCluster />
-          </div>
-
-          <div className="border-t border-dashed border-black/20 my-6" />
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {ACTIVITIES.map((a, i) => (
-              <motion.div
-                key={i}
-                initial={{ y: 24, opacity: 0, filter: "blur(8px)" }}
-                whileInView={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{
-                  duration: 0.7,
-                  ease: [0.22, 1, 0.36, 1],
-                  delay: 0.25 + i * 0.18,
-                }}
-                className="flex flex-col gap-3"
-              >
-                <img src={a.icon} alt="" className="w-6 h-6" />
-                <h3 className="text-black text-lg font-semibold leading-snug">
-                  {a.title}
-                </h3>
-                <p className="text-black/30 text-base font-medium">{a.sub}</p>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="border-t border-zinc-300 mt-[120px]" />
-        </div>
+        <div className="mt-24 w-full border-t border-zinc-300" />
       </div>
     </section>
   );

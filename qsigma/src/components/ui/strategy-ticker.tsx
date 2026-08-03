@@ -44,7 +44,7 @@ function buildSeries(seed: number, drift: number, vol: number) {
 }
 
 const fmt = (v: number) =>
-  "$" + v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 export default function StrategyTicker({
   name,

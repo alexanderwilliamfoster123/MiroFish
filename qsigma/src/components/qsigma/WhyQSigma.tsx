@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
 
 const ROWS = [
-  { label: "Multi-asset portfolios", other: "absent" as const },
-  { label: "Real-time data & synchronization", other: "check" as const },
-  { label: "AI-driven insights & optimization", other: "absent" as const },
-  { label: "Unified dashboard across all systems", other: "check" as const },
-  { label: "Self-evolving strategy engine", other: "absent" as const },
+  { label: "No upfront fees", other: "$10,000–$20,000" },
+  { label: "Regulated US brokerages", other: "Offshore, unregulated" },
+  { label: "US CPA-audited returns", other: "None" },
+  { label: "Real, self-evolving AI", other: "Set-and-forget marketing" },
 ];
 
 const ROW_H_DESKTOP = 56;
@@ -73,7 +72,7 @@ export default function WhyQSigma() {
   const SYNEX_WIDTH = isMobile ? "108%" : "115%";
   const SYNEX_PAD_X = isMobile ? 18 : 55;
   return (
-    <section className="relative w-full overflow-hidden" style={{ fontFamily: FONT }}>
+    <section id="compare" className="relative w-full overflow-hidden" style={{ fontFamily: FONT }}>
       {/* Background */}
       <img
         src="https://qclay.design/lovable/synex/StoneBG.png"
@@ -104,16 +103,16 @@ export default function WhyQSigma() {
             <span className="text-white/60 text-sm font-medium">WHY QSIGMA</span>
           </motion.div>
           <h2 className="mt-6 text-4xl md:text-5xl font-medium leading-[1.15] text-white">
-            {"Built for modern capital.".split(" ").map((w, i) => (
+            {"Same category,".split(" ").map((w, i) => (
               <RevealWord key={`h1-${i}`} text={w} delay={0.15 + i * 0.08} />
             ))}
             <br />
-            {"Not legacy systems".split(" ").map((w, i) => (
-              <RevealWord key={`h2-${i}`} text={w} delay={0.15 + (3 + i) * 0.08} />
+            {"different league".split(" ").map((w, i) => (
+              <RevealWord key={`h2-${i}`} text={w} delay={0.15 + (2 + i) * 0.08} />
             ))}
           </h2>
           <p className="mt-6 max-w-[475px] text-white/75 text-lg font-medium">
-            {"Connect exchanges, custodians, on-chain wallets, and data providers — all synchronized in one unified system for real-time visibility and control."
+            {"No upfront fees, regulated US brokerages, CPA-audited returns, and AI that actually evolves — compare us to the rest."
               .split(" ")
               .map((w, i) => (
                 <RevealWord key={`d-${i}`} text={w} delay={i * 0.04} />
@@ -136,7 +135,7 @@ export default function WhyQSigma() {
             </div>
             <div />
             <div className="text-white/75 text-sm font-medium text-center">
-              Other platform
+              Typical competitors
             </div>
           </div>
 
@@ -170,8 +169,8 @@ export default function WhyQSigma() {
                 ))}
               </div>
 
-              {/* Right column — Other platform */}
-              <div className="flex flex-col py-7 px-2 sm:px-[60px]">
+              {/* Right column — typical competitors */}
+              <div className="flex flex-col py-7 px-2 sm:px-6">
                 {ROWS.map((r, i) => (
                   <motion.div
                     key={i}
@@ -179,16 +178,15 @@ export default function WhyQSigma() {
                     whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                     viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 0.6, delay: 0.4 + i * 0.14, ease: [0.22, 1, 0.36, 1] }}
-                    className="flex items-center justify-center"
+                    className="flex items-center justify-center gap-2 text-center"
                     style={{ height: ROW_H }}
                   >
-                    {r.other === "absent" ? (
-                      <span className="text-white/70 text-xs font-normal capitalize">
-                        absent
-                      </span>
-                    ) : (
-                      <CheckIcon className="text-white" />
-                    )}
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0">
+                      <path d="M6 6l12 12M18 6 6 18" stroke="rgba(255,255,255,0.45)" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                    <span className="text-white/70 text-xs sm:text-[13px] font-normal leading-tight">
+                      {r.other}
+                    </span>
                   </motion.div>
                 ))}
               </div>

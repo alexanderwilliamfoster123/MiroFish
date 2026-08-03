@@ -9,7 +9,6 @@ import Integrations from "../components/qsigma/Integrations";
 import WhyQSigma from "../components/qsigma/WhyQSigma";
 import Strategies from "../components/qsigma/Strategies";
 import Calculator from "../components/qsigma/Calculator";
-import Comparison from "../components/qsigma/Comparison";
 import Pricing from "../components/qsigma/Pricing";
 import TakeControl from "../components/qsigma/TakeControl";
 import Footer from "../components/qsigma/Footer";
@@ -47,7 +46,6 @@ const Index = () => {
           <WhyQSigma />
           <Strategies />
           <Calculator />
-          <Comparison />
           <Pricing />
           <TakeControl onRequestAccess={() => setAuthOpen(true)} />
           <Footer />
