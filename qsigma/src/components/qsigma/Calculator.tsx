@@ -1,14 +1,17 @@
 import { CSSProperties, useMemo, useState } from "react";
 import FadeUp from "./FadeUp";
 
-// Average monthly rates derived from each strategy's backtested annualized return
+// Average monthly rates derived from each portfolio's backtested CAGR
 const STRATS = [
-  { name: "Momentum Alpha", monthly: 0.0248 },
-  { name: "Global Macro AI", monthly: 0.0165 },
-  { name: "Volatility Harvest", monthly: 0.0145 },
-  { name: "Blue-Chip Compounder", monthly: 0.0127 },
-  { name: "Digital Assets Quant", monthly: 0.0359 },
-  { name: "Rates & Arbitrage", monthly: 0.0099 },
+  { name: "Master Max", monthly: 0.0243 },
+  { name: "Master Portfolio", monthly: 0.0135 },
+  { name: "Overnight", monthly: 0.0224 },
+  { name: "Top-Pick", monthly: 0.0189 },
+  { name: "ORB", monthly: 0.0168 },
+  { name: "GLD/BTC Core", monthly: 0.014 },
+  { name: "Coherent Economic", monthly: 0.0107 },
+  { name: "Macro Defensive", monthly: 0.008 },
+  { name: "Defensive Momentum", monthly: 0.0065 },
 ];
 
 const MONTHS = [

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
 
 const ROWS = [
-  { label: "No upfront fees", other: "$10,000–$20,000" },
+  { label: "Upfront cost — $2,497, once", other: "$10,000+" },
   { label: "Regulated US brokerages", other: "Offshore, unregulated" },
   { label: "US CPA-audited returns", other: "None" },
   { label: "Real, self-evolving AI", other: "Set-and-forget marketing" },
@@ -116,7 +116,7 @@ export default function WhyQSigma() {
             </span>
           </h2>
           <p className="mt-6 max-w-[475px] text-black/55 text-lg font-medium">
-            {"No upfront fees, regulated US brokerages, CPA-audited returns, and AI that actually evolves — compare us to the rest."
+            {"One upfront cost of $2,497 — not $10,000 — with regulated US brokerages, CPA-audited returns, and AI that actually evolves."
               .split(" ")
               .map((w, i) => (
                 <RevealWord key={`d-${i}`} text={w} delay={i * 0.04} />
