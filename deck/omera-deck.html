@@ -153,9 +153,26 @@ td.dim{color:var(--gray)}
   td{padding:14px 14px 14px 0;font-size:12.5px}
 }
 @media print{
-  .slide{min-height:0;page-break-after:always;padding:60px}
+  .slide{min-height:97vh;page-break-after:always;padding:60px 84px}
   .reveal{opacity:1;transform:none}
 }
+
+/* phone layout — collapse inline grids, loosen padding */
+@media (max-width:760px){
+  .slide{padding:52px 22px 84px}
+  .rail{left:22px;right:22px}
+  .slide-inner[style*="grid-template-columns"]{display:grid;grid-template-columns:1fr !important;gap:32px !important}
+  .slide-inner [style*="grid-template-columns"]{display:grid;grid-template-columns:1fr !important;gap:22px !important;max-width:none !important}
+  .stats,.stats.three{grid-template-columns:repeat(2,1fr);gap:28px 20px}
+  #prooftable{display:block;overflow-x:auto;white-space:nowrap}
+  h1 br,h2 br{display:none}
+  .lede{font-size:15px}
+}
+
+@media print{
+  html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
 </style>
 </head>
 <body>
