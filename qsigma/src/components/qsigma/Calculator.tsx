@@ -172,7 +172,7 @@ const Calculator = () => {
               maxWidth: "540px",
             }}
           >
-            Every QSigma strategy has been running in our backtesting
+            Every alpha³ strategy has been running in our backtesting
             environment since January 2013. Choose one, pick your starting
             point, and see what disciplined compounding would have done.
           </p>

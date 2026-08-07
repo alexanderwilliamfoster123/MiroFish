@@ -89,7 +89,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
                   </GlassCardTitle>
                   <GlassCardDescription className="mt-2 text-white/80">
                     {mode === "signup"
-                      ? "We'll email you as soon as your QSigma access is ready."
+                      ? "We'll email you as soon as your alpha³ access is ready."
                       : "Redirecting you to your dashboard…"}
                   </GlassCardDescription>
                   <Button className="mt-6 w-full rounded-full" onClick={close}>
@@ -101,7 +101,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
                   <GlassCardHeader>
                     <GlassCardTitle>
                       {mode === "signup"
-                        ? "Create your QSigma account"
+                        ? "Create your alpha³ account"
                         : "Login to your account"}
                     </GlassCardTitle>
                     <GlassCardDescription className="text-white/80">

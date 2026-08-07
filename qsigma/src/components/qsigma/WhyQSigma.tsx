@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Logo from "./Logo";
 import { useEffect, useState } from "react";
 
 const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
@@ -45,25 +46,6 @@ function CheckIcon({ className = "" }: { className?: string }) {
   );
 }
 
-function QSigmaLogo() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 14 14"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <path d="M4.40072 0V4.40072H0C0 1.97299 1.97299 0 4.40072 0Z" fill="#0A0A0A" />
-      <path d="M4.40072 4.40137H0V8.80209H4.40072V4.40137Z" fill="#0A0A0A" />
-      <path d="M4.40112 0.000642776V4.40137H8.80185V0.000642776H4.40112Z" fill="#0A0A0A" />
-      <path d="M13.2031 8.80176H8.80237V13.2025C11.2301 13.2025 13.2031 11.2295 13.2031 8.80176Z" fill="#0A0A0A" />
-      <path d="M4.40112 8.8024L4.40112 13.2031L8.80185 13.2031L8.80185 8.8024L4.40112 8.8024Z" fill="#0A0A0A" />
-      <path d="M13.2031 4.40137H8.80237V8.80209H13.2031V4.40137Z" fill="#0A0A0A" />
-    </svg>
-  );
-}
 
 export default function WhyQSigma() {
   const isMobile = useIsMobile();
@@ -101,7 +83,7 @@ export default function WhyQSigma() {
             viewport={{ once: true, amount: 0.6 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="text-black/60 text-sm font-medium">WHY QSIGMA</span>
+            <span className="text-black/60 text-sm font-medium">WHY ALPHA³</span>
           </motion.div>
           <h2 className="mt-6 text-4xl md:text-5xl font-medium leading-[1.15]">
             <span className="text-black/35">
@@ -211,10 +193,7 @@ export default function WhyQSigma() {
                 >
                   {/* Logo header */}
                   <div className="flex items-center justify-center gap-2 h-[34px] w-full">
-                    <QSigmaLogo />
-                    <span className="text-black text-lg font-bold lowercase leading-none">
-                      qsigma
-                    </span>
+                    <Logo markSize={20} textSize={17} />
                   </div>
                   {/* Values / checks aligned to left row heights */}
                   <div className="flex flex-col w-full">

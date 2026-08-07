@@ -305,7 +305,7 @@ const Strategies = () => {
             className="mx-auto mt-4 md:mt-5 text-[14px] sm:text-[16px]"
             style={{ fontWeight: 500, color: "rgba(0, 0, 0, 0.40)", maxWidth: "520px" }}
           >
-            Every QSigma strategy is researched, executed, and rebalanced
+            Every alpha³ strategy is researched, executed, and rebalanced
             end-to-end by our AI engine. Pick the ones that fit your goals and
             subscribe in one tap.
           </p>

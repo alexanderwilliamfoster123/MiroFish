@@ -231,7 +231,7 @@ export default function IntelligenceLayers() {
                   style={{ width: 14, height: 14 }}
                 />
               </div>
-              {/* QSIGMA CORE label above */}
+              {/* ALPHA³ CORE label above */}
               <span
                 className="absolute -translate-x-1/2 whitespace-nowrap text-black text-[13px] tracking-wide"
                 style={{
@@ -241,7 +241,7 @@ export default function IntelligenceLayers() {
                   top: -64,
                 }}
               >
-                QSIGMA CORE
+                ALPHA³ CORE
               </span>
               {/* Description below */}
               <div

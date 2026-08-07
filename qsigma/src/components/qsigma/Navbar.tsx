@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Globe } from "lucide-react";
+import Logo from "./Logo";
 
 const NAV_LINKS = [
   { label: "PLATFORM", href: "#platform" },
@@ -34,19 +35,8 @@ const Navbar = ({ dark: scrolled = false, onLaunch }: NavbarProps) => {
       }}
       className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-5"
     >
-      <a
-        href="/"
-        aria-label="QSigma home"
-        style={{
-          fontWeight: 700,
-          fontSize: "22px",
-          letterSpacing: "-0.5px",
-          color: "#05050C",
-          lineHeight: "24px",
-          textDecoration: "none",
-        }}
-      >
-        QSigma
+      <a href="/" aria-label="alpha³ home" style={{ textDecoration: "none" }}>
+        <Logo />
       </a>
 
       <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center gap-8 text-[13px] tracking-tight">

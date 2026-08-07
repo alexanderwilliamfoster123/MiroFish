@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Logo from "./Logo";
 
 const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
 
@@ -91,9 +92,12 @@ export default function Footer() {
 
         {/* Legal small print */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-8 border-t border-black/10 pt-6">
-          <p className="text-black/30 text-xs font-medium">
-            © 2026 QSigma. All rights reserved.
-          </p>
+          <div className="flex items-center gap-3">
+            <Logo markSize={22} textSize={17} />
+            <p className="text-black/30 text-xs font-medium">
+              © 2026 alpha³. All rights reserved.
+            </p>
+          </div>
           <p className="text-black/30 text-xs font-medium md:max-w-[560px] md:text-right leading-relaxed">
             Investing involves risk, including possible loss of principal. Past
             performance does not guarantee future results. Strategy returns

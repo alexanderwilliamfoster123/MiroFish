@@ -81,7 +81,7 @@ export default function TakeControl({ onRequestAccess }: { onRequestAccess?: () 
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
           className="mt-8 max-w-2xl mx-auto text-center text-black/30 text-lg font-medium leading-relaxed"
         >
-          QSigma brings together your assets, data, and execution into one
+          alpha³ brings together your assets, data, and execution into one
           intelligent system — giving you clarity, speed, and control across
           every layer of your portfolio.
         </motion.p>
