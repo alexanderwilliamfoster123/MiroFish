@@ -102,16 +102,27 @@ export function ContactPage({ email, onNavigate, onLeave }: ContactPageProps) {
         className="animate-fade-up mt-4 max-w-md text-center text-[14px] font-light text-muted-foreground"
         style={{ animationDelay: "0.2s" }}
       >
-        The whole site from one screen — write me a letter, open any page,
-        pull any link.
+        The only way through. Write me a letter, open any room, pull any
+        link — all from this panel.
       </p>
 
       <div className="animate-fade-up mt-8 w-full" style={{ animationDelay: "0.3s" }}>
         <Console
           title={`console — signed in as ${email}`}
+          boot
           welcome={[
-            "control.panel v1 — the whole site runs from here",
-            "type help for commands. write to send me a letter.",
+            "control.panel — the whole world runs from here",
+            `signed in as ${email}`,
+            " ",
+            "prompts, left for you to click:",
+            { prompt: "write me a letter", command: "write" },
+            { prompt: "welcome.py", command: "home" },
+            { prompt: "the card series — companies", command: "companies" },
+            { prompt: "the reading machine — letters", command: "letters" },
+            { prompt: "the photo albums — pictures", command: "pictures" },
+            { prompt: "the tape rack — movies", command: "movies" },
+            " ",
+            "or just type — help lists everything. esc always returns here.",
           ]}
           commands={commands}
           compose={{

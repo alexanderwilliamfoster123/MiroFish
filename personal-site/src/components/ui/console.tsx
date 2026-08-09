@@ -7,12 +7,15 @@ import { useEffect, useRef, useState } from "react";
 // it becomes a control panel: type to run commands, `write` to compose a
 // letter, physical and on-screen keys both drive it.
 
+// a line on the screen: plain text, or a clickable prompt that runs a command
+export type ConsoleLine = string | { prompt: string; command: string };
+
 export interface ConsoleCommand {
   name: string;
   hint: string;
   aliases?: string[];
   // returns lines to print; side effects (navigation, window.open) welcome
-  run: (args: string) => string[] | void;
+  run: (args: string) => ConsoleLine[] | void;
 }
 
 export interface ConsoleComposer {
@@ -24,10 +27,12 @@ export interface ConsoleComposer {
 
 interface ConsoleProps {
   title: string;
-  welcome: string[];
+  welcome: ConsoleLine[];
   commands: ConsoleCommand[];
   compose?: ConsoleComposer;
   className?: string;
+  // reveal the welcome lines one by one on mount
+  boot?: boolean;
 }
 
 export function Console({
@@ -36,8 +41,9 @@ export function Console({
   commands,
   compose,
   className,
+  boot = false,
 }: ConsoleProps) {
-  const [lines, setLines] = useState<string[]>(welcome);
+  const [lines, setLines] = useState<ConsoleLine[]>(boot ? [] : welcome);
   const [input, setInput] = useState("");
   const [mode, setMode] = useState<"command" | "compose">("command");
   const [message, setMessage] = useState("");
@@ -49,8 +55,21 @@ export function Console({
     setInput(value);
   };
 
-  const print = (...next: string[]) =>
+  const print = (...next: ConsoleLine[]) =>
     setLines((prev) => [...prev, ...next]);
+
+  // boot sequence: the welcome lines type themselves onto the screen
+  useEffect(() => {
+    if (!boot) return;
+    let index = 0;
+    const interval = setInterval(() => {
+      index += 1;
+      setLines(welcome.slice(0, index));
+      if (index >= welcome.length) clearInterval(interval);
+    }, 190);
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const el = outputRef.current;
@@ -225,18 +244,35 @@ export function Console({
             </>
           ) : (
             <>
-              {lines.map((line, index) => (
-                <p
-                  key={`${index}-${line.slice(0, 12)}`}
-                  className={
-                    line.startsWith(">")
-                      ? "text-foreground"
-                      : "text-muted-foreground"
-                  }
-                >
-                  {line || " "}
-                </p>
-              ))}
+              {lines.map((line, index) =>
+                typeof line === "string" ? (
+                  <p
+                    key={`${index}-${line.slice(0, 12)}`}
+                    className={
+                      line.startsWith(">")
+                        ? "text-foreground"
+                        : "text-muted-foreground"
+                    }
+                  >
+                    {line || " "}
+                  </p>
+                ) : (
+                  <p key={`${index}-${line.command}`}>
+                    <button
+                      type="button"
+                      onClick={() => runCommand(line.command)}
+                      className="group cursor-pointer text-foreground/90 transition-colors duration-200 hover:text-foreground"
+                    >
+                      <span className="text-faint transition-colors duration-200 group-hover:text-foreground">
+                        {"→ "}
+                      </span>
+                      <span className="underline decoration-white/20 underline-offset-4 transition-colors duration-200 group-hover:decoration-white/60">
+                        {line.prompt}
+                      </span>
+                    </button>
+                  </p>
+                ),
+              )}
               <p className="text-foreground">
                 {"> "}
                 {input}
