@@ -4,7 +4,7 @@ import { BUSINESSES } from "./businesses.js";
 import { createBook } from "./tapeFactory.js";
 import { createCard } from "./cardFactory.js";
 import { createLiquidMetalButton } from "./liquidButton.js";
-import { createMacKeyboard } from "./keyboard.js";
+import { createControlPanel } from "./controlPanel.js";
 
 const canvas = document.getElementById("scene");
 const markersEl = document.getElementById("markers");
@@ -331,39 +331,18 @@ for (const btn of tabButtons) {
 }
 
 // ----------------------------------------------------------------- contact
-{
-  const emailText = document.getElementById("emailText");
-  const statusEl = document.getElementById("contactStatus");
-  const defaultStatus = statusEl.textContent;
-  let email = "";
-  const render = () => {
-    emailText.textContent = email;
-    statusEl.textContent = defaultStatus;
-    statusEl.classList.remove("ok");
-  };
-  const keyboard = createMacKeyboard({
-    onChar: (ch) => {
-      if (email.length < 64) {
-        email += ch;
-        render();
-      }
-    },
-    onDelete: () => {
-      email = email.slice(0, -1);
-      render();
-    },
-    onReturn: () => {
-      if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-        statusEl.textContent = "thanks · we’ll be in touch";
-        statusEl.classList.add("ok");
-      } else {
-        statusEl.textContent = "that’s not a full email yet · keep clicking";
-        statusEl.classList.remove("ok");
-      }
-    }
-  });
-  document.getElementById("keyboardMount").appendChild(keyboard.el);
-}
+// control panel: write to the site owner, or drive the site with /commands
+const panel = createControlPanel({
+  to: "alex@vertus.ai",
+  subject: "hello from the library",
+  commands: {
+    "/library": () => switchTab("library"),
+    "/businesses": () => switchTab("businesses"),
+    "/dark": () => applyTheme("dark"),
+    "/light": () => applyTheme("light")
+  }
+});
+document.getElementById("panelMount").appendChild(panel.el);
 
 function goTo(i) {
   i = THREE.MathUtils.clamp(i, 0, books.length - 1);
@@ -458,7 +437,11 @@ prevBtn.addEventListener("click", () => goTo(focusIndex - 1));
 nextBtn.addEventListener("click", () => goTo(focusIndex + 1));
 
 window.addEventListener("keydown", (e) => {
-  if (!entered || activeTab === "contact") return;
+  if (!entered) return;
+  if (activeTab === "contact") {
+    if (panel.handleKey(e)) e.preventDefault();
+    return;
+  }
   if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
     const dir = e.key === "ArrowLeft" ? -1 : 1;
     if (mode === "browse") {

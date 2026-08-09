@@ -1,0 +1,198 @@
+/* Scoped styles for the tape-shelf component. All rules live under .ts
+   so the file can be dropped into any project without leaking. The default
+   palette is light-on-dark; .ts-light flips the chrome for light pages. */
+
+.ts {
+  --ts-fg: rgba(235, 233, 228, 0.92);
+  --ts-fg-dim: rgba(235, 233, 228, 0.42);
+  --ts-fg-faint: rgba(235, 233, 228, 0.22);
+  position: relative;
+  overflow: hidden;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--ts-fg);
+  outline: none;
+}
+
+.ts.ts-light {
+  --ts-fg: rgba(24, 24, 26, 0.92);
+  --ts-fg-dim: rgba(24, 24, 26, 0.46);
+  --ts-fg-faint: rgba(24, 24, 26, 0.24);
+}
+
+.ts-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: grab;
+}
+
+.ts-canvas.dragging {
+  cursor: grabbing;
+}
+
+.ts-canvas.over-card {
+  cursor: pointer;
+}
+
+.ts-browse {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  transition: opacity 0.4s ease;
+}
+
+.ts-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ts-nav {
+  background: none;
+  border: none;
+  color: var(--ts-fg-dim);
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 6px 10px;
+  transition: color 0.25s ease;
+}
+
+.ts-nav:hover,
+.ts-nav:focus-visible {
+  color: var(--ts-fg);
+  outline: none;
+}
+
+.ts-markers {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.ts-marker {
+  background: none;
+  border: none;
+  padding: 8px 1px;
+  cursor: pointer;
+}
+
+.ts-marker span {
+  display: block;
+  width: 1px;
+  height: 12px;
+  background: var(--ts-fg-faint);
+  transition: background 0.25s ease, height 0.25s ease;
+}
+
+.ts-marker:hover span,
+.ts-marker:focus-visible span {
+  background: var(--ts-fg-dim);
+}
+
+.ts-marker:focus-visible {
+  outline: none;
+}
+
+.ts-marker.active span {
+  background: var(--ts-fg);
+  height: 17px;
+}
+
+.ts-hint {
+  position: absolute;
+  bottom: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  color: var(--ts-fg-faint);
+  font-size: 11px;
+  white-space: nowrap;
+  transition: opacity 0.6s ease;
+}
+
+.ts-inspect {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.ts-inspect.visible {
+  opacity: 1;
+}
+
+.ts-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--ts-fg-dim);
+  font: inherit;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 8px;
+  pointer-events: auto;
+  transition: color 0.25s ease;
+}
+
+.ts-close:hover,
+.ts-close:focus-visible {
+  color: var(--ts-fg);
+  outline: none;
+}
+
+.ts-caption {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  text-align: center;
+  pointer-events: auto;
+}
+
+.ts-title {
+  font-size: 15px;
+  letter-spacing: 0.1em;
+}
+
+.ts-link {
+  color: var(--ts-fg-dim);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ts-fg-faint);
+  padding-bottom: 2px;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.ts-link:hover,
+.ts-link:focus-visible {
+  color: var(--ts-fg);
+  border-color: var(--ts-fg-dim);
+  outline: none;
+}
+
+@media (max-width: 640px) {
+  .ts-hint {
+    display: none;
+  }
+
+  .ts-markers {
+    gap: 5px;
+  }
+}
