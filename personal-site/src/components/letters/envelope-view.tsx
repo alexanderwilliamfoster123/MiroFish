@@ -1,3 +1,4 @@
+import { WaxSeal } from "@/components/ui/wax-seal";
 import { LETTERS, type Letter } from "@/lib/letters";
 import { useState } from "react";
 
@@ -82,20 +83,29 @@ export function EnvelopeView() {
                   }}
                 />
 
-                {/* wax seal */}
+                {/* AW wax seal */}
                 <div
-                  className="absolute left-1/2 z-40 flex h-8 w-8 -translate-x-1/2 items-center justify-center rounded-full transition-all duration-500"
+                  className="absolute left-1/2 z-40 transition-all duration-500"
                   style={{
-                    top: "40%",
-                    background: "radial-gradient(circle at 35% 30%, #e6e2da, #b9b4aa 70%)",
-                    color: INK,
+                    top: "34%",
                     opacity: isOpen ? 0 : 1,
                     transform: `translateX(-50%) scale(${isOpen ? 0.5 : 1})`,
-                    boxShadow: "0 2px 6px rgba(0,0,0,0.5)",
                   }}
                 >
-                  <span className="font-serif text-[13px] italic">a.</span>
+                  <WaxSeal size={42} rotate={-7} />
                 </div>
+
+                {/* addressed in ink */}
+                <p
+                  className="absolute inset-x-0 z-30 text-center font-serif text-[11px] italic transition-opacity duration-500"
+                  style={{
+                    bottom: "13%",
+                    color: "rgba(235,233,228,0.4)",
+                    opacity: isOpen ? 0 : 1,
+                  }}
+                >
+                  for the reader
+                </p>
 
                 {/* hover lift */}
                 <div className="absolute inset-0 z-50 rounded-md transition-shadow duration-300 group-hover:shadow-[0_18px_40px_rgba(0,0,0,0.55)]" />
@@ -133,14 +143,28 @@ export function EnvelopeView() {
           >
             <p className="text-right text-[13px] italic opacity-60">{reading.date}</p>
             <h2 className="mt-6 text-2xl font-light lowercase">{reading.title}</h2>
-            <p className="mt-8 text-[15px] italic opacity-80">dear reader,</p>
-            {reading.paragraphs.map((paragraph) => (
-              <p key={paragraph.slice(0, 24)} className="mt-5 text-[15px] leading-[1.85]">
+            <div className="mt-4 h-px w-14 bg-current opacity-20" />
+            <p className="mt-7 text-[15px] italic opacity-80">dear reader,</p>
+            {reading.paragraphs.map((paragraph, index) => (
+              <p
+                key={paragraph.slice(0, 24)}
+                className={
+                  "mt-5 text-[15px] leading-[1.85] " +
+                  (index === 0
+                    ? "first-letter:float-left first-letter:mt-1 first-letter:mr-2 first-letter:font-serif first-letter:text-[44px] first-letter:leading-[0.85]"
+                    : "")
+                }
+              >
                 {paragraph}
               </p>
             ))}
-            <p className="mt-10 text-[15px] italic">yours, quietly —</p>
-            <p className="mt-1 text-xl italic">alexander</p>
+            <div className="mt-10 flex items-end justify-between">
+              <div>
+                <p className="text-[15px] italic">yours, quietly —</p>
+                <p className="mt-1 text-xl italic">alexander</p>
+              </div>
+              <WaxSeal size={54} rotate={8} className="opacity-90" />
+            </div>
             <button
               type="button"
               onClick={close}

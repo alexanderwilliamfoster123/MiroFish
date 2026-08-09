@@ -1,39 +1,36 @@
-import { PageShell } from "@/components/pages/page-shell";
-import { BusinessCard } from "@/components/ui/business-card";
-
-// One entry per card, left to right — same shape as the reference site.
-const BUSINESSES = [
-  { name: "vertus", tagline: "", url: "https://vertus.ai" },
-  { name: "vanquish", tagline: "", url: "https://example.com" },
-  { name: "alexander william", tagline: "", url: "https://example.com" },
-];
+import { BusinessCards3D } from "@/components/ui/business-cards-3d";
+import { useMemo } from "react";
 
 export function CompaniesPage() {
+  // One entry per 3D card, left to right.
+  const businesses = useMemo(
+    () => [
+      { name: "Vertus", tagline: "", url: "https://vertus.ai" },
+      { name: "Vanquish", tagline: "", url: "https://example.com" },
+      { name: "Alexander William", tagline: "", url: "https://example.com" },
+    ],
+    [],
+  );
+
   return (
-    <PageShell
-      eyebrow="Companies"
-      title="The card series"
-      intro="Three bets, printed on cardstock. Hover to inspect, select a card to visit."
-    >
-      <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-10">
-        {BUSINESSES.map((business, index) => (
-          <div
-            key={business.name}
-            className="animate-fade-up"
-            style={{ animationDelay: `${0.15 + index * 0.12}s` }}
-          >
-            <BusinessCard
-              name={business.name}
-              tagline={business.tagline}
-              url={business.url}
-              index={index}
-            />
-          </div>
-        ))}
+    <main className="flex min-h-dvh w-full flex-col">
+      <header className="mx-auto w-full max-w-3xl px-6 pt-20">
+        <p className="animate-fade-up text-[11px] tracking-[0.25em] text-faint uppercase">
+          Companies
+        </p>
+        <h1
+          className="animate-fade-up mt-3 font-serif text-3xl font-light"
+          style={{ animationDelay: "0.1s" }}
+        >
+          The card series
+        </h1>
+      </header>
+      <div
+        className="animate-fade-in mt-2 h-[calc(100dvh-230px)] min-h-[430px] w-full"
+        style={{ animationDelay: "0.2s" }}
+      >
+        <BusinessCards3D businesses={businesses} />
       </div>
-      <p className="mt-12 text-center text-[11px] tracking-[0.18em] text-faint lowercase">
-        {BUSINESSES.length} cards · card series
-      </p>
-    </PageShell>
+    </main>
   );
 }

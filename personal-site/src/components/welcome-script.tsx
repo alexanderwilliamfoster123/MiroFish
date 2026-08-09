@@ -29,6 +29,8 @@ links = {
     "github": "github.com/alexanderwilliamfoster123",
 }
 
+socials = ["instagram", "x", "linkedin", "youtube"]  # below ↓
+
 def enter(guest: str) -> None:
     print(f"welcome to the world of {world['name']}")
     print(f"you came through the door as {guest}")
@@ -61,7 +63,7 @@ if __name__ == "__main__":
       language="python"
       filename="welcome.py"
       code={typed || " "}
-      className="min-h-dvh rounded-none border-0 bg-black px-6 pt-10 pb-44 sm:px-12 sm:pt-14 [&_pre]:!text-[13px] sm:[&_pre]:!text-sm"
+      className="rounded-none border-0 bg-black px-6 pt-10 pb-6 sm:px-12 sm:pt-14 [&_pre]:!text-[13px] sm:[&_pre]:!text-sm"
     />
   );
 }
