@@ -3,6 +3,7 @@
 import React from "react"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { Check, Copy } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 // Monochrome Prism theme — the whole site is black-and-white
 const monochrome: Record<string, React.CSSProperties> = {
@@ -36,6 +37,7 @@ type CodeBlockProps = {
   language: string
   filename: string
   highlightLines?: number[]
+  className?: string
 } & (
   | {
       code: string
@@ -58,6 +60,7 @@ export const CodeBlock = ({
   code,
   highlightLines = [],
   tabs = [],
+  className,
 }: CodeBlockProps) => {
   const [copied, setCopied] = React.useState(false)
   const [activeTab, setActiveTab] = React.useState(0)
@@ -82,7 +85,12 @@ export const CodeBlock = ({
     : highlightLines
 
   return (
-    <div className="relative w-full rounded-lg border border-white/10 bg-neutral-950 p-4 font-mono text-sm">
+    <div
+      className={cn(
+        "relative w-full rounded-lg border border-white/10 bg-neutral-950 p-4 font-mono text-sm",
+        className
+      )}
+    >
       <div className="flex flex-col gap-2">
         {tabsExist && (
           <div className="flex overflow-x-auto">

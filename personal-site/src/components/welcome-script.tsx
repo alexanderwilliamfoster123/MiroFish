@@ -1,31 +1,67 @@
 import { CodeBlock } from "@/components/ui/code-block";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-const SCRIPT = `// welcome.ts
-const world = "Alexander Foster";
-const say = console.log;
+interface WelcomeScriptProps {
+  email: string;
+}
 
-say(\`Welcome to the world\`);
-say(\`of \${world}.\`);
-say("Companies. Letters.");
-say("Pictures. Movies.");`;
+export function WelcomeScript({ email }: WelcomeScriptProps) {
+  const script = useMemo(
+    () => `#!/usr/bin/env python3
+# welcome.py — you are now living inside this script
 
-export function WelcomeScript() {
+visitor = "${email}"
+
+world = {
+    "name": "Alexander Foster",
+    "builds": "quiet, careful software",
+    "thinking_about": [
+        "collective intelligence",
+        "simulation",
+        "interfaces that stay out of the way",
+    ],
+}
+
+rooms = ["companies", "letters", "pictures", "movies"]
+
+links = {
+    "email": "alex@vertus.ai",
+    "github": "github.com/alexanderwilliamfoster123",
+}
+
+def enter(guest: str) -> None:
+    print(f"welcome to the world of {world['name']}")
+    print(f"you came through the door as {guest}")
+    for room in rooms:
+        print(f"  -> {room} is open")
+    print("the dock below will take you anywhere")
+
+if __name__ == "__main__":
+    enter(visitor)
+`,
+    [email],
+  );
+
   const [typed, setTyped] = useState("");
 
   useEffect(() => {
     let index = 0;
     const interval = setInterval(() => {
-      index += 1;
-      setTyped(SCRIPT.slice(0, index));
-      if (index >= SCRIPT.length) {
+      index += 2;
+      setTyped(script.slice(0, index));
+      if (index >= script.length) {
         clearInterval(interval);
       }
-    }, 18);
+    }, 16);
     return () => clearInterval(interval);
-  }, []);
+  }, [script]);
 
   return (
-    <CodeBlock language="tsx" filename="welcome.ts" code={typed || " "} />
+    <CodeBlock
+      language="python"
+      filename="welcome.py"
+      code={typed || " "}
+      className="min-h-dvh rounded-none border-0 bg-black px-6 pt-10 pb-44 sm:px-12 sm:pt-14 [&_pre]:!text-[13px] sm:[&_pre]:!text-sm"
+    />
   );
 }
