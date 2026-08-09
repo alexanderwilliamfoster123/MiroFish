@@ -1,3 +1,4 @@
+import { DockNav } from "@/components/dock-nav";
 import { EmailGate } from "@/components/email-gate";
 import { CompaniesPage } from "@/components/pages/companies";
 import { ContactPage } from "@/components/pages/contact";
@@ -16,29 +17,19 @@ export default function App() {
     localStorage.getItem(STORAGE_KEY),
   );
   const [showReceipt, setShowReceipt] = useState(false);
-  const [section, setSection] = useState<Section>("console");
+  const [section, setSection] = useState<Section>("home");
 
   useEffect(() => {
     if (email) {
       localStorage.setItem(STORAGE_KEY, email);
     } else {
       localStorage.removeItem(STORAGE_KEY);
-      setSection("console");
+      setSection("home");
     }
   }, [email]);
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
-  }, [section]);
-
-  // everything happens from the panel — esc always returns to it
-  useEffect(() => {
-    if (section === "console") return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !e.defaultPrevented) setSection("console");
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
   }, [section]);
 
   if (!email) {
@@ -65,13 +56,6 @@ export default function App() {
     <>
       {/* key remounts the page so the fade-up intro replays on navigation */}
       <div key={section} className="animate-fade-in">
-        {section === "console" && (
-          <ContactPage
-            email={email}
-            onNavigate={setSection}
-            onLeave={() => setEmail(null)}
-          />
-        )}
         {section === "home" && (
           <HomePage email={email} onLeave={() => setEmail(null)} />
         )}
@@ -79,17 +63,15 @@ export default function App() {
         {section === "letters" && <LettersPage />}
         {section === "pictures" && <PicturesPage />}
         {section === "movies" && <MoviesPage />}
+        {section === "contact" && (
+          <ContactPage
+            email={email}
+            onNavigate={setSection}
+            onLeave={() => setEmail(null)}
+          />
+        )}
       </div>
-
-      {section !== "console" && (
-        <button
-          type="button"
-          onClick={() => setSection("console")}
-          className="fixed top-5 left-6 z-[60] cursor-pointer font-mono text-[11px] tracking-[0.18em] text-faint lowercase transition-colors duration-300 hover:text-foreground"
-        >
-          ↩ console
-        </button>
-      )}
+      <DockNav active={section} onNavigate={setSection} />
     </>
   );
 }

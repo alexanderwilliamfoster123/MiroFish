@@ -36,7 +36,7 @@ def enter(guest: str) -> None:
     print(f"you came through the door as {guest}")
     for room in rooms:
         print(f"  -> {room} is open")
-    print("the console runs everything — esc returns to it")
+    print("the dock below will take you anywhere")
 
 if __name__ == "__main__":
     enter(visitor)

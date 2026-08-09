@@ -124,10 +124,7 @@ export function PicturesPage() {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault(); // esc closes the album first; next esc exits to console
-        setOpen(null);
-      }
+      if (e.key === "Escape") setOpen(null);
     };
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
