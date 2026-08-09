@@ -63,7 +63,13 @@ export default function App() {
         {section === "letters" && <LettersPage />}
         {section === "pictures" && <PicturesPage />}
         {section === "movies" && <MoviesPage />}
-        {section === "contact" && <ContactPage email={email} />}
+        {section === "contact" && (
+          <ContactPage
+            email={email}
+            onNavigate={setSection}
+            onLeave={() => setEmail(null)}
+          />
+        )}
       </div>
       <DockNav active={section} onNavigate={setSection} />
     </>
