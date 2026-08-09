@@ -1,9 +1,12 @@
 <template>
   <router-view />
+  <ControlPanel />
 </template>
 
 <script setup>
 // 使用 Vue Router 来管理页面
+// ControlPanel 为全站悬浮键帽控制台（导航 / 邮件 / GitHub）
+import ControlPanel from './components/ui/ControlPanel.vue'
 </script>
 
 <style>

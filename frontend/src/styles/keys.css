@@ -1,0 +1,39 @@
+/*
+ * MiroFish 设计系统 · 键帽风格 (Keycap Design System)
+ * 全站通用的设计变量：黑色面板 + 奶白/琥珀玻璃/橙色键帽
+ * 任何组件都可以引用这些变量来保持视觉统一
+ */
+:root {
+  /* 面板 / 背景 */
+  --mf-black: #050505;
+  --mf-panel: #0d0c0b;
+  --mf-panel-edge: rgba(255, 255, 255, 0.08);
+  --mf-panel-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+
+  /* 奶白键帽 */
+  --mf-cream: #f4efe6;
+  --mf-cream-hi: #fffdf8;
+  --mf-cream-lo: #ddd5c5;
+  --mf-cream-side: #a89f8c;
+
+  /* 橙色键帽 */
+  --mf-orange: #f97c16;
+  --mf-orange-hi: #ffa63d;
+  --mf-orange-lo: #e2660a;
+  --mf-orange-side: #9a4a07;
+
+  /* 琥珀玻璃键帽 */
+  --mf-glass-bg: rgba(24, 10, 3, 0.6);
+  --mf-glass-rim: rgba(255, 122, 26, 0.55);
+  --mf-glass-glow: rgba(255, 122, 26, 0.4);
+
+  /* 文字 */
+  --mf-ink: #221b12;
+  --mf-paper: #fdfbf7;
+
+  /* 圆角 / 字体 */
+  --mf-key-radius: 14px;
+  --mf-panel-radius: 22px;
+  --mf-font-mono: 'JetBrains Mono', 'Noto Sans SC', monospace;
+  --mf-font-display: 'Space Grotesk', 'Noto Sans SC', sans-serif;
+}
