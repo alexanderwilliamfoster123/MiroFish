@@ -18,7 +18,7 @@ const STRIPE_SETS = [
 export interface VhsTapeProps {
   title: string;
   duration: string;
-  url: string;
+  url?: string;
   index: number;
 }
 
@@ -60,17 +60,19 @@ export function VhsTape({ title, duration, url, index }: VhsTapeProps) {
   const stripes = STRIPE_SETS[index % STRIPE_SETS.length];
   const wind = ((index * 37) % 100) / 100; // deterministic per-tape wind ratio
 
+  const Wrapper = url ? "a" : "div";
+  const linkProps = url
+    ? { href: url, target: "_blank", rel: "noreferrer", "aria-label": `${title} — watch` }
+    : {};
+
   return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noreferrer"
-      aria-label={`${title} — watch`}
+    <Wrapper
+      {...linkProps}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="group block w-[264px] shrink-0"
       style={{
-        transform: hovered
+        transform: hovered && url
           ? "translateY(-10px) rotateX(4deg)"
           : "translateY(0) rotateX(0deg)",
         transition: "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)",
@@ -148,6 +150,79 @@ export function VhsTape({ title, duration, url, index }: VhsTapeProps) {
           </div>
         </div>
       </div>
-    </a>
+    </Wrapper>
+  );
+}
+
+// Spine view for the rack: the tape standing with its labeled edge out.
+export function VhsSpine({
+  title,
+  index,
+  selected,
+  onClick,
+}: {
+  title: string;
+  index: number;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  const stripes = STRIPE_SETS[index % STRIPE_SETS.length];
+
+  if (selected) {
+    // the tape is out — an empty slot stays behind
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={`${title} — put it back`}
+        className="h-[218px] w-[54px] cursor-pointer rounded-[5px] border border-dashed border-white/15 bg-black/40 transition-colors hover:border-white/30"
+      />
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={`${title} — pull it out`}
+      className="group h-[218px] w-[54px] cursor-pointer rounded-[5px] border border-white/10 transition-transform duration-300 hover:-translate-y-2.5"
+      style={{
+        background: "linear-gradient(180deg, #1c1c1f 0%, #131315 60%, #0d0d0f 100%)",
+        boxShadow: "0 10px 24px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07)",
+      }}
+    >
+      <div className="flex h-full flex-col items-center py-2.5">
+        {/* stripe block */}
+        <div className="w-[34px]">
+          {stripes.map((color) => (
+            <div key={color} className="h-[6px] w-full" style={{ background: color }} />
+          ))}
+        </div>
+        {/* spine label */}
+        <div
+          className="mt-2.5 flex min-h-0 w-[34px] flex-1 items-center justify-center rounded-[1px] px-0.5 py-2"
+          style={{ background: LABEL }}
+        >
+          <p
+            className="overflow-hidden font-serif text-[11px] italic"
+            style={{
+              color: INK,
+              writingMode: "vertical-rl",
+              maxHeight: "100%",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {title}
+          </p>
+        </div>
+        <p
+          className="mt-2 font-mono text-[8px] tracking-[0.18em]"
+          style={{ color: "rgba(235,233,228,0.4)" }}
+        >
+          VHS
+        </p>
+      </div>
+    </button>
   );
 }

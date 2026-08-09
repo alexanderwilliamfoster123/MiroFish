@@ -1,5 +1,6 @@
 import { Component as Keyboard } from "@/components/ui/keyboard";
-import { useEffect, useState } from "react";
+import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
+import { useEffect, useMemo, useState } from "react";
 
 interface ContactPageProps {
   email: string;
@@ -7,6 +8,23 @@ interface ContactPageProps {
 
 export function ContactPage({ email }: ContactPageProps) {
   const [message, setMessage] = useState("");
+  const [sent, setSent] = useState(false);
+
+  const receipt = useMemo(() => {
+    const stamp = Date.now().toString();
+    const localPart = email.split("@")[0] ?? "sender";
+    const holder = localPart
+      .split(/[._-]+/)
+      .filter(Boolean)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ");
+    return {
+      ticketId: stamp.slice(-10),
+      barcodeValue: stamp.slice(-13).padStart(13, "0"),
+      last4Digits: stamp.slice(-4),
+      cardHolder: holder || "A Reader",
+    };
+  }, [email]);
 
   const applyKey = (key: string, resolved: string) => {
     switch (key) {
@@ -35,6 +53,7 @@ export function ContactPage({ email }: ContactPageProps) {
   // Physical typing writes straight into the letter; the on-screen keyboard
   // animates by itself via its own global key listeners.
   useEffect(() => {
+    if (sent) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key.length === 1) {
@@ -53,7 +72,7 @@ export function ContactPage({ email }: ContactPageProps) {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [sent]);
 
   const mailto = `mailto:alex@vertus.ai?subject=${encodeURIComponent(
     `a letter from ${email}`,
@@ -91,6 +110,9 @@ export function ContactPage({ email }: ContactPageProps) {
           </div>
           <a
             href={mailto}
+            onClick={() => {
+              if (message.trim()) setSent(true);
+            }}
             className={
               "text-[11px] tracking-[0.2em] uppercase transition-all duration-300 " +
               (message.trim()
@@ -118,6 +140,49 @@ export function ContactPage({ email }: ContactPageProps) {
       >
         <Keyboard onKey={applyKey} />
       </div>
+
+      {/* the receipt */}
+      {sent && (
+        <div
+          className="fixed inset-0 z-[90] flex flex-col items-center justify-center gap-7 overflow-y-auto bg-black/90 p-6 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Letter sent"
+        >
+          <AnimatedTicket
+            ticketId={receipt.ticketId}
+            amount={0}
+            date={new Date()}
+            cardHolder={receipt.cardHolder}
+            last4Digits={receipt.last4Digits}
+            barcodeValue={receipt.barcodeValue}
+          />
+          <div className="animate-fade-up text-center" style={{ animationDelay: "0.4s" }}>
+            <p className="text-[14px] text-foreground">
+              thanks for the letter — we&rsquo;ll be in touch in due course.
+            </p>
+            <div className="mt-5 flex items-center justify-center gap-6">
+              <button
+                type="button"
+                onClick={() => {
+                  setSent(false);
+                  setMessage("");
+                }}
+                className="cursor-pointer text-[11px] tracking-[0.2em] text-muted-foreground uppercase transition-colors hover:text-foreground"
+              >
+                write another
+              </button>
+              <button
+                type="button"
+                onClick={() => setSent(false)}
+                className="cursor-pointer text-[11px] tracking-[0.2em] text-faint uppercase transition-colors hover:text-foreground"
+              >
+                close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
