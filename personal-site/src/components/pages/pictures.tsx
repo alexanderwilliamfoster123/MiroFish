@@ -15,7 +15,16 @@ interface Album {
   photos: Photo[];
 }
 
+// photos resolve from an embedded map when the site is packaged as a single
+// offline file (e.g. the hosted single-file build); otherwise from unsplash
+declare global {
+  interface Window {
+    __EMBEDDED_PHOTOS?: Record<string, string>;
+  }
+}
+
 const u = (id: string) =>
+  window.__EMBEDDED_PHOTOS?.[id] ??
   `https://images.unsplash.com/${id}?q=80&w=1400&auto=format&fit=crop`;
 
 const ALBUMS: Album[] = [
