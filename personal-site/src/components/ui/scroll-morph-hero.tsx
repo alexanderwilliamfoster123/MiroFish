@@ -59,13 +59,13 @@ function FlipCard({
             >
                 {/* Front Face */}
                 <div
-                    className="absolute inset-0 h-full w-full overflow-hidden rounded-xl shadow-lg bg-gray-200"
+                    className="absolute inset-0 h-full w-full overflow-hidden rounded-xl shadow-lg bg-neutral-800"
                     style={{ backfaceVisibility: "hidden" }}
                 >
                     <img
                         src={src}
                         alt={`hero-${index}`}
-                        className="h-full w-full object-cover"
+                        className="h-full w-full object-cover grayscale"
                     />
                     <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-transparent" />
                 </div>
@@ -76,7 +76,7 @@ function FlipCard({
                     style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                 >
                     <div className="text-center">
-                        <p className="text-[8px] font-bold text-blue-400 uppercase tracking-widest mb-1">Album</p>
+                        <p className="text-[8px] font-bold text-neutral-500 uppercase tracking-widest mb-1">Album</p>
                         <p className="text-xs font-medium text-white">{label}</p>
                     </div>
                 </div>
@@ -264,7 +264,7 @@ export default function IntroAnimation() {
     const contentY = useTransform(smoothMorph, [0.8, 1], [20, 0]);
 
     return (
-        <div ref={containerRef} className="relative w-full h-full bg-[#FAFAFA] overflow-hidden">
+        <div ref={containerRef} className="relative w-full h-full bg-black overflow-hidden">
             {/* Container */}
             <div className="flex h-full w-full flex-col items-center justify-center perspective-1000">
 
@@ -274,7 +274,7 @@ export default function IntroAnimation() {
                         initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
                         animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 1 - morphValue * 2, y: 0, filter: "blur(0px)" } : { opacity: 0, filter: "blur(10px)" }}
                         transition={{ duration: 1 }}
-                        className="font-serif text-2xl font-light tracking-tight text-gray-800 md:text-4xl"
+                        className="font-serif text-2xl font-light tracking-tight text-neutral-200 md:text-4xl"
                     >
                         Places I stood still.
                     </motion.h1>
@@ -282,7 +282,7 @@ export default function IntroAnimation() {
                         initial={{ opacity: 0 }}
                         animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 0.5 - morphValue } : { opacity: 0 }}
                         transition={{ duration: 1, delay: 0.2 }}
-                        className="mt-4 text-xs font-bold tracking-[0.2em] text-gray-500"
+                        className="mt-4 text-xs font-bold tracking-[0.2em] text-neutral-500"
                     >
                         SCROLL TO EXPLORE
                     </motion.p>
@@ -293,10 +293,10 @@ export default function IntroAnimation() {
                     style={{ opacity: contentOpacity, y: contentY }}
                     className="absolute top-[10%] z-10 flex flex-col items-center justify-center text-center pointer-events-none px-4"
                 >
-                    <h2 className="font-serif text-3xl md:text-5xl font-light text-gray-900 tracking-tight mb-4">
+                    <h2 className="font-serif text-3xl md:text-5xl font-light text-neutral-100 tracking-tight mb-4">
                         Pictures
                     </h2>
-                    <p className="text-sm md:text-base text-gray-600 max-w-lg leading-relaxed">
+                    <p className="text-sm md:text-base text-neutral-400 max-w-lg leading-relaxed">
                         Albums from the last few years. <br className="hidden md:block" />
                         Keep scrolling to shuffle through them — flip a card to see its album.
                     </p>

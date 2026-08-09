@@ -2,8 +2,35 @@
 
 import React from "react"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism"
 import { Check, Copy } from "lucide-react"
+
+// Monochrome Prism theme — the whole site is black-and-white
+const monochrome: Record<string, React.CSSProperties> = {
+  'code[class*="language-"]': { color: "#e5e5e5", background: "none" },
+  'pre[class*="language-"]': { color: "#e5e5e5", background: "transparent" },
+  comment: { color: "#525252", fontStyle: "italic" },
+  prolog: { color: "#525252" },
+  doctype: { color: "#525252" },
+  cdata: { color: "#525252" },
+  punctuation: { color: "#737373" },
+  operator: { color: "#a3a3a3" },
+  keyword: { color: "#ffffff", fontWeight: 500 },
+  boolean: { color: "#ffffff" },
+  number: { color: "#d4d4d4" },
+  string: { color: "#a3a3a3" },
+  "template-string": { color: "#a3a3a3" },
+  char: { color: "#a3a3a3" },
+  function: { color: "#f5f5f5" },
+  "class-name": { color: "#f5f5f5" },
+  tag: { color: "#e5e5e5" },
+  "attr-name": { color: "#a3a3a3" },
+  "attr-value": { color: "#a3a3a3" },
+  variable: { color: "#e5e5e5" },
+  constant: { color: "#e5e5e5" },
+  property: { color: "#d4d4d4" },
+  interpolation: { color: "#e5e5e5" },
+  "interpolation-punctuation": { color: "#737373" },
+}
 
 type CodeBlockProps = {
   language: string
@@ -55,7 +82,7 @@ export const CodeBlock = ({
     : highlightLines
 
   return (
-    <div className="relative w-full rounded-lg bg-slate-900 p-4 font-mono text-sm">
+    <div className="relative w-full rounded-lg border border-white/10 bg-neutral-950 p-4 font-mono text-sm">
       <div className="flex flex-col gap-2">
         {tabsExist && (
           <div className="flex overflow-x-auto">
@@ -92,7 +119,8 @@ export const CodeBlock = ({
       </div>
       <SyntaxHighlighter
         language={activeLanguage}
-        style={atomDark}
+        style={monochrome}
+        lineNumberStyle={{ color: "#404040", minWidth: "2.25em" }}
         customStyle={{
           margin: 0,
           padding: 0,

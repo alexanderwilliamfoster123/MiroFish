@@ -36,14 +36,14 @@ export function CompaniesPage() {
             href={company.href}
             target="_blank"
             rel="noreferrer"
-            className="group overflow-hidden rounded-2xl border border-line bg-white transition-all duration-300 hover:border-foreground/25 hover:shadow-[0_12px_40px_rgba(0,0,0,0.06)]"
+            className="group overflow-hidden rounded-2xl border border-line bg-card transition-all duration-300 hover:border-foreground/25 hover:shadow-[0_12px_40px_rgba(255,255,255,0.04)]"
           >
             <div className="aspect-[16/9] overflow-hidden">
               <img
                 src={company.image}
                 alt={company.name}
                 loading="lazy"
-                className="h-full w-full object-cover grayscale transition-all duration-700 group-hover:scale-[1.03] group-hover:grayscale-0"
+                className="h-full w-full object-cover opacity-80 grayscale transition-all duration-700 group-hover:scale-[1.03] group-hover:opacity-100"
               />
             </div>
             <div className="p-5">

@@ -29,8 +29,8 @@ const MastercardIcon = (props: React.SVGProps<SVGSVGElement>) => (
         width="36"
         height="24"
     >
-        <circle cx="8" cy="12" r="7" fill="#EA001B"></circle>
-        <circle cx="16" cy="12" r="7" fill="#F79E1B" fillOpacity="0.8"></circle>
+        <circle cx="8" cy="12" r="7" fill="#e5e5e5"></circle>
+        <circle cx="16" cy="12" r="7" fill="#737373" fillOpacity="0.8"></circle>
     </svg>
 );
 
@@ -95,7 +95,7 @@ const Barcode = ({ value }: { value: string }) => {
 
 const ConfettiExplosion = () => {
   const confettiCount = 100;
-  const colors = ["#ef4444", "#3b82f6", "#22c55e", "#eab308", "#8b5cf6", "#f97316"];
+  const colors = ["#ffffff", "#d4d4d4", "#a3a3a3", "#737373", "#525252", "#404040"];
 
   return (
     <>
@@ -190,7 +190,7 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
         <div
           ref={ref}
           className={cn(
-            "relative w-full max-w-sm bg-card text-card-foreground rounded-2xl shadow-lg font-sans z-10",
+            "relative w-full max-w-sm bg-card text-card-foreground rounded-2xl border border-white/10 shadow-lg font-sans z-10",
             "animate-in fade-in-0 zoom-in-95 duration-500",
             className
           )}

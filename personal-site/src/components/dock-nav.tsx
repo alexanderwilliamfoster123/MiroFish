@@ -27,23 +27,25 @@ export function DockNav({ active, onNavigate }: DockNavProps) {
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-2 z-50">
       <div className="pointer-events-auto absolute bottom-0 left-1/2 max-w-full -translate-x-1/2">
-        <Dock className="items-end border border-line/80 bg-white/80 pb-3 shadow-[0_8px_30px_rgba(0,0,0,0.06)] backdrop-blur-md">
+        <Dock className="items-end border border-white/10 bg-neutral-950/80 pb-3 shadow-[0_8px_30px_rgba(0,0,0,0.6)] backdrop-blur-md">
           {ITEMS.map((item) => (
             <DockItem
               key={item.section}
               onClick={() => onNavigate(item.section)}
               className={cn(
-                "aspect-square rounded-full border border-line/70 bg-gray-100 transition-colors",
-                active === item.section && "border-foreground/30 bg-gray-200",
+                "aspect-square rounded-full border border-white/10 bg-neutral-900 transition-colors",
+                active === item.section && "border-white/30 bg-neutral-800",
               )}
             >
-              <DockLabel>{item.title}</DockLabel>
+              <DockLabel className="border-white/10 bg-neutral-900 text-neutral-200">
+                {item.title}
+              </DockLabel>
               <DockIcon>
                 <item.icon
                   className={cn(
                     "h-full w-full",
                     active === item.section
-                      ? "text-neutral-800"
+                      ? "text-neutral-100"
                       : "text-neutral-500",
                   )}
                 />

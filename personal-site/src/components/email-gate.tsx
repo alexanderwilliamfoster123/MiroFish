@@ -72,13 +72,13 @@ export function EmailGate({ onEnter }: EmailGateProps) {
               "w-full border-b bg-transparent pb-3 text-center text-base font-light tracking-wide outline-none transition-colors duration-300",
               "placeholder:text-faint",
               error
-                ? "border-red-400/70"
+                ? "border-white/70"
                 : "border-line focus:border-foreground/60",
             )}
           />
           <p
             className={cn(
-              "mt-3 h-4 text-xs text-red-400/90 transition-opacity duration-300",
+              "mt-3 h-4 text-xs text-neutral-400 transition-opacity duration-300",
               error ? "opacity-100" : "opacity-0",
             )}
             aria-live="polite"

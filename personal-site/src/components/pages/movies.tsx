@@ -53,7 +53,7 @@ export function MoviesPage() {
                 src={movie.thumbnail}
                 alt={movie.title}
                 loading="lazy"
-                className="aspect-video w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                className="aspect-video w-full object-cover opacity-80 grayscale transition-all duration-700 group-hover:scale-[1.03] group-hover:opacity-100"
               />
               <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/20">
                 <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/90 opacity-0 shadow-lg transition-all duration-300 group-hover:opacity-100">
