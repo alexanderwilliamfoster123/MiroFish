@@ -7,6 +7,7 @@ import {
   Clapperboard,
   Feather,
   HomeIcon,
+  Mail,
 } from "lucide-react";
 
 const ITEMS: Array<{ section: Section; title: string; icon: typeof HomeIcon }> =
@@ -16,6 +17,7 @@ const ITEMS: Array<{ section: Section; title: string; icon: typeof HomeIcon }> =
     { section: "letters", title: "Letters", icon: Feather },
     { section: "pictures", title: "Pictures", icon: Camera },
     { section: "movies", title: "Movies", icon: Clapperboard },
+    { section: "contact", title: "Contact", icon: Mail },
   ];
 
 interface DockNavProps {

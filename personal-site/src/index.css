@@ -14,6 +14,14 @@
   --color-muted: #171717;
   --color-muted-foreground: #8a8a8a;
   --color-border: #262626;
+  --color-input: #262626;
+  --color-ring: #737373;
+  --color-accent: #1f1f1f;
+  --color-accent-foreground: #f2f2f2;
+  --color-secondary: #171717;
+  --color-secondary-foreground: #f2f2f2;
+  --color-destructive: #737373;
+  --color-destructive-foreground: #0a0a0a;
   --color-faint: #525252;
   --color-line: #1f1f1f;
 }
@@ -63,4 +71,35 @@ body {
 
 .animate-fade-in {
   animation: fade-in 1.2s ease both;
+}
+
+@keyframes cursor-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-cursor-blink {
+  animation: cursor-blink 1.1s step-end infinite;
+}
+
+@keyframes holo-shift {
+  0% {
+    filter: hue-rotate(0deg) saturate(0.5);
+  }
+  50% {
+    filter: hue-rotate(180deg) saturate(0.6);
+  }
+  100% {
+    filter: hue-rotate(360deg) saturate(0.5);
+  }
+}
+
+.animate-holo {
+  animation: holo-shift 9s linear infinite;
 }

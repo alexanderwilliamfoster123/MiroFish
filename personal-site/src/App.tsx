@@ -1,6 +1,7 @@
 import { DockNav } from "@/components/dock-nav";
 import { EmailGate } from "@/components/email-gate";
 import { CompaniesPage } from "@/components/pages/companies";
+import { ContactPage } from "@/components/pages/contact";
 import { HomePage } from "@/components/pages/home";
 import { LettersPage } from "@/components/pages/letters";
 import { MoviesPage } from "@/components/pages/movies";
@@ -62,6 +63,7 @@ export default function App() {
         {section === "letters" && <LettersPage />}
         {section === "pictures" && <PicturesPage />}
         {section === "movies" && <MoviesPage />}
+        {section === "contact" && <ContactPage email={email} />}
       </div>
       <DockNav active={section} onNavigate={setSection} />
     </>
