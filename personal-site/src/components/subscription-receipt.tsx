@@ -1,15 +1,14 @@
-import { LiquidMetalButton } from "@/components/ui/liquid-metal-button";
 import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
 import { useMemo } from "react";
 
 interface SubscriptionReceiptProps {
   email: string;
-  onContinue: () => void;
+  onReset: () => void;
 }
 
 export function SubscriptionReceipt({
   email,
-  onContinue,
+  onReset,
 }: SubscriptionReceiptProps) {
   const receipt = useMemo(() => {
     const now = new Date();
@@ -31,7 +30,7 @@ export function SubscriptionReceipt({
   }, [email]);
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center gap-10 px-6 py-16">
+    <main className="flex min-h-dvh flex-col items-center justify-center gap-8 px-4 py-12">
       <AnimatedTicket
         ticketId={receipt.ticketId}
         amount={0}
@@ -40,11 +39,21 @@ export function SubscriptionReceipt({
         last4Digits={receipt.last4Digits}
         barcodeValue={receipt.barcodeValue}
       />
-      <div className="animate-fade-up flex flex-col items-center gap-4" style={{ animationDelay: "0.6s" }}>
-        <p className="text-[13px] tracking-wide text-muted-foreground">
-          You&rsquo;re subscribed as {email}
+      <div
+        className="animate-fade-up flex flex-col items-center gap-3 text-center"
+        style={{ animationDelay: "0.5s" }}
+      >
+        <p className="text-[14px] text-foreground">
+          thanks for the email — we&rsquo;ll be in touch in due course.
         </p>
-        <LiquidMetalButton label="Step inside" onClick={onContinue} />
+        <p className="text-[12px] text-muted-foreground">{email}</p>
+        <button
+          type="button"
+          onClick={onReset}
+          className="mt-2 cursor-pointer text-[11px] tracking-[0.2em] text-faint uppercase transition-colors duration-300 hover:text-foreground"
+        >
+          not you? start over
+        </button>
       </div>
     </main>
   );
