@@ -116,13 +116,13 @@ export function EmailGate({ onEnter }: EmailGateProps) {
           className="animate-fade-up font-serif text-2xl font-light italic leading-snug text-foreground sm:text-3xl"
           style={{ animationDelay: "0.1s" }}
         >
-          One small thing first.
+          Every world needs a key.
         </p>
         <p
           className="animate-fade-up mt-3 text-[13px] tracking-wide text-muted-foreground"
           style={{ animationDelay: "0.25s" }}
         >
-          Leave your email to step inside — type, or play the keys.
+          Yours is an email.
         </p>
 
         {/* the email line */}
@@ -156,7 +156,10 @@ export function EmailGate({ onEnter }: EmailGateProps) {
           </p>
         </div>
 
-        <div className="animate-fade-up mt-6" style={{ animationDelay: "0.55s" }}>
+        <div
+          className="animate-fade-up mt-5"
+          style={{ animationDelay: "0.55s", zoom: 0.62 }}
+        >
           <LiquidMetalButton label="Enter" onClick={submit} />
         </div>
 
