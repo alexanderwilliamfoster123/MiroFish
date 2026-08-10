@@ -112,6 +112,9 @@ export function EmailGate({ onEnter }: EmailGateProps) {
       )}
     >
       <div className="flex w-full flex-col items-center text-center">
+        <p className="animate-fade-in mb-10 text-[11px] tracking-[0.2em] text-faint uppercase">
+          Alexander Foster
+        </p>
         <p
           className="animate-fade-up font-serif text-2xl font-light italic leading-snug text-foreground sm:text-3xl"
           style={{ animationDelay: "0.1s" }}
@@ -156,18 +159,11 @@ export function EmailGate({ onEnter }: EmailGateProps) {
           </p>
         </div>
 
-        <div
-          className="animate-fade-up mt-5"
-          style={{ animationDelay: "0.55s", zoom: 0.62 }}
-        >
-          <LiquidMetalButton label="Enter" onClick={submit} />
-        </div>
-
         {/* the keyboard */}
         <div
           ref={scalerRef}
-          className="animate-fade-up mt-10 w-full max-w-5xl"
-          style={{ animationDelay: "0.7s" }}
+          className="animate-fade-up mt-8 w-full max-w-5xl"
+          style={{ animationDelay: "0.55s" }}
         >
           <div style={{ zoom: scale }}>
             <Keyboard onKey={applyKey} />
@@ -175,9 +171,12 @@ export function EmailGate({ onEnter }: EmailGateProps) {
         </div>
       </div>
 
-      <p className="animate-fade-in mt-10 text-[11px] tracking-[0.2em] text-faint uppercase">
-        Alexander Foster
-      </p>
+      <div
+        className="animate-fade-up mt-10"
+        style={{ animationDelay: "0.7s", zoom: 0.62 }}
+      >
+        <LiquidMetalButton label="Enter" onClick={submit} />
+      </div>
     </main>
   );
 }
