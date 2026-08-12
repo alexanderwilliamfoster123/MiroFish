@@ -14,7 +14,7 @@ interface TicketData {
   date: Date;
   last4Digits: string;
   barcodeValue: string;
-  memberId: string;
+  serial: string;
 }
 
 function digitsFrom(seed: string, length: number): string {
@@ -39,8 +39,19 @@ function issueTicket(email: string): TicketData {
     date: new Date(),
     last4Digits: digitsFrom(email, 4),
     barcodeValue: digitsFrom(seed + ":barcode", 14),
-    memberId: digitsFrom(seed + ":member", 16),
+    serial: `PKT-${digitsFrom(seed + ":serial", 5)}`,
   };
+}
+
+// Members are shown by name only — if someone typed their email into the
+// name field, fall back to a title-cased name from its local part.
+function formatMemberName(input: string): string {
+  const base = input.includes("@") ? input.split("@")[0] : input;
+  return base
+    .split(/[._\-+\s]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
 }
 
 export default function App() {
@@ -70,7 +81,7 @@ export default function App() {
             ticketId={ticket.ticketId}
             amount={0}
             date={ticket.date}
-            cardHolder={name.trim()}
+            cardHolder={formatMemberName(name)}
             last4Digits={ticket.last4Digits}
             barcodeValue={ticket.barcodeValue}
             xp={XP_BONUS}
@@ -86,8 +97,8 @@ export default function App() {
         </div>
       ) : stage === "card" && ticket ? (
         <PaktosCard
-          memberName={name.trim()}
-          memberId={ticket.memberId}
+          memberName={formatMemberName(name)}
+          serial={ticket.serial}
           xp={XP_BONUS}
         />
       ) : (
