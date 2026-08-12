@@ -1,7 +1,8 @@
 import * as React from "react";
 import NumberFlow from "@number-flow/react";
 import { TiltCard } from "@/components/ui/tilt-card";
-import platinumCard from "@/assets/paktos-card-platinum.jpg";
+import { AwardBadge } from "@/components/ui/award-badge";
+import iconBlack from "@/assets/paktos-icon-black-192.png";
 import logoWhite from "@/assets/paktos-logo-white-380.png";
 import logoWhite2x from "@/assets/paktos-logo-white-760.png";
 import logoWhite4x from "@/assets/paktos-logo-white-1520.png";
@@ -14,15 +15,15 @@ interface PaktosCardProps {
   xp: number;
 }
 
-// Engraved-metal text treatment to match the platinum card artwork.
+// Engraved-into-metal text treatment.
 const engraved: React.CSSProperties = {
-  color: "#6f7277",
-  textShadow: "0 1px 0 rgba(255,255,255,0.55), 0 -1px 1px rgba(0,0,0,0.35)",
-  fontWeight: 500,
+  color: "#55565c",
+  textShadow: "0 1px 0 rgba(255,255,255,0.55), 0 -1px 0 rgba(0,0,0,0.28)",
 };
 
-// The platinum Paktos Card artwork with the member's details set into it.
-function PlatinumCardFace({
+// Our own metal members card: brushed steel, the mark, and the member's
+// identity — engraved, simple, and unmistakably Paktos.
+function CardFace({
   memberName,
   serial,
 }: {
@@ -30,51 +31,81 @@ function PlatinumCardFace({
   serial: string;
 }) {
   return (
-    <div className="relative w-full" style={{ containerType: "inline-size" }}>
-      <img
-        src={platinumCard}
-        alt="Paktos member card"
-        className="block h-auto w-full rounded-2xl"
+    <div
+      className="relative flex h-56 w-full flex-col justify-between overflow-hidden rounded-2xl border border-[#96969c] p-6 text-left"
+      style={{
+        background:
+          "linear-gradient(180deg, #dcdce0 0%, #c6c6cc 30%, #b9b9bf 52%, #cfcfd4 78%, #e3e3e7 100%)",
+      }}
+    >
+      {/* brushed metal grain */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 1px, rgba(0,0,0,0.035) 1px 2px)",
+        }}
       />
-      {/* Member name — set above the engraved PAKTOS MEMBER label */}
-      <p
-        className="absolute font-sans uppercase"
+      {/* soft diagonal sheen */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
         style={{
-          ...engraved,
-          left: "10%",
-          top: "73.5%",
-          fontSize: "5.4cqw",
-          letterSpacing: "0.14em",
+          background:
+            "linear-gradient(115deg, transparent 32%, rgba(255,255,255,0.5) 47%, transparent 62%)",
         }}
-      >
-        {memberName}
-      </p>
-      {/* Membership serial — where a bank card would carry its number */}
-      <p
-        className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap font-sans tabular-nums"
-        style={{
-          ...engraved,
-          left: "84%",
-          top: "50%",
-          fontSize: "4.4cqw",
-          letterSpacing: "0.12em",
-        }}
-      >
-        {serial}
-      </p>
-      {/* Member since — under the banner */}
-      <p
-        className="absolute font-sans tabular-nums -translate-x-1/2"
-        style={{
-          ...engraved,
-          left: "76%",
-          top: "72.5%",
-          fontSize: "4.6cqw",
-          letterSpacing: "0.08em",
-        }}
-      >
-        26
-      </p>
+      />
+      {/* inner highlight edge */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-[3px] rounded-[13px] border border-white/40"
+      />
+
+      <div className="relative flex items-start justify-between">
+        <img
+          src={iconBlack}
+          alt="Paktos"
+          className="h-9 w-9 opacity-70"
+          style={{ filter: "drop-shadow(0 1px 0 rgba(255,255,255,0.5))" }}
+        />
+        <p
+          className="text-[10px] font-semibold uppercase tracking-[0.28em]"
+          style={engraved}
+        >
+          Founding Member
+        </p>
+      </div>
+
+      <div className="relative">
+        <p
+          className="text-xl font-semibold uppercase tracking-[0.12em]"
+          style={engraved}
+        >
+          {memberName}
+        </p>
+        <p
+          className="mt-1 text-[10px] font-medium uppercase tracking-[0.3em]"
+          style={{ ...engraved, color: "#7a7b81" }}
+        >
+          Paktos Member
+        </p>
+      </div>
+
+      <div className="relative flex items-end justify-between">
+        <p
+          className="font-mono text-sm font-medium tracking-[0.15em]"
+          style={engraved}
+        >
+          {serial}
+        </p>
+        <p
+          className="text-[11px] font-medium uppercase tracking-[0.2em]"
+          style={{ ...engraved, color: "#7a7b81" }}
+        >
+          Since 2026
+        </p>
+      </div>
     </div>
   );
 }
@@ -104,15 +135,12 @@ function StoryShareScreen({
           className="w-[120px] animate-in fade-in-0 duration-1000"
         />
 
-        <div className="animate-in fade-in-0 slide-in-from-bottom-2 duration-1000 delay-200">
-          <p className="font-serif text-5xl text-white">I'm in.</p>
-          <p className="mt-4 text-[11px] uppercase tracking-[0.35em] text-neutral-500">
-            Founding Member · {serial}
-          </p>
-        </div>
+        <p className="text-[11px] uppercase tracking-[0.35em] text-neutral-500 animate-in fade-in-0 slide-in-from-bottom-2 duration-1000 delay-200">
+          Founding Member · {serial}
+        </p>
 
         <div className="w-full animate-in fade-in-0 zoom-in-95 duration-1000 delay-300">
-          <PlatinumCardFace memberName={memberName} serial={serial} />
+          <CardFace memberName={memberName} serial={serial} />
         </div>
 
         <p className="text-sm tracking-wide text-neutral-400 animate-in fade-in-0 duration-1000 delay-500">
@@ -179,8 +207,17 @@ export function PaktosCard({ memberName, serial, xp }: PaktosCardProps) {
 
       <div className="w-full animate-in fade-in-0 zoom-in-95 duration-500">
         <TiltCard className="rounded-2xl shadow-2xl">
-          <PlatinumCardFace memberName={memberName} serial={serial} />
+          <CardFace memberName={memberName} serial={serial} />
         </TiltCard>
+      </div>
+
+      <div className="flex justify-center animate-in fade-in-0 duration-500 delay-200">
+        <AwardBadge
+          type="product-of-the-day"
+          place={2}
+          topText="FOUNDING MEMBER"
+          titleText="Paktos"
+        />
       </div>
 
       <p className="text-center text-sm text-muted-foreground">
