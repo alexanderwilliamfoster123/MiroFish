@@ -87,6 +87,14 @@ export default function App() {
             xp={XP_BONUS}
             memberLabel="Founding Member"
             icon={<img src={paktosIconBlack} alt="Paktos" className="h-8 w-8" />}
+            memberSlot={
+              <AwardBadge
+                type="product-of-the-day"
+                place={1}
+                topText="FOUNDING MEMBER"
+                titleText="Paktos"
+              />
+            }
           />
           <button
             onClick={() => setStage("card")}
@@ -152,14 +160,6 @@ export default function App() {
               </button>
             </form>
           )}
-          <div className="mt-12 flex justify-center">
-            <AwardBadge
-              type="product-of-the-day"
-              place={1}
-              topText="PAKTOS"
-              titleText="Founding Member"
-            />
-          </div>
         </div>
       )}
     </main>

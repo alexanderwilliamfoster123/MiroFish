@@ -145,6 +145,7 @@ export interface TicketProps extends React.HTMLAttributes<HTMLDivElement> {
   icon?: React.ReactNode;
   xp?: number;
   memberLabel?: string;
+  memberSlot?: React.ReactNode;
 }
 
 const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
@@ -160,6 +161,7 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
       icon,
       xp,
       memberLabel,
+      memberSlot,
       ...props
     },
     ref
@@ -234,17 +236,21 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
                   <p className="font-medium">{formattedDate}</p>
               </div>
 
-              <div className="bg-muted/50 p-4 rounded-lg flex items-center space-x-4">
-                  {icon ?? <MastercardIcon />}
-                  <div>
-                      <p className="font-semibold">{cardHolder}</p>
-                      {memberLabel ? (
-                        <p className="text-muted-foreground text-sm tracking-wide">{memberLabel}</p>
-                      ) : (
-                        <p className="text-muted-foreground font-mono text-sm tracking-wider">•••• {last4Digits}</p>
-                      )}
-                  </div>
-              </div>
+              {memberSlot ? (
+                <div className="flex justify-center">{memberSlot}</div>
+              ) : (
+                <div className="bg-muted/50 p-4 rounded-lg flex items-center space-x-4">
+                    {icon ?? <MastercardIcon />}
+                    <div>
+                        <p className="font-semibold">{cardHolder}</p>
+                        {memberLabel ? (
+                          <p className="text-muted-foreground text-sm tracking-wide">{memberLabel}</p>
+                        ) : (
+                          <p className="text-muted-foreground font-mono text-sm tracking-wider">•••• {last4Digits}</p>
+                        )}
+                    </div>
+                </div>
+              )}
 
               <DashedLine />
 

@@ -1,8 +1,7 @@
 import * as React from "react";
 import NumberFlow from "@number-flow/react";
-import { LiquidCard, CardContent } from "@/components/ui/liquid-glass-card";
 import { TiltCard } from "@/components/ui/tilt-card";
-import iconWhite from "@/assets/paktos-icon-white-192.png";
+import platinumCard from "@/assets/paktos-card-platinum.jpg";
 
 interface PaktosCardProps {
   memberName: string;
@@ -10,15 +9,16 @@ interface PaktosCardProps {
   xp: number;
 }
 
-// Brand gradient — lavender through coral into plum and violet. Reserved for
-// standout statements per the brand guidelines.
-const BRAND_GRADIENT =
-  "linear-gradient(115deg, #F0DCFF 0%, #FF8E94 35%, #D95DDF 65%, #9081DF 100%)";
+// Engraved-metal text treatment to match the platinum card artwork.
+const engraved: React.CSSProperties = {
+  color: "#6f7277",
+  textShadow: "0 1px 0 rgba(255,255,255,0.55), 0 -1px 1px rgba(0,0,0,0.35)",
+  fontWeight: 500,
+};
 
-// The member's Paktos Card, set to the brand system: near-black #18181B body
-// on a gradient metallic edge, lavender and grey-scale accents, with the
-// Founding Member XP bonus animating onto the balance. Sharing to a story
-// earns a second bonus that rolls the balance up again.
+// The member's platinum Paktos Card: the supplied metal artwork with the
+// member's details set into it. The Founding Member XP bonus rolls onto the
+// balance pill, and sharing to a story earns a second bonus.
 export function PaktosCard({ memberName, serial, xp }: PaktosCardProps) {
   const [balance, setBalance] = React.useState(0);
   const [shared, setShared] = React.useState(false);
@@ -45,73 +45,61 @@ export function PaktosCard({ memberName, serial, xp }: PaktosCardProps) {
     setBalance(xp * 2);
   };
 
+  const last4 = serial.replace(/\D/g, "").slice(-4);
+
   return (
     <div className="flex w-full max-w-sm flex-col items-center gap-5">
-      <div
-        className="rounded-full px-4 py-1.5 text-sm font-medium text-[#18181B] animate-in fade-in-0 slide-in-from-top-2 duration-500"
-        style={{ background: BRAND_GRADIENT }}
-      >
-        +{xp} XP · Founding Member bonus
+      <div className="rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground animate-in fade-in-0 slide-in-from-top-2 duration-500 tabular-nums">
+        +<NumberFlow value={balance} /> XP · Founding Member bonus
       </div>
 
       <div className="w-full animate-in fade-in-0 zoom-in-95 duration-500">
-        <TiltCard className="rounded-xl shadow-2xl">
-          <div className="rounded-xl p-[1.5px]" style={{ background: BRAND_GRADIENT }}>
-            <LiquidCard className="h-56 w-full rounded-[11px] border-0 bg-[#18181B] text-[#F2F1F3]">
-              <CardContent className="relative flex h-full flex-col justify-between p-6">
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 rounded-[11px]"
-                  style={{
-                    background:
-                      "radial-gradient(60% 80% at 85% 0%, rgba(217,93,223,0.16), transparent 60%), radial-gradient(50% 70% at 10% 100%, rgba(144,129,223,0.14), transparent 60%)",
-                  }}
-                />
-                <div className="flex items-start justify-between">
-                  <img src={iconWhite} alt="Paktos" className="h-9 w-9" />
-                  <p className="text-[10px] uppercase tracking-[0.25em] text-[#D3C2F0]">
-                    Founding Member
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-xs uppercase tracking-wide text-[#94939F]">
-                    Paktos XP
-                  </p>
-                  <p className="text-4xl font-semibold tabular-nums">
-                    <NumberFlow value={balance} />
-                    <span
-                      className="ml-2 text-lg font-medium"
-                      style={{
-                        background: BRAND_GRADIENT,
-                        WebkitBackgroundClip: "text",
-                        backgroundClip: "text",
-                        color: "transparent",
-                      }}
-                    >
-                      XP
-                    </span>
-                  </p>
-                </div>
-
-                <div className="flex items-end justify-between">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-wide text-[#94939F]">
-                      Member
-                    </p>
-                    <p className="font-medium">{memberName}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[10px] uppercase tracking-wide text-[#94939F]">
-                      Serial No.
-                    </p>
-                    <p className="font-mono text-sm tracking-wider text-[#C9C9CF]">
-                      {serial}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </LiquidCard>
+        <TiltCard className="rounded-2xl shadow-2xl">
+          <div className="relative w-full" style={{ containerType: "inline-size" }}>
+            <img
+              src={platinumCard}
+              alt="Paktos platinum member card"
+              className="block h-auto w-full rounded-2xl"
+            />
+            {/* Member name — set above the engraved PAKTOS MEMBER label */}
+            <p
+              className="absolute font-sans uppercase"
+              style={{
+                ...engraved,
+                left: "10%",
+                top: "72.5%",
+                fontSize: "5.6cqw",
+                letterSpacing: "0.14em",
+              }}
+            >
+              {memberName}
+            </p>
+            {/* Serial digits — beside the contactless symbol */}
+            <p
+              className="absolute font-sans tabular-nums"
+              style={{
+                ...engraved,
+                left: "82%",
+                top: "44.5%",
+                fontSize: "5.2cqw",
+                letterSpacing: "0.1em",
+              }}
+            >
+              {last4}
+            </p>
+            {/* Member since — under the banner */}
+            <p
+              className="absolute font-sans tabular-nums -translate-x-1/2"
+              style={{
+                ...engraved,
+                left: "76%",
+                top: "72.5%",
+                fontSize: "4.6cqw",
+                letterSpacing: "0.08em",
+              }}
+            >
+              26
+            </p>
           </div>
         </TiltCard>
       </div>
@@ -123,7 +111,7 @@ export function PaktosCard({ memberName, serial, xp }: PaktosCardProps) {
       <button
         onClick={handleShare}
         disabled={shared}
-        className="h-11 w-full rounded-md bg-[#18181B] px-6 text-sm font-medium text-[#F2F1F3] transition-opacity hover:opacity-90 disabled:opacity-60"
+        className="h-11 w-full rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
       >
         {shared
           ? `+${xp} XP added · Thanks for sharing!`
