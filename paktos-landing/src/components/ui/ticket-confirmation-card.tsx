@@ -143,6 +143,8 @@ export interface TicketProps extends React.HTMLAttributes<HTMLDivElement> {
   last4Digits: string;
   barcodeValue: string;
   icon?: React.ReactNode;
+  xp?: number;
+  memberLabel?: string;
 }
 
 const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
@@ -155,6 +157,9 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
       cardHolder,
       last4Digits,
       barcodeValue,
+      icon,
+      xp,
+      memberLabel,
       ...props
     },
     ref
@@ -219,8 +224,8 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
                       <p className="font-mono font-medium">{ticketId}</p>
                   </div>
                   <div className="text-right">
-                      <p className="text-xs text-muted-foreground uppercase">Amount</p>
-                      <p className="font-semibold text-lg">{formattedAmount}</p>
+                      <p className="text-xs text-muted-foreground uppercase">{xp != null ? "XP Earned" : "Amount"}</p>
+                      <p className="font-semibold text-lg">{xp != null ? `+${xp} XP` : formattedAmount}</p>
                   </div>
               </div>
 
@@ -230,10 +235,14 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
               </div>
 
               <div className="bg-muted/50 p-4 rounded-lg flex items-center space-x-4">
-                  <MastercardIcon />
+                  {icon ?? <MastercardIcon />}
                   <div>
                       <p className="font-semibold">{cardHolder}</p>
-                      <p className="text-muted-foreground font-mono text-sm tracking-wider">•••• {last4Digits}</p>
+                      {memberLabel ? (
+                        <p className="text-muted-foreground text-sm tracking-wide">{memberLabel}</p>
+                      ) : (
+                        <p className="text-muted-foreground font-mono text-sm tracking-wider">•••• {last4Digits}</p>
+                      )}
                   </div>
               </div>
 

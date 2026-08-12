@@ -2,6 +2,13 @@ import * as React from "react";
 import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
 import { AwardBadge } from "@/components/ui/award-badge";
 import { PaktosLogo } from "@/components/paktos-logo";
+import { PaktosCard } from "@/components/paktos-card";
+import { SpotsCounter } from "@/components/spots-counter";
+import paktosIconBlack from "@/assets/paktos-icon-black-192.png";
+
+const XP_BONUS = 500;
+
+type Stage = "landing" | "ticket" | "card";
 
 interface TicketData {
   ticketId: string;
@@ -9,6 +16,7 @@ interface TicketData {
   cardHolder: string;
   last4Digits: string;
   barcodeValue: string;
+  memberId: string;
 }
 
 function digitsFrom(seed: string, length: number): string {
@@ -43,29 +51,49 @@ function issueTicket(email: string): TicketData {
     cardHolder: nameFromEmail(email),
     last4Digits: digitsFrom(email, 4),
     barcodeValue: digitsFrom(seed + ":barcode", 14),
+    memberId: digitsFrom(seed + ":member", 16),
   };
 }
 
 export default function App() {
   const [email, setEmail] = React.useState("");
+  const [stage, setStage] = React.useState<Stage>("landing");
   const [ticket, setTicket] = React.useState<TicketData | null>(null);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!email.trim()) return;
     setTicket(issueTicket(email.trim()));
+    setStage("ticket");
   };
 
   return (
     <main className="flex min-h-screen w-full items-center justify-center bg-background p-4">
-      {ticket ? (
-        <AnimatedTicket
-          ticketId={ticket.ticketId}
-          amount={0}
-          date={ticket.date}
-          cardHolder={ticket.cardHolder}
-          last4Digits={ticket.last4Digits}
-          barcodeValue={ticket.barcodeValue}
+      {stage === "ticket" && ticket ? (
+        <div className="z-10 flex w-full max-w-sm flex-col items-center gap-6">
+          <AnimatedTicket
+            ticketId={ticket.ticketId}
+            amount={0}
+            date={ticket.date}
+            cardHolder={ticket.cardHolder}
+            last4Digits={ticket.last4Digits}
+            barcodeValue={ticket.barcodeValue}
+            xp={XP_BONUS}
+            memberLabel="Founding Member"
+            icon={<img src={paktosIconBlack} alt="Paktos" className="h-8 w-8" />}
+          />
+          <button
+            onClick={() => setStage("card")}
+            className="h-11 w-full max-w-sm rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            Add {XP_BONUS} XP to my Paktos Card
+          </button>
+        </div>
+      ) : stage === "card" && ticket ? (
+        <PaktosCard
+          memberName={ticket.cardHolder}
+          memberId={ticket.memberId}
+          xp={XP_BONUS}
         />
       ) : (
         <div className="flex w-full max-w-md flex-col items-center text-center">
@@ -93,12 +121,15 @@ export default function App() {
               Join
             </button>
           </form>
-          <div className="mt-16 flex justify-center">
+          <div className="mt-12">
+            <SpotsCounter />
+          </div>
+          <div className="mt-12 flex justify-center">
             <AwardBadge
               type="product-of-the-day"
               place={1}
               topText="PAKTOS"
-              titleText="The Founding List"
+              titleText="Founding Member"
             />
           </div>
         </div>
