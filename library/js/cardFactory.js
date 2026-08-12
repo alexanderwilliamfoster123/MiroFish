@@ -239,15 +239,13 @@ export function createCard(index, entry) {
   const triangle = new THREE.Mesh(
     triangleGeometry,
     new THREE.MeshPhysicalMaterial({
-      color: 0xd2ddcc,
-      roughness: 0.12,
+      // polished gold, matched to the shiny-coins reference
+      color: 0xffc35c,
+      roughness: 0.14,
       metalness: 1,
-      iridescence: 1,
-      iridescenceIOR: 1.8,
-      iridescenceThicknessRange: [120, 700],
       clearcoat: 1,
-      clearcoatRoughness: 0.08,
-      envMapIntensity: 2.6
+      clearcoatRoughness: 0.1,
+      envMapIntensity: 3.0
     })
   );
   triangle.position.set(0, CARD_H * 0.06, CARD_T / 2 + 0.018);
