@@ -2,7 +2,6 @@ import * as React from "react";
 import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
 import { AwardBadge } from "@/components/ui/award-badge";
 import { PaktosLogo } from "@/components/paktos-logo";
-import paktosIcon from "@/assets/paktos-icon-black.svg";
 
 interface TicketData {
   ticketId: string;
@@ -100,7 +99,6 @@ export default function App() {
               place={1}
               topText="PAKTOS"
               titleText="The Founding List"
-              iconSrc={paktosIcon}
             />
           </div>
         </div>
