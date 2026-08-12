@@ -28,9 +28,31 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
+// Laurel crest from the award badge, reused for the drawn badge.
+const LAUREL_PATH =
+  "M14.963 9.075c.787-3-.188-5.887-.188-5.887S12.488 5.175 11.7 8.175c-.787 3 .188 5.887.188 5.887s2.25-1.987 3.075-4.987m-4.5 1.987c.787 3-.188 5.888-.188 5.888S7.988 14.962 7.2 11.962c-.787-3 .188-5.887.188-5.887s2.287 1.987 3.075 4.987m.862 10.388s-.6-2.962-2.775-5.175C6.337 14.1 3.375 13.5 3.375 13.5s.6 2.962 2.775 5.175c2.213 2.175 5.175 2.775 5.175 2.775m3.3 3.413s-1.988-2.288-4.988-3.075-5.887.187-5.887.187 1.987 2.287 4.988 3.075c3 .787 5.887-.188 5.887-.188Zm6.75 0s1.988-2.288 4.988-3.075c3-.826 5.887.187 5.887.187s-1.988 2.287-4.988 3.075c-3 .787-5.887-.188-5.887-.188ZM32.625 13.5s-2.963.6-5.175 2.775c-2.213 2.213-2.775 5.175-2.775 5.175s2.962-.6 5.175-2.775c2.175-2.213 2.775-5.175 2.775-5.175M28.65 6.075s.975 2.887.188 5.887c-.826 3-3.076 4.988-3.076 4.988s-.974-2.888-.187-5.888c.788-3 3.075-4.987 3.075-4.987m-4.5 7.987s.975-2.887.188-5.887c-.788-3-3.076-4.988-3.076-4.988s-.974 2.888-.187 5.888c.788 3 3.075 4.988 3.075 4.988ZM18 26.1c.975-.225 3.113-.6 5.325 0 3 .788 5.063 3.038 5.063 3.038s-2.888.975-5.888.187a13 13 0 0 1-1.425-.525c.563.788 1.125 1.425 2.288 1.913l-.863 2.062c-2.063-.862-2.925-2.137-3.675-3.262-.262-.375-.525-.713-.787-1.05-.26.293-.465.586-.686.903l-.102.147-.048.068c-.775 1.108-1.643 2.35-3.627 3.194l-.862-2.062c1.162-.488 1.725-1.125 2.287-1.913-.45.225-.938.375-1.425.525-3 .788-5.887-.187-5.887-.187s1.987-2.288 4.987-3.075c2.212-.563 4.35-.188 5.325.037";
+
+function rr(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number
+) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
 async function generateStoryImage(
   memberName: string,
-  memberNo: string
+  memberNo: string,
+  serial: string
 ): Promise<Blob> {
   const W = 1080;
   const H = 1920;
@@ -41,6 +63,8 @@ async function generateStoryImage(
   const anyCtx = ctx as CanvasRenderingContext2D & { letterSpacing?: string };
   const sans =
     "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+  const monoFont =
+    "'SF Mono', 'Cascadia Mono', Consolas, 'Courier New', monospace";
 
   // open white ground
   ctx.fillStyle = "#ffffff";
@@ -48,41 +72,195 @@ async function generateStoryImage(
 
   // black lockup
   const logo = await loadImage(logoBlack2x);
-  const logoW = 300;
+  const logoW = 260;
   const logoH = (logo.height / logo.width) * logoW;
-  ctx.drawImage(logo, (W - logoW) / 2, 360, logoW, logoH);
+  ctx.drawImage(logo, (W - logoW) / 2, 220, logoW, logoH);
 
   ctx.textAlign = "center";
-
-  anyCtx.letterSpacing = "12px";
-  ctx.font = `800 78px ${sans}`;
+  anyCtx.letterSpacing = "10px";
+  ctx.font = `800 64px ${sans}`;
   ctx.fillStyle = "#18181B";
-  ctx.fillText("YOU'RE IN", W / 2, 700);
+  ctx.fillText("YOU'RE IN", W / 2, 480);
 
-  anyCtx.letterSpacing = "8px";
-  ctx.font = `800 148px ${sans}`;
-  ctx.fillText(memberNo, W / 2, 890);
+  anyCtx.letterSpacing = "6px";
+  ctx.font = `800 122px ${sans}`;
+  ctx.fillText(memberNo, W / 2, 630);
 
-  anyCtx.letterSpacing = "7px";
-  ctx.font = `500 30px ${sans}`;
+  anyCtx.letterSpacing = "6px";
+  ctx.font = `500 27px ${sans}`;
   ctx.fillStyle = "#94939F";
-  ctx.fillText(
-    `FOUNDING MEMBER · ${memberName.toUpperCase()}`,
-    W / 2,
-    970
+  ctx.fillText(`FOUNDING MEMBER · ${memberName.toUpperCase()}`, W / 2, 700);
+
+  // ——— the metal members card ———
+  const cx = 140;
+  const cy = 790;
+  const cw = 800;
+  const ch = 467;
+  const s = cw / 384; // scale from the CSS card's 384px design width
+
+  const grad = ctx.createLinearGradient(0, cy, 0, cy + ch);
+  grad.addColorStop(0, "#dcdce0");
+  grad.addColorStop(0.3, "#c6c6cc");
+  grad.addColorStop(0.52, "#b9b9bf");
+  grad.addColorStop(0.78, "#cfcfd4");
+  grad.addColorStop(1, "#e3e3e7");
+  rr(ctx, cx, cy, cw, ch, 16 * s);
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  ctx.save();
+  rr(ctx, cx, cy, cw, ch, 16 * s);
+  ctx.clip();
+  for (let gx = cx; gx < cx + cw; gx += 4) {
+    ctx.fillStyle = "rgba(255,255,255,0.05)";
+    ctx.fillRect(gx, cy, 2, ch);
+    ctx.fillStyle = "rgba(0,0,0,0.035)";
+    ctx.fillRect(gx + 2, cy, 2, ch);
+  }
+  const sheen = ctx.createLinearGradient(cx, cy, cx + cw, cy + ch);
+  sheen.addColorStop(0.32, "rgba(255,255,255,0)");
+  sheen.addColorStop(0.47, "rgba(255,255,255,0.5)");
+  sheen.addColorStop(0.62, "rgba(255,255,255,0)");
+  ctx.fillStyle = sheen;
+  ctx.fillRect(cx, cy, cw, ch);
+  ctx.restore();
+
+  rr(ctx, cx, cy, cw, ch, 16 * s);
+  ctx.strokeStyle = "#96969c";
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+  rr(ctx, cx + 6, cy + 6, cw - 12, ch - 12, 13 * s);
+  ctx.strokeStyle = "rgba(255,255,255,0.4)";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  const engravedText = (
+    text: string,
+    x: number,
+    y: number,
+    font: string,
+    color: string,
+    align: CanvasTextAlign,
+    spacing: string
+  ) => {
+    ctx.textAlign = align;
+    anyCtx.letterSpacing = spacing;
+    ctx.font = font;
+    ctx.fillStyle = "rgba(255,255,255,0.55)";
+    ctx.fillText(text, x, y + 2);
+    ctx.fillStyle = color;
+    ctx.fillText(text, x, y);
+  };
+
+  const mark = await loadImage(iconBlack);
+  ctx.globalAlpha = 0.7;
+  ctx.drawImage(mark, cx + 24 * s, cy + 24 * s, 36 * s, 36 * s);
+  ctx.globalAlpha = 1;
+
+  engravedText(
+    "FOUNDING MEMBER",
+    cx + cw - 24 * s,
+    cy + 38 * s,
+    `600 ${10 * s}px ${sans}`,
+    "#55565c",
+    "right",
+    `${2.8 * s}px`
+  );
+  engravedText(
+    memberName.toUpperCase(),
+    cx + 24 * s,
+    cy + ch * 0.56,
+    `600 ${20 * s}px ${sans}`,
+    "#55565c",
+    "left",
+    `${2.4 * s}px`
+  );
+  engravedText(
+    "PAKTOS MEMBER",
+    cx + 24 * s,
+    cy + ch * 0.56 + 26 * s,
+    `500 ${10 * s}px ${sans}`,
+    "#7a7b81",
+    "left",
+    `${3 * s}px`
+  );
+  engravedText(
+    serial,
+    cx + 24 * s,
+    cy + ch - 26 * s,
+    `500 ${14 * s}px ${monoFont}`,
+    "#55565c",
+    "left",
+    `${2.1 * s}px`
+  );
+  engravedText(
+    "SINCE 2026",
+    cx + cw - 24 * s,
+    cy + ch - 26 * s,
+    `500 ${11 * s}px ${sans}`,
+    "#7a7b81",
+    "right",
+    `${2.2 * s}px`
   );
 
-  anyCtx.letterSpacing = "1px";
-  ctx.font = `600 52px ${sans}`;
-  ctx.fillStyle = "#18181B";
-  ctx.fillText(`${memberName} just joined Paktos.`, W / 2, 1360);
-  ctx.font = `400 46px ${sans}`;
-  ctx.fillStyle = "#61606C";
-  ctx.fillText("Will you be the next?", W / 2, 1440);
+  // ——— the silver holographic badge ———
+  const bw = 400;
+  const bh = (54 / 260) * bw;
+  const bx = (W - bw) / 2;
+  const by = 1320;
+  const bs = bw / 260;
+  rr(ctx, bx, by, bw, bh, 10 * bs);
+  ctx.fillStyle = "#ddd";
+  ctx.fill();
+  rr(ctx, bx + 4 * bs, by + 4 * bs, bw - 8 * bs, bh - 8 * bs, 8 * bs);
+  ctx.strokeStyle = "#bbb";
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
 
-  ctx.font = `500 34px ${sans}`;
+  const laurel = new Path2D(LAUREL_PATH);
+  ctx.save();
+  ctx.translate(bx + 8 * bs, by + 9 * bs);
+  ctx.scale(bs, bs);
+  ctx.fillStyle = "#666";
+  ctx.fill(laurel);
+  ctx.restore();
+
+  ctx.textAlign = "left";
+  anyCtx.letterSpacing = "1px";
+  ctx.font = `700 ${9 * bs}px ${sans}`;
+  ctx.fillStyle = "#666";
+  ctx.fillText("FOUNDING MEMBER", bx + 53 * bs, by + 20 * bs);
+  ctx.font = `700 ${16 * bs}px ${sans}`;
+  ctx.fillText("Paktos", bx + 52 * bs, by + 40 * bs);
+
+  // holographic rainbow, blended over the whole badge
+  ctx.save();
+  rr(ctx, bx, by, bw, bh, 10 * bs);
+  ctx.clip();
+  ctx.globalCompositeOperation = "overlay";
+  const holo = ctx.createLinearGradient(bx, by, bx + bw, by + bh);
+  holo.addColorStop(0, "rgba(255,80,80,0.55)");
+  holo.addColorStop(0.25, "rgba(255,180,40,0.5)");
+  holo.addColorStop(0.5, "rgba(255,255,120,0.45)");
+  holo.addColorStop(0.7, "rgba(90,200,255,0.5)");
+  holo.addColorStop(1, "rgba(190,120,255,0.55)");
+  ctx.fillStyle = holo;
+  ctx.fillRect(bx, by, bw, bh);
+  ctx.restore();
+
+  // ——— closing copy ———
+  ctx.textAlign = "center";
+  anyCtx.letterSpacing = "1px";
+  ctx.font = `600 48px ${sans}`;
+  ctx.fillStyle = "#18181B";
+  ctx.fillText(`${memberName} just joined Paktos.`, W / 2, 1560);
+  ctx.font = `400 42px ${sans}`;
+  ctx.fillStyle = "#61606C";
+  ctx.fillText("Will you be the next?", W / 2, 1630);
+
+  ctx.font = `500 32px ${sans}`;
   ctx.fillStyle = "#94939F";
-  ctx.fillText(`${SOCIAL_TAG} · ${WAITLIST_LINK}`, W / 2, 1580);
+  ctx.fillText(`${SOCIAL_TAG} · ${WAITLIST_LINK}`, W / 2, 1750);
 
   return new Promise((resolve, reject) =>
     canvas.toBlob(
@@ -230,11 +408,13 @@ function CardFace({
 function ShareScreen({
   memberName,
   memberNo,
+  serial,
   onDone,
   onDismiss,
 }: {
   memberName: string;
   memberNo: string;
+  serial: string;
   onDone: () => void;
   onDismiss: () => void;
 }) {
@@ -252,7 +432,7 @@ function ShareScreen({
   React.useEffect(() => {
     let url: string | null = null;
     let cancelled = false;
-    generateStoryImage(memberName, memberNo)
+    generateStoryImage(memberName, memberNo, serial)
       .then((b) => {
         if (cancelled) return;
         url = URL.createObjectURL(b);
@@ -264,7 +444,7 @@ function ShareScreen({
       cancelled = true;
       if (url) URL.revokeObjectURL(url);
     };
-  }, [memberName, memberNo]);
+  }, [memberName, memberNo, serial]);
 
   const download = () => {
     if (!previewUrl) return;
@@ -380,6 +560,7 @@ export function PaktosCard({ memberName, serial, memberNo, xp, onShared }: Pakto
         <ShareScreen
           memberName={memberName}
           memberNo={memberNo}
+          serial={serial}
           onDone={handleShareDone}
           onDismiss={() => setShareOpen(false)}
         />
