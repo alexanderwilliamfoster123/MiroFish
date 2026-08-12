@@ -37,9 +37,13 @@
         </div>
         
         <div class="hero-right">
-          <!-- Logo 区域 -->
+          <!-- Logo 区域：实时 3D 场景，加载失败时回退为静态 Logo -->
           <div class="logo-container">
-            <img src="../assets/logo/MiroFish_logo_left.jpeg" alt="MiroFish Logo" class="hero-logo" />
+            <SplineScene url="/scene_1.splinecode" class="hero-spline">
+              <template #fallback>
+                <img src="../assets/logo/MiroFish_logo_left.jpeg" alt="MiroFish Logo" class="hero-logo" />
+              </template>
+            </SplineScene>
           </div>
           
           <button class="scroll-down-btn" @click="scrollToBottom">
@@ -210,6 +214,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import HistoryDatabase from '../components/HistoryDatabase.vue'
+import SplineScene from '../components/ui/SplineScene.vue'
 
 const router = useRouter()
 
@@ -513,6 +518,18 @@ const startSimulation = () => {
 .hero-logo {
   max-width: 500px; /* 调整logo大小 */
   width: 100%;
+}
+
+.hero-spline {
+  max-width: 560px;
+  width: 100%;
+  height: 420px;
+  /* 场景自带黑色背景，套用设计系统的黑色面板外观 */
+  background: var(--mf-black);
+  border-radius: var(--mf-panel-radius);
+  border: 1px solid var(--mf-panel-edge);
+  box-shadow: var(--mf-panel-shadow);
+  overflow: hidden;
 }
 
 .scroll-down-btn {
