@@ -1,3 +1,4 @@
+import * as React from "react";
 import { lazy, Suspense } from "react";
 import booleanWasmUrl from "@splinetool/boolean-wasm/build/boolean.wasm?url";
 
@@ -26,6 +27,21 @@ function patchSplineWasmFetch() {
   };
 }
 
+// The 3D scene must never take the page down with it: if WebGL or wasm is
+// unavailable (old device, strict CSP), we simply render nothing.
+class SplineErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
+
 interface SplineHeroProps {
   /** Scene URL — a bundled .splinecode asset or a prod.spline.design export */
   scene: string;
@@ -33,15 +49,17 @@ interface SplineHeroProps {
 }
 
 // 3D Spline scene wrapper for the waitlist page. Renders nothing until a
-// real scene URL is provided.
+// real scene URL is provided, and degrades silently if 3D can't run.
 export function SplineHero({ scene, className }: SplineHeroProps) {
   if (!scene || scene === "loading...") return null;
   patchSplineWasmFetch();
   return (
-    <div className={className}>
-      <Suspense fallback={null}>
-        <Spline scene={scene} />
-      </Suspense>
-    </div>
+    <SplineErrorBoundary>
+      <div className={className}>
+        <Suspense fallback={null}>
+          <Spline scene={scene} />
+        </Suspense>
+      </div>
+    </SplineErrorBoundary>
   );
 }
