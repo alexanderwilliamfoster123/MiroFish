@@ -3,7 +3,6 @@ import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
 import { AwardBadge } from "@/components/ui/award-badge";
 import { PaktosLogo } from "@/components/paktos-logo";
 import { PaktosCard } from "@/components/paktos-card";
-import { LiquidMetalButton } from "@/components/ui/liquid-metal-button";
 import paktosIconBlack from "@/assets/paktos-icon-black-192.png";
 
 const XP_BONUS = 500;
@@ -89,11 +88,12 @@ export default function App() {
             memberLabel="Founding Member"
             icon={<img src={paktosIconBlack} alt="Paktos" className="h-8 w-8" />}
           />
-          <LiquidMetalButton
-            label={`Add ${XP_BONUS} XP to my Paktos Card`}
-            width={260}
+          <button
             onClick={() => setStage("card")}
-          />
+            className="h-11 w-full max-w-sm rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            Add {XP_BONUS} XP to my Paktos Card
+          </button>
         </div>
       ) : stage === "card" && ticket ? (
         <PaktosCard
@@ -122,7 +122,12 @@ export default function App() {
                 aria-label="Email address"
                 className="h-11 flex-1 rounded-md border border-input bg-background px-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               />
-              <LiquidMetalButton label="Join" width={96} />
+              <button
+                type="submit"
+                className="h-11 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+              >
+                Join
+              </button>
             </form>
           ) : (
             <form
@@ -139,7 +144,12 @@ export default function App() {
                 aria-label="Name"
                 className="h-11 flex-1 rounded-md border border-input bg-background px-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               />
-              <LiquidMetalButton label="Continue" width={124} />
+              <button
+                type="submit"
+                className="h-11 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+              >
+                Continue
+              </button>
             </form>
           )}
           <div className="mt-12 flex justify-center">
