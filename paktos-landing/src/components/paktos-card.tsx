@@ -124,8 +124,21 @@ function StoryShareScreen({
   onDone: () => void;
   onDismiss: () => void;
 }) {
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onDismiss();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onDismiss]);
+
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-between overflow-y-auto bg-black px-8 py-12 animate-in fade-in-0 duration-700">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Share to your story"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-between overflow-y-auto bg-black px-8 py-12 animate-in fade-in-0 duration-700"
+    >
       {/* ——— the screenshot zone ——— */}
       <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-10 text-center">
         <img
@@ -143,15 +156,22 @@ function StoryShareScreen({
           <CardFace memberName={memberName} serial={serial} />
         </div>
 
-        <p className="text-sm tracking-wide text-neutral-400 animate-in fade-in-0 duration-1000 delay-500">
-          {WAITLIST_LINK}
-        </p>
+        <div className="animate-in fade-in-0 duration-1000 delay-500">
+          <p className="text-sm tracking-wide text-neutral-400">
+            {WAITLIST_LINK}
+          </p>
+          <p className="mt-2 text-sm font-medium tracking-wide text-white">
+            @tradepaktos
+          </p>
+        </div>
       </div>
 
       {/* ——— instructions, below the story art ——— */}
       <div className="mt-10 flex w-full max-w-sm flex-col items-center gap-3 animate-in fade-in-0 duration-1000 delay-700">
-        <p className="text-center text-xs text-neutral-500">
-          Screenshot this screen and post it to your story.
+        <p className="text-center text-xs leading-5 text-neutral-500">
+          Screenshot this screen, post it to your story and tag{" "}
+          <span className="text-neutral-300">@tradepaktos</span> to enter the{" "}
+          <span className="text-neutral-300">$1,000 raffle</span>.
         </p>
         <button
           onClick={onDone}

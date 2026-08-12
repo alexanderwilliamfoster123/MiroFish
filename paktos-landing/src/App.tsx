@@ -4,7 +4,6 @@ import { SplineHero } from "@/components/ui/spline-hero";
 import { PaktosLogo } from "@/components/paktos-logo";
 import splineScene from "@/assets/paktos-scene.splinecode?url";
 import { PaktosCard } from "@/components/paktos-card";
-import paktosIconBlack from "@/assets/paktos-icon-black-192.png";
 
 const XP_BONUS = 500;
 
@@ -86,8 +85,7 @@ export default function App() {
             last4Digits={ticket.last4Digits}
             barcodeValue={ticket.barcodeValue}
             xp={XP_BONUS}
-            memberLabel="Founding Member"
-            icon={<img src={paktosIconBlack} alt="Paktos" className="h-8 w-8" />}
+            hideMember
           />
           <button
             onClick={() => setStage("card")}

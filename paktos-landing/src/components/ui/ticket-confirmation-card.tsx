@@ -146,6 +146,7 @@ export interface TicketProps extends React.HTMLAttributes<HTMLDivElement> {
   xp?: number;
   memberLabel?: string;
   memberSlot?: React.ReactNode;
+  hideMember?: boolean;
 }
 
 const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
@@ -162,6 +163,7 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
       xp,
       memberLabel,
       memberSlot,
+      hideMember,
       ...props
     },
     ref
@@ -236,7 +238,7 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
                   <p className="font-medium">{formattedDate}</p>
               </div>
 
-              {memberSlot ? (
+              {hideMember ? null : memberSlot ? (
                 <div className="flex justify-center">{memberSlot}</div>
               ) : (
                 <div className="bg-muted/50 p-4 rounded-lg flex items-center space-x-4">
