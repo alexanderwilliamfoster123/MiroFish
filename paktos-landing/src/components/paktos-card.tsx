@@ -1,6 +1,7 @@
 import * as React from "react";
 import NumberFlow from "@number-flow/react";
 import { LiquidCard, CardContent } from "@/components/ui/liquid-glass-card";
+import { TiltCard } from "@/components/ui/tilt-card";
 import iconWhite from "@/assets/paktos-icon-white-192.png";
 
 interface PaktosCardProps {
@@ -28,7 +29,8 @@ export function PaktosCard({ memberName, memberId, xp }: PaktosCardProps) {
       </div>
 
       <div className="w-full animate-in fade-in-0 zoom-in-95 duration-500">
-        <LiquidCard className="h-56 w-full border-0 bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900 text-white shadow-2xl">
+        <TiltCard className="rounded-xl shadow-2xl">
+        <LiquidCard className="h-56 w-full border-0 bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900 text-white">
           <CardContent className="flex h-full flex-col justify-between p-6">
             <div className="flex items-start justify-between">
               <img src={iconWhite} alt="Paktos" className="h-9 w-9" />
@@ -60,6 +62,7 @@ export function PaktosCard({ memberName, memberId, xp }: PaktosCardProps) {
             </div>
           </CardContent>
         </LiquidCard>
+        </TiltCard>
       </div>
 
       <p className="text-center text-sm text-muted-foreground">
