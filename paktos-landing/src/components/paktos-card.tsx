@@ -3,7 +3,7 @@ import NumberFlow from "@number-flow/react";
 import { TiltCard } from "@/components/ui/tilt-card";
 import { AwardBadge } from "@/components/ui/award-badge";
 import iconBlack from "@/assets/paktos-icon-black-192.png";
-import logoWhite2x from "@/assets/paktos-logo-white-760.png";
+import logoBlack2x from "@/assets/paktos-logo-black-760.png";
 
 const WAITLIST_LINK = "paktos.com/waitlist";
 const SOCIAL_TAG = "@tradepaktos";
@@ -11,9 +11,85 @@ const SOCIAL_TAG = "@tradepaktos";
 interface PaktosCardProps {
   memberName: string;
   serial: string;
+  memberNo: string;
   xp: number;
-  /** Called after the member confirms they posted their story */
+  /** Called after the member confirms they shared their story */
   onShared?: () => void;
+}
+
+// ——— 9:16 story image generation (1080×1920 PNG, drawn on a canvas) ———
+
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+async function generateStoryImage(
+  memberName: string,
+  memberNo: string
+): Promise<Blob> {
+  const W = 1080;
+  const H = 1920;
+  const canvas = document.createElement("canvas");
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d")!;
+  const anyCtx = ctx as CanvasRenderingContext2D & { letterSpacing?: string };
+  const sans =
+    "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+
+  // open white ground
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, W, H);
+
+  // black lockup
+  const logo = await loadImage(logoBlack2x);
+  const logoW = 300;
+  const logoH = (logo.height / logo.width) * logoW;
+  ctx.drawImage(logo, (W - logoW) / 2, 360, logoW, logoH);
+
+  ctx.textAlign = "center";
+
+  anyCtx.letterSpacing = "12px";
+  ctx.font = `800 78px ${sans}`;
+  ctx.fillStyle = "#18181B";
+  ctx.fillText("YOU'RE IN", W / 2, 700);
+
+  anyCtx.letterSpacing = "8px";
+  ctx.font = `800 148px ${sans}`;
+  ctx.fillText(memberNo, W / 2, 890);
+
+  anyCtx.letterSpacing = "7px";
+  ctx.font = `500 30px ${sans}`;
+  ctx.fillStyle = "#94939F";
+  ctx.fillText(
+    `FOUNDING MEMBER · ${memberName.toUpperCase()}`,
+    W / 2,
+    970
+  );
+
+  anyCtx.letterSpacing = "1px";
+  ctx.font = `600 52px ${sans}`;
+  ctx.fillStyle = "#18181B";
+  ctx.fillText(`${memberName} just joined Paktos.`, W / 2, 1360);
+  ctx.font = `400 46px ${sans}`;
+  ctx.fillStyle = "#61606C";
+  ctx.fillText("Will you be the next?", W / 2, 1440);
+
+  ctx.font = `500 34px ${sans}`;
+  ctx.fillStyle = "#94939F";
+  ctx.fillText(`${SOCIAL_TAG} · ${WAITLIST_LINK}`, W / 2, 1580);
+
+  return new Promise((resolve, reject) =>
+    canvas.toBlob(
+      (b) => (b ? resolve(b) : reject(new Error("canvas export failed"))),
+      "image/png"
+    )
+  );
 }
 
 // Celebration burst when the XP lands on the card.
@@ -149,279 +225,151 @@ function CardFace({
   );
 }
 
-// ——— Story image generation (1080×1920 PNG, drawn on a canvas) ———
+// Open white share screen: shows the generated 9:16 story image immediately
+// with Share to Story and Save to Photos actions.
+function ShareScreen({
+  memberName,
+  memberNo,
+  onDone,
+  onDismiss,
+}: {
+  memberName: string;
+  memberNo: string;
+  onDone: () => void;
+  onDismiss: () => void;
+}) {
+  const [blob, setBlob] = React.useState<Blob | null>(null);
+  const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
 
-function loadImage(src: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-    img.src = src;
-  });
-}
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onDismiss();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onDismiss]);
 
-function roundedRect(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  r: number
-) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
-}
+  React.useEffect(() => {
+    let url: string | null = null;
+    let cancelled = false;
+    generateStoryImage(memberName, memberNo)
+      .then((b) => {
+        if (cancelled) return;
+        url = URL.createObjectURL(b);
+        setBlob(b);
+        setPreviewUrl(url);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+      if (url) URL.revokeObjectURL(url);
+    };
+  }, [memberName, memberNo]);
 
-async function generateStoryImage(
-  memberName: string,
-  serial: string
-): Promise<Blob> {
-  const W = 1080;
-  const H = 1920;
-  const canvas = document.createElement("canvas");
-  canvas.width = W;
-  canvas.height = H;
-  const ctx = canvas.getContext("2d")!;
-  const anyCtx = ctx as CanvasRenderingContext2D & { letterSpacing?: string };
-  const sans =
-    "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
-  const mono = "'SF Mono', 'Cascadia Mono', Consolas, 'Courier New', monospace";
-
-  // ground
-  ctx.fillStyle = "#000000";
-  ctx.fillRect(0, 0, W, H);
-  const glow = ctx.createRadialGradient(W / 2, 620, 100, W / 2, 620, 900);
-  glow.addColorStop(0, "rgba(255,255,255,0.07)");
-  glow.addColorStop(1, "rgba(255,255,255,0)");
-  ctx.fillStyle = glow;
-  ctx.fillRect(0, 0, W, H);
-
-  // white lockup
-  const logo = await loadImage(logoWhite2x);
-  const logoW = 320;
-  const logoH = (logo.height / logo.width) * logoW;
-  ctx.drawImage(logo, (W - logoW) / 2, 330, logoW, logoH);
-
-  // founding member line
-  ctx.textAlign = "center";
-  anyCtx.letterSpacing = "10px";
-  ctx.font = `500 30px ${sans}`;
-  ctx.fillStyle = "#8b8b90";
-  ctx.fillText(`FOUNDING MEMBER · ${serial}`, W / 2, 590);
-
-  // ——— the metal card ———
-  const cx = 100;
-  const cy = 680;
-  const cw = 880;
-  const ch = 560;
-  const grad = ctx.createLinearGradient(0, cy, 0, cy + ch);
-  grad.addColorStop(0, "#dcdce0");
-  grad.addColorStop(0.3, "#c6c6cc");
-  grad.addColorStop(0.52, "#b9b9bf");
-  grad.addColorStop(0.78, "#cfcfd4");
-  grad.addColorStop(1, "#e3e3e7");
-  roundedRect(ctx, cx, cy, cw, ch, 44);
-  ctx.fillStyle = grad;
-  ctx.fill();
-
-  // brushed grain
-  ctx.save();
-  roundedRect(ctx, cx, cy, cw, ch, 44);
-  ctx.clip();
-  for (let gx = cx; gx < cx + cw; gx += 4) {
-    ctx.fillStyle = "rgba(255,255,255,0.05)";
-    ctx.fillRect(gx, cy, 2, ch);
-    ctx.fillStyle = "rgba(0,0,0,0.035)";
-    ctx.fillRect(gx + 2, cy, 2, ch);
-  }
-  // diagonal sheen
-  const sheen = ctx.createLinearGradient(cx, cy, cx + cw, cy + ch);
-  sheen.addColorStop(0.32, "rgba(255,255,255,0)");
-  sheen.addColorStop(0.47, "rgba(255,255,255,0.5)");
-  sheen.addColorStop(0.62, "rgba(255,255,255,0)");
-  ctx.fillStyle = sheen;
-  ctx.fillRect(cx, cy, cw, ch);
-  ctx.restore();
-
-  // borders
-  roundedRect(ctx, cx, cy, cw, ch, 44);
-  ctx.strokeStyle = "#96969c";
-  ctx.lineWidth = 3;
-  ctx.stroke();
-  roundedRect(ctx, cx + 8, cy + 8, cw - 16, ch - 16, 36);
-  ctx.strokeStyle = "rgba(255,255,255,0.4)";
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  // engraved text helper: light offset below, dark on top
-  const engravedText = (
-    text: string,
-    x: number,
-    y: number,
-    font: string,
-    color: string,
-    align: CanvasTextAlign,
-    spacing: string
-  ) => {
-    ctx.textAlign = align;
-    anyCtx.letterSpacing = spacing;
-    ctx.font = font;
-    ctx.fillStyle = "rgba(255,255,255,0.55)";
-    ctx.fillText(text, x, y + 2);
-    ctx.fillStyle = color;
-    ctx.fillText(text, x, y);
+  const download = () => {
+    if (!previewUrl) return;
+    const a = document.createElement("a");
+    a.href = previewUrl;
+    a.download = "paktos-member-story.png";
+    a.click();
   };
 
-  // mark
-  const mark = await loadImage(iconBlack);
-  ctx.globalAlpha = 0.7;
-  ctx.drawImage(mark, cx + 56, cy + 52, 84, 84);
-  ctx.globalAlpha = 1;
+  const shareToStory = async () => {
+    if (!blob) return;
+    const file = new File([blob], "paktos-member-story.png", {
+      type: "image/png",
+    });
+    if (navigator.canShare?.({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: "Paktos" });
+        return;
+      } catch {
+        // share sheet dismissed — fall through to download
+      }
+    }
+    download();
+  };
 
-  engravedText(
-    "FOUNDING MEMBER",
-    cx + cw - 56,
-    cy + 96,
-    `600 26px ${sans}`,
-    "#55565c",
-    "right",
-    "7px"
-  );
-  engravedText(
-    memberName.toUpperCase(),
-    cx + 56,
-    cy + 320,
-    `600 58px ${sans}`,
-    "#55565c",
-    "left",
-    "7px"
-  );
-  engravedText(
-    "PAKTOS MEMBER",
-    cx + 56,
-    cy + 370,
-    `500 24px ${sans}`,
-    "#7a7b81",
-    "left",
-    "8px"
-  );
-  engravedText(
-    serial,
-    cx + 56,
-    cy + ch - 60,
-    `500 34px ${mono}`,
-    "#55565c",
-    "left",
-    "5px"
-  );
-  engravedText(
-    "SINCE 2026",
-    cx + cw - 56,
-    cy + ch - 60,
-    `500 26px ${sans}`,
-    "#7a7b81",
-    "right",
-    "5px"
-  );
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Share to your story"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-between overflow-y-auto bg-white px-8 py-10 animate-in fade-in-0 duration-500"
+    >
+      <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-5 text-center">
+        {previewUrl ? (
+          <img
+            src={previewUrl}
+            alt={`Your Paktos story image — member ${memberNo}`}
+            className="max-h-[52vh] rounded-xl border border-neutral-200 shadow-lg animate-in fade-in-0 zoom-in-95 duration-500"
+          />
+        ) : (
+          <div className="flex h-[52vh] w-full items-center justify-center text-sm text-neutral-400">
+            Preparing your story image…
+          </div>
+        )}
 
-  // giveaway hook + link + tag
-  anyCtx.letterSpacing = "1px";
-  ctx.textAlign = "center";
-  ctx.font = `600 44px ${sans}`;
-  ctx.fillStyle = "#ffffff";
-  ctx.fillText("Join the Paktos waitlist", W / 2, 1360);
-  ctx.font = `700 48px ${sans}`;
-  ctx.fillText("for your chance to win $1,000", W / 2, 1428);
-  ctx.font = `400 34px ${sans}`;
-  ctx.fillStyle = "#9ca3af";
-  ctx.fillText(WAITLIST_LINK, W / 2, 1520);
-  ctx.font = `600 38px ${sans}`;
-  ctx.fillStyle = "#ffffff";
-  ctx.fillText(SOCIAL_TAG, W / 2, 1586);
+        <div className="flex w-full gap-2 animate-in fade-in-0 duration-700 delay-200">
+          <button
+            onClick={shareToStory}
+            disabled={!blob}
+            className="h-11 flex-1 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+          >
+            Share to Story
+          </button>
+          <button
+            onClick={download}
+            disabled={!blob}
+            className="h-11 flex-1 rounded-md border border-input bg-background px-4 text-sm font-medium transition-colors hover:bg-accent disabled:opacity-60"
+          >
+            Save to Photos
+          </button>
+        </div>
 
-  return new Promise((resolve, reject) =>
-    canvas.toBlob(
-      (b) => (b ? resolve(b) : reject(new Error("canvas export failed"))),
-      "image/png"
-    )
+        <p className="text-xs leading-5 text-neutral-500">
+          Post it to your story, tag 3 trader friends and{" "}
+          <span className="text-neutral-800">{SOCIAL_TAG}</span> to be entered
+          into the <span className="text-neutral-800">$1,000 raffle</span>.
+        </p>
+      </div>
+
+      <div className="mt-6 flex w-full max-w-sm flex-col items-center gap-3">
+        <button
+          onClick={onDone}
+          className="h-11 w-full rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+        >
+          I shared to my story
+        </button>
+        <button
+          onClick={onDismiss}
+          className="text-xs text-neutral-500 underline-offset-2 hover:underline"
+        >
+          Maybe later
+        </button>
+      </div>
+    </div>
   );
 }
 
 // The member's metal Paktos Card. The Founding Member XP bonus rolls onto
-// the balance pill; sharing generates a story image (native share sheet on
-// phones, download elsewhere) and the second bonus lands after the member
-// confirms they posted.
-export function PaktosCard({ memberName, serial, xp, onShared }: PaktosCardProps) {
+// the balance pill; sharing opens the white story screen, and the second
+// bonus lands after the member confirms they shared.
+export function PaktosCard({ memberName, serial, memberNo, xp, onShared }: PaktosCardProps) {
   const [balance, setBalance] = React.useState(0);
   const [shared, setShared] = React.useState(false);
   const [shareOpen, setShareOpen] = React.useState(false);
-  const [generating, setGenerating] = React.useState(false);
-  const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     const timer = setTimeout(() => setBalance((b) => Math.max(b, xp)), 900);
     return () => clearTimeout(timer);
   }, [xp]);
 
-  React.useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setShareOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  React.useEffect(
-    () => () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-    },
-    [previewUrl]
-  );
-
-  const handleShare = async () => {
-    if (shared || generating) return;
-    setGenerating(true);
-    try {
-      const blob = await generateStoryImage(memberName, serial);
-      const url = URL.createObjectURL(blob);
-      setPreviewUrl(url);
-
-      const file = new File([blob], "paktos-founding-member.png", {
-        type: "image/png",
-      });
-      let sharedNatively = false;
-      if (navigator.canShare?.({ files: [file] })) {
-        try {
-          await navigator.share({ files: [file], title: "Paktos" });
-          sharedNatively = true;
-        } catch {
-          // share sheet dismissed — fall through to download
-        }
-      }
-      if (!sharedNatively) {
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "paktos-founding-member.png";
-        a.click();
-      }
-      setShareOpen(true);
-    } catch {
-      setShareOpen(true);
-    } finally {
-      setGenerating(false);
-    }
-  };
-
   const handleShareDone = () => {
     setShareOpen(false);
     setShared(true);
     setBalance(xp * 2);
-    // let the balance roll before moving to the giveaway countdown
+    // let the balance roll before moving to the raffle countdown
     setTimeout(() => onShared?.(), 2000);
   };
 
@@ -429,45 +377,12 @@ export function PaktosCard({ memberName, serial, xp, onShared }: PaktosCardProps
     <div className="flex w-full max-w-sm flex-col items-center gap-5">
       <CardConfetti />
       {shareOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Post to your story"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-6 animate-in fade-in-0 duration-300"
-          onClick={() => setShareOpen(false)}
-        >
-          <div
-            className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-2xl animate-in fade-in-0 zoom-in-95 duration-300"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {previewUrl && (
-              <img
-                src={previewUrl}
-                alt="Your Paktos story image"
-                className="mx-auto max-h-72 rounded-lg border border-neutral-200"
-              />
-            )}
-            <p className="mt-4 text-sm leading-6 text-neutral-600">
-              Your story image has been saved. Post it to your story and tag{" "}
-              <span className="font-medium text-neutral-900">{SOCIAL_TAG}</span>{" "}
-              to enter the{" "}
-              <span className="font-medium text-neutral-900">$1,000 raffle</span>
-              .
-            </p>
-            <button
-              onClick={handleShareDone}
-              className="mt-5 h-11 w-full rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-            >
-              I posted it · Claim my +{xp} XP
-            </button>
-            <button
-              onClick={() => setShareOpen(false)}
-              className="mt-3 text-xs text-neutral-500 underline-offset-2 hover:underline"
-            >
-              Maybe later
-            </button>
-          </div>
-        </div>
+        <ShareScreen
+          memberName={memberName}
+          memberNo={memberNo}
+          onDone={handleShareDone}
+          onDismiss={() => setShareOpen(false)}
+        />
       )}
 
       <div className="rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground animate-in fade-in-0 slide-in-from-top-2 duration-500 tabular-nums">
@@ -489,20 +404,19 @@ export function PaktosCard({ memberName, serial, xp, onShared }: PaktosCardProps
         />
       </div>
 
-      <p className="text-center text-sm text-muted-foreground">
-        Your Founding Member bonus has been added to your Paktos Card.
+      <p className="text-center text-sm leading-6 text-muted-foreground">
+        Tag 3 trader friends and share to your story to be entered into a{" "}
+        <span className="font-medium text-foreground">$1,000 raffle</span>.
       </p>
 
       <button
-        onClick={handleShare}
-        disabled={shared || generating}
+        onClick={() => !shared && setShareOpen(true)}
+        disabled={shared}
         className="h-11 w-full rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
       >
         {shared
           ? `+${xp} XP added · Thanks for sharing!`
-          : generating
-            ? "Preparing your story image…"
-            : `Share to your story · Earn +${xp} XP`}
+          : "Share to my story"}
       </button>
     </div>
   );

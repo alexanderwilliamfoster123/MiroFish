@@ -148,6 +148,7 @@ export interface TicketProps extends React.HTMLAttributes<HTMLDivElement> {
   memberSlot?: React.ReactNode;
   hideMember?: boolean;
   confetti?: boolean;
+  memberNo?: string;
 }
 
 const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
@@ -166,6 +167,7 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
       memberSlot,
       hideMember,
       confetti = true,
+      memberNo,
       ...props
     },
     ref
@@ -216,6 +218,11 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
                   <CheckCircleIcon className="w-10 h-10 text-primary animate-in zoom-in-75 delay-500 duration-500" />
               </div>
               <h1 className="text-2xl font-semibold mt-4">You're In!</h1>
+              {memberNo && (
+                <p className="mt-2 text-sm font-semibold uppercase tracking-[0.25em] animate-in fade-in-0 slide-in-from-bottom-1 duration-700">
+                  Member {memberNo}
+                </p>
+              )}
               <p className="text-muted-foreground mt-1">
                 Your place has been secured.
               </p>

@@ -8,8 +8,8 @@ import { AnimatedCountdown } from "@/components/ui/animated-countdown";
 
 const XP_BONUS = 500;
 
-// When the $1,000 giveaway closes.
-const GIVEAWAY_DATE = new Date("2026-09-12T18:00:00Z");
+// When the $1,000 raffle closes — 60 days from launch.
+const GIVEAWAY_DATE = new Date("2026-10-11T18:00:00Z");
 
 type Stage = "email" | "name" | "ticket" | "card" | "countdown";
 
@@ -19,6 +19,7 @@ interface TicketData {
   last4Digits: string;
   barcodeValue: string;
   serial: string;
+  memberNo: string;
 }
 
 function digitsFrom(seed: string, length: number): string {
@@ -38,12 +39,16 @@ function digitsFrom(seed: string, length: number): string {
 
 function issueTicket(email: string): TicketData {
   const seed = `${email}:${Date.now()}`;
+  // Simulated permanent member number — replace with the backend-assigned
+  // value when signups are wired up.
+  const memberNumber = 300 + (parseInt(digitsFrom(seed + ":member", 4), 10) % 1200);
   return {
     ticketId: digitsFrom(seed, 13),
     date: new Date(),
     last4Digits: digitsFrom(email, 4),
     barcodeValue: digitsFrom(seed + ":barcode", 14),
     serial: `PKT-${digitsFrom(seed + ":serial", 5)}`,
+    memberNo: `#${String(memberNumber).padStart(6, "0")}`,
   };
 }
 
@@ -91,6 +96,7 @@ export default function App() {
             xp={XP_BONUS}
             hideMember
             confetti={false}
+            memberNo={ticket.memberNo}
           />
           <button
             onClick={() => setStage("card")}
@@ -103,6 +109,7 @@ export default function App() {
         <PaktosCard
           memberName={formatMemberName(name)}
           serial={ticket.serial}
+          memberNo={ticket.memberNo}
           xp={XP_BONUS}
           onShared={() => setStage("countdown")}
         />
@@ -110,7 +117,7 @@ export default function App() {
         <div className="fixed inset-0 z-10 flex flex-col items-center justify-center gap-8 overflow-y-auto bg-black px-6 py-10 animate-in fade-in-0 duration-700">
           <SplineHero scene={splineScene} className="h-64 w-full max-w-md" />
           <p className="text-[11px] font-medium uppercase tracking-[0.35em] text-neutral-500">
-            The $1,000 Giveaway
+            The $1,000 Raffle
           </p>
           <AnimatedCountdown
             targetDate={GIVEAWAY_DATE}
@@ -121,7 +128,9 @@ export default function App() {
             labelClassName="text-neutral-500"
             unitClassName="hover:bg-transparent"
           />
-          <p className="font-serif text-2xl text-white">The World Will Know.</p>
+          <p className="font-serif text-2xl text-white">
+            Trade Like The World Is Watching.
+          </p>
         </div>
       ) : (
         <div className="flex w-full max-w-md flex-col items-center text-center">
