@@ -2,9 +2,8 @@ import { cn } from "@/lib/utils";
 import logo1x from "@/assets/paktos-logo-black-380.png";
 import logo2x from "@/assets/paktos-logo-black-760.png";
 
-// Official Paktos lockup from the brand logo kit. The kit's traced SVG has
-// stair-stepped edges, so we serve edge-smoothed downscales of the 2048px
-// master instead. Icon and wordmark stay together per the kit's guidelines.
+// Official Paktos lockup, downscaled from the 2000px master supplied by the
+// brand. Icon and wordmark stay together per the brand guidelines.
 export function PaktosLogo({ className }: { className?: string }) {
   return (
     <img
