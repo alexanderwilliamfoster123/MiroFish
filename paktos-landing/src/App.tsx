@@ -7,12 +7,11 @@ import paktosIconBlack from "@/assets/paktos-icon-black-192.png";
 
 const XP_BONUS = 500;
 
-type Stage = "landing" | "ticket" | "card";
+type Stage = "name" | "email" | "confirm";
 
 interface TicketData {
   ticketId: string;
   date: Date;
-  cardHolder: string;
   last4Digits: string;
   barcodeValue: string;
   memberId: string;
@@ -33,21 +32,11 @@ function digitsFrom(seed: string, length: number): string {
   return out;
 }
 
-function nameFromEmail(email: string): string {
-  const local = email.split("@")[0] ?? "Guest";
-  return local
-    .split(/[._\-+]/)
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
-}
-
 function issueTicket(email: string): TicketData {
   const seed = `${email}:${Date.now()}`;
   return {
     ticketId: digitsFrom(seed, 13),
     date: new Date(),
-    cardHolder: nameFromEmail(email),
     last4Digits: digitsFrom(email, 4),
     barcodeValue: digitsFrom(seed + ":barcode", 14),
     memberId: digitsFrom(seed + ":member", 16),
@@ -55,71 +44,96 @@ function issueTicket(email: string): TicketData {
 }
 
 export default function App() {
+  const [stage, setStage] = React.useState<Stage>("name");
+  const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [stage, setStage] = React.useState<Stage>("landing");
   const [ticket, setTicket] = React.useState<TicketData | null>(null);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleNameSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!name.trim()) return;
+    setStage("email");
+  };
+
+  const handleEmailSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!email.trim()) return;
     setTicket(issueTicket(email.trim()));
-    setStage("ticket");
+    setStage("confirm");
   };
 
   return (
-    <main className="flex min-h-screen w-full items-center justify-center bg-background p-4">
-      {stage === "ticket" && ticket ? (
-        <div className="z-10 flex w-full max-w-sm flex-col items-center gap-6">
+    <main className="flex min-h-screen w-full items-center justify-center bg-background p-4 py-10">
+      {stage === "confirm" && ticket ? (
+        <div className="z-10 flex w-full max-w-sm flex-col items-center gap-10">
           <AnimatedTicket
             ticketId={ticket.ticketId}
             amount={0}
             date={ticket.date}
-            cardHolder={ticket.cardHolder}
+            cardHolder={name.trim()}
             last4Digits={ticket.last4Digits}
             barcodeValue={ticket.barcodeValue}
             xp={XP_BONUS}
             memberLabel="Founding Member"
             icon={<img src={paktosIconBlack} alt="Paktos" className="h-8 w-8" />}
           />
-          <button
-            onClick={() => setStage("card")}
-            className="h-11 w-full max-w-sm rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-          >
-            Add {XP_BONUS} XP to my Paktos Card
-          </button>
+          <PaktosCard
+            memberName={name.trim()}
+            memberId={ticket.memberId}
+            xp={XP_BONUS}
+          />
         </div>
-      ) : stage === "card" && ticket ? (
-        <PaktosCard
-          memberName={ticket.cardHolder}
-          memberId={ticket.memberId}
-          xp={XP_BONUS}
-        />
       ) : (
         <div className="flex w-full max-w-md flex-col items-center text-center">
           <PaktosLogo />
           <p className="mt-6 text-muted-foreground">
             The World Is Watching.
           </p>
-          <form
-            onSubmit={handleSubmit}
-            className="mt-10 flex w-full items-center gap-2"
-          >
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="you@example.com"
-              aria-label="Email address"
-              className="h-11 flex-1 rounded-md border border-input bg-background px-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            />
-            <button
-              type="submit"
-              className="h-11 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          {stage === "name" ? (
+            <form
+              onSubmit={handleNameSubmit}
+              className="mt-10 flex w-full items-center gap-2"
             >
-              Join
-            </button>
-          </form>
+              <input
+                type="text"
+                required
+                autoFocus
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                placeholder="Your name"
+                aria-label="Name"
+                className="h-11 flex-1 rounded-md border border-input bg-background px-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              />
+              <button
+                type="submit"
+                className="h-11 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+              >
+                Continue
+              </button>
+            </form>
+          ) : (
+            <form
+              onSubmit={handleEmailSubmit}
+              className="mt-10 flex w-full items-center gap-2"
+            >
+              <input
+                type="email"
+                required
+                autoFocus
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="you@example.com"
+                aria-label="Email address"
+                className="h-11 flex-1 rounded-md border border-input bg-background px-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              />
+              <button
+                type="submit"
+                className="h-11 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+              >
+                Join
+              </button>
+            </form>
+          )}
           <div className="mt-12 flex justify-center">
             <AwardBadge
               type="product-of-the-day"
