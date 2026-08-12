@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>shiny coins</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23fff'/%3E%3Ccircle cx='8' cy='8' r='5' fill='none' stroke='%23c9962e' stroke-width='1.4'/%3E%3Ccircle cx='8' cy='8' r='2.2' fill='%23c9962e'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23000'/%3E%3Ccircle cx='8' cy='8' r='5' fill='none' stroke='%23ffc35c' stroke-width='1.4'/%3E%3Ccircle cx='8' cy='8' r='2.2' fill='%23ffc35c'/%3E%3C/svg%3E">
 <style>
 html,
 body {
@@ -12,6 +12,10 @@ body {
   height: 100%;
   overflow: hidden;
   background: #ffffff;
+  color: rgba(24, 24, 26, 0.5);
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.06em;
 }
 
 #scene {
@@ -21,20 +25,48 @@ body {
   height: 100%;
   display: block;
 }
-</style>
-<script type="importmap">
-{
-  "imports": {
-    "three": "./vendor/three.module.min.js"
-  }
+
+.status {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 24px;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
 }
-</script>
+
+.status.gone {
+  opacity: 0;
+}
+</style>
 </head>
 <body>
 <canvas id="scene"></canvas>
+<p class="status" id="status">loading…</p>
 <script type="module">
-import { mountCoins } from "./coins.js";
-mountCoins(document.getElementById("scene"));
+// The user's Spline export ("shiny coins loop") on its own page:
+// the vanilla Spline runtime is vendored locally, the scene streams
+// from Spline's CDN exactly as their original Next.js export did.
+import { Application } from "./vendor/spline/runtime.js";
+
+// override with ?scene=<url or local file> if you ever swap the scene
+const SCENE_URL = new URLSearchParams(location.search).get("scene")
+  || "https://prod.spline.design/axM-a3i4zLUUEn54/scene.splinecode";
+
+const statusEl = document.getElementById("status");
+const app = new Application(document.getElementById("scene"));
+app.load(SCENE_URL)
+  .then(() => {
+    app.setBackgroundColor("#ffffff");
+    statusEl.classList.add("gone");
+  })
+  .catch((err) => {
+    console.error(err);
+    statusEl.textContent = "couldn’t reach the scene — check your connection and reload.";
+  });
 </script>
 </body>
 </html>

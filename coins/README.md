@@ -1,11 +1,19 @@
 # coins
 
-Shiny gold coins on white, looping forever, with the owner's four-chevron
-logo minted into both faces as relief geometry. Built natively in Three.js
-(`coins.js` + `index.html`) so the logo could be added — the original
-hosted Spline scene can't be edited from this environment; it is still
-viewable via `spline-original.html`, which streams the scene from Spline's
-CDN with the vendored runtime in `vendor/spline/`.
+The user's original "shiny coins loop" Spline scene on its own page
+(`index.html`) — the scene streams live from Spline's CDN with the vanilla
+runtime vendored in `vendor/spline/`, page background white.
+
+To put the logo ON these coins while keeping their exact colour and style,
+the edit has to happen in the Spline editor (the scene is not editable from
+outside): open the project at spline.design, drop the logo SVG onto the coin
+faces (or set it as a decal/texture on the coin material), and hit Update —
+this page streams the live scene URL, so it picks the change up
+automatically with no code edits.
+
+`native.html` is a Three.js recreation with the logo minted in relief —
+kept as a fallback; its colours were guessed and can be matched to a
+screenshot of the original if needed.
 
 ## Run
 
@@ -13,12 +21,3 @@ CDN with the vendored runtime in `vendor/spline/`.
 python3 -m http.server 8080   # in this folder
 # open http://localhost:8080
 ```
-
-## Notes
-
-- The logo is a hand-traced vector approximation of the uploaded mark; send
-  the real SVG and the trace can be swapped for exact paths.
-- Coin count, sizes, tilts, and spin speeds are the `place(...)` calls at
-  the bottom of `coins.js`.
-- This page is intentionally standalone; say the word to link it from the
-  library site (a tab or a /coins command in the control panel).
