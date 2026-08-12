@@ -1,6 +1,5 @@
 import * as React from "react";
 import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
-import { AwardBadge } from "@/components/ui/award-badge";
 import { PaktosLogo } from "@/components/paktos-logo";
 import { PaktosCard } from "@/components/paktos-card";
 import paktosIconBlack from "@/assets/paktos-icon-black-192.png";
@@ -87,14 +86,6 @@ export default function App() {
             xp={XP_BONUS}
             memberLabel="Founding Member"
             icon={<img src={paktosIconBlack} alt="Paktos" className="h-8 w-8" />}
-            memberSlot={
-              <AwardBadge
-                type="product-of-the-day"
-                place={1}
-                topText="FOUNDING MEMBER"
-                titleText="Paktos"
-              />
-            }
           />
           <button
             onClick={() => setStage("card")}
