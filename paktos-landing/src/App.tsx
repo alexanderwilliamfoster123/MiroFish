@@ -2,6 +2,7 @@ import * as React from "react";
 import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
 import { AwardBadge } from "@/components/ui/award-badge";
 import { PaktosLogo } from "@/components/paktos-logo";
+import paktosIcon from "@/assets/paktos-icon-black.svg";
 
 interface TicketData {
   ticketId: string;
@@ -97,7 +98,9 @@ export default function App() {
             <AwardBadge
               type="product-of-the-day"
               place={1}
-              link="https://www.producthunt.com"
+              topText="PAKTOS"
+              titleText="Coming 2026"
+              iconSrc={paktosIcon}
             />
           </div>
         </div>

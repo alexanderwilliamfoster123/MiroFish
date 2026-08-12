@@ -204,9 +204,9 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
               <div className="p-3 bg-primary/10 rounded-full animate-in zoom-in-50 delay-300 duration-500">
                   <CheckCircleIcon className="w-10 h-10 text-primary animate-in zoom-in-75 delay-500 duration-500" />
               </div>
-              <h1 className="text-2xl font-semibold mt-4">Thank you!</h1>
+              <h1 className="text-2xl font-semibold mt-4">You're In!</h1>
               <p className="text-muted-foreground mt-1">
-                Your ticket has been issued successfully
+                Your place has been secured.
               </p>
           </div>
 
