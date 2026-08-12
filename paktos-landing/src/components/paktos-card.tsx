@@ -1,6 +1,7 @@
 import * as React from "react";
 import NumberFlow from "@number-flow/react";
 import { LiquidCard, CardContent } from "@/components/ui/liquid-glass-card";
+import { LiquidMetalButton } from "@/components/ui/liquid-metal-button";
 import { TiltCard } from "@/components/ui/tilt-card";
 import iconWhite from "@/assets/paktos-icon-white-192.png";
 
@@ -120,15 +121,15 @@ export function PaktosCard({ memberName, serial, xp }: PaktosCardProps) {
         Your Founding Member bonus has been added to your Paktos Card.
       </p>
 
-      <button
+      <LiquidMetalButton
+        label={
+          shared
+            ? `+${xp} XP added · Thanks for sharing!`
+            : `Share to your story · Earn +${xp} XP`
+        }
+        width={280}
         onClick={handleShare}
-        disabled={shared}
-        className="h-11 w-full rounded-md bg-[#18181B] px-6 text-sm font-medium text-[#F2F1F3] transition-opacity hover:opacity-90 disabled:opacity-60"
-      >
-        {shared
-          ? `+${xp} XP added · Thanks for sharing!`
-          : `Share to your story · Earn +${xp} XP`}
-      </button>
+      />
     </div>
   );
 }
