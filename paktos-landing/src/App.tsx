@@ -70,7 +70,10 @@ export default function App() {
       ) : (
         <div className="flex w-full max-w-md flex-col items-center text-center">
           <PaktosLogo />
-          <p className="mt-6 text-muted-foreground">
+          <p className="mt-5 text-xs font-medium uppercase tracking-[0.35em] text-foreground">
+            World Trading Championship
+          </p>
+          <p className="mt-4 text-muted-foreground">
             Opportunity dances with those on the dancefloor.
           </p>
           <form
