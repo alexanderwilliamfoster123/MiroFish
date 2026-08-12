@@ -90,6 +90,7 @@ export default function App() {
             barcodeValue={ticket.barcodeValue}
             xp={XP_BONUS}
             hideMember
+            confetti={false}
           />
           <button
             onClick={() => setStage("card")}

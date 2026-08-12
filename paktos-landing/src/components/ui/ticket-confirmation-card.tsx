@@ -147,6 +147,7 @@ export interface TicketProps extends React.HTMLAttributes<HTMLDivElement> {
   memberLabel?: string;
   memberSlot?: React.ReactNode;
   hideMember?: boolean;
+  confetti?: boolean;
 }
 
 const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
@@ -164,6 +165,7 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
       memberLabel,
       memberSlot,
       hideMember,
+      confetti = true,
       ...props
     },
     ref
@@ -195,7 +197,7 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
 
     return (
       <>
-        {showConfetti && <ConfettiExplosion />}
+        {confetti && showConfetti && <ConfettiExplosion />}
         <div
           ref={ref}
           className={cn(
