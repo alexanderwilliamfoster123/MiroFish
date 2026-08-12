@@ -2,7 +2,7 @@ import * as React from "react";
 import NumberFlow from "@number-flow/react";
 import { LiquidCard, CardContent } from "@/components/ui/liquid-glass-card";
 import { TiltCard } from "@/components/ui/tilt-card";
-import iconBlack from "@/assets/paktos-icon-black-192.png";
+import iconWhite from "@/assets/paktos-icon-white-192.png";
 
 interface PaktosCardProps {
   memberName: string;
@@ -10,9 +10,15 @@ interface PaktosCardProps {
   xp: number;
 }
 
-// The member's gold Paktos Card: the Founding Member XP bonus animates onto
-// the balance shortly after the card appears, and sharing to a story earns a
-// second bonus that rolls the balance up again.
+// Brand gradient — lavender through coral into plum and violet. Reserved for
+// standout statements per the brand guidelines.
+const BRAND_GRADIENT =
+  "linear-gradient(115deg, #F0DCFF 0%, #FF8E94 35%, #D95DDF 65%, #9081DF 100%)";
+
+// The member's Paktos Card, set to the brand system: near-black #18181B body
+// on a gradient metallic edge, lavender and grey-scale accents, with the
+// Founding Member XP bonus animating onto the balance. Sharing to a story
+// earns a second bonus that rolls the balance up again.
 export function PaktosCard({ memberName, serial, xp }: PaktosCardProps) {
   const [balance, setBalance] = React.useState(0);
   const [shared, setShared] = React.useState(false);
@@ -41,55 +47,72 @@ export function PaktosCard({ memberName, serial, xp }: PaktosCardProps) {
 
   return (
     <div className="flex w-full max-w-sm flex-col items-center gap-5">
-      <div className="rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground animate-in fade-in-0 slide-in-from-top-2 duration-500">
+      <div
+        className="rounded-full px-4 py-1.5 text-sm font-medium text-[#18181B] animate-in fade-in-0 slide-in-from-top-2 duration-500"
+        style={{ background: BRAND_GRADIENT }}
+      >
         +{xp} XP · Founding Member bonus
       </div>
 
       <div className="w-full animate-in fade-in-0 zoom-in-95 duration-500">
         <TiltCard className="rounded-xl shadow-2xl">
-        <LiquidCard className="h-56 w-full border-0 bg-gradient-to-br from-[#f7ecc4] via-[#f3e3ac] to-[#dcc584] text-neutral-800 ring-1 ring-inset ring-[#b3a05e]/40">
-          <CardContent className="relative flex h-full flex-col justify-between p-6">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(115deg, rgba(255,0,128,0.07), rgba(255,236,0,0.12) 30%, rgba(0,255,128,0.07) 55%, rgba(0,128,255,0.09) 80%, rgba(255,0,255,0.07))",
-              }}
-            />
-            <div className="flex items-start justify-between">
-              <img src={iconBlack} alt="Paktos" className="h-9 w-9" />
-              <p className="text-[10px] uppercase tracking-[0.25em] text-neutral-600">
-                Founding Member
-              </p>
-            </div>
+          <div className="rounded-xl p-[1.5px]" style={{ background: BRAND_GRADIENT }}>
+            <LiquidCard className="h-56 w-full rounded-[11px] border-0 bg-[#18181B] text-[#F2F1F3]">
+              <CardContent className="relative flex h-full flex-col justify-between p-6">
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 rounded-[11px]"
+                  style={{
+                    background:
+                      "radial-gradient(60% 80% at 85% 0%, rgba(217,93,223,0.16), transparent 60%), radial-gradient(50% 70% at 10% 100%, rgba(144,129,223,0.14), transparent 60%)",
+                  }}
+                />
+                <div className="flex items-start justify-between">
+                  <img src={iconWhite} alt="Paktos" className="h-9 w-9" />
+                  <p className="text-[10px] uppercase tracking-[0.25em] text-[#D3C2F0]">
+                    Founding Member
+                  </p>
+                </div>
 
-            <div>
-              <p className="text-xs uppercase tracking-wide text-neutral-600">
-                Paktos XP
-              </p>
-              <p className="text-4xl font-semibold tabular-nums">
-                <NumberFlow value={balance} />
-                <span className="ml-2 text-lg font-medium text-neutral-600">XP</span>
-              </p>
-            </div>
+                <div>
+                  <p className="text-xs uppercase tracking-wide text-[#94939F]">
+                    Paktos XP
+                  </p>
+                  <p className="text-4xl font-semibold tabular-nums">
+                    <NumberFlow value={balance} />
+                    <span
+                      className="ml-2 text-lg font-medium"
+                      style={{
+                        background: BRAND_GRADIENT,
+                        WebkitBackgroundClip: "text",
+                        backgroundClip: "text",
+                        color: "transparent",
+                      }}
+                    >
+                      XP
+                    </span>
+                  </p>
+                </div>
 
-            <div className="flex items-end justify-between">
-              <div>
-                <p className="text-[10px] uppercase tracking-wide text-neutral-600">
-                  Member
-                </p>
-                <p className="font-medium">{memberName}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-[10px] uppercase tracking-wide text-neutral-600">
-                  Serial No.
-                </p>
-                <p className="font-mono text-sm tracking-wider">{serial}</p>
-              </div>
-            </div>
-          </CardContent>
-        </LiquidCard>
+                <div className="flex items-end justify-between">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wide text-[#94939F]">
+                      Member
+                    </p>
+                    <p className="font-medium">{memberName}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] uppercase tracking-wide text-[#94939F]">
+                      Serial No.
+                    </p>
+                    <p className="font-mono text-sm tracking-wider text-[#C9C9CF]">
+                      {serial}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </LiquidCard>
+          </div>
         </TiltCard>
       </div>
 
@@ -100,7 +123,7 @@ export function PaktosCard({ memberName, serial, xp }: PaktosCardProps) {
       <button
         onClick={handleShare}
         disabled={shared}
-        className="h-11 w-full rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+        className="h-11 w-full rounded-md bg-[#18181B] px-6 text-sm font-medium text-[#F2F1F3] transition-opacity hover:opacity-90 disabled:opacity-60"
       >
         {shared
           ? `+${xp} XP added · Thanks for sharing!`

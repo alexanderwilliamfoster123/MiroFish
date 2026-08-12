@@ -39,6 +39,13 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
+        sans: [
+          "Satoshi",
+          "'Satoshi Variable'",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
         serif: ["Georgia", "'Times New Roman'", "serif"],
       },
     },
