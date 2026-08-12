@@ -3,7 +3,6 @@ import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
 import { AwardBadge } from "@/components/ui/award-badge";
 import { PaktosLogo } from "@/components/paktos-logo";
 import { PaktosCard } from "@/components/paktos-card";
-import { SpotsCounter } from "@/components/spots-counter";
 import paktosIconBlack from "@/assets/paktos-icon-black-192.png";
 
 const XP_BONUS = 500;
@@ -121,9 +120,6 @@ export default function App() {
               Join
             </button>
           </form>
-          <div className="mt-12">
-            <SpotsCounter />
-          </div>
           <div className="mt-12 flex justify-center">
             <AwardBadge
               type="product-of-the-day"
