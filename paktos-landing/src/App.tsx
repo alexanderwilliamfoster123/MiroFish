@@ -1,10 +1,15 @@
 import * as React from "react";
 import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
+import { SplineHero } from "@/components/ui/spline-hero";
 import { PaktosLogo } from "@/components/paktos-logo";
 import { PaktosCard } from "@/components/paktos-card";
 import paktosIconBlack from "@/assets/paktos-icon-black-192.png";
 
 const XP_BONUS = 500;
+
+// Paste the real Spline export URL here (Spline → Export → Code → React),
+// e.g. "https://prod.spline.design/AbCdEfGh/scene.splinecode".
+const SPLINE_SCENE = "";
 
 type Stage = "email" | "name" | "ticket" | "card";
 
@@ -102,6 +107,7 @@ export default function App() {
         />
       ) : (
         <div className="flex w-full max-w-md flex-col items-center text-center">
+          <SplineHero scene={SPLINE_SCENE} className="mb-8 h-64 w-full" />
           <PaktosLogo />
           <p className="mt-6 text-muted-foreground">
             The World Is Watching.

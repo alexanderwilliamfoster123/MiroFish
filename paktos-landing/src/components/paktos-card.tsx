@@ -29,12 +29,11 @@ function PlatinumCardFace({
   memberName: string;
   serial: string;
 }) {
-  const last4 = serial.replace(/\D/g, "").slice(-4);
   return (
     <div className="relative w-full" style={{ containerType: "inline-size" }}>
       <img
         src={platinumCard}
-        alt="Paktos platinum member card"
+        alt="Paktos member card"
         className="block h-auto w-full rounded-2xl"
       />
       {/* Member name — set above the engraved PAKTOS MEMBER label */}
@@ -43,25 +42,25 @@ function PlatinumCardFace({
         style={{
           ...engraved,
           left: "10%",
-          top: "72.5%",
-          fontSize: "5.6cqw",
+          top: "73.5%",
+          fontSize: "5.4cqw",
           letterSpacing: "0.14em",
         }}
       >
         {memberName}
       </p>
-      {/* Serial digits — beside the contactless symbol */}
+      {/* Membership serial — where a bank card would carry its number */}
       <p
-        className="absolute font-sans tabular-nums"
+        className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap font-sans tabular-nums"
         style={{
           ...engraved,
-          left: "82%",
-          top: "44.5%",
-          fontSize: "5.2cqw",
-          letterSpacing: "0.1em",
+          left: "84%",
+          top: "50%",
+          fontSize: "4.4cqw",
+          letterSpacing: "0.12em",
         }}
       >
-        {last4}
+        {serial}
       </p>
       {/* Member since — under the banner */}
       <p
