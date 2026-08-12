@@ -2,6 +2,7 @@ import * as React from "react";
 import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
 import { AwardBadge } from "@/components/ui/award-badge";
 import { PaktosLogo } from "@/components/paktos-logo";
+import paktosIcon from "@/assets/paktos-icon-black.svg";
 
 interface TicketData {
   ticketId: string;
@@ -73,12 +74,9 @@ export default function App() {
           <p className="mt-6 text-muted-foreground">
             The World Is Watching.
           </p>
-          <p className="mt-10 text-xs font-medium uppercase tracking-[0.3em] text-foreground">
-            The Founding List
-          </p>
           <form
             onSubmit={handleSubmit}
-            className="mt-4 flex w-full items-center gap-2"
+            className="mt-10 flex w-full items-center gap-2"
           >
             <input
               type="email"
@@ -101,8 +99,8 @@ export default function App() {
               type="product-of-the-day"
               place={1}
               topText="PAKTOS"
-              titleText="Coming 2026"
-              hideIcon
+              titleText="The Founding List"
+              iconSrc={paktosIcon}
             />
           </div>
         </div>
