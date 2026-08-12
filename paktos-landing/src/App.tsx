@@ -4,10 +4,14 @@ import { SplineHero } from "@/components/ui/spline-hero";
 import { PaktosLogo } from "@/components/paktos-logo";
 import splineScene from "@/assets/paktos-scene.splinecode?url";
 import { PaktosCard } from "@/components/paktos-card";
+import { AnimatedCountdown } from "@/components/ui/animated-countdown";
 
 const XP_BONUS = 500;
 
-type Stage = "email" | "name" | "ticket" | "card";
+// When the $1,000 giveaway closes.
+const GIVEAWAY_DATE = new Date("2026-09-12T18:00:00Z");
+
+type Stage = "email" | "name" | "ticket" | "card" | "countdown";
 
 interface TicketData {
   ticketId: string;
@@ -99,7 +103,25 @@ export default function App() {
           memberName={formatMemberName(name)}
           serial={ticket.serial}
           xp={XP_BONUS}
+          onShared={() => setStage("countdown")}
         />
+      ) : stage === "countdown" ? (
+        <div className="fixed inset-0 z-10 flex flex-col items-center justify-center gap-8 overflow-y-auto bg-black px-6 py-10 animate-in fade-in-0 duration-700">
+          <SplineHero scene={splineScene} className="h-64 w-full max-w-md" />
+          <p className="text-[11px] font-medium uppercase tracking-[0.35em] text-neutral-500">
+            The $1,000 Giveaway
+          </p>
+          <AnimatedCountdown
+            targetDate={GIVEAWAY_DATE}
+            variant="minimal"
+            size="md"
+            containerClassName="border-transparent"
+            numberClassName="text-white"
+            labelClassName="text-neutral-500"
+            unitClassName="hover:bg-transparent"
+          />
+          <p className="font-serif text-2xl text-white">The World Will Know.</p>
+        </div>
       ) : (
         <div className="flex w-full max-w-md flex-col items-center text-center">
           <SplineHero scene={splineScene} className="mb-8 h-64 w-full" />

@@ -12,6 +12,46 @@ interface PaktosCardProps {
   memberName: string;
   serial: string;
   xp: number;
+  /** Called after the member confirms they posted their story */
+  onShared?: () => void;
+}
+
+// Celebration burst when the XP lands on the card.
+function CardConfetti() {
+  const [active, setActive] = React.useState(true);
+  React.useEffect(() => {
+    const timer = setTimeout(() => setActive(false), 5500);
+    return () => clearTimeout(timer);
+  }, []);
+  if (!active) return null;
+  const colors = ["#ef4444", "#3b82f6", "#22c55e", "#eab308", "#8b5cf6", "#f97316"];
+  return (
+    <>
+      <style>
+        {`
+          @keyframes card-fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+          }
+        `}
+      </style>
+      <div className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
+        {Array.from({ length: 90 }).map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-2 h-4"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${-20 + Math.random() * 10}%`,
+              backgroundColor: colors[i % colors.length],
+              transform: `rotate(${Math.random() * 360}deg)`,
+              animation: `card-fall ${2.5 + Math.random() * 2.5}s ${Math.random() * 1.5}s linear forwards`,
+            }}
+          />
+        ))}
+      </div>
+    </>
+  );
 }
 
 // Engraved-into-metal text treatment.
@@ -289,15 +329,20 @@ async function generateStoryImage(
     "5px"
   );
 
-  // link + tag
+  // giveaway hook + link + tag
   anyCtx.letterSpacing = "1px";
   ctx.textAlign = "center";
-  ctx.font = `400 36px ${sans}`;
-  ctx.fillStyle = "#9ca3af";
-  ctx.fillText(WAITLIST_LINK, W / 2, 1400);
-  ctx.font = `600 40px ${sans}`;
+  ctx.font = `600 44px ${sans}`;
   ctx.fillStyle = "#ffffff";
-  ctx.fillText(SOCIAL_TAG, W / 2, 1470);
+  ctx.fillText("Join the Paktos waitlist", W / 2, 1360);
+  ctx.font = `700 48px ${sans}`;
+  ctx.fillText("for your chance to win $1,000", W / 2, 1428);
+  ctx.font = `400 34px ${sans}`;
+  ctx.fillStyle = "#9ca3af";
+  ctx.fillText(WAITLIST_LINK, W / 2, 1520);
+  ctx.font = `600 38px ${sans}`;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(SOCIAL_TAG, W / 2, 1586);
 
   return new Promise((resolve, reject) =>
     canvas.toBlob(
@@ -311,7 +356,7 @@ async function generateStoryImage(
 // the balance pill; sharing generates a story image (native share sheet on
 // phones, download elsewhere) and the second bonus lands after the member
 // confirms they posted.
-export function PaktosCard({ memberName, serial, xp }: PaktosCardProps) {
+export function PaktosCard({ memberName, serial, xp, onShared }: PaktosCardProps) {
   const [balance, setBalance] = React.useState(0);
   const [shared, setShared] = React.useState(false);
   const [shareOpen, setShareOpen] = React.useState(false);
@@ -376,10 +421,13 @@ export function PaktosCard({ memberName, serial, xp }: PaktosCardProps) {
     setShareOpen(false);
     setShared(true);
     setBalance(xp * 2);
+    // let the balance roll before moving to the giveaway countdown
+    setTimeout(() => onShared?.(), 2000);
   };
 
   return (
     <div className="flex w-full max-w-sm flex-col items-center gap-5">
+      <CardConfetti />
       {shareOpen && (
         <div
           role="dialog"
