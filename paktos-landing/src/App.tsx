@@ -71,7 +71,7 @@ export default function App() {
         <div className="flex w-full max-w-md flex-col items-center text-center">
           <PaktosLogo />
           <p className="mt-6 text-muted-foreground">
-            Opportunity dances with those on the dancefloor.
+            The World Is Watching.
           </p>
           <form
             onSubmit={handleSubmit}
