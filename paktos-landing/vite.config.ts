@@ -5,9 +5,15 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   build: {
-    // Inline all brand assets (SVGs and the platinum card art) as data URIs
-    // so the bundle stays self-contained
+    // Inline all brand assets (SVGs, card art, Spline scene) as data URIs and
+    // merge all dynamic chunks so the bundle stays fully self-contained
     assetsInlineLimit: 4000000,
+    chunkSizeWarningLimit: 5000,
+    rollupOptions: {
+      output: {
+        inlineDynamicImports: true,
+      },
+    },
   },
   resolve: {
     alias: {

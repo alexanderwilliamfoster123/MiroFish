@@ -1,10 +1,33 @@
 import { lazy, Suspense } from "react";
+import booleanWasmUrl from "@splinetool/boolean-wasm/build/boolean.wasm?url";
 
-// Loaded lazily so the 3D runtime is only fetched when a scene is configured.
+// Loaded lazily so the 3D runtime stays out of the critical path.
 const Spline = lazy(() => import("@splinetool/react-spline"));
 
+// The Spline runtime fetches helper wasm modules from unpkg at runtime.
+// Serve our bundled copy instead so the page works fully offline /
+// self-contained (and behind strict CSPs).
+let fetchPatched = false;
+function patchSplineWasmFetch() {
+  if (fetchPatched || typeof window === "undefined") return;
+  fetchPatched = true;
+  const origFetch = window.fetch.bind(window);
+  window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
+    const url =
+      typeof input === "string"
+        ? input
+        : input instanceof Request
+          ? input.url
+          : String(input);
+    if (url.includes("@splinetool/boolean-wasm") && url.endsWith(".wasm")) {
+      return origFetch(booleanWasmUrl, init);
+    }
+    return origFetch(input, init);
+  };
+}
+
 interface SplineHeroProps {
-  /** Full URL of a Spline scene export, e.g. https://prod.spline.design/xxxx/scene.splinecode */
+  /** Scene URL — a bundled .splinecode asset or a prod.spline.design export */
   scene: string;
   className?: string;
 }
@@ -13,6 +36,7 @@ interface SplineHeroProps {
 // real scene URL is provided.
 export function SplineHero({ scene, className }: SplineHeroProps) {
   if (!scene || scene === "loading...") return null;
+  patchSplineWasmFetch();
   return (
     <div className={className}>
       <Suspense fallback={null}>
