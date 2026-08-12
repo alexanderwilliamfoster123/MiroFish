@@ -4,6 +4,9 @@ import { CoinsLoop } from "@/components/coins-loop";
 import { PaktosLogo } from "@/components/paktos-logo";
 import { PaktosCard } from "@/components/paktos-card";
 import { AnimatedCountdown } from "@/components/ui/animated-countdown";
+import { Button } from "@/components/ui/button";
+import { ButtonColorful } from "@/components/ui/button-colorful";
+import { RiInstagramFill, RiLinkedinFill, RiTwitterXFill } from "@remixicon/react";
 
 const XP_BONUS = 500;
 
@@ -97,12 +100,11 @@ export default function App() {
             confetti={false}
             memberNo={ticket.memberNo}
           />
-          <button
+          <ButtonColorful
             onClick={() => setStage("card")}
-            className="h-11 w-full max-w-sm rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-          >
-            Add {XP_BONUS} XP to my Paktos Card
-          </button>
+            className="h-11 w-full max-w-sm"
+            label={`Add ${XP_BONUS} XP to my Paktos Card`}
+          />
         </div>
       ) : stage === "card" && ticket ? (
         <PaktosCard
@@ -131,6 +133,45 @@ export default function App() {
             <p className="text-center font-serif text-2xl text-[#18181B]">
               Trade Like The World Is Watching.
             </p>
+
+            <div className="mt-2 flex flex-col items-center gap-3">
+              <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-[#94939F]">
+                Follow the arena
+              </p>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="icon" asChild>
+                  <a
+                    href="https://x.com/tradepaktos"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Follow Paktos on X"
+                  >
+                    <RiTwitterXFill size={16} aria-hidden="true" />
+                  </a>
+                </Button>
+                <Button variant="outline" size="icon" asChild>
+                  <a
+                    href="https://instagram.com/tradepaktos"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Follow Paktos on Instagram"
+                  >
+                    <RiInstagramFill size={16} aria-hidden="true" />
+                  </a>
+                </Button>
+                <Button variant="outline" size="icon" asChild>
+                  <a
+                    href="https://linkedin.com/company/tradepaktos"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Follow Paktos on LinkedIn"
+                  >
+                    <RiLinkedinFill size={16} aria-hidden="true" />
+                  </a>
+                </Button>
+              </div>
+              <p className="text-xs text-[#94939F]">@tradepaktos</p>
+            </div>
           </div>
           <CoinsLoop className="h-52 w-full shrink-0 rotate-180" />
         </div>
@@ -156,12 +197,7 @@ export default function App() {
                 aria-label="Email address"
                 className="h-11 flex-1 rounded-md border border-input bg-background px-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               />
-              <button
-                type="submit"
-                className="h-11 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-              >
-                Join
-              </button>
+              <ButtonColorful type="submit" className="h-11" label="Join" />
             </form>
           ) : (
             <form
@@ -178,12 +214,7 @@ export default function App() {
                 aria-label="Name"
                 className="h-11 flex-1 rounded-md border border-input bg-background px-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               />
-              <button
-                type="submit"
-                className="h-11 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-              >
-                Continue
-              </button>
+              <ButtonColorful type="submit" className="h-11" label="Continue" />
             </form>
           )}
         </div>

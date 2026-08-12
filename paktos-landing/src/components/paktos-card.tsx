@@ -2,6 +2,8 @@ import * as React from "react";
 import NumberFlow from "@number-flow/react";
 import { TiltCard } from "@/components/ui/tilt-card";
 import { AwardBadge } from "@/components/ui/award-badge";
+import { Button } from "@/components/ui/button";
+import { ButtonColorful } from "@/components/ui/button-colorful";
 import iconBlack from "@/assets/paktos-icon-black-192.png";
 import logoBlack2x from "@/assets/paktos-logo-black-760.png";
 
@@ -491,20 +493,20 @@ function ShareScreen({
         )}
 
         <div className="flex w-full gap-2 animate-in fade-in-0 duration-700 delay-200">
-          <button
+          <ButtonColorful
             onClick={shareToStory}
             disabled={!blob}
-            className="h-11 flex-1 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
-          >
-            Share to Story
-          </button>
-          <button
+            className="h-11 flex-1"
+            label="Share to Story"
+          />
+          <Button
+            variant="outline"
             onClick={download}
             disabled={!blob}
-            className="h-11 flex-1 rounded-md border border-input bg-background px-4 text-sm font-medium transition-colors hover:bg-accent disabled:opacity-60"
+            className="h-11 flex-1"
           >
             Save to Photos
-          </button>
+          </Button>
         </div>
 
         <p className="text-xs leading-5 text-neutral-500">
@@ -515,12 +517,11 @@ function ShareScreen({
       </div>
 
       <div className="mt-6 flex w-full max-w-sm flex-col items-center gap-3">
-        <button
+        <ButtonColorful
           onClick={onDone}
-          className="h-11 w-full rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-        >
-          I shared to my story
-        </button>
+          className="h-11 w-full"
+          label="I shared to my story"
+        />
         <button
           onClick={onDismiss}
           className="text-xs text-neutral-500 underline-offset-2 hover:underline"
@@ -590,15 +591,14 @@ export function PaktosCard({ memberName, serial, memberNo, xp, onShared }: Pakto
         <span className="font-medium text-foreground">$1,000 raffle</span>.
       </p>
 
-      <button
+      <ButtonColorful
         onClick={() => !shared && setShareOpen(true)}
         disabled={shared}
-        className="h-11 w-full rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
-      >
-        {shared
-          ? `+${xp} XP added · Thanks for sharing!`
-          : "Share to my story"}
-      </button>
+        className="h-11 w-full"
+        label={
+          shared ? `+${xp} XP added · Thanks for sharing!` : "Share to my story"
+        }
+      />
     </div>
   );
 }
