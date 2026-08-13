@@ -4,7 +4,9 @@ import {
   type RevealItem,
 } from "@/components/ui/hover-reveal-list";
 import { RadialScrollGallery } from "@/components/ui/portfolio-and-image-gallery";
+import { InteractiveFolderGallery } from "@/components/ui/interactive-folder-gallery";
 import { WordReveal } from "@/components/ui/word-reveal";
+import { LETTERS } from "@/lib/letters";
 import {
   AtSign,
   Briefcase,
@@ -22,37 +24,6 @@ type Room = "writing" | "pictures" | "socials" | "companies";
 
 // the wheel of investments, in order around the circle
 const COMPANIES = ["vertus", "vanquish", "paktos", "tootski", "omera"];
-
-const POSTS = [
-  {
-    title: "on building quietly",
-    summary:
-      "the best work i've done never announced itself. why shipping softly beats launching loudly.",
-    published: "jul 2026",
-    url: "#",
-  },
-  {
-    title: "simulation as a way of seeing",
-    summary:
-      "what building mirofish taught me about crowds, prediction, and the limits of asking people what they think.",
-    published: "may 2026",
-    url: "#",
-  },
-  {
-    title: "interfaces that stay out of the way",
-    summary:
-      "a short argument for software that disappears — and the discipline it takes to leave things out.",
-    published: "feb 2026",
-    url: "#",
-  },
-  {
-    title: "notes to a younger builder",
-    summary:
-      "everything i wish someone had told me before i wrote my first line of production code.",
-    published: "nov 2025",
-    url: "#",
-  },
-];
 
 // one row per place — swap hrefs/handles/descriptions for the real ones
 const SOCIALS: RevealItem[] = [
@@ -93,6 +64,36 @@ const SOCIALS: RevealItem[] = [
   },
 ];
 
+// monochrome placeholder photographs for the stack — swap for real ones
+const photo = (stops: string, extra: string) =>
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' width='500' height='700'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>${stops}</linearGradient><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/><feColorMatrix type='matrix' values='0 0 0 0 0.85  0 0 0 0 0.85  0 0 0 0 0.83  0 0 0 0.05 0'/><feComposite operator='over' in2='SourceGraphic'/></filter></defs><g filter='url(%23n)'><rect width='500' height='700' fill='url(%23g)'/>${extra}</g></svg>`,
+  );
+
+const PHOTOS = [
+  photo(
+    "<stop offset='0' stop-color='#cfccc5'/><stop offset='1' stop-color='#3a3936'/>",
+    "<polygon points='0,700 120,430 260,560 380,380 500,520 500,700' fill='#232220'/>",
+  ),
+  photo(
+    "<stop offset='0' stop-color='#8f8c86'/><stop offset='1' stop-color='#1c1b19'/>",
+    "<rect y='430' width='500' height='4' fill='rgba(235,233,228,0.35)'/>",
+  ),
+  photo(
+    "<stop offset='0' stop-color='#3a3936'/><stop offset='1' stop-color='#050505'/>",
+    "<circle cx='360' cy='170' r='46' fill='rgba(235,233,228,0.75)'/>",
+  ),
+  photo(
+    "<stop offset='0' stop-color='#e3e0d9'/><stop offset='1' stop-color='#57544f'/>",
+    "<rect x='60' width='16' height='700' fill='rgba(20,19,18,0.5)'/><rect x='180' width='26' height='700' fill='rgba(20,19,18,0.65)'/><rect x='340' width='12' height='700' fill='rgba(20,19,18,0.45)'/>",
+  ),
+  photo(
+    "<stop offset='0' stop-color='#6e6b66'/><stop offset='1' stop-color='#141312'/>",
+    "<polygon points='0,700 200,300 340,470 500,260 500,700' fill='#111010'/>",
+  ),
+];
+
 const DOCK_ITEMS: Array<{ room: Room; title: string; icon: typeof Feather }> = [
   { room: "companies", title: "companies", icon: Briefcase },
   { room: "writing", title: "writing", icon: Feather },
@@ -105,12 +106,23 @@ interface WorldProps {
 }
 
 export function World({ onLeave }: WorldProps) {
-  const [room, setRoom] = useState<Room | null>(null);
+  const [room, setRoomState] = useState<Room | null>(null);
+  const [letter, setLetter] = useState<number | null>(null);
 
-  // esc steps back: room -> home
+  const setRoom = (next: Room | null) => {
+    setLetter(null);
+    setRoomState(next);
+  };
+
+  // esc steps back: letter -> writing -> home
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setRoom(null);
+      if (e.key !== "Escape") return;
+      setLetter((currentLetter) => {
+        if (currentLetter !== null) return null;
+        setRoomState(null);
+        return null;
+      });
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -249,57 +261,79 @@ export function World({ onLeave }: WorldProps) {
         </section>
       )}
 
-      {room === "writing" && (
+      {room === "writing" && letter === null && (
         <section
-          key="writing"
-          className="animate-fade-in mx-auto flex min-h-dvh w-full max-w-xl flex-col justify-center px-6 pt-16 pb-36"
+          key="writing-list"
+          className="animate-fade-in mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-6 pt-16 pb-36"
         >
-          <p
-            className="animate-fade-up text-[11px] tracking-[0.25em] text-faint"
-            style={{ animationDelay: "0.05s" }}
-          >
-            writing
-          </p>
           <h1
-            className="animate-fade-up mt-3 text-[19px] font-medium tracking-tight sm:text-[21px]"
-            style={{ animationDelay: "0.15s" }}
+            className="animate-fade-up text-[19px] font-medium tracking-tight sm:text-[21px]"
+            style={{ animationDelay: "0.1s" }}
           >
-            letters and essays.
+            writing.
           </h1>
-          <div
-            className="animate-fade-up mt-10"
-            style={{ animationDelay: "0.3s" }}
-          >
-            {POSTS.map((post) => (
-              <a
-                key={post.title}
-                href={post.url}
-                className="group block border-b border-white/[0.07] py-7 transition-colors duration-300"
+          <div className="mt-8 flex flex-col">
+            {LETTERS.map((entry, index) => (
+              <button
+                key={entry.num}
+                type="button"
+                onClick={() => setLetter(index)}
+                className="animate-fade-in group flex cursor-pointer items-baseline justify-between gap-6 border-b border-white/[0.07] py-4 text-left"
+                style={{ animationDelay: `${0.25 + index * 0.08}s`, animationDuration: "0.6s" }}
               >
-                <div className="flex items-baseline justify-between gap-6">
-                  <h3 className="text-[16px] font-medium tracking-tight text-neutral-300 transition-colors duration-300 group-hover:text-foreground">
-                    {post.title}
-                  </h3>
-                  <span className="shrink-0 font-mono text-[11px] text-faint">
-                    {post.published}
-                  </span>
-                </div>
-                <p className="mt-2 max-w-md text-[13px] font-light leading-relaxed text-muted-foreground">
-                  {post.summary}
-                </p>
-              </a>
+                <span className="text-[15px] font-medium tracking-tight text-neutral-500 transition-colors duration-300 group-hover:text-foreground">
+                  {entry.title}
+                </span>
+                <span className="shrink-0 font-mono text-[10px] text-faint">
+                  {entry.date}
+                </span>
+              </button>
             ))}
           </div>
+        </section>
+      )}
+
+      {room === "writing" && letter !== null && (
+        <section
+          key={`letter-${letter}`}
+          className="animate-fade-in mx-auto flex min-h-dvh w-full max-w-xl flex-col justify-center px-6 pt-20 pb-36"
+        >
+          <button
+            type="button"
+            onClick={() => setLetter(null)}
+            className="animate-fade-in fixed top-5 left-6 z-50 cursor-pointer text-[11px] tracking-[0.2em] text-faint transition-colors duration-300 hover:text-foreground"
+          >
+            ← back
+          </button>
+          <WordReveal
+            lead={LETTERS[letter].title + "."}
+            paragraphs={LETTERS[letter].paragraphs}
+            total={1.3}
+            className="text-[16px] leading-[1.75] font-light text-neutral-400 sm:text-[17px]"
+          />
+          <p
+            className="animate-fade-in mt-10 font-serif text-xl italic text-neutral-500"
+            style={{ animationDelay: "1.5s", animationDuration: "0.8s" }}
+          >
+            alexander
+            <span className="ml-3 font-sans text-[11px] not-italic text-faint">
+              {LETTERS[letter].date}
+            </span>
+          </p>
         </section>
       )}
 
       {room === "pictures" && (
         <div
           key="pictures"
-          className="animate-fade-in flex min-h-dvh flex-col items-center justify-center gap-3"
+          className="animate-fade-in flex min-h-dvh flex-col items-center justify-center overflow-hidden pb-10"
         >
-          <p className="text-[19px] font-medium tracking-tight">pictures.</p>
-          <p className="text-[12px] text-faint">soon.</p>
+          <InteractiveFolderGallery
+            photos={PHOTOS.map((image, index) => ({ id: index, image }))}
+            folderName="frames"
+            dragHintText="drag a photo down to close"
+            className="!py-0"
+          />
         </div>
       )}
 
