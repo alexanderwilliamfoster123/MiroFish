@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ticket jar</title>
+<title>prize vault</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23fff'/%3E%3Cpath d='M5 3h6v1.5H5z' fill='%23999'/%3E%3Cpath d='M4.5 5h7v8a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1z' fill='none' stroke='%23999'/%3E%3Ccircle cx='8' cy='11' r='1.6' fill='%23c9962e'/%3E%3C/svg%3E">
 <style>
 html,
@@ -209,7 +209,7 @@ const jar = mountJar(document.getElementById("scene"), {
       streakHide = setTimeout(() => streakEl.classList.remove("on"), 2600);
     }
   }
-});
+}, { camZ: 13.2 });
 window.jar = jar; // integration hook: jar.setTickets(sold, total)
 document.getElementById("buy").addEventListener("click", () => jar.buy());
 </script>

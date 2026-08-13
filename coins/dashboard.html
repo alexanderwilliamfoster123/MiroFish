@@ -193,7 +193,7 @@ td.num, th.num { text-align: right; }
 
 .jar-stage {
   position: relative;
-  height: 380px;
+  height: 410px;
 }
 
 .jar-stage canvas {
@@ -363,7 +363,7 @@ td.num, th.num { text-align: right; }
     </div>
 
     <div class="card jar-card" id="jarCard">
-      <h2>Prize pool <span class="live">live</span></h2>
+      <h2>Prize vault <span class="live">live</span></h2>
       <div class="jar-stage" id="jarStage">
         <canvas id="jar"></canvas>
         <div class="jar-flash" id="flash"></div>
@@ -426,7 +426,7 @@ const jar = mountJar(document.getElementById("jar"), {
       streakHide = setTimeout(() => streakEl.classList.remove("on"), 2600);
     }
   }
-}, { sold: 139, total: 500 });
+}, { sold: 61240, total: 100000 });
 
 // keep the $ readouts in sync with the jar's state
 function syncMeta() { onTickets(jar.sold, jar.total); }
@@ -452,7 +452,11 @@ function scheduleSim() {
   clearTimeout(simTimer);
   if (!simOn) return;
   simTimer = setTimeout(() => {
-    const burst = Math.random() < 0.25 ? 2 + Math.floor(Math.random() * 3) : 1;
+    // mostly single tickets; occasionally a whale sweeps a block and the
+    // pile itself visibly rises
+    const r = Math.random();
+    const burst = r < 0.08 ? 250 + Math.floor(Math.random() * 400)
+      : r < 0.3 ? 2 + Math.floor(Math.random() * 3) : 1;
     window.jar.buy(burst);
     scheduleSim();
   }, 900 + Math.random() * 3800);

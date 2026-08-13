@@ -22,15 +22,22 @@ python3 -m http.server 8080   # in this folder
 # open http://localhost:8080
 ```
 
-## Ticket jar (`jar.html`)
+## Prize vault (`jar.html`)
 
-Coins drop into a glass jar as competition tickets sell; the pile height
-tracks sold / total. Every ticket is a celebration: a golden shower of
-cosmetic coins, spark bursts, a glow pulse behind the jar, a camera
-kick, a gold screen flash, and a "+$25" floater. Rapid sales streak up
-(tier 1→3, "on fire ×N" pill) and the whole thing escalates — cosmetic
-coins vanish after landing, so the frenzy never corrupts the sold/total
-pile. `prefers-reduced-motion` turns the fireworks off.
+Tiny holographic chrome coins (the six deep spectrum palettes from the
+coins page) drop into an armored-glass vault — brushed-steel plinth and
+rim, gold trim, and a gold vault wheel that idles slowly and spins up on
+wins. Glass so the pool stays visible (that's the product); vault frame
+so it reads like millions, not a tip jar. The pile height tracks
+sold / total proportionally, so it scales from a hundred tickets to
+hundreds of thousands.
+
+Every ticket is a celebration: a shower of cosmetic holo coins, spark
+bursts, a glow pulse, a camera kick, a gold screen flash, and a "+$25"
+floater. Rapid sales streak up (tier 1→3, "on fire ×N" pill) and the
+whole thing escalates — cosmetic coins vanish after landing, so the
+frenzy never corrupts the sold/total pile. `prefers-reduced-motion`
+turns the fireworks off.
 
 `mountJar(canvas, ui, opts)` sizes itself to the canvas's parent
 (ResizeObserver), so the same component runs full-page or inside a
@@ -42,8 +49,9 @@ its own chrome. Feed it the live count any of three ways:
   ticketing API every 30s and call this; new sales rain in as coins.
 - `window.jar.buy(n)` increments locally (the demo button uses this).
 
-The jar's visual capacity is ~105 coins; the pile maps proportionally, so
-any ticket total works. Logic lives in `jar.js`.
+The vault's visual capacity is ~300 coins; the pile maps proportionally,
+so any ticket total works. Logic lives in `jar.js`
+(`opts.camZ` sets camera distance: ~13 full-page, default for cards).
 
 ## Tournament dashboard (`dashboard.html`)
 
