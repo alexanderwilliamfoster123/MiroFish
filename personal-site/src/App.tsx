@@ -1,10 +1,9 @@
-import { CaptureStep } from "@/components/email-gate";
+import { Gate } from "@/components/email-gate";
 import { SubscriptionReceipt } from "@/components/subscription-receipt";
 import { useEffect, useState } from "react";
 
 const EMAIL_KEY = "gate:email";
 const NAME_KEY = "gate:name";
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function App() {
   const [email, setEmail] = useState<string | null>(() =>
@@ -26,28 +25,12 @@ export default function App() {
     else localStorage.removeItem(NAME_KEY);
   }, [name]);
 
-  if (!email) {
+  if (!name || !email) {
     return (
-      <CaptureStep
-        key="email"
-        heading="Every world needs a key."
-        sub="Yours is an email."
-        placeholder="you@somewhere.com"
-        validate={(value) => EMAIL_PATTERN.test(value)}
-        errorText="That doesn’t look right."
-        onSubmit={setEmail}
-      />
-    );
-  }
-
-  if (!name) {
-    return (
-      <CaptureStep
-        key="name"
-        heading="And your name."
-        placeholder="your name"
-        allowSpaces
-        onSubmit={setName}
+      <Gate
+        initialStep={email ? "name" : "email"}
+        onEmail={setEmail}
+        onName={setName}
       />
     );
   }
@@ -55,7 +38,6 @@ export default function App() {
   return (
     <SubscriptionReceipt
       name={name}
-      email={email}
       onReset={() => {
         setEmail(null);
         setName(null);

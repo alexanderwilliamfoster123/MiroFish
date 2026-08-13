@@ -2,39 +2,52 @@ import { Component as Keyboard } from "@/components/ui/keyboard";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // natural keyboard widths: compact (<768px windows) vs full
 const KEYBOARD_NATURAL_COMPACT = 700;
 const KEYBOARD_NATURAL_FULL = 1080;
 
-interface CaptureStepProps {
-  heading: string;
-  sub?: string;
-  placeholder: string;
-  allowSpaces?: boolean;
-  errorText?: string;
-  validate?: (value: string) => boolean;
-  onSubmit: (value: string) => void;
+type Step = "email" | "name";
+
+const STEPS: Record<
+  Step,
+  { heading: string; sub?: string; placeholder: string; errorText?: string }
+> = {
+  email: {
+    heading: "every world has a key.",
+    sub: "yours is an email.",
+    placeholder: "you@somewhere.com",
+    errorText: "that doesn’t look right.",
+  },
+  name: {
+    heading: "and your name.",
+    placeholder: "your name",
+  },
+};
+
+interface GateProps {
+  initialStep: Step;
+  onEmail: (email: string) => void;
+  onName: (name: string) => void;
 }
 
-// One question per screen: a heading, a line, the keyboard. Enter moves on.
-export function CaptureStep({
-  heading,
-  sub,
-  placeholder,
-  allowSpaces = false,
-  errorText,
-  validate,
-  onSubmit,
-}: CaptureStepProps) {
+// One continuous screen: the line collects the email, empties itself,
+// asks for the name, then hands over to the receipt. The keyboard never
+// moves; only the words change.
+export function Gate({ initialStep, onEmail, onName }: GateProps) {
+  const [step, setStep] = useState<Step>(initialStep);
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
   const [leaving, setLeaving] = useState(false);
-  const valueRef = useRef("");
-  const leavingRef = useRef(false);
 
-  // keyboard scales down to fit narrow screens
+  const valueRef = useRef("");
+  const stepRef = useRef<Step>(initialStep);
+  const leavingRef = useRef(false);
+  stepRef.current = step;
+
+  // keyboard scales down to fit narrow screens, capped so the page stays airy
   const scalerRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(0.72);
 
   useEffect(() => {
     const el = scalerRef.current;
@@ -44,7 +57,6 @@ export function CaptureStep({
         window.innerWidth < 768
           ? KEYBOARD_NATURAL_COMPACT
           : KEYBOARD_NATURAL_FULL;
-      // never larger than 72% — the page stays open and airy
       setScale(Math.min(0.72, el.clientWidth / natural));
     };
     compute();
@@ -67,13 +79,19 @@ export function CaptureStep({
     if (leavingRef.current) return;
     const trimmed = valueRef.current.trim();
     if (!trimmed) return;
-    if (validate && !validate(trimmed)) {
-      setError(true);
-      return;
+    if (stepRef.current === "email") {
+      if (!EMAIL_PATTERN.test(trimmed)) {
+        setError(true);
+        return;
+      }
+      onEmail(trimmed); // kept immediately, even if they wander off here
+      write("");
+      setStep("name");
+    } else {
+      leavingRef.current = true;
+      setLeaving(true);
+      setTimeout(() => onName(trimmed), 550);
     }
-    leavingRef.current = true;
-    setLeaving(true);
-    setTimeout(() => onSubmit(trimmed), 550);
   };
 
   // one handler for the on-screen keyboard and physical keys
@@ -87,7 +105,7 @@ export function CaptureStep({
         submit();
         break;
       case " ":
-        if (allowSpaces && current && current.length < 48) {
+        if (stepRef.current === "name" && current && current.length < 48) {
           write(current + " ");
         }
         break;
@@ -120,6 +138,8 @@ export function CaptureStep({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const copy = STEPS[step];
+
   return (
     <main
       className={cn(
@@ -128,57 +148,54 @@ export function CaptureStep({
       )}
     >
       <div className="flex w-full flex-col items-center text-center">
-        <h1
-          className="animate-fade-up text-[19px] font-medium tracking-tight text-foreground sm:text-[21px]"
-          style={{ animationDelay: "0.1s" }}
-        >
-          {heading}
-        </h1>
-        {sub && (
+        {/* only the words change between steps */}
+        <div key={step} className="animate-fade-up" style={{ animationDuration: "0.5s" }}>
+          <h1 className="text-[19px] font-medium tracking-tight text-foreground sm:text-[21px]">
+            {copy.heading}
+          </h1>
           <p
-            className="animate-fade-up mt-2.5 text-[13px] text-muted-foreground"
-            style={{ animationDelay: "0.2s" }}
+            className={cn(
+              "mt-2.5 text-[13px] text-muted-foreground",
+              !copy.sub && "hidden",
+            )}
           >
-            {sub}
+            {copy.sub}
           </p>
-        )}
 
-        {/* the line */}
-        <div
-          className="animate-fade-up mt-14 w-full max-w-[300px]"
-          style={{ animationDelay: "0.3s" }}
-        >
-          <div
-            className={cn(
-              "border-b pb-2.5 text-center text-[15px] transition-colors duration-300",
-              error ? "border-white/70" : "border-line",
-            )}
-            aria-label={heading}
-            aria-live="polite"
-          >
-            {value ? (
-              <span className="text-foreground">{value}</span>
-            ) : (
-              <span className="text-faint">{placeholder}</span>
-            )}
-            <span className="animate-cursor-blink ml-px inline-block h-[1.05em] w-[2px] translate-y-[3px] bg-foreground" />
+          {/* the line */}
+          <div className="mx-auto mt-14 w-full max-w-[300px]">
+            <div
+              className={cn(
+                "border-b pb-2.5 text-center text-[15px] transition-colors duration-300",
+                error ? "border-white/70" : "border-line",
+              )}
+              aria-label={copy.heading}
+              aria-live="polite"
+            >
+              {value ? (
+                <span className="text-foreground">{value}</span>
+              ) : (
+                <span className="text-faint">{copy.placeholder}</span>
+              )}
+              <span className="animate-cursor-blink ml-px inline-block h-[1.05em] w-[2px] translate-y-[3px] bg-foreground" />
+            </div>
+            <p
+              className={cn(
+                "mt-3 h-4 text-[11px] transition-opacity duration-300",
+                error
+                  ? "text-neutral-400 opacity-100"
+                  : value
+                    ? "text-faint opacity-100"
+                    : "opacity-0",
+              )}
+              aria-live="polite"
+            >
+              {error ? copy.errorText : "press return"}
+            </p>
           </div>
-          <p
-            className={cn(
-              "mt-3 h-4 text-[11px] transition-opacity duration-300",
-              error
-                ? "text-neutral-400 opacity-100"
-                : value
-                  ? "text-faint opacity-100"
-                  : "opacity-0",
-            )}
-            aria-live="polite"
-          >
-            {error ? errorText : "press return"}
-          </p>
         </div>
 
-        {/* the keyboard */}
+        {/* the keyboard — mounted once, never moves */}
         <div
           ref={scalerRef}
           className="animate-fade-up mt-16 w-full max-w-5xl"
