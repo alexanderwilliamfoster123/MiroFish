@@ -57,7 +57,6 @@ export default function App() {
         name={name}
         email={email}
         onContinue={() => setEntered(true)}
-        onReset={reset}
       />
     );
   }

@@ -6,14 +6,12 @@ interface SubscriptionReceiptProps {
   name: string;
   email: string;
   onContinue: () => void;
-  onReset: () => void;
 }
 
 export function SubscriptionReceipt({
   name,
   email,
   onContinue,
-  onReset,
 }: SubscriptionReceiptProps) {
   const receipt = useMemo(() => {
     const now = new Date();
@@ -44,13 +42,6 @@ export function SubscriptionReceipt({
         <div style={{ zoom: 0.72 }}>
           <LiquidMetalButton label="get started" onClick={onContinue} />
         </div>
-        <button
-          type="button"
-          onClick={onReset}
-          className="cursor-pointer text-[11px] tracking-[0.2em] text-faint transition-colors duration-300 hover:text-foreground"
-        >
-          not you? start over
-        </button>
       </div>
     </main>
   );

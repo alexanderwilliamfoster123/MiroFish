@@ -21,19 +21,6 @@ const CheckCircleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-const MastercardIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg
-        {...props}
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        width="36"
-        height="24"
-    >
-        <circle cx="8" cy="12" r="7" fill="#e5e5e5"></circle>
-        <circle cx="16" cy="12" r="7" fill="#737373" fillOpacity="0.8"></circle>
-    </svg>
-);
-
 
 // --- Helper Components ---
 
@@ -153,9 +140,9 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
       ticketId,
       amount,
       date,
-      cardHolder,
-      email,
-      last4Digits,
+      cardHolder: _cardHolder,
+      email: _email,
+      last4Digits: _last4Digits,
       barcodeValue,
       ...props
     },
@@ -229,18 +216,6 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
               <div>
                   <p className="text-xs text-muted-foreground">Date & Time</p>
                   <p className="font-medium">{formattedDate}</p>
-              </div>
-
-              <div className="bg-muted/50 p-4 rounded-lg flex items-center space-x-4">
-                  <MastercardIcon />
-                  <div>
-                      <p className="font-semibold">{cardHolder}</p>
-                      {email ? (
-                        <p className="text-muted-foreground font-mono text-sm tracking-wider">{email}</p>
-                      ) : (
-                        <p className="text-muted-foreground font-mono text-sm tracking-wider">•••• {last4Digits}</p>
-                      )}
-                  </div>
               </div>
 
               <DashedLine />
