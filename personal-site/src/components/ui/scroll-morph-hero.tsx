@@ -119,9 +119,7 @@ const ALBUMS = ["Album 01", "Album 02", "Album 03", "Album 04"];
 // Helper for linear interpolation
 const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
 
-export default function IntroAnimation({
-    images = IMAGES,
-}: { images?: string[] } = {}) {
+export default function IntroAnimation() {
     const [introPhase, setIntroPhase] = useState<AnimationPhase>("scatter");
     const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
     const containerRef = useRef<HTMLDivElement>(null);
@@ -235,15 +233,14 @@ export default function IntroAnimation({
 
     // --- Random Scatter Positions ---
     const scatterPositions = useMemo(() => {
-        return images.map(() => ({
+        return IMAGES.map(() => ({
             x: (Math.random() - 0.5) * 1500,
             y: (Math.random() - 0.5) * 1000,
             rotation: (Math.random() - 0.5) * 180,
             scale: 0.6,
             opacity: 0,
         }));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [images]);
+    }, []);
 
     // --- Render Loop (Manual Calculation for Morph) ---
     const [morphValue, setMorphValue] = useState(0);
@@ -277,17 +274,17 @@ export default function IntroAnimation({
                         initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
                         animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 1 - morphValue * 2, y: 0, filter: "blur(0px)" } : { opacity: 0, filter: "blur(10px)" }}
                         transition={{ duration: 1 }}
-                        className="text-[19px] font-medium tracking-tight text-neutral-200 sm:text-[21px]"
+                        className="font-serif text-2xl font-light tracking-tight text-neutral-200 md:text-4xl"
                     >
-                        places i stood still.
+                        Places I stood still.
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0 }}
                         animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 0.5 - morphValue } : { opacity: 0 }}
                         transition={{ duration: 1, delay: 0.2 }}
-                        className="mt-3 text-[11px] tracking-[0.2em] text-neutral-500"
+                        className="mt-4 text-xs font-bold tracking-[0.2em] text-neutral-500"
                     >
-                        scroll to explore
+                        SCROLL TO EXPLORE
                     </motion.p>
                 </div>
 
@@ -296,17 +293,18 @@ export default function IntroAnimation({
                     style={{ opacity: contentOpacity, y: contentY }}
                     className="absolute top-[10%] z-10 flex flex-col items-center justify-center text-center pointer-events-none px-4"
                 >
-                    <h2 className="text-[19px] sm:text-[21px] font-medium text-neutral-100 tracking-tight mb-2">
-                        pictures.
+                    <h2 className="font-serif text-3xl md:text-5xl font-light text-neutral-100 tracking-tight mb-4">
+                        Pictures
                     </h2>
-                    <p className="text-[12px] text-neutral-500">
-                        keep scrolling to shuffle — flip a card for its album.
+                    <p className="text-sm md:text-base text-neutral-400 max-w-lg leading-relaxed">
+                        Albums from the last few years. <br className="hidden md:block" />
+                        Keep scrolling to shuffle through them — flip a card to see its album.
                     </p>
                 </motion.div>
 
                 {/* Main Container */}
                 <div className="relative flex items-center justify-center w-full h-full">
-                    {images.slice(0, TOTAL_IMAGES).map((src, i) => {
+                    {IMAGES.slice(0, TOTAL_IMAGES).map((src, i) => {
                         let target = { x: 0, y: 0, rotation: 0, scale: 1, opacity: 1 };
 
                         // 1. Intro Phases (Scatter -> Line)

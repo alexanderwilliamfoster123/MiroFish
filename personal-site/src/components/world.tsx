@@ -4,7 +4,7 @@ import {
   type RevealItem,
 } from "@/components/ui/hover-reveal-list";
 import { RadialScrollGallery } from "@/components/ui/portfolio-and-image-gallery";
-import IntroAnimation from "@/components/ui/scroll-morph-hero";
+import { InteractiveFolderGallery } from "@/components/ui/interactive-folder-gallery";
 import { WordReveal } from "@/components/ui/word-reveal";
 import { LETTERS } from "@/lib/letters";
 import {
@@ -324,8 +324,16 @@ export function World({ onLeave }: WorldProps) {
       )}
 
       {room === "pictures" && (
-        <div key="pictures" className="animate-fade-in h-dvh w-full overflow-hidden">
-          <IntroAnimation images={[...PHOTOS, ...PHOTOS, ...PHOTOS, ...PHOTOS]} />
+        <div
+          key="pictures"
+          className="animate-fade-in flex min-h-dvh flex-col items-center justify-center overflow-hidden pb-10"
+        >
+          <InteractiveFolderGallery
+            photos={PHOTOS.map((image, index) => ({ id: index, image }))}
+            folderName="frames"
+            dragHintText="drag a photo down to close"
+            className="!py-0"
+          />
         </div>
       )}
 
