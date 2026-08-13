@@ -1,11 +1,11 @@
-import { Component as Keyboard } from "@/components/ui/keyboard";
+import { MacBookKeyboard } from "@/components/ui/macbook-keyboard";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// natural keyboard widths: compact (<768px windows) vs full
-const KEYBOARD_NATURAL_COMPACT = 700;
-const KEYBOARD_NATURAL_FULL = 1080;
+// natural width of the macbook keyboard deck
+const KEYBOARD_NATURAL = 390;
+const KEYBOARD_MAX_SCALE = 1.55;
 
 type Step = "email" | "name";
 
@@ -15,7 +15,6 @@ const STEPS: Record<
 > = {
   email: {
     heading: "every world has a key.",
-    sub: "yours is an email.",
     placeholder: "you@somewhere.com",
     errorText: "that doesn’t look right.",
   },
@@ -45,19 +44,15 @@ export function Gate({ initialStep, onEmail, onName }: GateProps) {
   const leavingRef = useRef(false);
   stepRef.current = step;
 
-  // keyboard scales down to fit narrow screens, capped so the page stays airy
+  // keyboard scales with the screen, capped so the page stays airy
   const scalerRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(0.72);
+  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     const el = scalerRef.current;
     if (!el) return;
     const compute = () => {
-      const natural =
-        window.innerWidth < 768
-          ? KEYBOARD_NATURAL_COMPACT
-          : KEYBOARD_NATURAL_FULL;
-      setScale(Math.min(0.72, el.clientWidth / natural));
+      setScale(Math.min(KEYBOARD_MAX_SCALE, el.clientWidth / KEYBOARD_NATURAL));
     };
     compute();
     const observer = new ResizeObserver(compute);
@@ -202,7 +197,7 @@ export function Gate({ initialStep, onEmail, onName }: GateProps) {
           style={{ animationDelay: "0.45s" }}
         >
           <div style={{ zoom: scale }}>
-            <Keyboard onKey={applyKey} />
+            <MacBookKeyboard onKey={applyKey} />
           </div>
         </div>
       </div>

@@ -1,12 +1,18 @@
+import { LiquidMetalButton } from "@/components/ui/liquid-metal-button";
 import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
 import { useMemo } from "react";
 
 interface SubscriptionReceiptProps {
   name: string;
+  onContinue: () => void;
   onReset: () => void;
 }
 
-export function SubscriptionReceipt({ name, onReset }: SubscriptionReceiptProps) {
+export function SubscriptionReceipt({
+  name,
+  onContinue,
+  onReset,
+}: SubscriptionReceiptProps) {
   const receipt = useMemo(() => {
     const now = new Date();
     const stamp = now.getTime().toString();
@@ -28,14 +34,21 @@ export function SubscriptionReceipt({ name, onReset }: SubscriptionReceiptProps)
         last4Digits={receipt.last4Digits}
         barcodeValue={receipt.barcodeValue}
       />
-      <button
-        type="button"
-        onClick={onReset}
-        className="animate-fade-up cursor-pointer text-[11px] tracking-[0.2em] text-faint transition-colors duration-300 hover:text-foreground"
+      <div
+        className="animate-fade-up flex flex-col items-center gap-6"
         style={{ animationDelay: "0.5s" }}
       >
-        not you? start over
-      </button>
+        <div style={{ zoom: 0.72 }}>
+          <LiquidMetalButton label="get started" onClick={onContinue} />
+        </div>
+        <button
+          type="button"
+          onClick={onReset}
+          className="cursor-pointer text-[11px] tracking-[0.2em] text-faint transition-colors duration-300 hover:text-foreground"
+        >
+          not you? start over
+        </button>
+      </div>
     </main>
   );
 }
