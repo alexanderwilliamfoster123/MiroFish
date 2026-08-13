@@ -215,17 +215,17 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
 
               <div className="grid grid-cols-2 gap-4 text-left">
                   <div>
-                      <p className="text-xs text-muted-foreground uppercase">Ticket ID</p>
+                      <p className="text-xs text-muted-foreground">Ticket ID</p>
                       <p className="font-mono font-medium">{ticketId}</p>
                   </div>
                   <div className="text-right">
-                      <p className="text-xs text-muted-foreground uppercase">Amount</p>
+                      <p className="text-xs text-muted-foreground">Amount</p>
                       <p className="font-semibold text-lg">{formattedAmount}</p>
                   </div>
               </div>
 
               <div>
-                  <p className="text-xs text-muted-foreground uppercase">Date & Time</p>
+                  <p className="text-xs text-muted-foreground">Date & Time</p>
                   <p className="font-medium">{formattedDate}</p>
               </div>
 

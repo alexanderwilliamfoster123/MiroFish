@@ -47,7 +47,7 @@ export function SubscriptionReceipt({
         <button
           type="button"
           onClick={onReset}
-          className="mt-2 cursor-pointer text-[11px] tracking-[0.2em] text-faint uppercase transition-colors duration-300 hover:text-foreground"
+          className="mt-2 cursor-pointer text-[11px] tracking-[0.2em] text-faint transition-colors duration-300 hover:text-foreground"
         >
           not you? start over
         </button>
