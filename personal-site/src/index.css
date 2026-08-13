@@ -73,6 +73,16 @@ body {
   animation: fade-in 1.2s ease both;
 }
 
+/* display face: condensed Bodoni, per the site's type treatment */
+.font-display-condensed {
+  font-family: "Bodoni Moda", serif;
+  font-weight: 600;
+  font-stretch: condensed;
+  letter-spacing: -0.055em;
+  transform: scaleX(0.82);
+  transform-origin: center;
+}
+
 @keyframes cursor-blink {
   0%,
   49% {

@@ -1,5 +1,4 @@
 import { Component as Keyboard } from "@/components/ui/keyboard";
-import { LiquidMetalButton } from "@/components/ui/liquid-metal-button";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 
@@ -8,16 +7,24 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const KEYBOARD_NATURAL_COMPACT = 700;
 const KEYBOARD_NATURAL_FULL = 1080;
 
+type Field = "name" | "email";
+
 interface EmailGateProps {
-  onEnter: (email: string) => void;
+  onEnter: (name: string, email: string) => void;
 }
 
 export function EmailGate({ onEnter }: EmailGateProps) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [error, setError] = useState(false);
+  const [active, setActive] = useState<Field>("name");
+  const [error, setError] = useState<Field | null>(null);
   const [leaving, setLeaving] = useState(false);
+
+  const nameRef = useRef("");
   const emailRef = useRef("");
+  const activeRef = useRef<Field>("name");
   const leavingRef = useRef(false);
+  activeRef.current = active;
 
   // keyboard scales down to fit narrow screens
   const scalerRef = useRef<HTMLDivElement>(null);
@@ -43,35 +50,68 @@ export function EmailGate({ onEnter }: EmailGateProps) {
     };
   }, []);
 
-  const write = (value: string) => {
-    emailRef.current = value;
-    setEmail(value);
-    setError(false);
+  const write = (field: Field, value: string) => {
+    if (field === "name") {
+      nameRef.current = value;
+      setName(value);
+    } else {
+      emailRef.current = value;
+      setEmail(value);
+    }
+    setError(null);
   };
 
   const submit = () => {
     if (leavingRef.current) return;
-    const value = emailRef.current.trim();
-    if (!EMAIL_PATTERN.test(value)) {
-      setError(true);
+    const nameValue = nameRef.current.trim();
+    const emailValue = emailRef.current.trim();
+    if (!nameValue) {
+      setActive("name");
+      setError("name");
+      return;
+    }
+    if (!EMAIL_PATTERN.test(emailValue)) {
+      setActive("email");
+      setError("email");
       return;
     }
     leavingRef.current = true;
     setLeaving(true);
-    setTimeout(() => onEnter(value), 700);
+    setTimeout(() => onEnter(nameValue, emailValue), 700);
+  };
+
+  // enter advances: name -> email -> receipt
+  const advance = () => {
+    if (activeRef.current === "name") {
+      if (!nameRef.current.trim()) {
+        setError("name");
+        return;
+      }
+      setActive("email");
+    } else {
+      submit();
+    }
   };
 
   // one handler for the on-screen keyboard and physical keys
   const applyKey = (key: string, resolved: string) => {
+    const field = activeRef.current;
+    const current = field === "name" ? nameRef.current : emailRef.current;
     switch (key) {
       case "Backspace":
-        write(emailRef.current.slice(0, -1));
+        write(field, current.slice(0, -1));
         break;
       case "Enter":
-        submit();
+        advance();
+        break;
+      case "Tab":
+        setActive(field === "name" ? "email" : "name");
         break;
       case " ":
-      case "Tab":
+        if (field === "name" && current && current.length < 48) {
+          write(field, current + " ");
+        }
+        break;
       case "Shift":
       case "CapsLock":
       case "NumLock":
@@ -81,12 +121,8 @@ export function EmailGate({ onEnter }: EmailGateProps) {
       case "ContextMenu":
         break;
       default:
-        if (
-          resolved.length === 1 &&
-          !/\s/.test(resolved) &&
-          emailRef.current.length < 64
-        ) {
-          write(emailRef.current + resolved);
+        if (resolved.length === 1 && !/\s/.test(resolved) && current.length < 64) {
+          write(field, current + resolved);
         }
     }
   };
@@ -94,7 +130,10 @@ export function EmailGate({ onEnter }: EmailGateProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
-      if (e.key.length === 1 || ["Backspace", "Enter"].includes(e.key)) {
+      if (
+        e.key.length === 1 ||
+        ["Backspace", "Enter", "Tab"].includes(e.key)
+      ) {
         e.preventDefault();
         applyKey(e.key, e.key);
       }
@@ -104,6 +143,44 @@ export function EmailGate({ onEnter }: EmailGateProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const cursor = (
+    <span className="animate-cursor-blink ml-px inline-block h-[1.05em] w-[7px] translate-y-[3px] bg-foreground" />
+  );
+
+  const fieldLine = (
+    field: Field,
+    value: string,
+    placeholder: string,
+  ) => (
+    <button
+      type="button"
+      onClick={() => setActive(field)}
+      className="block w-full cursor-text text-left"
+      aria-label={field}
+    >
+      <p className="text-[10px] tracking-[0.25em] text-faint uppercase">
+        {field}
+      </p>
+      <div
+        className={cn(
+          "mt-2 border-b pb-2.5 text-center font-mono text-base transition-colors duration-300",
+          error === field
+            ? "border-white/70"
+            : active === field
+              ? "border-white/40"
+              : "border-line",
+        )}
+      >
+        {value ? (
+          <span className="text-foreground">{value}</span>
+        ) : (
+          <span className="text-faint">{placeholder}</span>
+        )}
+        {active === field && cursor}
+      </div>
+    </button>
+  );
+
   return (
     <main
       className={cn(
@@ -112,70 +189,55 @@ export function EmailGate({ onEnter }: EmailGateProps) {
       )}
     >
       <div className="flex w-full flex-col items-center text-center">
-        <p className="animate-fade-in mb-10 text-[11px] tracking-[0.2em] text-faint uppercase">
-          Alexander Foster
-        </p>
-        <p
-          className="animate-fade-up font-serif text-2xl font-light italic leading-snug text-foreground sm:text-3xl"
+        <h1
+          className="font-display-condensed animate-fade-up text-3xl leading-snug text-foreground sm:text-4xl"
           style={{ animationDelay: "0.1s" }}
         >
           Every world needs a key.
-        </p>
+        </h1>
         <p
           className="animate-fade-up mt-3 text-[13px] tracking-wide text-muted-foreground"
           style={{ animationDelay: "0.25s" }}
         >
-          Yours is an email.
+          Yours is a name and an email.
         </p>
 
-        {/* the email line */}
+        {/* the two lines */}
         <div
-          className="animate-fade-up mt-10 w-full max-w-sm"
+          className="animate-fade-up mt-10 flex w-full max-w-sm flex-col gap-7"
           style={{ animationDelay: "0.4s" }}
         >
-          <div
-            className={cn(
-              "border-b pb-3 text-center font-mono text-base transition-colors duration-300",
-              error ? "border-white/70" : "border-line",
-            )}
-            aria-label="Email address"
-            aria-live="polite"
-          >
-            {email ? (
-              <span className="text-foreground">{email}</span>
-            ) : (
-              <span className="text-faint">you@somewhere.com</span>
-            )}
-            <span className="animate-cursor-blink ml-px inline-block h-[1.05em] w-[7px] translate-y-[3px] bg-foreground" />
-          </div>
+          {fieldLine("name", name, "your name")}
+          {fieldLine("email", email, "you@somewhere.com")}
           <p
             className={cn(
-              "mt-3 h-4 text-xs text-neutral-400 transition-opacity duration-300",
-              error ? "opacity-100" : "opacity-0",
+              "h-4 text-xs transition-opacity duration-300",
+              error
+                ? "text-neutral-400 opacity-100"
+                : email && active === "email"
+                  ? "text-faint opacity-100"
+                  : "opacity-0",
             )}
             aria-live="polite"
           >
-            That doesn&rsquo;t look like an email.
+            {error === "name"
+              ? "A name first — any name."
+              : error === "email"
+                ? "That doesn’t look like an email."
+                : "press enter ↵"}
           </p>
         </div>
 
         {/* the keyboard */}
         <div
           ref={scalerRef}
-          className="animate-fade-up mt-8 w-full max-w-5xl"
+          className="animate-fade-up mt-6 w-full max-w-5xl"
           style={{ animationDelay: "0.55s" }}
         >
           <div style={{ zoom: scale }}>
             <Keyboard onKey={applyKey} />
           </div>
         </div>
-      </div>
-
-      <div
-        className="animate-fade-up mt-10"
-        style={{ animationDelay: "0.7s", zoom: 0.62 }}
-      >
-        <LiquidMetalButton label="Enter" onClick={submit} />
       </div>
     </main>
   );
