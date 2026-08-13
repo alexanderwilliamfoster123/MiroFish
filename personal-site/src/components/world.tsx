@@ -4,6 +4,7 @@ import {
   type RevealItem,
 } from "@/components/ui/hover-reveal-list";
 import { RadialScrollGallery } from "@/components/ui/portfolio-and-image-gallery";
+import { WordReveal } from "@/components/ui/word-reveal";
 import {
   AtSign,
   Briefcase,
@@ -126,10 +127,41 @@ export function World({ onLeave }: WorldProps) {
       </button>
 
       {room === null && (
-        <div className="animate-fade-in flex min-h-dvh items-center justify-center">
-          <p className="text-[12px] tracking-[0.3em] text-faint">
-            alexander foster
-          </p>
+        <div className="mx-auto flex min-h-dvh w-full max-w-4xl items-center px-6 pb-28">
+          <div className="grid w-full gap-12 sm:grid-cols-[150px_1fr] sm:gap-16">
+            {/* side links, fey-style */}
+            <nav className="flex flex-row flex-wrap gap-x-5 gap-y-2 sm:flex-col sm:gap-3 sm:pt-1.5">
+              {DOCK_ITEMS.map((item, index) => (
+                <button
+                  key={item.room}
+                  type="button"
+                  onClick={() => setRoom(item.room)}
+                  className="animate-fade-in cursor-pointer text-left text-[13px] text-neutral-500 transition-colors duration-300 hover:text-foreground"
+                  style={{ animationDelay: `${0.3 + index * 0.08}s`, animationDuration: "0.6s" }}
+                >
+                  {item.title}
+                </button>
+              ))}
+            </nav>
+
+            {/* the statement */}
+            <div>
+              <WordReveal
+                lead="every world has a key — you used yours."
+                paragraphs={[
+                  "this is where i keep what i make: the companies i've founded, the letters i write, the pictures i take, and the places you can find me. all of it built quietly, most of it still being carved.",
+                  "take the dock below, or the doors on the left. stay as long as you like.",
+                ]}
+                className="text-[19px] leading-[1.6] font-light text-neutral-400 sm:text-[21px]"
+              />
+              <p
+                className="animate-fade-in mt-10 font-serif text-2xl italic text-neutral-500"
+                style={{ animationDelay: "1s", animationDuration: "0.8s" }}
+              >
+                alexander
+              </p>
+            </div>
+          </div>
         </div>
       )}
 
