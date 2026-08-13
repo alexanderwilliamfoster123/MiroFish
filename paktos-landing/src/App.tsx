@@ -68,7 +68,18 @@ function sanitizeHandle(input: string): string {
   return input.toLowerCase().replace(/[^a-z0-9_]/g, "").slice(0, 20);
 }
 
+// The tournaments space is pre-launch: only reachable at #tournaments
+// until it gets a real route when the page goes live.
+const TournamentsPage = React.lazy(() => import("@/tournaments"));
+
 export default function App() {
+  const [route, setRoute] = React.useState(() => window.location.hash);
+  React.useEffect(() => {
+    const onHash = () => setRoute(window.location.hash);
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
   const [stage, setStage] = React.useState<Stage>("email");
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -93,6 +104,14 @@ export default function App() {
     setTicket(issueTicket(email.trim()));
     setStage("ticket");
   };
+
+  if (route === "#tournaments") {
+    return (
+      <React.Suspense fallback={null}>
+        <TournamentsPage />
+      </React.Suspense>
+    );
+  }
 
   return (
     <main className="flex min-h-screen w-full items-center justify-center bg-background p-4 py-10">
