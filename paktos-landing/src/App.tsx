@@ -2,8 +2,6 @@ import * as React from "react";
 import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
 import { PaktosLogo } from "@/components/paktos-logo";
 import { CoinOrbit } from "@/components/coin-orbit";
-import { SplineHero } from "@/components/ui/spline-hero";
-import coinsScene from "@/assets/paktos-scene.splinecode?url";
 import { PaktosCard } from "@/components/paktos-card";
 import { AnimatedCountdown } from "@/components/ui/animated-countdown";
 import { Button } from "@/components/ui/button";
@@ -158,13 +156,7 @@ export default function App() {
         <div className="fixed inset-0 z-10 overflow-hidden bg-white animate-in fade-in-0 duration-700">
           <div className="relative z-10 flex h-full flex-col items-center justify-between overflow-y-auto px-6 py-10">
             <div className="flex w-full flex-1 items-center justify-center py-4">
-              {/* Interactive 3D coin ring — drag to play. Falls back to the
-                  sprite orbit where WebGL/wasm can't run. */}
-              <SplineHero
-                scene={coinsScene}
-                className="aspect-[896/425] w-full max-w-3xl"
-                fallback={<CoinOrbit />}
-              />
+              <CoinOrbit />
             </div>
 
             <div className="flex flex-col items-center gap-5">
