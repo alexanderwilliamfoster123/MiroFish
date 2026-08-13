@@ -229,12 +229,36 @@ app.load(SCENE_URL)
   .then(() => {
     app.setBackgroundColor("#FFFFFF");
     loadingEl.classList.add("gone");
+    applyZoom(app);
     startOrbit(app);
   })
   .catch((err) => {
     console.error(err);
     loadingEl.textContent = "couldn’t reach the scene — check your connection and reload.";
   });
+
+// ---- zoom ------------------------------------------------------------
+// The stage band is shorter than a full viewport, so pull the camera in
+// to keep the coins at their full-page size. ?zoom=1.3 tunes it,
+// ?zoom=1 disables.
+function applyZoom(app) {
+  const z = parseFloat(params.get("zoom")) || 1.5;
+  if (!(z > 0) || z === 1) return;
+  try {
+    if (app._controls?.orbitControls) {
+      app.setZoom(z);
+      return;
+    }
+  } catch {}
+  try {
+    const cam = app.getAllObjects().find((o) => o && /camera/i.test(o.name || "") && o.position);
+    if (cam) {
+      cam.position.x /= z;
+      cam.position.y /= z;
+      cam.position.z /= z;
+    }
+  } catch {}
+}
 
 // ---- slow clockwise circle -------------------------------------------
 // Carries the scene's own coins around a calm circular path (one lap
