@@ -35,20 +35,58 @@ interface Coin {
   vx: number;
   vy: number;
   r: number;
-  palette: number;
+  /** start angle of this coin's holographic rainbow sweep */
+  hue: number;
+  /** which face color this coin got (index into FACES) */
+  face: number;
   rot: number;
   vr: number;
   /** 0 = solid; >0 = dissolving out of the pile (oldest coins) */
   dis: number;
 }
 
-// Holographic pastel coin faces: [light, lighter, edge]
-const PALETTES: [string, string, string][] = [
-  ["#e8d9ff", "#c9e6ff", "#b3a4de"],
-  ["#ffe4c9", "#fff3d8", "#dcb98e"],
-  ["#e3e3e7", "#f7f7f9", "#ababb4"],
-  ["#ffd9ec", "#e2ceff", "#d19cc4"],
-  ["#cdefff", "#e8faff", "#93c6de"],
+// Saturated holographic faces, matching the brand coin renders:
+// cyan, gold, pink, violet, peach, pearl, and the occasional dark navy.
+const FACES: [string, string][] = [
+  ["#2fd2f2", "#8df2ff"],
+  ["#ffd257", "#ffeba6"],
+  ["#ff96d3", "#ffcdea"],
+  ["#a86df2", "#dcb0ff"],
+  ["#ffb06a", "#ffdda1"],
+  ["#efe3ee", "#ffffff"],
+  ["#232338", "#40405e"],
+];
+const DARK_FACE = FACES.length - 1;
+// Cumulative weights — vivid faces common, pearl and dark rarer.
+const FACE_WEIGHTS = [0.18, 0.34, 0.5, 0.65, 0.8, 0.9, 1];
+
+function pickFace(): number {
+  const roll = Math.random();
+  for (let i = 0; i < FACE_WEIGHTS.length; i++) {
+    if (roll <= FACE_WEIGHTS[i]) return i;
+  }
+  return 0;
+}
+
+// Iridescent sweep blended over every face; the per-coin `hue` rotates it.
+const HOLO_STOPS: [number, string][] = [
+  [0, "rgba(255,90,150,0.75)"],
+  [0.17, "rgba(255,160,70,0.7)"],
+  [0.34, "rgba(255,235,130,0.65)"],
+  [0.5, "rgba(110,235,200,0.6)"],
+  [0.66, "rgba(90,160,255,0.7)"],
+  [0.83, "rgba(200,110,255,0.72)"],
+  [1, "rgba(255,90,150,0.75)"],
+];
+// The rainbow chrome milled edge, near-opaque.
+const RIM_STOPS: [number, string][] = [
+  [0, "rgba(255,110,160,0.9)"],
+  [0.17, "rgba(255,180,90,0.9)"],
+  [0.34, "rgba(255,240,150,0.9)"],
+  [0.5, "rgba(130,240,210,0.9)"],
+  [0.66, "rgba(110,175,255,0.9)"],
+  [0.83, "rgba(210,130,255,0.9)"],
+  [1, "rgba(255,110,160,0.9)"],
 ];
 
 const MAX_COINS = 90;
@@ -121,31 +159,73 @@ const CoinJar = React.forwardRef<JarHandle, { tier: number }>(function CoinJar(
       const scale = 1 - coin.dis;
       if (scale <= 0) return;
       const r = coin.r * scale;
-      const [light, lighter, edge] = PALETTES[coin.palette];
-      const grad = ctx.createLinearGradient(
-        coin.x - r,
-        coin.y - r,
-        coin.x + r,
-        coin.y + r
-      );
-      grad.addColorStop(0, light);
-      grad.addColorStop(1, lighter);
+      const { x, y } = coin;
+
+      // saturated face
+      const [deep, light] = FACES[coin.face];
+      const dark = coin.face === DARK_FACE;
+      const base = ctx.createLinearGradient(x - r, y - r, x + r, y + r);
+      base.addColorStop(0, light);
+      base.addColorStop(1, deep);
       ctx.beginPath();
-      ctx.arc(coin.x, coin.y, r, 0, Math.PI * 2);
-      ctx.fillStyle = grad;
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = base;
       ctx.fill();
-      ctx.lineWidth = Math.max(1, r * 0.12);
-      ctx.strokeStyle = edge;
+
+      // holographic rainbow sweep blended over the metal
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.clip();
+      const conic = (
+        ctx as CanvasRenderingContext2D & {
+          createConicGradient?: (
+            angle: number,
+            x: number,
+            y: number
+          ) => CanvasGradient;
+        }
+      ).createConicGradient;
+      const holo = conic
+        ? conic.call(ctx, coin.hue, x, y)
+        : ctx.createLinearGradient(x - r, y - r, x + r, y + r);
+      for (const [p, c] of HOLO_STOPS) holo.addColorStop(p, c);
+      ctx.globalCompositeOperation = "overlay";
+      ctx.globalAlpha = 0.6;
+      ctx.fillStyle = holo;
+      ctx.fillRect(x - r, y - r, r * 2, r * 2);
+      ctx.globalAlpha = 1;
+      ctx.restore();
+
+      // rainbow chrome milled edge, plus a bright inner ring
+      const rim = conic
+        ? conic.call(ctx, coin.hue + 1.2, x, y)
+        : ctx.createLinearGradient(x - r, y + r, x + r, y - r);
+      for (const [p, c] of RIM_STOPS) rim.addColorStop(p, c);
+      ctx.beginPath();
+      ctx.arc(x, y, r - 0.5, 0, Math.PI * 2);
+      ctx.lineWidth = Math.max(1.2, r * 0.13);
+      ctx.strokeStyle = rim;
       ctx.stroke();
-      // engraved star
-      starPath(coin.x, coin.y, r * 0.55, coin.rot);
-      ctx.fillStyle = "rgba(90, 88, 110, 0.28)";
+      ctx.beginPath();
+      ctx.arc(x, y, r * 0.84, 0, Math.PI * 2);
+      ctx.lineWidth = Math.max(0.8, r * 0.05);
+      ctx.strokeStyle = "rgba(255,255,255,0.55)";
+      ctx.stroke();
+
+      // embossed star: light catch below, engraving above
+      starPath(x + r * 0.06, y + r * 0.06, r * 0.52, coin.rot);
+      ctx.fillStyle = "rgba(255,255,255,0.35)";
       ctx.fill();
+      starPath(x, y, r * 0.52, coin.rot);
+      ctx.fillStyle = dark ? "rgba(5,5,16,0.6)" : "rgba(70,60,100,0.42)";
+      ctx.fill();
+
       // top-left sheen
       ctx.beginPath();
-      ctx.arc(coin.x, coin.y, r * 0.82, Math.PI * 0.95, Math.PI * 1.55);
-      ctx.lineWidth = Math.max(1, r * 0.14);
-      ctx.strokeStyle = "rgba(255,255,255,0.7)";
+      ctx.arc(x, y, r * 0.8, Math.PI * 0.95, Math.PI * 1.5);
+      ctx.lineWidth = Math.max(1, r * 0.12);
+      ctx.strokeStyle = "rgba(255,255,255,0.75)";
       ctx.stroke();
     };
 
@@ -176,7 +256,8 @@ const CoinJar = React.forwardRef<JarHandle, { tier: number }>(function CoinJar(
           vx: (Math.random() - 0.5) * 120,
           vy: reduceMotion ? 600 : 40,
           r,
-          palette: Math.floor(Math.random() * PALETTES.length),
+          hue: Math.random() * Math.PI * 2,
+          face: pickFace(),
           rot: Math.random() * Math.PI,
           vr: (Math.random() - 0.5) * 3,
           dis: 0,
@@ -264,24 +345,24 @@ const CoinJar = React.forwardRef<JarHandle, { tier: number }>(function CoinJar(
       ctx.lineTo(jarRight - cornerR, jarBottom);
       ctx.arcTo(jarRight, jarBottom, jarRight, jarBottom - cornerR, cornerR);
       ctx.lineTo(jarRight, jarTop);
-      ctx.fillStyle = "rgba(244, 244, 248, 0.6)";
+      ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
       ctx.fill();
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2;
       const glass = ctx.createLinearGradient(jarLeft, 0, jarRight, 0);
-      glass.addColorStop(0, "#c9c9d2");
-      glass.addColorStop(0.5, "#e8e8ee");
-      glass.addColorStop(1, "#c9c9d2");
+      glass.addColorStop(0, "#d6d6dd");
+      glass.addColorStop(0.5, "#ebebf0");
+      glass.addColorStop(1, "#d6d6dd");
       ctx.strokeStyle = glass;
       ctx.stroke();
       // rim highlights
       ctx.beginPath();
-      ctx.moveTo(jarLeft - 6, jarTop);
-      ctx.lineTo(jarLeft + 10, jarTop);
-      ctx.moveTo(jarRight - 10, jarTop);
-      ctx.lineTo(jarRight + 6, jarTop);
-      ctx.lineWidth = 5;
+      ctx.moveTo(jarLeft - 5, jarTop);
+      ctx.lineTo(jarLeft + 8, jarTop);
+      ctx.moveTo(jarRight - 8, jarTop);
+      ctx.lineTo(jarRight + 5, jarTop);
+      ctx.lineWidth = 4;
       ctx.lineCap = "round";
-      ctx.strokeStyle = "#b9b9c2";
+      ctx.strokeStyle = "#c4c4cc";
       ctx.stroke();
       ctx.lineCap = "butt";
 
@@ -383,17 +464,17 @@ export default function TournamentsPage() {
   }, [tier]);
 
   return (
-    <main className="flex min-h-screen w-full flex-col items-center bg-background px-6 py-14">
+    <main className="flex min-h-screen w-full flex-col items-center bg-white px-6 py-16">
       <PaktosLogo />
 
-      <p className="mt-8 text-[11px] font-medium uppercase tracking-[0.35em] text-[#94939F]">
-        London · Mar 2026 · Tournament #4
+      <p className="mt-10 text-xs font-medium text-[#86868b]">
+        London · March 2026
       </p>
 
-      <p className="mt-8 text-[11px] font-medium uppercase tracking-[0.3em] text-[#61606C]">
+      <p className="mt-12 text-[11px] font-medium uppercase tracking-[0.22em] text-[#86868b]">
         Live prize pool
       </p>
-      <div className="mt-2 text-5xl font-semibold tabular-nums tracking-tight text-[#18181B] sm:text-6xl">
+      <div className="mt-3 text-6xl font-semibold tabular-nums tracking-[-0.02em] text-[#1d1d1f] sm:text-7xl">
         <NumberFlow
           value={pool}
           format={{
@@ -403,45 +484,48 @@ export default function TournamentsPage() {
           }}
         />
       </div>
-      <p className="mt-2 text-sm text-muted-foreground">
-        <span className="font-medium tabular-nums text-foreground">
+      <p className="mt-3 text-sm text-[#86868b]">
+        <span className="font-medium tabular-nums text-[#1d1d1f]">
           {tickets.toLocaleString()}
         </span>{" "}
-        tickets sold · every ticket adds ${TICKET_VALUE}
+        tickets sold
       </p>
 
-      <div className="relative mt-6 w-full max-w-md">
+      <div className="relative mt-10 w-full max-w-md overflow-hidden rounded-[28px] bg-[#f5f5f7]">
         {milestoneHit && (
-          <div className="absolute inset-x-0 top-3 z-10 flex justify-center animate-in fade-in-0 zoom-in-95 duration-500">
-            <span className="rounded-full bg-primary px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-primary-foreground shadow-lg">
+          <div className="absolute inset-x-0 top-5 z-10 flex justify-center animate-in fade-in-0 zoom-in-95 duration-500">
+            <span className="rounded-full bg-[#1d1d1f] px-4 py-1.5 text-xs font-medium text-white shadow-lg">
               {fmtShort(milestoneHit)} unlocked
             </span>
           </div>
         )}
         <CoinJar ref={jarRef} tier={tier} />
+        <p className="pb-5 text-center text-xs text-[#86868b]">
+          1 ticket = 1 coin · ${TICKET_VALUE}
+        </p>
       </div>
 
-      <div className="mt-6 w-full max-w-md">
-        <div className="flex items-baseline justify-between text-xs text-muted-foreground">
-          <span>{fmtShort(prev)}</span>
-          <span className="font-medium text-foreground">
-            Next milestone · {fmtShort(milestone)}
+      <div className="mt-8 w-full max-w-md">
+        <div className="flex items-baseline justify-between text-xs">
+          <span className="text-[#86868b]">{fmtShort(prev)}</span>
+          <span className="font-medium text-[#1d1d1f]">
+            Next milestone {fmtShort(milestone)}
           </span>
         </div>
-        <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-[#ececf0]">
+        <div className="mt-2.5 h-1 w-full overflow-hidden rounded-full bg-[#e8e8ed]">
           <div
-            className="h-full rounded-full bg-[#18181B] transition-[width] duration-700 ease-out"
+            className="h-full rounded-full bg-[#1d1d1f] transition-[width] duration-700 ease-out"
             style={{ width: `${Math.round(progress * 100)}%` }}
           />
         </div>
-        <div className="mt-3 flex justify-center gap-2">
+        <div className="mt-4 flex justify-center gap-1.5">
           {MILESTONES.map((m) => (
             <span
               key={m}
               className={
                 pool >= m
-                  ? "rounded-full bg-[#18181B] px-3 py-1 text-[10px] font-semibold tracking-wide text-white"
-                  : "rounded-full border border-[#e4e4e9] px-3 py-1 text-[10px] font-medium tracking-wide text-[#94939F]"
+                  ? "rounded-full bg-[#1d1d1f] px-3 py-1 text-[11px] font-medium text-white"
+                  : "rounded-full bg-[#f5f5f7] px-3 py-1 text-[11px] font-medium text-[#86868b]"
               }
             >
               {fmtShort(m)}
@@ -450,33 +534,32 @@ export default function TournamentsPage() {
         </div>
       </div>
 
-      <p
-        className="mt-6 h-5 text-xs text-muted-foreground"
-        aria-live="polite"
-      >
+      <p className="mt-8 h-5 text-xs text-[#86868b]" aria-live="polite">
         {lastBuyer && (
           <span
             key={`${lastBuyer}-${tickets}`}
             className="inline-block animate-in fade-in-0 slide-in-from-bottom-1 duration-500"
           >
-            <span className="font-medium text-foreground">@{lastBuyer}</span>{" "}
-            just entered · +${TICKET_VALUE} to the pool
+            <span className="font-medium text-[#1d1d1f]">@{lastBuyer}</span>{" "}
+            just entered
           </span>
         )}
       </p>
 
-      <div className="mt-10 grid w-full max-w-md grid-cols-3 gap-4 border-t border-[#ececf0] pt-6 text-center">
+      <div className="mt-12 grid w-full max-w-md grid-cols-3 gap-4 border-t border-[#e8e8ed] pt-7 text-center">
         <div>
-          <p className="text-xs text-[#94939F]">Entry Fee</p>
-          <p className="mt-1 font-semibold text-[#18181B]">${TICKET_VALUE}</p>
+          <p className="text-xs text-[#86868b]">Entry</p>
+          <p className="mt-1.5 text-sm font-medium text-[#1d1d1f]">
+            ${TICKET_VALUE}
+          </p>
         </div>
         <div>
-          <p className="text-xs text-[#94939F]">Starts</p>
-          <p className="mt-1 font-semibold text-[#18181B]">Mar 2026</p>
+          <p className="text-xs text-[#86868b]">Starts</p>
+          <p className="mt-1.5 text-sm font-medium text-[#1d1d1f]">Mar 2026</p>
         </div>
         <div>
-          <p className="text-xs text-[#94939F]">Location</p>
-          <p className="mt-1 font-semibold text-[#18181B]">London</p>
+          <p className="text-xs text-[#86868b]">Location</p>
+          <p className="mt-1.5 text-sm font-medium text-[#1d1d1f]">London</p>
         </div>
       </div>
     </main>
