@@ -138,8 +138,8 @@ export function makeTicket() {
   const T = 0.09;
   const group = new THREE.Group();
 
-  const faceMat = holoMaterial(0xdde3ec, 0.15);
-  faceMat.envMapIntensity = 2.2;
+  const faceMat = chromeMaterial(spectrumTexture(4, 0.6));
+  faceMat.roughness = 0.16;
   faceMat.bumpMap = ticketBumpTexture();
   faceMat.bumpScale = 3.2;
 
@@ -188,28 +188,99 @@ export function makeTicket() {
   return group;
 }
 
-const COIN_TINTS = [0x33ccff, 0xff5cb8, 0xffc93c, 0x8a6bff, 0xe8e8f2, 0x4de3b0];
+const COIN_PALETTES = [
+  ["#8ff3ff", "#ffffff", "#b7a6ff", "#ff9fd6"],
+  ["#25d6ff", "#8feeff", "#2fc9e8", "#7fd8ff"],
+  ["#ffd76a", "#ffeab0", "#ffb36b", "#ffdf8a"],
+  ["#ff9ed4", "#ffd6ee", "#c9a8ff", "#ff badge"],
+  ["#a9c8ff", "#ffffff", "#ffc9e2", "#cfe2ff"],
+  ["#7fe8d8", "#ccfff2", "#9fd0ff", "#b0ffe8"]
+];
+
+// smooth spectrum gradient, the actual source of the rainbow chrome look
+function spectrumTexture(index, angleJitter = 0) {
+  const palette = COIN_PALETTES[index % COIN_PALETTES.length].map((c) => c.replace(" badge", "b8e0"));
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = 512;
+  const ctx = canvas.getContext("2d");
+  const a = (index * 0.9 + angleJitter) % (Math.PI * 2);
+  const x = Math.cos(a) * 256;
+  const y = Math.sin(a) * 256;
+  const grad = ctx.createLinearGradient(256 - x, 256 - y, 256 + x, 256 + y);
+  palette.forEach((c, i) => grad.addColorStop(i / (palette.length - 1), c));
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 512, 512);
+  // soft counter-sweep so the gradient bends like a reflection
+  const grad2 = ctx.createLinearGradient(256 + y, 256 - x, 256 - y, 256 + x);
+  grad2.addColorStop(0, "rgba(255,255,255,0.55)");
+  grad2.addColorStop(0.45, "rgba(255,255,255,0)");
+  grad2.addColorStop(1, "rgba(255,170,220,0.35)");
+  ctx.fillStyle = grad2;
+  ctx.fillRect(0, 0, 512, 512);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
+function chromeMaterial(map) {
+  return new THREE.MeshPhysicalMaterial({
+    map,
+    metalness: 1,
+    roughness: 0.12,
+    iridescence: 0.9,
+    iridescenceIOR: 1.8,
+    iridescenceThicknessRange: [120, 700],
+    clearcoat: 1,
+    clearcoatRoughness: 0.06,
+    envMapIntensity: 1.1
+  });
+}
+
+// remap extrude UVs to the shape's bounding box so gradients span the face
+function planarUVs(geometry) {
+  geometry.computeBoundingBox();
+  const bb = geometry.boundingBox;
+  const pos = geometry.attributes.position;
+  const uv = geometry.attributes.uv;
+  const sx = bb.max.x - bb.min.x || 1;
+  const sy = bb.max.y - bb.min.y || 1;
+  for (let i = 0; i < pos.count; i++) {
+    uv.setXY(i, (pos.getX(i) - bb.min.x) / sx, (pos.getY(i) - bb.min.y) / sy);
+  }
+  uv.needsUpdate = true;
+  return geometry;
+}
 
 export function makeStarCoin(radius, tintIndex) {
-  const tint = COIN_TINTS[tintIndex % COIN_TINTS.length];
-  const t = radius * 0.22;
+  const t = radius * 0.24;
   const coin = new THREE.Group();
-  const face = holoMaterial(tint, 0.18);
-  const rim = holoMaterial(0xe8e8f0, 0.12);
+  const faceMap = spectrumTexture(tintIndex);
+  const wallMap = spectrumTexture(tintIndex + 3, 1.2);
 
-  const body = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, t, 64), face);
+  // full-thickness body: its cap is the engraved star's floor
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, t, 64), chromeMaterial(wallMap));
   body.rotation.x = Math.PI / 2;
   coin.add(body);
-  const edge = new THREE.Mesh(new THREE.TorusGeometry(radius * 0.985, t * 0.5, 16, 80), rim);
-  coin.add(edge);
 
-  const star = new THREE.Mesh(starGeometry(radius * 0.58, t * 0.35), holoMaterial(tint, 0.08));
-  star.position.z = t / 2;
-  coin.add(star);
-  const starBack = star.clone();
-  starBack.rotation.y = Math.PI;
-  starBack.position.z = -t / 2;
-  coin.add(starBack);
+  // face plates with a star-shaped hole -> the star reads debossed
+  const plateShape = new THREE.Shape();
+  plateShape.absarc(0, 0, radius * 0.995, 0, Math.PI * 2);
+  plateShape.holes.push(starShape(radius * 0.6, radius * 0.6 * 0.44));
+  const plateGeo = planarUVs(new THREE.ExtrudeGeometry(plateShape, {
+    depth: t * 0.32,
+    bevelEnabled: true,
+    bevelThickness: t * 0.12,
+    bevelSize: t * 0.12,
+    bevelSegments: 2,
+    curveSegments: 48
+  }));
+  const plate = new THREE.Mesh(plateGeo, chromeMaterial(faceMap));
+  plate.position.z = t / 2 - t * 0.1;
+  coin.add(plate);
+  const plateBack = new THREE.Mesh(plateGeo, chromeMaterial(spectrumTexture(tintIndex, 2.1)));
+  plateBack.rotation.y = Math.PI;
+  plateBack.position.z = -t / 2 + t * 0.1;
+  coin.add(plateBack);
 
   return coin;
 }
@@ -226,7 +297,7 @@ export function mountPrize(canvas, ui, options = {}) {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 60);
-  camera.position.set(0, 0, 11);
+  camera.position.set(0, 0, 13);
 
   const size = () => {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -244,26 +315,25 @@ export function mountPrize(canvas, ui, options = {}) {
   const world = new THREE.Group();
   scene.add(world);
 
-  // hero ticket, floating above the headline
+  // hero ticket: a large holographic backdrop behind the prize amount
   const ticket = makeTicket();
-  ticket.position.y = 2.0;
-  ticket.scale.setScalar(0.85);
+  ticket.position.set(0, 0.1, -2.6);
+  ticket.scale.setScalar(1.7);
   world.add(ticket);
 
-  // coin ring: one coin per N tickets, orbiting below the headline space
+  // coin ring: a camera-facing circle around the headline, like the reference
   const ringGroup = new THREE.Group();
-  ringGroup.position.y = -0.4;
+  ringGroup.position.y = -0.1;
   world.add(ringGroup);
   const coins = [];
   const RING_MAX = 14;
   const arriving = [];
 
   function coinPose(i, count) {
-    const a = (i / Math.max(count, 1)) * Math.PI * 2;
-    const rx = 4.8;
-    const ry = 0.85;
+    const a = -Math.PI / 2 + (i / Math.max(count, 1)) * Math.PI * 2;
+    const r = 3.5;
     return {
-      position: new THREE.Vector3(Math.cos(a) * rx, Math.sin(a * 2) * 0.14 - 1.55, Math.sin(a) * ry),
+      position: new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, ((i % 3) - 1) * 0.6),
       angle: a
     };
   }
@@ -314,6 +384,9 @@ export function mountPrize(canvas, ui, options = {}) {
     const target = Math.min(Math.ceil(sold / perCoin), RING_MAX);
     while (coins.length > target) removeCoin();
     while (coins.length < target) addCoin(instant);
+    if (instant) {
+      for (const coin of coins) coin.position.copy(coin.userData.home);
+    }
     ui.sub.textContent = `${sold.toLocaleString("en-US")} tickets sold · $${TICKET_PRICE} each`;
   }
 
@@ -343,13 +416,13 @@ export function mountPrize(canvas, ui, options = {}) {
     }
     ui.pool.textContent = fmt(shownPool);
 
-    // ticket float
-    ticket.rotation.y = Math.sin(elapsed * 0.4) * 0.5 * MOTION;
-    ticket.rotation.x = Math.sin(elapsed * 0.31) * 0.12 * MOTION;
-    ticket.position.y = 2.0 + Math.sin(elapsed * 0.8) * 0.07 * MOTION;
+    // ticket sway, staying face-on behind the headline
+    ticket.rotation.y = Math.sin(elapsed * 0.4) * 0.16 * MOTION;
+    ticket.rotation.x = Math.sin(elapsed * 0.31) * 0.06 * MOTION;
+    ticket.position.y = 0.1 + Math.sin(elapsed * 0.8) * 0.06 * MOTION;
 
     // ring drift + coin spins
-    ringGroup.rotation.y += dt * 0.08 * MOTION;
+    ringGroup.rotation.z += dt * 0.05 * MOTION;
     for (const coin of coins) {
       coin.rotation.y += dt * coin.userData.spin * MOTION;
       if (coin.userData.arriving) {
