@@ -1,6 +1,7 @@
 import * as React from "react";
 import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
 import { PaktosLogo } from "@/components/paktos-logo";
+import { CoinOrbit } from "@/components/coin-orbit";
 import { PaktosCard } from "@/components/paktos-card";
 import { AnimatedCountdown } from "@/components/ui/animated-countdown";
 import { Button } from "@/components/ui/button";
@@ -153,20 +154,27 @@ export default function App() {
         />
       ) : stage === "countdown" ? (
         <div className="fixed inset-0 z-10 overflow-hidden bg-white animate-in fade-in-0 duration-700">
-          <div className="relative z-10 flex h-full flex-col items-center justify-center gap-8 overflow-y-auto px-6 py-8">
-            <p className="text-[11px] font-medium uppercase tracking-[0.35em] text-[#61606C]">
-              Paktos Launch
-            </p>
-            <AnimatedCountdown
-              targetDate={GIVEAWAY_DATE}
-              variant="minimal"
-              size="md"
-              containerClassName="border-transparent"
-              numberClassName="text-[#18181B]"
-              labelClassName="text-[#94939F]"
-              unitClassName="hover:bg-transparent"
-            />
-            <div className="mt-2 flex flex-col items-center gap-3">
+          <div className="relative z-10 flex h-full flex-col items-center justify-between overflow-y-auto px-6 py-10">
+            <div className="flex flex-1 items-center justify-center py-4">
+              <CoinOrbit />
+            </div>
+
+            <div className="flex flex-col items-center gap-5">
+              <p className="text-[11px] font-medium uppercase tracking-[0.35em] text-[#61606C]">
+                Paktos Launch
+              </p>
+              <AnimatedCountdown
+                targetDate={GIVEAWAY_DATE}
+                variant="minimal"
+                size="md"
+                containerClassName="border-transparent"
+                numberClassName="text-[#18181B]"
+                labelClassName="text-[#94939F]"
+                unitClassName="hover:bg-transparent"
+              />
+            </div>
+
+            <div className="mt-8 flex flex-col items-center gap-3 pb-2">
               <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-[#94939F]">
                 Follow the arena
               </p>

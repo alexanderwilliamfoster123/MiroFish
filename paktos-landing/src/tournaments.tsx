@@ -1,6 +1,12 @@
 import * as React from "react";
 import NumberFlow from "@number-flow/react";
 import { PaktosLogo } from "@/components/paktos-logo";
+import coinCyan from "@/assets/coins/coin-cyan.png";
+import coinBlue from "@/assets/coins/coin-blue.png";
+import coinYellow from "@/assets/coins/coin-yellow.png";
+import coinOrange from "@/assets/coins/coin-orange.png";
+import coinPink from "@/assets/coins/coin-pink.png";
+import coinNavy from "@/assets/coins/coin-navy.png";
 
 // ——— Simulated ticket sales ———
 // Wire these to the real tournament API when it exists: each sale event
@@ -35,9 +41,9 @@ interface Coin {
   vx: number;
   vy: number;
   r: number;
-  /** start angle of this coin's holographic rainbow sweep */
+  /** small per-coin hue shift in degrees, for variety in the pile */
   hue: number;
-  /** which face color this coin got (index into FACES) */
+  /** which sprite this coin uses (index into SPRITE_URLS) */
   face: number;
   rot: number;
   vr: number;
@@ -45,20 +51,17 @@ interface Coin {
   dis: number;
 }
 
-// Saturated holographic faces, matching the brand coin renders:
-// cyan, gold, pink, violet, peach, pearl, and the occasional dark navy.
-const FACES: [string, string][] = [
-  ["#2fd2f2", "#8df2ff"],
-  ["#ffd257", "#ffeba6"],
-  ["#ff96d3", "#ffcdea"],
-  ["#a86df2", "#dcb0ff"],
-  ["#ffb06a", "#ffdda1"],
-  ["#efe3ee", "#ffffff"],
-  ["#232338", "#40405e"],
+// The actual brand coin renders, cut from the hero animation frames.
+const SPRITE_URLS = [
+  coinCyan,
+  coinBlue,
+  coinYellow,
+  coinOrange,
+  coinPink,
+  coinNavy,
 ];
-const DARK_FACE = FACES.length - 1;
-// Cumulative weights — vivid faces common, pearl and dark rarer.
-const FACE_WEIGHTS = [0.18, 0.34, 0.5, 0.65, 0.8, 0.9, 1];
+// Cumulative pick weights — dark navy stays the rare one, like the video.
+const FACE_WEIGHTS = [0.2, 0.38, 0.56, 0.72, 0.88, 1];
 
 function pickFace(): number {
   const roll = Math.random();
@@ -67,27 +70,6 @@ function pickFace(): number {
   }
   return 0;
 }
-
-// Iridescent sweep blended over every face; the per-coin `hue` rotates it.
-const HOLO_STOPS: [number, string][] = [
-  [0, "rgba(255,90,150,0.75)"],
-  [0.17, "rgba(255,160,70,0.7)"],
-  [0.34, "rgba(255,235,130,0.65)"],
-  [0.5, "rgba(110,235,200,0.6)"],
-  [0.66, "rgba(90,160,255,0.7)"],
-  [0.83, "rgba(200,110,255,0.72)"],
-  [1, "rgba(255,90,150,0.75)"],
-];
-// The rainbow chrome milled edge, near-opaque.
-const RIM_STOPS: [number, string][] = [
-  [0, "rgba(255,110,160,0.9)"],
-  [0.17, "rgba(255,180,90,0.9)"],
-  [0.34, "rgba(255,240,150,0.9)"],
-  [0.5, "rgba(130,240,210,0.9)"],
-  [0.66, "rgba(110,175,255,0.9)"],
-  [0.83, "rgba(210,130,255,0.9)"],
-  [1, "rgba(255,110,160,0.9)"],
-];
 
 const MAX_COINS = 90;
 const GRAVITY = 2600;
@@ -141,92 +123,33 @@ const CoinJar = React.forwardRef<JarHandle, { tier: number }>(function CoinJar(
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    const starPath = (x: number, y: number, rOut: number, rot: number) => {
-      const rIn = rOut * 0.45;
-      ctx.beginPath();
-      for (let i = 0; i < 12; i++) {
-        const angle = rot + (i * Math.PI) / 6;
-        const radius = i % 2 === 0 ? rOut : rIn;
-        const px = x + Math.cos(angle) * radius;
-        const py = y + Math.sin(angle) * radius;
-        if (i === 0) ctx.moveTo(px, py);
-        else ctx.lineTo(px, py);
-      }
-      ctx.closePath();
-    };
+    const sprites = SPRITE_URLS.map((url) => {
+      const img = new Image();
+      img.src = url;
+      return img;
+    });
 
     const drawCoin = (coin: Coin) => {
       const scale = 1 - coin.dis;
       if (scale <= 0) return;
       const r = coin.r * scale;
-      const { x, y } = coin;
-
-      // saturated face
-      const [deep, light] = FACES[coin.face];
-      const dark = coin.face === DARK_FACE;
-      const base = ctx.createLinearGradient(x - r, y - r, x + r, y + r);
-      base.addColorStop(0, light);
-      base.addColorStop(1, deep);
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fillStyle = base;
-      ctx.fill();
-
-      // holographic rainbow sweep blended over the metal
+      const img = sprites[coin.face];
       ctx.save();
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.clip();
-      const conic = (
-        ctx as CanvasRenderingContext2D & {
-          createConicGradient?: (
-            angle: number,
-            x: number,
-            y: number
-          ) => CanvasGradient;
+      ctx.translate(coin.x, coin.y);
+      ctx.rotate(coin.rot);
+      if (img.complete && img.naturalWidth > 0) {
+        // slight per-coin hue shift for extra variety in the pile
+        if (coin.hue !== 0 && "filter" in ctx) {
+          ctx.filter = `hue-rotate(${coin.hue}deg)`;
         }
-      ).createConicGradient;
-      const holo = conic
-        ? conic.call(ctx, coin.hue, x, y)
-        : ctx.createLinearGradient(x - r, y - r, x + r, y + r);
-      for (const [p, c] of HOLO_STOPS) holo.addColorStop(p, c);
-      ctx.globalCompositeOperation = "overlay";
-      ctx.globalAlpha = 0.6;
-      ctx.fillStyle = holo;
-      ctx.fillRect(x - r, y - r, r * 2, r * 2);
-      ctx.globalAlpha = 1;
+        ctx.drawImage(img, -r, -r, r * 2, r * 2);
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, Math.PI * 2);
+        ctx.fillStyle = "#dcdce2";
+        ctx.fill();
+      }
       ctx.restore();
-
-      // rainbow chrome milled edge, plus a bright inner ring
-      const rim = conic
-        ? conic.call(ctx, coin.hue + 1.2, x, y)
-        : ctx.createLinearGradient(x - r, y + r, x + r, y - r);
-      for (const [p, c] of RIM_STOPS) rim.addColorStop(p, c);
-      ctx.beginPath();
-      ctx.arc(x, y, r - 0.5, 0, Math.PI * 2);
-      ctx.lineWidth = Math.max(1.2, r * 0.13);
-      ctx.strokeStyle = rim;
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(x, y, r * 0.84, 0, Math.PI * 2);
-      ctx.lineWidth = Math.max(0.8, r * 0.05);
-      ctx.strokeStyle = "rgba(255,255,255,0.55)";
-      ctx.stroke();
-
-      // embossed star: light catch below, engraving above
-      starPath(x + r * 0.06, y + r * 0.06, r * 0.52, coin.rot);
-      ctx.fillStyle = "rgba(255,255,255,0.35)";
-      ctx.fill();
-      starPath(x, y, r * 0.52, coin.rot);
-      ctx.fillStyle = dark ? "rgba(5,5,16,0.6)" : "rgba(70,60,100,0.42)";
-      ctx.fill();
-
-      // top-left sheen
-      ctx.beginPath();
-      ctx.arc(x, y, r * 0.8, Math.PI * 0.95, Math.PI * 1.5);
-      ctx.lineWidth = Math.max(1, r * 0.12);
-      ctx.strokeStyle = "rgba(255,255,255,0.75)";
-      ctx.stroke();
     };
 
     const step = (now: number) => {
@@ -249,17 +172,17 @@ const CoinJar = React.forwardRef<JarHandle, { tier: number }>(function CoinJar(
       // spawn queued coins through the mouth of the jar
       while (pendingRef.current > 0) {
         pendingRef.current -= 1;
-        const r = 11 + Math.random() * 4;
+        const r = 12.5 + Math.random() * 4;
         coins.push({
           x: jarLeft + jarW * (0.3 + Math.random() * 0.4),
           y: Math.max(jarTop - 46, 18),
           vx: (Math.random() - 0.5) * 120,
           vy: reduceMotion ? 600 : 40,
           r,
-          hue: Math.random() * Math.PI * 2,
+          hue: Math.round((Math.random() - 0.5) * 16),
           face: pickFace(),
-          rot: Math.random() * Math.PI,
-          vr: (Math.random() - 0.5) * 3,
+          rot: (Math.random() - 0.5) * 0.9,
+          vr: (Math.random() - 0.5) * 1.6,
           dis: 0,
         });
         // dissolve the oldest coins once the jar is at capacity
@@ -328,6 +251,19 @@ const CoinJar = React.forwardRef<JarHandle, { tier: number }>(function CoinJar(
               b.vy += impulse * ny;
             }
           }
+        }
+      }
+
+      // pile pressure can shove coins through the walls during the
+      // relaxation passes — clamp everything back inside the jar
+      for (const coin of solid) {
+        if (coin.y + coin.r > jarBottom) {
+          coin.y = jarBottom - coin.r;
+          if (coin.vy > 0) coin.vy = 0;
+        }
+        if (coin.y + coin.r > jarTop) {
+          if (coin.x - coin.r < jarLeft) coin.x = jarLeft + coin.r;
+          else if (coin.x + coin.r > jarRight) coin.x = jarRight - coin.r;
         }
       }
 

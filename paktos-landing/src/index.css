@@ -56,3 +56,15 @@
     transform: rotateY(180deg);
   }
 }
+
+/* slow clockwise coin orbit on the finale */
+@keyframes coin-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes coin-orbit-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
