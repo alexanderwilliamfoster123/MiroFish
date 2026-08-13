@@ -22,10 +22,22 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* the original Spline scene, full viewport — geometry, materials,
-   reflections, lighting, camera, shadows, and animation untouched */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* the original Spline scene on top — geometry, materials, reflections,
+   lighting, camera, shadows, and animation untouched; the coins are only
+   carried around a slow clockwise circle */
+.stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
 #scene {
-  position: fixed;
+  position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -33,7 +45,7 @@ body {
 }
 
 .loading {
-  position: fixed;
+  position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
@@ -49,22 +61,16 @@ body {
   opacity: 0;
 }
 
-.hud {
-  position: fixed;
-  top: 44px;
-  left: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
+.info {
+  flex: 0 0 auto;
   text-align: center;
+  padding: 4px 24px 10px;
   pointer-events: none;
 }
 
 .eyebrow {
-  margin: 0 0 2px;
-  font-size: 14px;
+  margin: 0 0 4px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -73,7 +79,7 @@ body {
 
 .pool {
   margin: 0;
-  font-size: clamp(56px, 9vw, 104px);
+  font-size: clamp(44px, 7vw, 84px);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1;
@@ -82,22 +88,58 @@ body {
 
 .tagline {
   margin: 8px 0 0;
-  font-size: clamp(16px, 2vw, 20px);
+  font-size: clamp(15px, 1.8vw, 19px);
   color: #6e6e73;
 }
 
 .sub {
   margin: 2px 0 0;
-  font-size: 14px;
+  font-size: 13px;
   color: #a1a1a6;
   font-variant-numeric: tabular-nums;
 }
 
+/* countdown + cta + socials at the bottom */
+.bar {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px 30px;
+}
+
+.timer {
+  display: flex;
+  align-items: baseline;
+  gap: 26px;
+}
+
+.seg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 44px;
+}
+
+.seg .num {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.seg .lab {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #a1a1a6;
+}
+
 .buy {
-  position: fixed;
-  bottom: 44px;
-  left: 50%;
-  transform: translateX(-50%);
   padding: 14px 30px;
   border: none;
   border-radius: 100px;
@@ -114,20 +156,63 @@ body {
 }
 
 .buy:active {
-  transform: translateX(-50%) scale(0.97);
+  transform: scale(0.97);
+}
+
+.socials {
+  display: flex;
+  gap: 22px;
+}
+
+.socials a {
+  display: inline-flex;
+  color: rgba(24, 24, 26, 0.4);
+  transition: color 0.2s ease;
+}
+
+.socials a:hover {
+  color: rgba(24, 24, 26, 0.85);
+}
+
+.socials svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+@media (max-height: 700px) {
+  .bar { gap: 12px; padding-bottom: 22px; }
+  .tagline { display: none; }
 }
 </style>
 </head>
 <body>
-<canvas id="scene"></canvas>
-<p class="loading" id="loading">loading…</p>
-<div class="hud">
+<div class="stage">
+  <canvas id="scene"></canvas>
+  <p class="loading" id="loading">loading…</p>
+</div>
+<section class="info">
   <p class="eyebrow">Trading Competition</p>
   <h1 class="pool" id="pool">$0</h1>
   <p class="tagline">The prize pool grows with every ticket.</p>
   <p class="sub" id="sub"></p>
-</div>
-<button class="buy" id="buy" type="button">Buy a ticket&nbsp;&nbsp;$25</button>
+</section>
+<footer class="bar">
+  <div class="timer" id="timer" aria-label="time until the draw">
+    <div class="seg"><span class="num" id="t-d">00</span><span class="lab">days</span></div>
+    <div class="seg"><span class="num" id="t-h">00</span><span class="lab">hours</span></div>
+    <div class="seg"><span class="num" id="t-m">00</span><span class="lab">minutes</span></div>
+    <div class="seg"><span class="num" id="t-s">00</span><span class="lab">seconds</span></div>
+  </div>
+  <button class="buy" id="buy" type="button">Buy a ticket&nbsp;&nbsp;$25</button>
+  <!-- socials: swap the hrefs for the real profiles -->
+  <nav class="socials" aria-label="socials">
+    <a href="#" aria-label="X" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-6.4L6.4 22H3.3l7.3-8.3L1.6 2H8l4.4 5.9L18.9 2Zm-1.1 18.1h1.7L7.1 3.8H5.3l12.5 16.3Z"/></svg></a>
+    <a href="#" aria-label="Instagram" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2-.1-1.3-.1-1.7-.1-4.9s0-3.6.1-4.9c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4 1.3-.1 1.7-.1 4.9-.1Zm0 1.8c-3.1 0-3.5 0-4.8.1-1.1.1-1.5.2-1.8.3-.5.2-.8.4-1.1.7-.3.3-.5.6-.7 1.1-.1.3-.3.7-.3 1.8-.1 1.3-.1 1.6-.1 4.8s0 3.5.1 4.8c.1 1.1.2 1.5.3 1.8.2.5.4.8.7 1.1.3.3.6.5 1.1.7.3.1.7.3 1.8.3 1.3.1 1.6.1 4.8.1s3.5 0 4.8-.1c1.1-.1 1.5-.2 1.8-.3.5-.2.8-.4 1.1-.7.3-.3.5-.6.7-1.1.1-.3.3-.7.3-1.8.1-1.3.1-1.6.1-4.8s0-3.5-.1-4.8c-.1-1.1-.2-1.5-.3-1.8-.2-.5-.4-.8-.7-1.1-.3-.3-.6-.5-1.1-.7-.3-.1-.7-.3-1.8-.3-1.3-.1-1.6-.1-4.8-.1Zm0 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 8.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4ZM18.4 5.6a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0Z"/></svg></a>
+    <a href="#" aria-label="YouTube" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.3 31.3 0 0 0 0 12c0 2 .2 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1c.3-1.9.5-3.8.5-5.8s-.2-3.9-.5-5.8ZM9.5 15.6V8.4L15.8 12l-6.3 3.6Z"/></svg></a>
+    <a href="#" aria-label="Telegram" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M21.9 3.4 1.7 11.2c-1.1.4-1.1 1.1-.2 1.4l5.1 1.6 2 6c.2.7.1.9.8.9.5 0 .8-.2 1.1-.5l2.6-2.5 5.3 3.9c1 .5 1.7.3 1.9-.9l3.5-16.4c.4-1.5-.5-2.1-1.9-1.3ZM7.3 13.7l11.4-7.2c.6-.3 1.1-.1.7.2l-9.8 8.8-.4 4-1.9-5.8Z"/></svg></a>
+  </nav>
+</footer>
 <script type="module">
 // The supplied Spline scene, loaded directly — no approximation. The
 // vendored vanilla runtime is the same 1.12.98 build as
@@ -144,11 +229,62 @@ app.load(SCENE_URL)
   .then(() => {
     app.setBackgroundColor("#FFFFFF");
     loadingEl.classList.add("gone");
+    startOrbit(app);
   })
   .catch((err) => {
     console.error(err);
     loadingEl.textContent = "couldn’t reach the scene — check your connection and reload.";
   });
+
+// ---- slow clockwise circle -------------------------------------------
+// Carries the scene's own coins around a calm circular path (one lap
+// every two minutes) by rotating their positions about their shared
+// centre — the coins themselves, their materials, and their baked spin
+// stay exactly as authored. ?orbit=0 disables, ?lap=90 sets seconds/lap.
+function startOrbit(app) {
+  if (params.get("orbit") === "0") return;
+  let objects;
+  try { objects = app.getAllObjects(); } catch { return; }
+  const skip = /camera|light|floor|ground|shadow|plane|text|backg|title|logo/i;
+  const usable = objects.filter((o) => o && o.name && o.position && !skip.test(o.name));
+
+  let coins = usable.filter((o) => /coin|star|token|chip|dollar|money/i.test(o.name));
+  if (coins.length < 3) {
+    // fall back to the largest family of same-named copies (Spline names
+    // duplicates "Thing", "Thing 2", "Thing 3", …)
+    const families = new Map();
+    for (const o of usable) {
+      const base = o.name.replace(/[\s_-]*(copy)?[\s_-]*\d*$/i, "").trim().toLowerCase();
+      if (!families.has(base)) families.set(base, []);
+      families.get(base).push(o);
+    }
+    let best = [];
+    for (const group of families.values()) if (group.length > best.length) best = group;
+    if (best.length >= 4) coins = best;
+  }
+  if (coins.length < 3) return; // unknown layout — leave the scene untouched
+
+  const cx = coins.reduce((s, o) => s + o.position.x, 0) / coins.length;
+  const cy = coins.reduce((s, o) => s + o.position.y, 0) / coins.length;
+  const lap = Math.max(20, parseFloat(params.get("lap")) || 120);
+  const SPEED = (Math.PI * 2) / lap;
+
+  let last = performance.now();
+  (function step(now) {
+    const dt = Math.min((now - last) / 1000, 0.1);
+    last = now;
+    const a = -SPEED * dt; // negative = clockwise on screen
+    const cos = Math.cos(a);
+    const sin = Math.sin(a);
+    for (const o of coins) {
+      const dx = o.position.x - cx;
+      const dy = o.position.y - cy;
+      o.position.x = cx + dx * cos - dy * sin;
+      o.position.y = cy + dx * sin + dy * cos;
+    }
+    requestAnimationFrame(step);
+  })(last);
+}
 
 // ---- prize pool: sold × $25, rolling counter -------------------------
 const TICKET_PRICE = 25;
@@ -166,6 +302,30 @@ function render() {
 }
 render();
 
+// ---- countdown to the draw -------------------------------------------
+// point it at the real close with ?ends=2026-09-01T00:00:00Z
+// (placeholder: 14 days from first load)
+const pEnds = Date.parse(params.get("ends"));
+const endsAt = Number.isFinite(pEnds) ? pEnds : Date.now() + 14 * 86400000;
+const tD = document.getElementById("t-d");
+const tH = document.getElementById("t-h");
+const tM = document.getElementById("t-m");
+const tS = document.getElementById("t-s");
+const two = (n) => String(n).padStart(2, "0");
+
+function renderTimer() {
+  let left = Math.max(0, endsAt - Date.now());
+  const d = Math.floor(left / 86400000); left -= d * 86400000;
+  const h = Math.floor(left / 3600000); left -= h * 3600000;
+  const m = Math.floor(left / 60000); left -= m * 60000;
+  const s = Math.floor(left / 1000);
+  tD.textContent = two(d);
+  tH.textContent = two(h);
+  tM.textContent = two(m);
+  tS.textContent = two(s);
+}
+renderTimer();
+
 let last = performance.now();
 (function tick(now) {
   const dt = Math.min((now - last) / 1000, 0.1);
@@ -175,6 +335,7 @@ let last = performance.now();
     shown = Math.abs(diff) < 1 ? target : shown + diff * Math.min(dt * 3, 1);
     poolEl.textContent = fmt(shown);
   }
+  renderTimer();
   requestAnimationFrame(tick);
 })(last);
 

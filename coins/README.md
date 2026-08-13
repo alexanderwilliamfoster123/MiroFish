@@ -40,11 +40,23 @@ any ticket total works. Logic lives in `jar.js`.
 The supplied Spline coins scene loaded directly, full viewport, on white —
 geometry, materials, reflections, lighting, camera, shadows, and animation
 untouched (vendored runtime 1.12.98, matching @splinetool/viewer@1.12.98;
-only the scene streams from Spline). The Apple-style HUD shows the prize
-pool (sold × $25) as a rolling counter with the exposed gold palette
-(#FFC35C family). Live count via `prize.html?sold=139` or
-`window.pool.setSold(n)`; demo button calls `window.pool.buy()`.
-A `?scene=` override loads any other .splinecode.
+only the scene streams from Spline). The coins sit on top and are carried
+around a slow clockwise circle (one calm lap every two minutes — position
+only, so the coins' own materials and baked spin stay exactly as
+authored). Below them: the rolling prize-pool counter (sold × $25, gold
+#FFC35C family), then a countdown to the draw, the buy CTA, and social
+links at the bottom.
+
+Hooks:
+
+- `?sold=139` or `window.pool.setSold(n)` — live ticket count (demo
+  button calls `window.pool.buy()`)
+- `?ends=2026-09-01T00:00:00Z` — real close time for the countdown
+  (placeholder: 14 days from load)
+- `?lap=90` — seconds per coin lap; `?orbit=0` turns the circle off
+- `?scene=` — load any other .splinecode
+- social links are placeholder `#` hrefs in the footer — drop the real
+  profile URLs in
 
 `prize-native.html` keeps the earlier procedural recreation (holographic
 ticket + paktos-marked spectrum coins) as an alternative.
