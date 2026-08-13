@@ -2,29 +2,33 @@ import { Component as Keyboard } from "@/components/ui/keyboard";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // natural keyboard widths: compact (<768px windows) vs full
 const KEYBOARD_NATURAL_COMPACT = 700;
 const KEYBOARD_NATURAL_FULL = 1080;
 
-type Field = "name" | "email";
-
-interface EmailGateProps {
-  onEnter: (name: string, email: string) => void;
+interface CaptureStepProps {
+  heading: string;
+  placeholder: string;
+  allowSpaces?: boolean;
+  errorText?: string;
+  validate?: (value: string) => boolean;
+  onSubmit: (value: string) => void;
 }
 
-export function EmailGate({ onEnter }: EmailGateProps) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [active, setActive] = useState<Field>("name");
-  const [error, setError] = useState<Field | null>(null);
+// One question per screen: a heading, a line, the keyboard. Enter moves on.
+export function CaptureStep({
+  heading,
+  placeholder,
+  allowSpaces = false,
+  errorText,
+  validate,
+  onSubmit,
+}: CaptureStepProps) {
+  const [value, setValue] = useState("");
+  const [error, setError] = useState(false);
   const [leaving, setLeaving] = useState(false);
-
-  const nameRef = useRef("");
-  const emailRef = useRef("");
-  const activeRef = useRef<Field>("name");
+  const valueRef = useRef("");
   const leavingRef = useRef(false);
-  activeRef.current = active;
 
   // keyboard scales down to fit narrow screens
   const scalerRef = useRef<HTMLDivElement>(null);
@@ -50,68 +54,41 @@ export function EmailGate({ onEnter }: EmailGateProps) {
     };
   }, []);
 
-  const write = (field: Field, value: string) => {
-    if (field === "name") {
-      nameRef.current = value;
-      setName(value);
-    } else {
-      emailRef.current = value;
-      setEmail(value);
-    }
-    setError(null);
+  const write = (next: string) => {
+    valueRef.current = next;
+    setValue(next);
+    setError(false);
   };
 
   const submit = () => {
     if (leavingRef.current) return;
-    const nameValue = nameRef.current.trim();
-    const emailValue = emailRef.current.trim();
-    if (!nameValue) {
-      setActive("name");
-      setError("name");
-      return;
-    }
-    if (!EMAIL_PATTERN.test(emailValue)) {
-      setActive("email");
-      setError("email");
+    const trimmed = valueRef.current.trim();
+    if (!trimmed) return;
+    if (validate && !validate(trimmed)) {
+      setError(true);
       return;
     }
     leavingRef.current = true;
     setLeaving(true);
-    setTimeout(() => onEnter(nameValue, emailValue), 700);
-  };
-
-  // enter advances: name -> email -> receipt
-  const advance = () => {
-    if (activeRef.current === "name") {
-      if (!nameRef.current.trim()) {
-        setError("name");
-        return;
-      }
-      setActive("email");
-    } else {
-      submit();
-    }
+    setTimeout(() => onSubmit(trimmed), 550);
   };
 
   // one handler for the on-screen keyboard and physical keys
   const applyKey = (key: string, resolved: string) => {
-    const field = activeRef.current;
-    const current = field === "name" ? nameRef.current : emailRef.current;
+    const current = valueRef.current;
     switch (key) {
       case "Backspace":
-        write(field, current.slice(0, -1));
+        write(current.slice(0, -1));
         break;
       case "Enter":
-        advance();
-        break;
-      case "Tab":
-        setActive(field === "name" ? "email" : "name");
+        submit();
         break;
       case " ":
-        if (field === "name" && current && current.length < 48) {
-          write(field, current + " ");
+        if (allowSpaces && current && current.length < 48) {
+          write(current + " ");
         }
         break;
+      case "Tab":
       case "Shift":
       case "CapsLock":
       case "NumLock":
@@ -122,7 +99,7 @@ export function EmailGate({ onEnter }: EmailGateProps) {
         break;
       default:
         if (resolved.length === 1 && !/\s/.test(resolved) && current.length < 64) {
-          write(field, current + resolved);
+          write(current + resolved);
         }
     }
   };
@@ -130,10 +107,7 @@ export function EmailGate({ onEnter }: EmailGateProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
-      if (
-        e.key.length === 1 ||
-        ["Backspace", "Enter", "Tab"].includes(e.key)
-      ) {
+      if (e.key.length === 1 || ["Backspace", "Enter"].includes(e.key)) {
         e.preventDefault();
         applyKey(e.key, e.key);
       }
@@ -143,96 +117,61 @@ export function EmailGate({ onEnter }: EmailGateProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const cursor = (
-    <span className="animate-cursor-blink ml-px inline-block h-[1.05em] w-[7px] translate-y-[3px] bg-foreground" />
-  );
-
-  const fieldLine = (
-    field: Field,
-    value: string,
-    placeholder: string,
-  ) => (
-    <button
-      type="button"
-      onClick={() => setActive(field)}
-      className="block w-full cursor-text text-left"
-      aria-label={field}
-    >
-      <p className="text-[10px] tracking-[0.25em] text-faint uppercase">
-        {field}
-      </p>
-      <div
-        className={cn(
-          "mt-2 border-b pb-2.5 text-center font-mono text-base transition-colors duration-300",
-          error === field
-            ? "border-white/70"
-            : active === field
-              ? "border-white/40"
-              : "border-line",
-        )}
-      >
-        {value ? (
-          <span className="text-foreground">{value}</span>
-        ) : (
-          <span className="text-faint">{placeholder}</span>
-        )}
-        {active === field && cursor}
-      </div>
-    </button>
-  );
-
   return (
     <main
       className={cn(
-        "flex min-h-dvh flex-col items-center justify-center px-4 py-10 transition-opacity duration-700 ease-out",
+        "flex min-h-dvh flex-col items-center justify-center px-4 py-10 transition-opacity duration-500 ease-out",
         leaving && "pointer-events-none opacity-0",
       )}
     >
       <div className="flex w-full flex-col items-center text-center">
         <h1
-          className="font-display-condensed animate-fade-up text-3xl leading-snug text-foreground sm:text-4xl"
+          className="animate-fade-up text-[26px] font-medium tracking-tight text-foreground sm:text-[30px]"
           style={{ animationDelay: "0.1s" }}
         >
-          Every world needs a key.
+          {heading}
         </h1>
-        <p
-          className="animate-fade-up mt-3 text-[13px] tracking-wide text-muted-foreground"
+
+        {/* the line */}
+        <div
+          className="animate-fade-up mt-9 w-full max-w-sm"
           style={{ animationDelay: "0.25s" }}
         >
-          Yours is a name and an email.
-        </p>
-
-        {/* the two lines */}
-        <div
-          className="animate-fade-up mt-10 flex w-full max-w-sm flex-col gap-7"
-          style={{ animationDelay: "0.4s" }}
-        >
-          {fieldLine("name", name, "your name")}
-          {fieldLine("email", email, "you@somewhere.com")}
+          <div
+            className={cn(
+              "border-b pb-3 text-center text-[17px] transition-colors duration-300",
+              error ? "border-white/70" : "border-line",
+            )}
+            aria-label={heading}
+            aria-live="polite"
+          >
+            {value ? (
+              <span className="text-foreground">{value}</span>
+            ) : (
+              <span className="text-faint">{placeholder}</span>
+            )}
+            <span className="animate-cursor-blink ml-px inline-block h-[1.05em] w-[2px] translate-y-[3px] bg-foreground" />
+          </div>
           <p
             className={cn(
-              "h-4 text-xs transition-opacity duration-300",
+              "mt-3 h-4 text-xs transition-opacity duration-300",
               error
                 ? "text-neutral-400 opacity-100"
-                : email && active === "email"
+                : value
                   ? "text-faint opacity-100"
                   : "opacity-0",
             )}
             aria-live="polite"
           >
-            {error === "name"
-              ? "A name first — any name."
-              : error === "email"
-                ? "That doesn’t look like an email."
-                : "press enter ↵"}
+            {error ? errorText : "press return"}
           </p>
         </div>
 
         {/* the keyboard */}
         <div
           ref={scalerRef}
-          className="animate-fade-up mt-6 w-full max-w-5xl"
-          style={{ animationDelay: "0.55s" }}
+          className="animate-fade-up mt-8 w-full max-w-5xl"
+          style={{ animationDelay: "0.4s" }}
         >
           <div style={{ zoom: scale }}>
             <Keyboard onKey={applyKey} />

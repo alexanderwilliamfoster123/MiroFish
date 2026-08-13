@@ -1,9 +1,10 @@
-import { EmailGate } from "@/components/email-gate";
+import { CaptureStep } from "@/components/email-gate";
 import { SubscriptionReceipt } from "@/components/subscription-receipt";
 import { useEffect, useState } from "react";
 
 const EMAIL_KEY = "gate:email";
 const NAME_KEY = "gate:name";
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function App() {
   const [email, setEmail] = useState<string | null>(() =>
@@ -13,23 +14,39 @@ export default function App() {
     localStorage.getItem(NAME_KEY),
   );
 
+  // each answer is kept the moment it's given, so a half-finished
+  // signup still leaves the email behind
   useEffect(() => {
-    if (email && name) {
-      localStorage.setItem(EMAIL_KEY, email);
-      localStorage.setItem(NAME_KEY, name);
-    } else {
-      localStorage.removeItem(EMAIL_KEY);
-      localStorage.removeItem(NAME_KEY);
-    }
-  }, [email, name]);
+    if (email) localStorage.setItem(EMAIL_KEY, email);
+    else localStorage.removeItem(EMAIL_KEY);
+  }, [email]);
 
-  if (!email || !name) {
+  useEffect(() => {
+    if (name) localStorage.setItem(NAME_KEY, name);
+    else localStorage.removeItem(NAME_KEY);
+  }, [name]);
+
+  if (!email) {
     return (
-      <EmailGate
-        onEnter={(newName, newEmail) => {
-          setName(newName);
-          setEmail(newEmail);
-        }}
+      <CaptureStep
+        key="email"
+        heading="Your email."
+        placeholder="you@somewhere.com"
+        validate={(value) => EMAIL_PATTERN.test(value)}
+        errorText="That doesn’t look right."
+        onSubmit={setEmail}
+      />
+    );
+  }
+
+  if (!name) {
+    return (
+      <CaptureStep
+        key="name"
+        heading="And your name."
+        placeholder="your name"
+        allowSpaces
+        onSubmit={setName}
       />
     );
   }
