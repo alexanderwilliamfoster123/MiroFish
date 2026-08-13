@@ -571,11 +571,10 @@ export function PaktosCard({ memberName, serial, memberNo, handle, joined, xp, o
   }, [xp]);
 
   const handleShareDone = () => {
-    setShareOpen(false);
+    // straight to the launch countdown — no flash of the card in between
     setShared(true);
     setBalance(xp * 2);
-    // let the balance roll before moving to the raffle countdown
-    setTimeout(() => onShared?.(), 2000);
+    onShared?.();
   };
 
   return (
