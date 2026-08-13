@@ -147,10 +147,6 @@ export default function App() {
               labelClassName="text-[#94939F]"
               unitClassName="hover:bg-transparent"
             />
-            <p className="text-center font-serif text-2xl text-[#18181B]">
-              Trade Like The World Is Watching.
-            </p>
-
             <div className="mt-2 flex flex-col items-center gap-3">
               <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-[#94939F]">
                 Follow the arena

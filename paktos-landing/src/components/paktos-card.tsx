@@ -470,8 +470,27 @@ function ShareScreen({
     };
   }, [memberName, memberNo, serial, handle, joined]);
 
-  const download = () => {
-    if (!previewUrl) return;
+  const download = async () => {
+    if (!blob || !previewUrl) return;
+    // Hosts that sandbox plain downloads (e.g. the claude.ai preview)
+    // expose a save API instead — prefer it when present.
+    const saver = (
+      window as {
+        claude?: {
+          downloads?: {
+            save: (req: { filename: string; data: Blob }) => Promise<unknown>;
+          };
+        };
+      }
+    ).claude?.downloads;
+    if (saver) {
+      try {
+        await saver.save({ filename: "paktos-member-story.png", data: blob });
+      } catch {
+        // viewer declined or a prompt is already open — nothing to do
+      }
+      return;
+    }
     const a = document.createElement("a");
     a.href = previewUrl;
     a.download = "paktos-member-story.png";
