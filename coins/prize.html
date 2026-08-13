@@ -4,19 +4,26 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>prize pool</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23fff'/%3E%3Cpath d='M8 2.6l1.4 3 3.3.3-2.5 2.2.8 3.2L8 9.6l-3 1.7.8-3.2L3.3 5.9l3.3-.3z' fill='%23b58cff'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23fff'/%3E%3Ccircle cx='8' cy='8' r='5' fill='none' stroke='%23FFC35C' stroke-width='1.4'/%3E%3Ccircle cx='8' cy='8' r='2.2' fill='%23FFC35C'/%3E%3C/svg%3E">
 <style>
+/* exposed palette:
+   primary gold #FFC35C (255,195,92 / 38deg 100% 68%)
+   background   #FFFFFF
+   loading text rgba(24,24,26,0.5) */
+
 html,
 body {
   margin: 0;
   height: 100%;
   overflow: hidden;
-  background: #ffffff;
+  background: #FFFFFF;
   color: #1d1d1f;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Inter, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
+/* the original Spline scene, full viewport — geometry, materials,
+   reflections, lighting, camera, shadows, and animation untouched */
 #scene {
   position: fixed;
   inset: 0;
@@ -25,33 +32,48 @@ body {
   display: block;
 }
 
-.hero {
+.loading {
   position: fixed;
   inset: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+  color: rgba(24, 24, 26, 0.5);
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+.loading.gone {
+  opacity: 0;
+}
+
+.hud {
+  position: fixed;
+  top: 44px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
   text-align: center;
   pointer-events: none;
-  gap: 6px;
 }
 
 .eyebrow {
-  margin: 0 0 4px;
+  margin: 0 0 2px;
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  background: linear-gradient(90deg, #38b6ff, #b57bee 45%, #ff7ac3);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #E9A437; /* gold midtone for contrast on white */
 }
 
 .pool {
   margin: 0;
-  font-size: clamp(64px, 11vw, 128px);
+  font-size: clamp(56px, 9vw, 104px);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1;
@@ -59,8 +81,8 @@ body {
 }
 
 .tagline {
-  margin: 10px 0 0;
-  font-size: clamp(17px, 2.2vw, 21px);
+  margin: 8px 0 0;
+  font-size: clamp(16px, 2vw, 20px);
   color: #6e6e73;
 }
 
@@ -73,7 +95,7 @@ body {
 
 .buy {
   position: fixed;
-  bottom: 46px;
+  bottom: 44px;
   left: 50%;
   transform: translateX(-50%);
   padding: 14px 30px;
@@ -95,17 +117,11 @@ body {
   transform: translateX(-50%) scale(0.97);
 }
 </style>
-<script type="importmap">
-{
-  "imports": {
-    "three": "./vendor/three.module.min.js"
-  }
-}
-</script>
 </head>
 <body>
 <canvas id="scene"></canvas>
-<div class="hero">
+<p class="loading" id="loading">loading…</p>
+<div class="hud">
   <p class="eyebrow">Trading Competition</p>
   <h1 class="pool" id="pool">$0</h1>
   <p class="tagline">The prize pool grows with every ticket.</p>
@@ -113,14 +129,63 @@ body {
 </div>
 <button class="buy" id="buy" type="button">Buy a ticket&nbsp;&nbsp;$25</button>
 <script type="module">
-import { mountPrize } from "./prize.js";
+// The supplied Spline scene, loaded directly — no approximation. The
+// vendored vanilla runtime is the same 1.12.98 build as
+// @splinetool/viewer@1.12.98; only the scene itself streams from Spline.
+import { Application } from "./vendor/spline/runtime.js";
 
-const pool = mountPrize(document.getElementById("scene"), {
-  pool: document.getElementById("pool"),
-  sub: document.getElementById("sub")
-});
-window.pool = pool; // integration hook: pool.setSold(n)
-document.getElementById("buy").addEventListener("click", () => pool.buy());
+const params = new URLSearchParams(location.search);
+const SCENE_URL = params.get("scene")
+  || "https://prod.spline.design/axM-a3i4zLUUEn54/scene.splinecode";
+
+const loadingEl = document.getElementById("loading");
+const app = new Application(document.getElementById("scene"));
+app.load(SCENE_URL)
+  .then(() => {
+    app.setBackgroundColor("#FFFFFF");
+    loadingEl.classList.add("gone");
+  })
+  .catch((err) => {
+    console.error(err);
+    loadingEl.textContent = "couldn’t reach the scene — check your connection and reload.";
+  });
+
+// ---- prize pool: sold × $25, rolling counter -------------------------
+const TICKET_PRICE = 25;
+const poolEl = document.getElementById("pool");
+const subEl = document.getElementById("sub");
+const pSold = parseInt(params.get("sold"), 10);
+let sold = Number.isFinite(pSold) ? Math.max(0, pSold) : 139;
+let shown = sold * TICKET_PRICE;
+let target = shown;
+const fmt = (n) => "$" + Math.round(n).toLocaleString("en-US");
+
+function render() {
+  poolEl.textContent = fmt(shown);
+  subEl.textContent = `${sold.toLocaleString("en-US")} tickets sold · $${TICKET_PRICE} each`;
+}
+render();
+
+let last = performance.now();
+(function tick(now) {
+  const dt = Math.min((now - last) / 1000, 0.1);
+  last = now;
+  if (shown !== target) {
+    const diff = target - shown;
+    shown = Math.abs(diff) < 1 ? target : shown + diff * Math.min(dt * 3, 1);
+    poolEl.textContent = fmt(shown);
+  }
+  requestAnimationFrame(tick);
+})(last);
+
+function setSold(next) {
+  sold = Math.max(0, Math.round(next));
+  target = sold * TICKET_PRICE;
+  render();
+  poolEl.textContent = fmt(shown);
+}
+window.pool = { setSold, buy: (n = 1) => setSold(sold + n), get sold() { return sold; } };
+document.getElementById("buy").addEventListener("click", () => window.pool.buy());
 </script>
 </body>
 </html>

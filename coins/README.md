@@ -37,10 +37,14 @@ any ticket total works. Logic lives in `jar.js`.
 
 ## Prize pool (`prize.html`)
 
-Apple-clean casino hero: the golden-ticket design rebuilt in holographic
-rainbow chrome (`prize.js`, traced from the uploaded scene_2.splinecode —
-Spline scene materials can't be edited from outside, so the ticket was
-recreated natively), orbited by iridescent star coins. The pool counter is
-sold × $25 and rolls smoothly; each ticket drops a new coin into the ring.
-Feed the live count via `prize.html?sold=139` or `window.pool.setSold(n)`;
-the demo button calls `window.pool.buy()`.
+The supplied Spline coins scene loaded directly, full viewport, on white —
+geometry, materials, reflections, lighting, camera, shadows, and animation
+untouched (vendored runtime 1.12.98, matching @splinetool/viewer@1.12.98;
+only the scene streams from Spline). The Apple-style HUD shows the prize
+pool (sold × $25) as a rolling counter with the exposed gold palette
+(#FFC35C family). Live count via `prize.html?sold=139` or
+`window.pool.setSold(n)`; demo button calls `window.pool.buy()`.
+A `?scene=` override loads any other .splinecode.
+
+`prize-native.html` keeps the earlier procedural recreation (holographic
+ticket + paktos-marked spectrum coins) as an alternative.
