@@ -1,6 +1,5 @@
 import * as React from "react";
 import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
-import { CoinsLoop } from "@/components/coins-loop";
 import { PaktosLogo } from "@/components/paktos-logo";
 import { PaktosCard } from "@/components/paktos-card";
 import { AnimatedCountdown } from "@/components/ui/animated-countdown";
@@ -110,6 +109,11 @@ export default function App() {
             hideMember
             confetti={false}
             memberNo={ticket.memberNo}
+            details={[
+              { label: "Name", value: formatMemberName(name) },
+              { label: "Handle", value: `@${handle}` },
+              { label: "Email", value: email.trim(), span: true },
+            ]}
           />
           <button
             onClick={() => setStage("card")}
@@ -130,7 +134,6 @@ export default function App() {
         />
       ) : stage === "countdown" ? (
         <div className="fixed inset-0 z-10 overflow-hidden bg-white animate-in fade-in-0 duration-700">
-          <CoinsLoop className="absolute inset-0 h-full w-full" />
           <div className="relative z-10 flex h-full flex-col items-center justify-center gap-8 overflow-y-auto px-6 py-8">
             <p className="text-[11px] font-medium uppercase tracking-[0.35em] text-[#61606C]">
               Paktos Launch

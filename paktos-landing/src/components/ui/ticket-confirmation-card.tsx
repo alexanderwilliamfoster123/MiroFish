@@ -149,6 +149,7 @@ export interface TicketProps extends React.HTMLAttributes<HTMLDivElement> {
   hideMember?: boolean;
   confetti?: boolean;
   memberNo?: string;
+  details?: { label: string; value: string; span?: boolean }[];
 }
 
 const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
@@ -168,6 +169,7 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
       hideMember,
       confetti = true,
       memberNo,
+      details,
       ...props
     },
     ref
@@ -246,6 +248,17 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
                   <p className="text-xs text-muted-foreground uppercase">Date & Time</p>
                   <p className="font-medium">{formattedDate}</p>
               </div>
+
+              {details && details.length > 0 && (
+                <div className="grid grid-cols-2 gap-4 text-left">
+                    {details.map((detail) => (
+                      <div key={detail.label} className={detail.span ? "col-span-2" : undefined}>
+                          <p className="text-xs text-muted-foreground uppercase">{detail.label}</p>
+                          <p className="font-medium break-words">{detail.value}</p>
+                      </div>
+                    ))}
+                </div>
+              )}
 
               {hideMember ? null : memberSlot ? (
                 <div className="flex justify-center">{memberSlot}</div>
