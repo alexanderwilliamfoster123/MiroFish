@@ -206,7 +206,7 @@ export default function App() {
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="you@example.com"
                 aria-label="Email address"
-                className="h-11 flex-1 rounded-md border border-input bg-background px-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                className="h-11 flex-1 rounded-md border border-input bg-background px-4 text-base outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
               />
               <button
                 type="submit"
@@ -228,7 +228,7 @@ export default function App() {
                 onChange={(event) => setName(event.target.value)}
                 placeholder="Your name"
                 aria-label="Name"
-                className="h-11 flex-1 rounded-md border border-input bg-background px-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                className="h-11 flex-1 rounded-md border border-input bg-background px-4 text-base outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
               />
               <button
                 type="submit"
@@ -244,7 +244,7 @@ export default function App() {
                 className="mt-10 flex w-full items-center gap-2"
               >
                 <div className="relative flex-1">
-                  <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                  <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-base text-muted-foreground sm:text-sm">
                     @
                   </span>
                   <input
@@ -257,7 +257,7 @@ export default function App() {
                     }
                     placeholder="yourhandle"
                     aria-label="Handle"
-                    className="h-11 w-full rounded-md border border-input bg-background pl-8 pr-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="h-11 w-full rounded-md border border-input bg-background pl-8 pr-4 text-base outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
                   />
                 </div>
                 <button
