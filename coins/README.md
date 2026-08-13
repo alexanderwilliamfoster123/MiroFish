@@ -25,7 +25,17 @@ python3 -m http.server 8080   # in this folder
 ## Ticket jar (`jar.html`)
 
 Coins drop into a glass jar as competition tickets sell; the pile height
-tracks sold / total. Feed it the live count any of three ways:
+tracks sold / total. Every ticket is a celebration: a golden shower of
+cosmetic coins, spark bursts, a glow pulse behind the jar, a camera
+kick, a gold screen flash, and a "+$25" floater. Rapid sales streak up
+(tier 1→3, "on fire ×N" pill) and the whole thing escalates — cosmetic
+coins vanish after landing, so the frenzy never corrupts the sold/total
+pile. `prefers-reduced-motion` turns the fireworks off.
+
+`mountJar(canvas, ui, opts)` sizes itself to the canvas's parent
+(ResizeObserver), so the same component runs full-page or inside a
+dashboard card; `ui.onCelebrate(tier, streak)` lets the host page flash
+its own chrome. Feed it the live count any of three ways:
 
 - URL params: `jar.html?sold=140&total=500`
 - From script: `window.jar.setTickets(sold, total)` — e.g. poll your
@@ -34,6 +44,15 @@ tracks sold / total. Feed it the live count any of three ways:
 
 The jar's visual capacity is ~105 coins; the pile maps proportionally, so
 any ticket total works. Logic lives in `jar.js`.
+
+## Tournament dashboard (`dashboard.html`)
+
+The jar living inside the trade-tournament dashboard: a live leaderboard
+card next to the prize-pool card (jar + rolling $ counter + tickets bar +
+buy CTA), with the draw countdown in the header. A demo simulator fires
+random sales every few seconds so the jar goes off on its own —
+`?sim=0` starts it paused, and the card's code comments show where to
+poll a real ticketing API instead (`window.jar.setTickets(sold, total)`).
 
 ## Prize pool (`prize.html`)
 
