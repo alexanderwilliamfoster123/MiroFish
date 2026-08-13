@@ -3,7 +3,6 @@ import NumberFlow from "@number-flow/react";
 import { TiltCard } from "@/components/ui/tilt-card";
 import { AwardBadge } from "@/components/ui/award-badge";
 import { Button } from "@/components/ui/button";
-import { ButtonColorful } from "@/components/ui/button-colorful";
 import iconBlack from "@/assets/paktos-icon-black-192.png";
 import logoBlack2x from "@/assets/paktos-logo-black-760.png";
 
@@ -14,9 +13,21 @@ interface PaktosCardProps {
   memberName: string;
   serial: string;
   memberNo: string;
+  handle: string;
+  joined: Date;
   xp: number;
   /** Called after the member confirms they shared their story */
   onShared?: () => void;
+}
+
+function joinedLabel(joined: Date): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  })
+    .format(joined)
+    .toUpperCase();
 }
 
 // ——— 9:16 story image generation (1080×1920 PNG, drawn on a canvas) ———
@@ -54,7 +65,9 @@ function rr(
 async function generateStoryImage(
   memberName: string,
   memberNo: string,
-  serial: string
+  serial: string,
+  handle: string,
+  joined: Date
 ): Promise<Blob> {
   const W = 1080;
   const H = 1920;
@@ -79,19 +92,20 @@ async function generateStoryImage(
   ctx.drawImage(logo, (W - logoW) / 2, 220, logoW, logoH);
 
   ctx.textAlign = "center";
-  anyCtx.letterSpacing = "10px";
-  ctx.font = `800 64px ${sans}`;
-  ctx.fillStyle = "#18181B";
-  ctx.fillText("YOU'RE IN", W / 2, 480);
-
-  anyCtx.letterSpacing = "6px";
-  ctx.font = `800 122px ${sans}`;
-  ctx.fillText(memberNo, W / 2, 630);
-
-  anyCtx.letterSpacing = "6px";
-  ctx.font = `500 27px ${sans}`;
+  anyCtx.letterSpacing = "14px";
+  ctx.font = `500 34px ${sans}`;
   ctx.fillStyle = "#94939F";
-  ctx.fillText(`FOUNDING MEMBER · ${memberName.toUpperCase()}`, W / 2, 700);
+  ctx.fillText("YOU'RE IN", W / 2, 470);
+
+  anyCtx.letterSpacing = "2px";
+  ctx.font = `600 106px ${sans}`;
+  ctx.fillStyle = "#18181B";
+  ctx.fillText(memberNo, W / 2, 620);
+
+  anyCtx.letterSpacing = "6px";
+  ctx.font = `400 26px ${sans}`;
+  ctx.fillStyle = "#A5A5AB";
+  ctx.fillText(`FOUNDING MEMBER · @${handle}`, W / 2, 695);
 
   // ——— the metal members card ———
   const cx = 140;
@@ -178,13 +192,13 @@ async function generateStoryImage(
     `${2.4 * s}px`
   );
   engravedText(
-    "PAKTOS MEMBER",
+    `@${handle}`,
     cx + 24 * s,
     cy + ch * 0.56 + 26 * s,
-    `500 ${10 * s}px ${sans}`,
+    `500 ${11 * s}px ${sans}`,
     "#7a7b81",
     "left",
-    `${3 * s}px`
+    `${1.4 * s}px`
   );
   engravedText(
     serial,
@@ -196,7 +210,7 @@ async function generateStoryImage(
     `${2.1 * s}px`
   );
   engravedText(
-    "SINCE 2026",
+    `JOINED ${joinedLabel(joined)}`,
     cx + cw - 24 * s,
     cy + ch - 26 * s,
     `500 ${11 * s}px ${sans}`,
@@ -252,16 +266,16 @@ async function generateStoryImage(
 
   // ——— closing copy ———
   ctx.textAlign = "center";
-  anyCtx.letterSpacing = "1px";
-  ctx.font = `600 48px ${sans}`;
+  anyCtx.letterSpacing = "0.5px";
+  ctx.font = `500 44px ${sans}`;
   ctx.fillStyle = "#18181B";
   ctx.fillText(`${memberName} just joined Paktos.`, W / 2, 1560);
-  ctx.font = `400 42px ${sans}`;
-  ctx.fillStyle = "#61606C";
-  ctx.fillText("Will you be the next?", W / 2, 1630);
+  ctx.font = `400 38px ${sans}`;
+  ctx.fillStyle = "#8A8A90";
+  ctx.fillText("Will you be the next?", W / 2, 1628);
 
-  ctx.font = `500 32px ${sans}`;
-  ctx.fillStyle = "#94939F";
+  ctx.font = `400 30px ${sans}`;
+  ctx.fillStyle = "#A5A5AB";
   ctx.fillText(`${SOCIAL_TAG} · ${WAITLIST_LINK}`, W / 2, 1750);
 
   return new Promise((resolve, reject) =>
@@ -321,9 +335,13 @@ const engraved: React.CSSProperties = {
 function CardFace({
   memberName,
   serial,
+  handle,
+  joined,
 }: {
   memberName: string;
   serial: string;
+  handle: string;
+  joined: Date;
 }) {
   return (
     <div
@@ -380,10 +398,10 @@ function CardFace({
           {memberName}
         </p>
         <p
-          className="mt-1 text-[10px] font-medium uppercase tracking-[0.3em]"
+          className="mt-1 text-[11px] font-medium tracking-[0.14em]"
           style={{ ...engraved, color: "#7a7b81" }}
         >
-          Paktos Member
+          @{handle}
         </p>
       </div>
 
@@ -398,7 +416,7 @@ function CardFace({
           className="text-[11px] font-medium uppercase tracking-[0.2em]"
           style={{ ...engraved, color: "#7a7b81" }}
         >
-          Since 2026
+          Joined {joinedLabel(joined)}
         </p>
       </div>
     </div>
@@ -411,12 +429,16 @@ function ShareScreen({
   memberName,
   memberNo,
   serial,
+  handle,
+  joined,
   onDone,
   onDismiss,
 }: {
   memberName: string;
   memberNo: string;
   serial: string;
+  handle: string;
+  joined: Date;
   onDone: () => void;
   onDismiss: () => void;
 }) {
@@ -434,7 +456,7 @@ function ShareScreen({
   React.useEffect(() => {
     let url: string | null = null;
     let cancelled = false;
-    generateStoryImage(memberName, memberNo, serial)
+    generateStoryImage(memberName, memberNo, serial, handle, joined)
       .then((b) => {
         if (cancelled) return;
         url = URL.createObjectURL(b);
@@ -446,7 +468,7 @@ function ShareScreen({
       cancelled = true;
       if (url) URL.revokeObjectURL(url);
     };
-  }, [memberName, memberNo, serial]);
+  }, [memberName, memberNo, serial, handle, joined]);
 
   const download = () => {
     if (!previewUrl) return;
@@ -493,12 +515,13 @@ function ShareScreen({
         )}
 
         <div className="flex w-full gap-2 animate-in fade-in-0 duration-700 delay-200">
-          <ButtonColorful
+          <button
             onClick={shareToStory}
             disabled={!blob}
-            className="h-11 flex-1"
-            label="Share to Story"
-          />
+            className="h-11 flex-1 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+          >
+            Share to Story
+          </button>
           <Button
             variant="outline"
             onClick={download}
@@ -517,11 +540,12 @@ function ShareScreen({
       </div>
 
       <div className="mt-6 flex w-full max-w-sm flex-col items-center gap-3">
-        <ButtonColorful
+        <button
           onClick={onDone}
-          className="h-11 w-full"
-          label="I shared to my story"
-        />
+          className="h-11 w-full rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+        >
+          I shared to my story
+        </button>
         <button
           onClick={onDismiss}
           className="text-xs text-neutral-500 underline-offset-2 hover:underline"
@@ -536,7 +560,7 @@ function ShareScreen({
 // The member's metal Paktos Card. The Founding Member XP bonus rolls onto
 // the balance pill; sharing opens the white story screen, and the second
 // bonus lands after the member confirms they shared.
-export function PaktosCard({ memberName, serial, memberNo, xp, onShared }: PaktosCardProps) {
+export function PaktosCard({ memberName, serial, memberNo, handle, joined, xp, onShared }: PaktosCardProps) {
   const [balance, setBalance] = React.useState(0);
   const [shared, setShared] = React.useState(false);
   const [shareOpen, setShareOpen] = React.useState(false);
@@ -562,6 +586,8 @@ export function PaktosCard({ memberName, serial, memberNo, xp, onShared }: Pakto
           memberName={memberName}
           memberNo={memberNo}
           serial={serial}
+          handle={handle}
+          joined={joined}
           onDone={handleShareDone}
           onDismiss={() => setShareOpen(false)}
         />
@@ -573,7 +599,12 @@ export function PaktosCard({ memberName, serial, memberNo, xp, onShared }: Pakto
 
       <div className="w-full animate-in fade-in-0 zoom-in-95 duration-500">
         <TiltCard className="rounded-2xl shadow-2xl">
-          <CardFace memberName={memberName} serial={serial} />
+          <CardFace
+            memberName={memberName}
+            serial={serial}
+            handle={handle}
+            joined={joined}
+          />
         </TiltCard>
       </div>
 
@@ -591,14 +622,15 @@ export function PaktosCard({ memberName, serial, memberNo, xp, onShared }: Pakto
         <span className="font-medium text-foreground">$1,000 raffle</span>.
       </p>
 
-      <ButtonColorful
+      <button
         onClick={() => !shared && setShareOpen(true)}
         disabled={shared}
-        className="h-11 w-full"
-        label={
-          shared ? `+${xp} XP added · Thanks for sharing!` : "Share to my story"
-        }
-      />
+        className="h-11 w-full rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+      >
+        {shared
+          ? `+${xp} XP added · Thanks for sharing!`
+          : "Share to my story"}
+      </button>
     </div>
   );
 }
