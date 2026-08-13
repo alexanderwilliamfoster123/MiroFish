@@ -162,24 +162,12 @@ export function World({ onLeave }: WorldProps) {
       {room === "companies" && (
         <section key="companies" className="animate-fade-in w-full">
           <div className="flex h-[46vh] flex-col items-center justify-end px-6 text-center">
-            <p
-              className="animate-fade-up text-[11px] tracking-[0.25em] text-faint"
-              style={{ animationDelay: "0.05s" }}
-            >
-              companies
-            </p>
             <h1
-              className="animate-fade-up mt-3 text-[19px] font-medium tracking-tight sm:text-[21px]"
-              style={{ animationDelay: "0.15s" }}
+              className="animate-fade-up text-[19px] font-medium tracking-tight sm:text-[21px]"
+              style={{ animationDelay: "0.1s" }}
             >
               founded.
             </h1>
-            <p
-              className="animate-fade-up mt-2 text-[12px] text-faint"
-              style={{ animationDelay: "0.25s" }}
-            >
-              scroll to turn the wheel
-            </p>
           </div>
           <RadialScrollGallery
             className="!min-h-[64vh]"
