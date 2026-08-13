@@ -30,7 +30,8 @@ export default function App() {
     return (
       <CaptureStep
         key="email"
-        heading="Your email."
+        heading="Every world needs a key."
+        sub="Yours is an email."
         placeholder="you@somewhere.com"
         validate={(value) => EMAIL_PATTERN.test(value)}
         errorText="That doesn’t look right."

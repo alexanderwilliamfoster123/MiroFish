@@ -8,6 +8,7 @@ const KEYBOARD_NATURAL_FULL = 1080;
 
 interface CaptureStepProps {
   heading: string;
+  sub?: string;
   placeholder: string;
   allowSpaces?: boolean;
   errorText?: string;
@@ -18,6 +19,7 @@ interface CaptureStepProps {
 // One question per screen: a heading, a line, the keyboard. Enter moves on.
 export function CaptureStep({
   heading,
+  sub,
   placeholder,
   allowSpaces = false,
   errorText,
@@ -42,7 +44,8 @@ export function CaptureStep({
         window.innerWidth < 768
           ? KEYBOARD_NATURAL_COMPACT
           : KEYBOARD_NATURAL_FULL;
-      setScale(Math.min(1, el.clientWidth / natural));
+      // never larger than 72% — the page stays open and airy
+      setScale(Math.min(0.72, el.clientWidth / natural));
     };
     compute();
     const observer = new ResizeObserver(compute);
@@ -126,20 +129,28 @@ export function CaptureStep({
     >
       <div className="flex w-full flex-col items-center text-center">
         <h1
-          className="animate-fade-up text-[26px] font-medium tracking-tight text-foreground sm:text-[30px]"
+          className="animate-fade-up text-[19px] font-medium tracking-tight text-foreground sm:text-[21px]"
           style={{ animationDelay: "0.1s" }}
         >
           {heading}
         </h1>
+        {sub && (
+          <p
+            className="animate-fade-up mt-2.5 text-[13px] text-muted-foreground"
+            style={{ animationDelay: "0.2s" }}
+          >
+            {sub}
+          </p>
+        )}
 
         {/* the line */}
         <div
-          className="animate-fade-up mt-9 w-full max-w-sm"
-          style={{ animationDelay: "0.25s" }}
+          className="animate-fade-up mt-14 w-full max-w-[300px]"
+          style={{ animationDelay: "0.3s" }}
         >
           <div
             className={cn(
-              "border-b pb-3 text-center text-[17px] transition-colors duration-300",
+              "border-b pb-2.5 text-center text-[15px] transition-colors duration-300",
               error ? "border-white/70" : "border-line",
             )}
             aria-label={heading}
@@ -154,7 +165,7 @@ export function CaptureStep({
           </div>
           <p
             className={cn(
-              "mt-3 h-4 text-xs transition-opacity duration-300",
+              "mt-3 h-4 text-[11px] transition-opacity duration-300",
               error
                 ? "text-neutral-400 opacity-100"
                 : value
@@ -170,8 +181,8 @@ export function CaptureStep({
         {/* the keyboard */}
         <div
           ref={scalerRef}
-          className="animate-fade-up mt-8 w-full max-w-5xl"
-          style={{ animationDelay: "0.4s" }}
+          className="animate-fade-up mt-16 w-full max-w-5xl"
+          style={{ animationDelay: "0.45s" }}
         >
           <div style={{ zoom: scale }}>
             <Keyboard onKey={applyKey} />
