@@ -56,7 +56,7 @@ function logoGeometry(scale, depth) {
   return geometry;
 }
 
-function makeCoin(radius, faceMat, reliefMat, rimMat) {
+export function makeCoin(radius, faceMat, reliefMat, rimMat) {
   const coin = new THREE.Group();
   const t = radius * 0.16; // thickness
 

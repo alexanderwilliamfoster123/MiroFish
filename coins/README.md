@@ -21,3 +21,16 @@ screenshot of the original if needed.
 python3 -m http.server 8080   # in this folder
 # open http://localhost:8080
 ```
+
+## Ticket jar (`jar.html`)
+
+Coins drop into a glass jar as competition tickets sell; the pile height
+tracks sold / total. Feed it the live count any of three ways:
+
+- URL params: `jar.html?sold=140&total=500`
+- From script: `window.jar.setTickets(sold, total)` — e.g. poll your
+  ticketing API every 30s and call this; new sales rain in as coins.
+- `window.jar.buy(n)` increments locally (the demo button uses this).
+
+The jar's visual capacity is ~105 coins; the pile maps proportionally, so
+any ticket total works. Logic lives in `jar.js`.
