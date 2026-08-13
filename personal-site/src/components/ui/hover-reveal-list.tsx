@@ -47,26 +47,26 @@ export function HoverRevealList({ items }: { items: RevealItem[] }) {
             target="_blank"
             rel="noreferrer"
             onMouseEnter={() => setActive(index)}
-            className="group flex items-baseline gap-5 border-b border-white/[0.07] py-6 transition-colors duration-300 sm:py-7"
+            className="group flex items-baseline gap-4 border-b border-white/[0.07] py-3.5 transition-colors duration-300"
             style={{
               opacity: active === null ? 1 : active === index ? 1 : 0.28,
               transition: "opacity 0.35s ease",
             }}
           >
-            <span className="font-mono text-[11px] text-faint tabular-nums">
+            <span className="font-mono text-[10px] text-faint tabular-nums">
               {String(index + 1).padStart(2, "0")}
             </span>
             <span
               className={
-                "text-3xl font-medium tracking-tight transition-colors duration-300 sm:text-[44px] " +
+                "text-[15px] font-medium tracking-tight transition-colors duration-300 " +
                 (active === index ? "text-foreground" : "text-neutral-500")
               }
             >
               {entry.title}
             </span>
-            <span className="ml-auto flex items-center gap-2 text-[12px] text-faint opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <span className="ml-auto flex items-center gap-1.5 text-[11px] text-faint opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               open
-              <ArrowUpRight size={13} />
+              <ArrowUpRight size={12} />
             </span>
           </a>
         ))}

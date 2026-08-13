@@ -3,7 +3,6 @@ import {
   HoverRevealList,
   type RevealItem,
 } from "@/components/ui/hover-reveal-list";
-import { Blog8 } from "@/components/ui/blog8";
 import { RadialScrollGallery } from "@/components/ui/portfolio-and-image-gallery";
 import {
   AtSign,
@@ -23,61 +22,34 @@ type Room = "writing" | "pictures" | "socials" | "companies";
 // the wheel of investments, in order around the circle
 const COMPANIES = ["vertus", "vanquish", "paktos", "tootski", "omera"];
 
-// self-contained monochrome covers so the posts render anywhere
-const cover = (a: string, b: string, n: string) =>
-  "data:image/svg+xml;utf8," +
-  encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='450'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='${a}'/><stop offset='1' stop-color='${b}'/></linearGradient></defs><rect width='800' height='450' fill='url(%23g)'/><text x='40' y='400' font-family='monospace' font-size='28' fill='rgba(235,233,228,0.35)'>${n}</text></svg>`,
-  );
-
 const POSTS = [
   {
-    id: "post-1",
     title: "on building quietly",
     summary:
       "the best work i've done never announced itself. why shipping softly beats launching loudly.",
-    label: "essay",
-    author: "alexander foster",
     published: "jul 2026",
     url: "#",
-    image: cover("#1c1c1f", "#0c0c0e", "no.01"),
-    tags: ["essay", "building"],
   },
   {
-    id: "post-2",
     title: "simulation as a way of seeing",
     summary:
       "what building mirofish taught me about crowds, prediction, and the limits of asking people what they think.",
-    label: "essay",
-    author: "alexander foster",
     published: "may 2026",
     url: "#",
-    image: cover("#232326", "#101012", "no.02"),
-    tags: ["essay", "simulation"],
   },
   {
-    id: "post-3",
     title: "interfaces that stay out of the way",
     summary:
       "a short argument for software that disappears — and the discipline it takes to leave things out.",
-    label: "essay",
-    author: "alexander foster",
     published: "feb 2026",
     url: "#",
-    image: cover("#18181b", "#0a0a0c", "no.03"),
-    tags: ["essay", "design"],
   },
   {
-    id: "post-4",
     title: "notes to a younger builder",
     summary:
       "everything i wish someone had told me before i wrote my first line of production code.",
-    label: "letter",
-    author: "alexander foster",
     published: "nov 2025",
     url: "#",
-    image: cover("#202023", "#0e0e10", "no.04"),
-    tags: ["letter"],
   },
 ];
 
@@ -164,7 +136,7 @@ export function World({ onLeave }: WorldProps) {
       {room === "socials" && (
         <section
           key="socials"
-          className="animate-fade-in mx-auto flex min-h-dvh w-full max-w-3xl flex-col justify-center px-6 pt-16 pb-36"
+          className="animate-fade-in mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-6 pt-16 pb-36"
         >
           <p
             className="animate-fade-up text-[11px] tracking-[0.25em] text-faint"
@@ -200,7 +172,7 @@ export function World({ onLeave }: WorldProps) {
               className="animate-fade-up mt-3 text-[19px] font-medium tracking-tight sm:text-[21px]"
               style={{ animationDelay: "0.15s" }}
             >
-              invested in.
+              founded.
             </h1>
             <p
               className="animate-fade-up mt-2 text-[12px] text-faint"
@@ -258,12 +230,46 @@ export function World({ onLeave }: WorldProps) {
       )}
 
       {room === "writing" && (
-        <section key="writing" className="animate-fade-in w-full pb-24">
-          <Blog8
-            heading="writing."
-            description="letters and essays — on building, thinking, and paying attention."
-            posts={POSTS}
-          />
+        <section
+          key="writing"
+          className="animate-fade-in mx-auto flex min-h-dvh w-full max-w-xl flex-col justify-center px-6 pt-16 pb-36"
+        >
+          <p
+            className="animate-fade-up text-[11px] tracking-[0.25em] text-faint"
+            style={{ animationDelay: "0.05s" }}
+          >
+            writing
+          </p>
+          <h1
+            className="animate-fade-up mt-3 text-[19px] font-medium tracking-tight sm:text-[21px]"
+            style={{ animationDelay: "0.15s" }}
+          >
+            letters and essays.
+          </h1>
+          <div
+            className="animate-fade-up mt-10"
+            style={{ animationDelay: "0.3s" }}
+          >
+            {POSTS.map((post) => (
+              <a
+                key={post.title}
+                href={post.url}
+                className="group block border-b border-white/[0.07] py-7 transition-colors duration-300"
+              >
+                <div className="flex items-baseline justify-between gap-6">
+                  <h3 className="text-[16px] font-medium tracking-tight text-neutral-300 transition-colors duration-300 group-hover:text-foreground">
+                    {post.title}
+                  </h3>
+                  <span className="shrink-0 font-mono text-[11px] text-faint">
+                    {post.published}
+                  </span>
+                </div>
+                <p className="mt-2 max-w-md text-[13px] font-light leading-relaxed text-muted-foreground">
+                  {post.summary}
+                </p>
+              </a>
+            ))}
+          </div>
         </section>
       )}
 
