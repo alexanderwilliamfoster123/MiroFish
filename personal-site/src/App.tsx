@@ -55,6 +55,7 @@ export default function App() {
     return (
       <SubscriptionReceipt
         name={name}
+        email={email}
         onContinue={() => setEntered(true)}
         onReset={reset}
       />

@@ -4,12 +4,14 @@ import { useMemo } from "react";
 
 interface SubscriptionReceiptProps {
   name: string;
+  email: string;
   onContinue: () => void;
   onReset: () => void;
 }
 
 export function SubscriptionReceipt({
   name,
+  email,
   onContinue,
   onReset,
 }: SubscriptionReceiptProps) {
@@ -31,6 +33,7 @@ export function SubscriptionReceipt({
         amount={0}
         date={receipt.date}
         cardHolder={name}
+        email={email}
         last4Digits={receipt.last4Digits}
         barcodeValue={receipt.barcodeValue}
       />

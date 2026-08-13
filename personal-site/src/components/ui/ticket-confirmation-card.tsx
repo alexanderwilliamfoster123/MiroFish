@@ -140,6 +140,7 @@ export interface TicketProps extends React.HTMLAttributes<HTMLDivElement> {
   amount: number;
   date: Date;
   cardHolder: string;
+  email?: string;
   last4Digits: string;
   barcodeValue: string;
   icon?: React.ReactNode;
@@ -153,6 +154,7 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
       amount,
       date,
       cardHolder,
+      email,
       last4Digits,
       barcodeValue,
       ...props
@@ -233,7 +235,11 @@ const AnimatedTicket = React.forwardRef<HTMLDivElement, TicketProps>(
                   <MastercardIcon />
                   <div>
                       <p className="font-semibold">{cardHolder}</p>
-                      <p className="text-muted-foreground font-mono text-sm tracking-wider">•••• {last4Digits}</p>
+                      {email ? (
+                        <p className="text-muted-foreground font-mono text-sm tracking-wider">{email}</p>
+                      ) : (
+                        <p className="text-muted-foreground font-mono text-sm tracking-wider">•••• {last4Digits}</p>
+                      )}
                   </div>
               </div>
 

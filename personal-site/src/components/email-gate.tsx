@@ -15,6 +15,7 @@ const STEPS: Record<
 > = {
   email: {
     heading: "every world has a key.",
+    sub: "yours is an email.",
     placeholder: "you@somewhere.com",
     errorText: "that doesn’t look right.",
   },
