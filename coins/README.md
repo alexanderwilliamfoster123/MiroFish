@@ -34,3 +34,13 @@ tracks sold / total. Feed it the live count any of three ways:
 
 The jar's visual capacity is ~105 coins; the pile maps proportionally, so
 any ticket total works. Logic lives in `jar.js`.
+
+## Prize pool (`prize.html`)
+
+Apple-clean casino hero: the golden-ticket design rebuilt in holographic
+rainbow chrome (`prize.js`, traced from the uploaded scene_2.splinecode —
+Spline scene materials can't be edited from outside, so the ticket was
+recreated natively), orbited by iridescent star coins. The pool counter is
+sold × $25 and rolls smoothly; each ticket drops a new coin into the ring.
+Feed the live count via `prize.html?sold=139` or `window.pool.setSold(n)`;
+the demo button calls `window.pool.buy()`.
