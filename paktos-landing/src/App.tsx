@@ -190,7 +190,6 @@ export default function App() {
         </div>
       ) : (
         <div className="flex w-full max-w-md flex-col items-center text-center">
-          <CoinsLoop className="mb-8 h-64 rounded-xl" />
           <PaktosLogo />
           <p className="mt-6 text-muted-foreground">
             The World Is Watching.
