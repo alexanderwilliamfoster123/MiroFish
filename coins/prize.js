@@ -189,17 +189,17 @@ export function makeTicket() {
 }
 
 const COIN_PALETTES = [
-  ["#8ff3ff", "#ffffff", "#b7a6ff", "#ff9fd6"],
-  ["#25d6ff", "#8feeff", "#2fc9e8", "#7fd8ff"],
-  ["#ffd76a", "#ffeab0", "#ffb36b", "#ffdf8a"],
-  ["#ff9ed4", "#ffd6ee", "#c9a8ff", "#ff badge"],
-  ["#a9c8ff", "#ffffff", "#ffc9e2", "#cfe2ff"],
-  ["#7fe8d8", "#ccfff2", "#9fd0ff", "#b0ffe8"]
+  ["#00b4e8", "#6fe8ff", "#3a2f9e", "#ff4fae"],
+  ["#0a5aa8", "#3fd4ff", "#0096d6", "#7de0ff"],
+  ["#c96a1e", "#ffd75e", "#f5a800", "#ffe89a"],
+  ["#8a2fd0", "#ff8fce", "#ff3d9a", "#ffc4e8"],
+  ["#2b2e8f", "#9a8cff", "#5a48e8", "#e0d8ff"],
+  ["#0a7a8f", "#5af0d0", "#00c8a8", "#a8ffe8"]
 ];
 
 // smooth spectrum gradient, the actual source of the rainbow chrome look
 function spectrumTexture(index, angleJitter = 0) {
-  const palette = COIN_PALETTES[index % COIN_PALETTES.length].map((c) => c.replace(" badge", "b8e0"));
+  const palette = COIN_PALETTES[index % COIN_PALETTES.length];
   const canvas = document.createElement("canvas");
   canvas.width = canvas.height = 512;
   const ctx = canvas.getContext("2d");
@@ -212,9 +212,9 @@ function spectrumTexture(index, angleJitter = 0) {
   ctx.fillRect(0, 0, 512, 512);
   // soft counter-sweep so the gradient bends like a reflection
   const grad2 = ctx.createLinearGradient(256 + y, 256 - x, 256 - y, 256 + x);
-  grad2.addColorStop(0, "rgba(255,255,255,0.55)");
+  grad2.addColorStop(0, "rgba(255,255,255,0.28)");
   grad2.addColorStop(0.45, "rgba(255,255,255,0)");
-  grad2.addColorStop(1, "rgba(255,170,220,0.35)");
+  grad2.addColorStop(1, "rgba(60,20,120,0.22)");
   ctx.fillStyle = grad2;
   ctx.fillRect(0, 0, 512, 512);
   const texture = new THREE.CanvasTexture(canvas);
@@ -251,6 +251,39 @@ function planarUVs(geometry) {
   return geometry;
 }
 
+// the paktos four-chevron mark, normalized to fit a coin face
+function paktosShapes(size) {
+  const w = 0.34;
+  const unit = [[0, 1], [1, 1], [1, 0], [1 - w, w], [1 - w, 1 - w], [w, 1 - w]];
+  const placements = [[-1.16, 0.12], [0.04, -0.14], [-1.16, -1.08], [0.04, -1.34]];
+  const glyphs = placements.map(([ox, oy]) =>
+    unit.map(([x, y]) => {
+      const px = x + ox;
+      const py = y + oy;
+      return [py, -px]; // rotate -90° so the mark points lower-right
+    })
+  );
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (const g of glyphs) for (const [x, y] of g) {
+    minX = Math.min(minX, x); maxX = Math.max(maxX, x);
+    minY = Math.min(minY, y); maxY = Math.max(maxY, y);
+  }
+  const cx = (minX + maxX) / 2;
+  const cy = (minY + maxY) / 2;
+  const scale = size / Math.max(maxX - minX, maxY - minY);
+  return glyphs.map((g) => {
+    const shape = new THREE.Shape();
+    g.forEach(([x, y], i) => {
+      const px = (x - cx) * scale;
+      const py = (y - cy) * scale;
+      if (i === 0) shape.moveTo(px, py);
+      else shape.lineTo(px, py);
+    });
+    shape.closePath();
+    return shape;
+  });
+}
+
 export function makeStarCoin(radius, tintIndex) {
   const t = radius * 0.24;
   const coin = new THREE.Group();
@@ -265,7 +298,7 @@ export function makeStarCoin(radius, tintIndex) {
   // face plates with a star-shaped hole -> the star reads debossed
   const plateShape = new THREE.Shape();
   plateShape.absarc(0, 0, radius * 0.995, 0, Math.PI * 2);
-  plateShape.holes.push(starShape(radius * 0.6, radius * 0.6 * 0.44));
+  plateShape.holes.push(...paktosShapes(radius * 1.12));
   const plateGeo = planarUVs(new THREE.ExtrudeGeometry(plateShape, {
     depth: t * 0.32,
     bevelEnabled: true,
