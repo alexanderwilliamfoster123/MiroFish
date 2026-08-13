@@ -1,50 +1,48 @@
-# Paktos Landing
+# Paktos Waitlist Landing
 
-Waitlist landing page for Paktos. The flow: 3D coin hero → email → name →
-"You're In!" receipt with +500 XP → brushed-metal Paktos member card with a
-silver holographic Founding Member badge → story-share screen (screenshot,
-post, tag @tradepaktos for the $1,000 raffle) → +500 XP claimed after posting.
+A single-page waitlist funnel for Paktos. Built with Vite, React 18, TypeScript, and Tailwind CSS (shadcn-style components).
 
-## Stack
+## The flow
 
-- Vite + React 18 + TypeScript
-- Tailwind CSS 3 with `tailwindcss-animate`
-- shadcn project structure (`components.json`, `src/components/ui`,
-  `src/lib/utils.ts`, CSS-variable theme tokens, `@/*` path alias)
-- `@splinetool/react-spline` for the 3D coins hero (scene bundled locally,
-  including its wasm dependency — no external requests at runtime)
-- `@number-flow/react` for the XP roll-up animation
+1. **Landing** — Paktos lockup, "The World Is Watching.", email → **Join**
+2. **Name** — "Your name" → **Continue**
+3. **Handle** — "@yourhandle" → **Claim** (input is sanitized to lowercase letters, numbers, underscores, max 20 chars)
+4. **Receipt** — "You're In! / MEMBER #xxxxxx", +500 XP, and the details they entered (name, @handle, email) → "Add 500 XP to my Paktos Card"
+5. **Card** — confetti, brushed-metal Founding Member card (name, @handle, serial, joined date), holographic badge, XP roll-up → "Share to my story"
+6. **Share** — generates a 1080×1920 story PNG on a canvas, shown immediately with **Share to Story** (native share sheet where supported, `navigator.share` with files) and **Save to Photos** (download). "I shared to my story" doubles XP and moves straight to the finale.
+7. **Finale** — white screen with the "PAKTOS LAUNCH" countdown, quote, and social links.
 
-## Run
+## Run it
 
 ```bash
 npm install
-npm run dev            # dev server
-npm run build          # production build (code-split, 3D loads lazily)
-SINGLEFILE=1 npm run build   # fully self-contained single-chunk build
+npm run dev        # dev server
+npm run build      # production build → dist/ (code-split, hashed assets)
 ```
 
-## Configuration
+There is also a single-file build used for previews — everything inlined into one JS bundle:
 
-- `WAITLIST_LINK` in `src/components/paktos-card.tsx` — the link shown on the
-  story-share screen.
-- `XP_BONUS` in `src/App.tsx` — the Founding Member bonus size.
-- Signups are client-side only; wire `handleNameSubmit` in `src/App.tsx` to
-  your backend/CRM to actually store emails.
+```bash
+SINGLEFILE=1 npm run build
+```
 
-## Components (`src/components/ui`)
+## Where things live
 
-- `ticket-confirmation-card.tsx` — `AnimatedTicket` receipt with confetti,
-  barcode, and optional XP / member-slot props.
-- `award-badge.tsx` — holographic badge (gold/silver/bronze via `place`),
-  extended with `topText` / `titleText` / `iconSrc` / `hideIcon` overrides.
-- `tilt-card.tsx` — 3D cursor tilt with spotlight (used on the member card).
-- `spline-hero.tsx` — lazy, CSP-safe Spline scene wrapper with an error
-  boundary (the page never breaks if WebGL/wasm is unavailable).
-- `liquid-glass-card.tsx`, `liquid-glass-button.tsx`, `payment-card.tsx`,
-  `liquid-metal-button.tsx`, `number-flow-trading.tsx`, `input.tsx`,
-  `label.tsx`, `button.tsx` — integrated library components, available but
-  not all used by the current flow.
+- `src/App.tsx` — the whole flow / stage machine. Start here.
+- `src/components/paktos-card.tsx` — members card, share screen, and the canvas story-image generator (`generateStoryImage`).
+- `src/components/ui/ticket-confirmation-card.tsx` — the receipt.
+- `src/components/ui/animated-countdown.tsx` — the finale countdown.
+- `src/assets/` — logo lockups (1x/2x/4x), icon marks, coin-loop videos (currently unused by any screen, kept for reuse).
 
-Brand assets (logo lockups at 1x/2x/4x, mark icons, Spline scene) live in
-`src/assets/`, generated from the brand kit masters.
+## What needs wiring up before launch (all front-end only today)
+
+Everything currently runs client-side with simulated data. The single integration point is `handleHandleSubmit` → `issueTicket()` in `src/App.tsx`:
+
+1. **Signup API** — post `{ email, name, handle }` on the handle Claim submit.
+2. **Member number** — `issueTicket()` fabricates one (marked with a comment). Replace with the backend-assigned sequential number.
+3. **Handle uniqueness** — the client only sanitizes; the backend must enforce availability/uniqueness and reject dupes.
+4. **Launch date** — `GIVEAWAY_DATE` in `src/App.tsx` (currently 2026-10-11). Set the real launch timestamp.
+5. **Social links** — the finale links to `x.com/tradepaktos`, `instagram.com/tradepaktos`, `linkedin.com/company/tradepaktos`. Confirm handles.
+6. **Share tracking** — "I shared to my story" is self-reported; the raffle entry (+500 XP) trusts the click. Track it server-side if the raffle needs verification.
+
+No env vars, no server, no analytics are set up yet.
