@@ -151,3 +151,16 @@ body {
 .light [class*="bg-[#0b0b0b]"],
 .light [class*="bg-[#141414]"],
 .light [class*="bg-[#161616]"] { background-color: #f3f3f1; }
+
+/* the dock, quiet in light: no rings around the icons */
+.light [class*="bg-neutral-950/80"] {
+  background-color: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+.light [role="button"][class*="bg-neutral-900"] {
+  background-color: transparent;
+  border-color: transparent;
+}
+.light [role="button"][class*="border-white/30"] {
+  background-color: rgba(0, 0, 0, 0.07);
+}
