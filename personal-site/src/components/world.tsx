@@ -114,10 +114,10 @@ export function World({ onLeave }: WorldProps) {
                 "",
                 "now i'm building vanquish, paktos, tootski and omera.",
               ]}
-              className="text-[19px] leading-[1.6] font-light text-neutral-400 sm:text-[21px]"
+              className="font-display-condensed text-[15px] leading-[1.8] text-neutral-400 sm:text-[16px]"
             />
             <p
-              className="animate-fade-in mt-10 font-serif text-2xl italic text-neutral-500"
+              className="animate-fade-in mt-8 font-serif text-lg italic text-neutral-500"
               style={{ animationDelay: "1s", animationDuration: "0.8s" }}
             >
               alexander
