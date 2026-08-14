@@ -9,12 +9,25 @@ const EMAIL_KEY = "gate:email";
 const NAME_KEY = "gate:name";
 const ENTERED_KEY = "gate:entered";
 
+// returning visitors skip the gate; open the site with #fresh to forget
+// the stored visitor and walk the door again (handy for demos)
+if (typeof window !== "undefined" && window.location.hash === "#fresh") {
+  localStorage.removeItem(EMAIL_KEY);
+  localStorage.removeItem(NAME_KEY);
+  localStorage.removeItem(ENTERED_KEY);
+  history.replaceState(null, "", window.location.pathname + window.location.search);
+}
+
 export default function App() {
-  // every visit walks the whole door: email, name, ticket. the answers are
-  // still written to localStorage so the contact compose can sign the mail.
-  const [email, setEmail] = useState<string | null>(null);
-  const [name, setName] = useState<string | null>(null);
-  const [entered, setEntered] = useState(false);
+  const [email, setEmail] = useState<string | null>(() =>
+    localStorage.getItem(EMAIL_KEY),
+  );
+  const [name, setName] = useState<string | null>(() =>
+    localStorage.getItem(NAME_KEY),
+  );
+  const [entered, setEntered] = useState<boolean>(
+    () => localStorage.getItem(ENTERED_KEY) === "1",
+  );
 
   // each answer is kept the moment it's given, so a half-finished
   // signup still leaves the email behind
@@ -36,7 +49,11 @@ export default function App() {
   let screen;
   if (!name || !email) {
     screen = (
-      <Gate initialStep="email" onEmail={setEmail} onName={setName} />
+      <Gate
+        initialStep={email ? "name" : "email"}
+        onEmail={setEmail}
+        onName={setName}
+      />
     );
   } else if (!entered) {
     screen = (
