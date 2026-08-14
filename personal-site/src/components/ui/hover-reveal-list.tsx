@@ -134,14 +134,7 @@ export function HoverRevealList({ items }: { items: RevealItem[] }) {
         transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
       >
         {item && (
-          <div
-            className="rounded-xl border border-white/10 p-5"
-            style={{
-              background: "rgba(12, 12, 13, 0.92)",
-              boxShadow: "0 24px 60px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06)",
-              backdropFilter: "blur(12px)",
-            }}
-          >
+          <div className="hover-card rounded-xl border border-white/10 p-5">
             {item.icon && (
               <item.icon size={18} strokeWidth={1.5} className="text-neutral-300" />
             )}
