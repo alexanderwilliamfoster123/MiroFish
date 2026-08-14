@@ -123,6 +123,18 @@ const companyCards =
       );
     });
 
+// every page title sits exactly where the landing copy sits
+function RoomTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <h1
+      className="animate-fade-up absolute top-[24vh] left-6 z-10 text-[13px] font-medium tracking-tight sm:left-[33.5vw]"
+      style={{ animationDelay: "0.1s" }}
+    >
+      {children}
+    </h1>
+  );
+}
+
 export function World() {
   const [room, setRoomState] = useState<Room | null>(null);
   const [letter, setLetter] = useState<number | null>(null);
@@ -241,14 +253,11 @@ export function World() {
       {room === "socials" && (
         <section
           key="socials"
-          className="animate-fade-in flex min-h-dvh w-full flex-col items-center justify-center overflow-hidden px-4 pt-14 pb-32"
         >
-          <h1
-            className="animate-fade-up text-[13px] font-medium tracking-tight"
-            style={{ animationDelay: "0.1s" }}
+          <RoomTitle>find me everywhere.</RoomTitle>
+          <div
+          className="animate-fade-in flex min-h-dvh w-full flex-col items-center justify-center overflow-hidden px-4 pt-14 pb-32"
           >
-            find me everywhere.
-          </h1>
 
           <div
             className="animate-fade-up mt-8 flex flex-wrap items-end justify-center gap-3"
@@ -300,19 +309,14 @@ export function World() {
               onHover={(hovering) => setHoverFolder(hovering ? "frames" : null)}
             />
           </div>
+          </div>
         </section>
       )}
 
       {room === "companies" && (
         <section key="companies" className="animate-fade-in w-full">
-          <div className="flex h-[46vh] flex-col items-center justify-end px-6 text-center">
-            <h1
-              className="animate-fade-up text-[13px] font-medium tracking-tight"
-              style={{ animationDelay: "0.1s" }}
-            >
-              founded.
-            </h1>
-          </div>
+          <RoomTitle>founded.</RoomTitle>
+          <div className="h-[42vh]" />
           <RadialScrollGallery
             className="!min-h-[64vh]"
             baseRadius={430}
@@ -325,10 +329,8 @@ export function World() {
           </RadialScrollGallery>
 
           {/* the first wheel lets go, then the second set begins */}
-          <div className="flex h-[52vh] flex-col items-center justify-end px-6 text-center">
-            <h1 className="text-[13px] font-medium tracking-tight">
-              invested.
-            </h1>
+          <div className="flex h-[52vh] flex-col justify-end px-6 pl-6 sm:pl-[33.5vw]">
+            <h1 className="text-[13px] font-medium tracking-tight">invested.</h1>
           </div>
           <RadialScrollGallery
             className="!min-h-[64vh]"
@@ -349,13 +351,8 @@ export function World() {
           key="writing-list"
           className="animate-fade-in mx-auto flex min-h-dvh w-full max-w-2xl flex-col justify-center px-6 pt-16 pb-36"
         >
-          <h1
-            className="animate-fade-up text-[13px] font-medium tracking-tight"
-            style={{ animationDelay: "0.1s" }}
-          >
-            writing.
-          </h1>
-          <div className="mt-9 flex flex-col gap-9">
+          <RoomTitle>writing.</RoomTitle>
+          <div className="mt-9 flex flex-col gap-9 pt-10">
             {LETTERS.map((entry, index) => (
               <div
                 key={entry.num}
@@ -500,13 +497,9 @@ export function World() {
             className="animate-fade-up relative hidden w-[min(600px,92vw)] sm:block"
             style={{ animationDelay: "0.1s" }}
           >
-            <Mac className="h-auto w-full text-[#050505]" />
+            <Mac className="desk-glass h-auto w-full text-[#050505]" />
             <div
-              className="absolute top-[5%] left-[4.9%] flex h-[61%] w-[90.2%] flex-col overflow-hidden text-neutral-200"
-              style={{
-                background:
-                  "radial-gradient(120% 90% at 50% 0%, #131313 0%, #0a0a0a 55%, #050505 100%)",
-              }}
+              className="desk-screen absolute top-[5%] left-[4.9%] flex h-[61%] w-[90.2%] flex-col overflow-hidden text-neutral-200"
             >
               {/* menu bar */}
               <div className="flex h-[16px] shrink-0 items-center justify-between bg-white/[0.06] px-2.5 text-[8px] text-neutral-300">
@@ -538,14 +531,14 @@ export function World() {
                 <div className="absolute top-2.5 right-3.5 flex gap-4">
                   {["dumps", "folders"].map((name) => (
                     <div key={name} className="flex flex-col items-center gap-0.5">
-                      <Folder size={20} strokeWidth={1} className="fill-white/10 text-white/25" />
+                      <Folder size={20} strokeWidth={1} className="desk-folder fill-white/10 text-white/25" />
                       <span className="text-[7px] font-medium text-neutral-300">{name}</span>
                     </div>
                   ))}
                 </div>
 
                 {/* compose window */}
-                <div className="flex h-[74%] w-[52%] flex-col overflow-hidden rounded-md border border-white/10 bg-[#141414] shadow-[0_18px_50px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.06)]">
+                <div className="desk-window flex h-[74%] w-[52%] flex-col overflow-hidden rounded-md border border-white/10 bg-[#141414] shadow-[0_18px_50px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.06)]">
                   <div className="flex items-center gap-2.5 border-b border-white/[0.06] bg-white/[0.03] px-2.5 py-1.5">
                     <div className="flex items-center gap-1">
                       <span className="h-1.5 w-1.5 rounded-full bg-[#ff5f57]" />

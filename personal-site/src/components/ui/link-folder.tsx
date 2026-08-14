@@ -54,9 +54,9 @@ export function LinkFolder({
         className="pointer-events-none absolute bottom-4 h-28 w-[168px] drop-shadow-2xl"
         animate={{ opacity: open ? 0 : 1, scale: open ? 0.9 : 1 }}
       >
-        <div className="absolute top-0 left-0 h-6 w-16 rounded-t-lg border-t border-r border-l border-white/10 bg-linear-to-t from-[#1e1e1e] to-[#2a2a2a]" />
-        <div className="absolute top-5 right-0 bottom-0 left-0 rounded-b-lg rounded-tr-lg border border-white/10 bg-linear-to-b from-[#1e1e1e] to-[#0a0a0a] shadow-[inset_0_0_40px_rgba(0,0,0,0.8)]" />
-        <div className="pointer-events-none absolute top-6 right-1.5 bottom-1.5 left-1.5 rounded-md bg-black shadow-inner" />
+        <div className="lf-tab absolute top-0 left-0 h-6 w-16 rounded-t-lg border-t border-r border-l border-white/10 bg-linear-to-t from-[#1e1e1e] to-[#2a2a2a]" />
+        <div className="lf-body absolute top-5 right-0 bottom-0 left-0 rounded-b-lg rounded-tr-lg border border-white/10 bg-linear-to-b from-[#1e1e1e] to-[#0a0a0a] shadow-[inset_0_0_40px_rgba(0,0,0,0.8)]" />
+        <div className="lf-inner pointer-events-none absolute top-6 right-1.5 bottom-1.5 left-1.5 rounded-md bg-black shadow-inner" />
       </motion.div>
 
       {/* the cards */}
@@ -84,7 +84,7 @@ export function LinkFolder({
                 if (info.offset.y > 70 && open) onClose();
               }}
               onTap={open ? activate : undefined}
-              className={`group absolute bottom-0 h-[132px] w-[104px] origin-bottom overflow-hidden rounded-lg border border-white/15 shadow-[0_20px_40px_rgba(0,0,0,0.5)] ${
+              className={`lf-cardframe group absolute bottom-0 h-[132px] w-[104px] origin-bottom overflow-hidden rounded-lg border border-white/15 shadow-[0_20px_40px_rgba(0,0,0,0.5)] ${
                 open
                   ? link.soon
                     ? "pointer-events-auto cursor-grab active:cursor-grabbing"
@@ -112,7 +112,7 @@ export function LinkFolder({
               whileDrag={open ? { scale: 1.15, rotate: 5, zIndex: 150 } : {}}
               transition={{ type: "spring", stiffness: 350, damping: 30 }}
             >
-              <div className="flex h-full w-full flex-col justify-between bg-linear-to-b from-[#191919] to-[#0c0c0c] p-3">
+              <div className="lf-card flex h-full w-full flex-col justify-between bg-linear-to-b from-[#191919] to-[#0c0c0c] p-3">
                 {Icon ? (
                   <Icon size={14} strokeWidth={1.5} className="text-neutral-300" />
                 ) : (
@@ -143,7 +143,7 @@ export function LinkFolder({
 
       {/* folder front */}
       <motion.div
-        className="pointer-events-auto absolute bottom-0 z-20 h-[84px] w-[178px] cursor-pointer drop-shadow-[0_-20px_40px_rgba(0,0,0,0.8)]"
+        className="lf-front pointer-events-auto absolute bottom-0 z-20 h-[84px] w-[178px] cursor-pointer drop-shadow-[0_-20px_40px_rgba(0,0,0,0.8)]"
         style={{ transformOrigin: "bottom" }}
         animate={{
           opacity: open ? 0 : 1,
@@ -155,9 +155,9 @@ export function LinkFolder({
         onMouseLeave={() => onHover(false)}
         onClick={onOpen}
       >
-        <div className="relative flex h-full w-full items-end justify-center overflow-hidden rounded-xl border border-white/15 bg-linear-to-b from-[#262626] to-[#101010] pb-3.5 shadow-[inset_0_2px_10px_rgba(255,255,255,0.08)]">
+        <div className="lf-panel relative flex h-full w-full items-end justify-center overflow-hidden rounded-xl border border-white/15 bg-linear-to-b from-[#262626] to-[#101010] pb-3.5 shadow-[inset_0_2px_10px_rgba(255,255,255,0.08)]">
           <div className="absolute top-0 right-0 left-0 h-px bg-linear-to-r from-transparent via-white/40 to-transparent" />
-          <div className="flex items-center justify-center rounded-md border border-black/80 bg-black px-3 py-1.5 shadow-inner">
+          <div className="lf-chip flex items-center justify-center px-3 py-1.5">
             <span className="text-[10px] font-medium tracking-wide text-white/90">
               {name}
             </span>
