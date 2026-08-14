@@ -134,6 +134,7 @@ export function World() {
   const [isMobile, setIsMobile] = useState(false);
 
   const loginInputRef = useRef<HTMLInputElement>(null);
+  const keyboardRef = useRef<HTMLDivElement>(null);
 
   // each answer is kept the moment it's given
   useEffect(() => {
@@ -268,6 +269,55 @@ export function World() {
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entered, loginStep, loginValue, activeApp, sent, message]);
+
+  // the aluminium keyboard presses its keys as you type on your real one
+  useEffect(() => {
+    const labelFor = (key: string): string | null => {
+      if (key === " ") return " ";
+      if (key === "Backspace") return "delete";
+      if (key === "Enter") return "return";
+      if (key === "Shift") return "shift";
+      if (key === "Tab") return "tab";
+      if (key === "CapsLock") return "caps lock";
+      if (key === "Escape") return "esc";
+      if (key.length === 1) return key.toLowerCase();
+      return null;
+    };
+    const keysFor = (label: string): HTMLElement[] => {
+      const root = keyboardRef.current;
+      if (!root) return [];
+      const all = Array.from(root.querySelectorAll("div"));
+      if (label === " ") {
+        return all.filter((div) => div.className.includes("flex-[5]"));
+      }
+      return all.filter(
+        (div) =>
+          div.childElementCount === 0 &&
+          (div.textContent ?? "").trim().toLowerCase() === label,
+      );
+    };
+    const press = (e: KeyboardEvent) => {
+      const label = labelFor(e.key);
+      if (!label) return;
+      keysFor(label).forEach((div) => div.classList.add("key-pressed"));
+    };
+    const release = (e: KeyboardEvent) => {
+      const label = labelFor(e.key);
+      if (!label) return;
+      keysFor(label).forEach((div) => div.classList.remove("key-pressed"));
+    };
+    window.addEventListener("keydown", press);
+    window.addEventListener("keyup", release);
+    window.addEventListener("blur", () => {
+      keyboardRef.current
+        ?.querySelectorAll(".key-pressed")
+        .forEach((div) => div.classList.remove("key-pressed"));
+    });
+    return () => {
+      window.removeEventListener("keydown", press);
+      window.removeEventListener("keyup", release);
+    };
+  }, []);
 
   // the aluminium keyboard under the display is clickable too
   const onKeyboardClick = (event: MouseEvent<HTMLDivElement>) => {
@@ -745,6 +795,7 @@ export function World() {
 
           {/* the keyboard — half as wide as the display, like the real desk */}
           <div
+            ref={keyboardRef}
             className="animate-fade-up"
             style={{ animationDelay: "0.2s", zoom: 0.64 }}
             onClick={onKeyboardClick}
