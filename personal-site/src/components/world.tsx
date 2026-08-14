@@ -13,6 +13,7 @@ import {
   ArrowRight,
   AtSign,
   Briefcase,
+  Camera,
   ChevronDown,
   CirclePlus,
   Feather,
@@ -106,7 +107,6 @@ const LETTER_COVERS = [
 
 const DOCK_ITEMS: Array<{ room: Room; title: string; icon: typeof Feather }> = [
   { room: "companies", title: "companies", icon: Briefcase },
-  { room: "writing", title: "writing", icon: Feather },
   { room: "socials", title: "socials", icon: AtSign },
   { room: "contact", title: "contact", icon: Mail },
 ];
@@ -287,7 +287,27 @@ export function World({ onLeave }: WorldProps) {
             className="animate-fade-up mt-10"
             style={{ animationDelay: "0.3s" }}
           >
-            <HoverRevealList items={SOCIALS} />
+            <HoverRevealList
+              items={[
+                {
+                  title: "writing",
+                  handle: "letters",
+                  description: "the letters — read them right here.",
+                  href: "#",
+                  icon: Feather,
+                  onSelect: () => setRoom("writing"),
+                },
+                {
+                  title: "frames",
+                  handle: "photographs",
+                  description: "photographs in frames — coming soon.",
+                  href: "#",
+                  icon: Camera,
+                  soon: true,
+                },
+                ...SOCIALS,
+              ]}
+            />
           </div>
         </section>
       )}
@@ -618,7 +638,9 @@ export function World({ onLeave }: WorldProps) {
           desktopClassName="border border-white/10 bg-neutral-950/80 shadow-[0_8px_30px_rgba(0,0,0,0.6)] backdrop-blur-md"
           items={DOCK_ITEMS.map((item) => ({
             title: item.title,
-            active: room === item.room,
+            active:
+              room === item.room ||
+              (item.room === "socials" && room === "writing"),
             onClick: () => setRoom(room === item.room ? null : item.room),
             icon: (
               <item.icon

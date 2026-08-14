@@ -14,6 +14,8 @@ export interface RevealItem {
   icon?: LucideIcon;
   // rows with sublinks open a small drop-down instead of navigating
   sublinks?: { title: string; href: string }[];
+  onSelect?: () => void; // in-app row: click runs this instead of following href
+  soon?: boolean; // not yet open — row is quiet and unclickable
 }
 
 const SPRING = { stiffness: 220, damping: 24, mass: 0.6 };
@@ -68,6 +70,42 @@ export function HoverRevealList({ items }: { items: RevealItem[] }) {
               </span>
             </>
           );
+
+          if (entry.soon) {
+            return (
+              <div
+                key={entry.title}
+                onMouseEnter={() => setActive(index)}
+                className="group flex items-baseline gap-4 border-b border-white/[0.07] py-3.5"
+                style={rowStyle}
+              >
+                <span className="font-mono text-[10px] text-faint tabular-nums">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="text-[15px] font-medium tracking-tight text-neutral-600">
+                  {entry.title}
+                </span>
+                <span className="ml-auto text-[11px] text-faint opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  coming soon
+                </span>
+              </div>
+            );
+          }
+
+          if (entry.onSelect) {
+            return (
+              <button
+                key={entry.title}
+                type="button"
+                onClick={entry.onSelect}
+                onMouseEnter={() => setActive(index)}
+                className="group flex w-full cursor-pointer items-baseline gap-4 border-b border-white/[0.07] py-3.5 text-left transition-colors duration-300"
+                style={rowStyle}
+              >
+                {rowInner}
+              </button>
+            );
+          }
 
           if (entry.sublinks) {
             return (
