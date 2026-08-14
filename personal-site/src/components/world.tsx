@@ -1,6 +1,5 @@
 import { FloatingDock } from "@/components/ui/floating-dock";
 import { LinkFolder, type FolderLink } from "@/components/ui/link-folder";
-import { ProductSticker } from "@/components/ui/product-sticker";
 import { RadialScrollGallery } from "@/components/ui/portfolio-and-image-gallery";
 import { Mac } from "@/components/ui/mac";
 import Keyboard from "@/components/ui/magic-keyboard-component";
@@ -188,17 +187,11 @@ export function World() {
   const [message, setMessage] = useState("");
   const [openFolder, setOpenFolder] = useState<string | null>(null);
   const [hoverFolder, setHoverFolder] = useState<string | null>(null);
-  const [inspect, setInspect] = useState<{
-    link: FolderLink;
-    folder: string;
-    index: number;
-  } | null>(null);
 
   const setRoom = (next: Room | null) => {
     setLetter(null);
     setOpenFolder(null);
     setHoverFolder(null);
-    setInspect(null);
     setContactSent(false);
     setMessage("");
     setRoomState(next);
@@ -264,15 +257,11 @@ export function World() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      setInspect((currentInspect) => {
-        if (currentInspect !== null) return null;
-        setOpenFolder((currentFolder) => {
-          if (currentFolder !== null) return null;
-          setLetter((currentLetter) => {
-            if (currentLetter !== null) return null;
-            setRoomState(null);
-            return null;
-          });
+      setOpenFolder((currentFolder) => {
+        if (currentFolder !== null) return null;
+        setLetter((currentLetter) => {
+          if (currentLetter !== null) return null;
+          setRoomState(null);
           return null;
         });
         return null;
@@ -330,7 +319,6 @@ export function World() {
               dimmed={openFolder !== null && openFolder !== "social"}
               hovered={hoverFolder === "social"}
               onHover={(hovering) => setHoverFolder(hovering ? "social" : null)}
-              onInspect={(link, index) => setInspect({ link, folder: "social media", index })}
             />
             <LinkFolder
               name="writing"
@@ -357,7 +345,6 @@ export function World() {
               dimmed={openFolder !== null && openFolder !== "writing"}
               hovered={hoverFolder === "writing"}
               onHover={(hovering) => setHoverFolder(hovering ? "writing" : null)}
-              onInspect={(link, index) => setInspect({ link, folder: "writing", index })}
             />
             <LinkFolder
               name="frames"
@@ -369,7 +356,6 @@ export function World() {
               dimmed={openFolder !== null && openFolder !== "frames"}
               hovered={hoverFolder === "frames"}
               onHover={(hovering) => setHoverFolder(hovering ? "frames" : null)}
-              onInspect={(link, index) => setInspect({ link, folder: "frames", index })}
             />
           </div>
           </div>
@@ -677,15 +663,6 @@ export function World() {
             <Keyboard />
           </div>
         </section>
-      )}
-
-      {inspect && (
-        <ProductSticker
-          link={inspect.link}
-          folder={inspect.folder}
-          index={inspect.index}
-          onClose={() => setInspect(null)}
-        />
       )}
 
       {/* the dock — small and quiet */}
