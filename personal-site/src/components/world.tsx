@@ -1,5 +1,6 @@
 import { FloatingDock } from "@/components/ui/floating-dock";
 import { LinkFolder, type FolderLink } from "@/components/ui/link-folder";
+import { ProductSticker } from "@/components/ui/product-sticker";
 import { RadialScrollGallery } from "@/components/ui/portfolio-and-image-gallery";
 import { Mac } from "@/components/ui/mac";
 import Keyboard from "@/components/ui/magic-keyboard-component";
@@ -43,16 +44,61 @@ const INVESTED = ["aurora", "atlas", "solace", "ember", "northwind"];
 
 // one row per place — swap hrefs/handles/descriptions for the real ones
 const SOCIAL_CARDS: FolderLink[] = [
-  { title: "the world", handle: "@alexanderfoster", icon: Instagram, href: "https://instagram.com/" },
-  { title: "the mind", handle: "@alexanderfoster", icon: Instagram, href: "https://instagram.com/" },
-  { title: "the soul", handle: "@alexanderfoster", icon: Instagram, href: "https://instagram.com/" },
-  { title: "linkedin", handle: "alexander foster", icon: Linkedin, href: "https://linkedin.com/" },
-  { title: "youtube", handle: "@alexanderfoster", icon: Youtube, href: "https://youtube.com/" },
-  { title: "x", handle: "@alexfoster", icon: Twitter, href: "https://x.com/" },
+  {
+    title: "the world",
+    handle: "@alexanderfoster",
+    icon: Instagram,
+    href: "https://instagram.com/",
+    description:
+      "an instagram of places and days — the outside of a life, kept honestly.",
+  },
+  {
+    title: "the mind",
+    handle: "@alexanderfoster",
+    icon: Instagram,
+    href: "https://instagram.com/",
+    description:
+      "an instagram of ideas — diagrams, notes, things worth thinking twice about.",
+  },
+  {
+    title: "the soul",
+    handle: "@alexanderfoster",
+    icon: Instagram,
+    href: "https://instagram.com/",
+    description:
+      "an instagram of the quiet parts — what the building is actually for.",
+  },
+  {
+    title: "linkedin",
+    handle: "alexander foster",
+    icon: Linkedin,
+    href: "https://linkedin.com/",
+    description: "the professional record — companies, roles, the long game.",
+  },
+  {
+    title: "youtube",
+    handle: "@alexanderfoster",
+    icon: Youtube,
+    href: "https://youtube.com/",
+    description: "the moving pictures — films about building and thinking.",
+  },
+  {
+    title: "x",
+    handle: "@alexfoster",
+    icon: Twitter,
+    href: "https://x.com/",
+    description: "thoughts as they happen. building in public, quietly.",
+  },
 ];
 
 const FRAMES_CARDS: FolderLink[] = [
-  { title: "frames", handle: "photographs", icon: Camera, soon: true },
+  {
+    title: "frames",
+    handle: "photographs",
+    icon: Camera,
+    soon: true,
+    description: "photographs in frames — still being developed. literally.",
+  },
 ];
 
 // small monochrome covers for the letter rows — swap for real imagery
@@ -142,11 +188,17 @@ export function World() {
   const [message, setMessage] = useState("");
   const [openFolder, setOpenFolder] = useState<string | null>(null);
   const [hoverFolder, setHoverFolder] = useState<string | null>(null);
+  const [inspect, setInspect] = useState<{
+    link: FolderLink;
+    folder: string;
+    index: number;
+  } | null>(null);
 
   const setRoom = (next: Room | null) => {
     setLetter(null);
     setOpenFolder(null);
     setHoverFolder(null);
+    setInspect(null);
     setContactSent(false);
     setMessage("");
     setRoomState(next);
@@ -212,11 +264,15 @@ export function World() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      setOpenFolder((currentFolder) => {
-        if (currentFolder !== null) return null;
-        setLetter((currentLetter) => {
-          if (currentLetter !== null) return null;
-          setRoomState(null);
+      setInspect((currentInspect) => {
+        if (currentInspect !== null) return null;
+        setOpenFolder((currentFolder) => {
+          if (currentFolder !== null) return null;
+          setLetter((currentLetter) => {
+            if (currentLetter !== null) return null;
+            setRoomState(null);
+            return null;
+          });
           return null;
         });
         return null;
@@ -225,6 +281,7 @@ export function World() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
 
   return (
     <main className="relative min-h-dvh w-full">
@@ -273,6 +330,7 @@ export function World() {
               dimmed={openFolder !== null && openFolder !== "social"}
               hovered={hoverFolder === "social"}
               onHover={(hovering) => setHoverFolder(hovering ? "social" : null)}
+              onInspect={(link, index) => setInspect({ link, folder: "social media", index })}
             />
             <LinkFolder
               name="writing"
@@ -282,12 +340,15 @@ export function World() {
                   handle: "letters",
                   icon: Feather,
                   onSelect: () => setRoom("writing"),
+                  description:
+                    "letters, sent occasionally — read them right here on the site.",
                 },
                 {
                   title: "forbes column",
                   handle: "forbes",
                   icon: Newspaper,
                   href: "https://www.forbes.com/",
+                  description: "the column — on building and simulation.",
                 },
               ]}
               open={openFolder === "writing"}
@@ -296,6 +357,7 @@ export function World() {
               dimmed={openFolder !== null && openFolder !== "writing"}
               hovered={hoverFolder === "writing"}
               onHover={(hovering) => setHoverFolder(hovering ? "writing" : null)}
+              onInspect={(link, index) => setInspect({ link, folder: "writing", index })}
             />
             <LinkFolder
               name="frames"
@@ -307,6 +369,7 @@ export function World() {
               dimmed={openFolder !== null && openFolder !== "frames"}
               hovered={hoverFolder === "frames"}
               onHover={(hovering) => setHoverFolder(hovering ? "frames" : null)}
+              onInspect={(link, index) => setInspect({ link, folder: "frames", index })}
             />
           </div>
           </div>
@@ -349,10 +412,10 @@ export function World() {
       {room === "writing" && letter === null && (
         <section
           key="writing-list"
-          className="animate-fade-in mx-auto flex min-h-dvh w-full max-w-2xl flex-col justify-center px-6 pt-16 pb-36"
+          className="animate-fade-in mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-6 pt-[32vh] pb-36"
         >
           <RoomTitle>writing.</RoomTitle>
-          <div className="mt-9 flex flex-col gap-9 pt-10">
+          <div className="flex flex-col gap-9">
             {LETTERS.map((entry, index) => (
               <div
                 key={entry.num}
@@ -614,6 +677,15 @@ export function World() {
             <Keyboard />
           </div>
         </section>
+      )}
+
+      {inspect && (
+        <ProductSticker
+          link={inspect.link}
+          folder={inspect.folder}
+          index={inspect.index}
+          onClose={() => setInspect(null)}
+        />
       )}
 
       {/* the dock — small and quiet */}

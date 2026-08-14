@@ -13,6 +13,7 @@ export interface FolderLink {
   href?: string;
   onSelect?: () => void;
   soon?: boolean;
+  description?: string; // what it actually is — shown on the sticker
 }
 
 export interface LinkFolderProps {
@@ -25,6 +26,7 @@ export interface LinkFolderProps {
   fanShift?: number; // px to slide the open fan so it centres on the page
   hovered: boolean;
   onHover: (hovering: boolean) => void;
+  onInspect?: (link: FolderLink, index: number) => void;
 }
 
 export function LinkFolder({
@@ -37,6 +39,7 @@ export function LinkFolder({
   fanShift = 0,
   hovered,
   onHover,
+  onInspect,
 }: LinkFolderProps) {
   const center = (links.length - 1) / 2;
 
@@ -70,6 +73,10 @@ export function LinkFolder({
 
           const Icon = link.icon;
           const activate = () => {
+            if (onInspect) {
+              onInspect(link, index);
+              return;
+            }
             if (link.soon) return;
             if (link.onSelect) link.onSelect();
             else if (link.href) window.open(link.href, "_blank", "noopener");
