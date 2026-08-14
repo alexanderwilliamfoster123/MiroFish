@@ -245,7 +245,7 @@ export function World({ onLeave }: WorldProps) {
       </button>
 
       {room === null && (
-        <div className="mx-auto flex min-h-dvh w-full max-w-2xl items-center px-6 pb-28">
+        <div className="min-h-dvh w-full px-6 pt-[24vh] sm:pl-[33.5vw]">
           <div>
             <WordReveal
               lead="i built vertus."
