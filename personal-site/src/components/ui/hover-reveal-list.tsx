@@ -85,9 +85,11 @@ export function HoverRevealList({ items }: { items: RevealItem[] }) {
                 <span className="text-[15px] font-medium tracking-tight text-neutral-600">
                   {entry.title}
                 </span>
-                <span className="ml-auto text-[11px] text-faint opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  coming soon
-                </span>
+                {entry.title !== "coming soon" && (
+                  <span className="ml-auto text-[11px] text-faint opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    coming soon
+                  </span>
+                )}
               </div>
             );
           }

@@ -105,10 +105,37 @@ const FloatingDockDesktop = ({
   className?: string;
 }) => {
   const mouseX = useMotionValue(Infinity);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // skeuomorphic panel shadow — cast away from wherever the lamp is
+  const shadowX = useMotionValue(0);
+  const shadowY = useMotionValue(-1);
+  useEffect(() => {
+    const onMove = (e: globalThis.MouseEvent) => {
+      const bounds = panelRef.current?.getBoundingClientRect();
+      if (!bounds) return;
+      const dx = e.clientX - (bounds.x + bounds.width / 2);
+      const dy = e.clientY - (bounds.y + bounds.height / 2);
+      const angle = Math.atan2(dy, dx);
+      const distance = Math.min(3, (Math.hypot(dx, dy) / (bounds.width * 2)) * 3);
+      shadowX.set(-Math.cos(angle) * distance);
+      shadowY.set(-Math.sin(angle) * distance);
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [shadowX, shadowY]);
+  const panelShadow = useMotionTemplate`
+    calc(${shadowX} * 3px) calc(${shadowY} * 3px) 4px rgba(0, 0, 0, 0.16),
+    calc(${shadowX} * 10px) calc(${shadowY} * 10px) 12px rgba(0, 0, 0, 0.22),
+    calc(${shadowX} * 26px) calc(${shadowY} * 26px) 34px rgba(0, 0, 0, 0.3),
+    calc(${shadowX} * 60px) calc(${shadowY} * 60px) 80px rgba(0, 0, 0, 0.35)`;
+
   return (
     <motion.div
+      ref={panelRef}
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
+      style={{ boxShadow: panelShadow }}
       className={cn(
         "mx-auto hidden h-11 items-end gap-2 rounded-xl px-2.5 pb-2 md:flex",
         className,
@@ -162,9 +189,24 @@ function IconContainer({
     return () => window.removeEventListener("mousemove", onMove);
   }, [glow]);
   const glowSpring = useSpring(glow, { stiffness: 140, damping: 22 });
-  const glowInner = useTransform(glowSpring, (v) => v * 0.28);
-  const glowOuter = useTransform(glowSpring, (v) => v * 0.14);
-  const glowShadow = useMotionTemplate`0 0 10px rgba(255,255,255,${glowInner}), 0 0 26px rgba(255,255,255,${glowOuter})`;
+  const glowInner = useTransform(glowSpring, (v) => v * 0.24);
+  const glowOuter = useTransform(glowSpring, (v) => v * 0.12);
+  const glowShadow = useMotionTemplate`inset 0 1px 0 rgba(255,255,255,0.09), inset 0 -2px 5px rgba(0,0,0,0.5), 0 4px 10px rgba(0,0,0,0.45), 0 0 10px rgba(255,255,255,${glowInner}), 0 0 26px rgba(255,255,255,${glowOuter})`;
+
+  // the lit edge swings to face the lamp
+  const edgeAngle = useMotionValue(0);
+  useEffect(() => {
+    const onMove = (e: globalThis.MouseEvent) => {
+      const bounds = ref.current?.getBoundingClientRect();
+      if (!bounds) return;
+      const dx = e.clientX - (bounds.x + bounds.width / 2);
+      const dy = e.clientY - (bounds.y + bounds.height / 2);
+      edgeAngle.set((Math.atan2(dy, dx) * 180) / Math.PI + 90);
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [edgeAngle]);
+  const edgeRotate = useMotionTemplate`rotate(${edgeAngle}deg)`;
 
   return (
     <button type="button" onClick={onClick} className="cursor-pointer outline-none">
@@ -174,10 +216,23 @@ function IconContainer({
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         className={cn(
-          "relative flex aspect-square items-center justify-center rounded-full",
-          active ? "bg-white/15" : "bg-white/[0.06]",
+          "dock-key relative flex aspect-square items-center justify-center overflow-hidden rounded-[11px] active:translate-y-[1px]",
+          active && "dock-key-active",
         )}
       >
+        {/* edge light, always facing the cursor */}
+        <motion.div
+          className="pointer-events-none absolute inset-0"
+          style={{ transform: edgeRotate, opacity: glowSpring }}
+        >
+          <div
+            className="h-full w-full"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(255,255,255,0.13), transparent 52%)",
+            }}
+          />
+        </motion.div>
         <AnimatePresence>
           {hovered && (
             <motion.div

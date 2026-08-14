@@ -37,12 +37,6 @@ export default function App() {
     else localStorage.removeItem(ENTERED_KEY);
   }, [entered]);
 
-  const reset = () => {
-    setEmail(null);
-    setName(null);
-    setEntered(false);
-  };
-
   let screen;
   if (!name || !email) {
     screen = (
@@ -61,7 +55,7 @@ export default function App() {
       />
     );
   } else {
-    screen = <World onLeave={reset} />;
+    screen = <World />;
   }
 
   return (

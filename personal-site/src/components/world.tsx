@@ -18,8 +18,10 @@ import {
   CirclePlus,
   Feather,
   Folder,
+  Home,
   Images,
   Mail,
+  Newspaper,
   Paperclip,
   PenLine,
   Search,
@@ -57,13 +59,6 @@ const SOCIALS: RevealItem[] = [
     ],
   },
   {
-    title: "x",
-    handle: "@alexfoster",
-    description: "thoughts as they happen. building in public, quietly.",
-    href: "https://x.com/",
-    icon: Twitter,
-  },
-  {
     title: "linkedin",
     handle: "alexander foster",
     description: "the professional record — companies, roles, the long game.",
@@ -76,6 +71,13 @@ const SOCIALS: RevealItem[] = [
     description: "the moving pictures — films about building and thinking.",
     href: "https://youtube.com/",
     icon: Youtube,
+  },
+  {
+    title: "x",
+    handle: "@alexfoster",
+    description: "thoughts as they happen. building in public, quietly.",
+    href: "https://x.com/",
+    icon: Twitter,
   },
 ];
 
@@ -147,11 +149,7 @@ const companyCards =
       );
     });
 
-interface WorldProps {
-  onLeave: () => void;
-}
-
-export function World({ onLeave }: WorldProps) {
+export function World() {
   const [room, setRoomState] = useState<Room | null>(null);
   const [letter, setLetter] = useState<number | null>(null);
   const [contactSent, setContactSent] = useState(false);
@@ -236,14 +234,6 @@ export function World({ onLeave }: WorldProps) {
 
   return (
     <main className="relative min-h-dvh w-full">
-      <button
-        type="button"
-        onClick={onLeave}
-        className="fixed top-[17px] right-16 z-50 cursor-pointer text-[11px] tracking-[0.2em] text-faint transition-colors duration-300 hover:text-foreground"
-      >
-        leave
-      </button>
-
       {room === null && (
         <div className="min-h-dvh w-full px-6 pt-[24vh] sm:pl-[33.5vw]">
           <div>
@@ -283,31 +273,50 @@ export function World({ onLeave }: WorldProps) {
           >
             find me everywhere.
           </h1>
-          <div
-            className="animate-fade-up mt-10"
-            style={{ animationDelay: "0.3s" }}
-          >
-            <HoverRevealList
-              items={[
-                {
-                  title: "writing",
-                  handle: "letters",
-                  description: "the letters — read them right here.",
-                  href: "#",
-                  icon: Feather,
-                  onSelect: () => setRoom("writing"),
-                },
-                {
-                  title: "frames",
-                  handle: "photographs",
-                  description: "photographs in frames — coming soon.",
-                  href: "#",
-                  icon: Camera,
-                  soon: true,
-                },
-                ...SOCIALS,
-              ]}
-            />
+          <div className="animate-fade-up mt-10" style={{ animationDelay: "0.3s" }}>
+            <p className="text-[11px] tracking-[0.25em] text-faint">social media</p>
+            <div className="mt-1">
+              <HoverRevealList items={SOCIALS} />
+            </div>
+
+            <p className="mt-10 text-[11px] tracking-[0.25em] text-faint">writing</p>
+            <div className="mt-1">
+              <HoverRevealList
+                items={[
+                  {
+                    title: "newsletter",
+                    handle: "letters",
+                    description: "letters, sent occasionally — read them right here.",
+                    href: "#",
+                    icon: Feather,
+                    onSelect: () => setRoom("writing"),
+                  },
+                  {
+                    title: "forbes column",
+                    handle: "forbes",
+                    description: "the column — on building and simulation.",
+                    href: "https://www.forbes.com/",
+                    icon: Newspaper,
+                  },
+                ]}
+              />
+            </div>
+
+            <p className="mt-10 text-[11px] tracking-[0.25em] text-faint">frames</p>
+            <div className="mt-1">
+              <HoverRevealList
+                items={[
+                  {
+                    title: "coming soon",
+                    handle: "photographs",
+                    description: "photographs in frames — coming soon.",
+                    href: "#",
+                    icon: Camera,
+                    soon: true,
+                  },
+                ]}
+              />
+            </div>
           </div>
         </section>
       )}
@@ -636,7 +645,21 @@ export function World({ onLeave }: WorldProps) {
       <div className="fixed bottom-4 left-1/2 z-50 max-w-full -translate-x-1/2">
         <FloatingDock
           desktopClassName="border border-white/10 bg-neutral-950/80 shadow-[0_8px_30px_rgba(0,0,0,0.6)] backdrop-blur-md"
-          items={DOCK_ITEMS.map((item) => ({
+          items={[
+            {
+              title: "home",
+              active: room === null,
+              onClick: () => setRoom(null),
+              icon: (
+                <Home
+                  className={
+                    "h-full w-full " +
+                    (room === null ? "text-foreground" : "text-neutral-400")
+                  }
+                />
+              ),
+            },
+            ...DOCK_ITEMS.map((item) => ({
             title: item.title,
             active:
               room === item.room ||
@@ -650,7 +673,8 @@ export function World({ onLeave }: WorldProps) {
                 }
               />
             ),
-          }))}
+            })),
+          ]}
         />
       </div>
     </main>

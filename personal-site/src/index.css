@@ -179,3 +179,26 @@ body {
 
 /* the lamp and the dock glow are dark-room effects */
 .light .cursor-lamp { display: none; }
+
+/* skeuomorphic dock keys — raised in the dark, pressed when clicked */
+.dock-key {
+  background: linear-gradient(180deg, #1a1a1a 0%, #0c0c0c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: filter 0.25s ease;
+}
+.dock-key:hover { filter: brightness(1.18); }
+.dock-key:active {
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.7) !important;
+}
+.dock-key-active {
+  background: linear-gradient(180deg, #262626 0%, #141414 100%);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+.light .dock-key {
+  background: linear-gradient(180deg, #ffffff 0%, #ebebe9 100%);
+  border-color: rgba(0, 0, 0, 0.09);
+}
+.light .dock-key-active {
+  background: linear-gradient(180deg, #f2f2f0 0%, #dededb 100%);
+  border-color: rgba(0, 0, 0, 0.16);
+}
