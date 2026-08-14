@@ -243,33 +243,21 @@ export function World() {
           key="socials"
           className="animate-fade-in flex min-h-dvh w-full flex-col items-center justify-center overflow-hidden px-4 pt-14 pb-32"
         >
-          <p
-            className="animate-fade-up text-[11px] tracking-[0.25em] text-faint"
-            style={{ animationDelay: "0.05s" }}
-          >
-            socials
-          </p>
           <h1
-            className="animate-fade-up mt-3 text-[13px] font-medium tracking-tight"
-            style={{ animationDelay: "0.15s" }}
+            className="animate-fade-up text-[13px] font-medium tracking-tight"
+            style={{ animationDelay: "0.1s" }}
           >
             find me everywhere.
           </h1>
-          <p
-            className="animate-fade-up mt-2 text-[11px] text-faint"
-            style={{ animationDelay: "0.25s" }}
-          >
-            open a folder &mdash; each card takes you where it goes
-          </p>
 
           <div
-            className="animate-fade-up mt-6 flex flex-wrap items-end justify-center gap-3"
+            className="animate-fade-up mt-8 flex flex-wrap items-end justify-center gap-3"
             style={{ animationDelay: "0.35s" }}
           >
             <LinkFolder
               name="social media"
               links={SOCIAL_CARDS}
-              fanShift={292}
+              fanShift={208}
               open={openFolder === "social"}
               onOpen={() => setOpenFolder("social")}
               onClose={() => setOpenFolder(null)}
@@ -303,7 +291,7 @@ export function World() {
             <LinkFolder
               name="frames"
               links={FRAMES_CARDS}
-              fanShift={-292}
+              fanShift={-208}
               open={openFolder === "frames"}
               onOpen={() => setOpenFolder("frames")}
               onClose={() => setOpenFolder(null)}
