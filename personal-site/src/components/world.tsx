@@ -357,57 +357,69 @@ export function World({ onLeave }: WorldProps) {
             style={{ animationDelay: "0.1s" }}
           >
             <Mac className="h-auto w-full text-[#050505]" />
-            <div className="absolute top-[5%] left-[4.9%] flex h-[61%] w-[90.2%] flex-col overflow-hidden bg-[#0a0a0a] text-neutral-200">
-              {/* window chrome */}
-              <div className="flex items-center justify-between border-b border-white/[0.07] bg-white/[0.03] px-4 py-2">
-                <div className="flex items-center space-x-1.5">
-                  <span className="h-2 w-2 rounded-full bg-white/15" />
-                  <span className="h-2 w-2 rounded-full bg-white/15" />
-                  <span className="h-2 w-2 rounded-full bg-white/15" />
-                </div>
-                <div className="mx-4 flex h-4 max-w-xs flex-1 items-center justify-center rounded bg-white/[0.05]">
-                  <span className="text-[9px] text-neutral-500">
-                    mail &mdash; new message
-                  </span>
-                </div>
-                {!contactSent ? (
-                  <button
-                    type="button"
-                    onClick={sendEmail}
-                    disabled={!message.trim()}
-                    className="cursor-pointer text-[10px] font-medium text-neutral-500 transition-colors duration-300 hover:text-foreground disabled:cursor-default disabled:opacity-40"
-                  >
-                    send &rarr;
-                  </button>
-                ) : (
-                  <div className="w-4" />
-                )}
+            <div
+              className="absolute top-[5%] left-[4.9%] flex h-[61%] w-[90.2%] flex-col overflow-hidden text-neutral-200"
+              style={{
+                background:
+                  "radial-gradient(120% 90% at 50% 0%, #161616 0%, #0a0a0a 55%, #060606 100%)",
+              }}
+            >
+              {/* menu bar */}
+              <div className="flex h-[18px] items-center justify-between bg-white/[0.05] px-3 text-[9px] text-neutral-400 backdrop-blur">
+                <span className="font-medium">mail</span>
+                <span>9:41</span>
               </div>
 
-              {contactSent ? (
-                <div className="flex flex-1 items-center justify-center">
-                  <p className="text-[11px] text-neutral-500">
-                    sent &mdash; thank you. i&rsquo;ll read it soon.
-                  </p>
+              {/* the little compose window, floating on the desktop */}
+              <div className="flex flex-1 items-center justify-center">
+                <div className="flex h-[82%] w-[68%] flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0d0d0d] shadow-[0_24px_70px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.05)]">
+                  <div className="flex items-center justify-between border-b border-white/[0.07] bg-white/[0.03] px-3 py-1.5">
+                    <div className="flex items-center space-x-1.5">
+                      <span className="h-2 w-2 rounded-full bg-white/15" />
+                      <span className="h-2 w-2 rounded-full bg-white/15" />
+                      <span className="h-2 w-2 rounded-full bg-white/15" />
+                    </div>
+                    <span className="text-[9px] text-neutral-500">new message</span>
+                    {!contactSent ? (
+                      <button
+                        type="button"
+                        onClick={sendEmail}
+                        disabled={!message.trim()}
+                        className="cursor-pointer text-[10px] font-medium text-neutral-500 transition-colors duration-300 hover:text-foreground disabled:cursor-default disabled:opacity-40"
+                      >
+                        send &rarr;
+                      </button>
+                    ) : (
+                      <div className="w-4" />
+                    )}
+                  </div>
+
+                  {contactSent ? (
+                    <div className="flex flex-1 items-center justify-center">
+                      <p className="text-[11px] text-neutral-500">
+                        sent &mdash; thank you. i&rsquo;ll read it soon.
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-baseline gap-2 border-b border-white/[0.06] px-4 py-2 text-[10px]">
+                        <span className="text-neutral-500">to:</span>
+                        <span className="text-neutral-300">alex@vertus.ai</span>
+                      </div>
+                      <div className="flex items-baseline gap-2 border-b border-white/[0.06] px-4 py-2 text-[10px]">
+                        <span className="text-neutral-500">subject:</span>
+                        <span className="text-neutral-300">
+                          hello from {localStorage.getItem("gate:name") ?? "you"}
+                        </span>
+                      </div>
+                      <div className="flex-1 overflow-y-auto px-4 py-3 text-[11px] leading-[1.7] whitespace-pre-wrap">
+                        {message}
+                        <span className="animate-cursor-blink ml-px inline-block h-[11px] w-[1.5px] translate-y-[2px] bg-neutral-200" />
+                      </div>
+                    </>
+                  )}
                 </div>
-              ) : (
-                <>
-                  <div className="flex items-baseline gap-2 border-b border-white/[0.06] px-5 py-2.5 text-[11px]">
-                    <span className="text-neutral-500">to:</span>
-                    <span className="text-neutral-300">alex@vertus.ai</span>
-                  </div>
-                  <div className="flex items-baseline gap-2 border-b border-white/[0.06] px-5 py-2.5 text-[11px]">
-                    <span className="text-neutral-500">subject:</span>
-                    <span className="text-neutral-300">
-                      hello from {localStorage.getItem("gate:name") ?? "you"}
-                    </span>
-                  </div>
-                  <div className="flex-1 overflow-y-auto px-5 py-4 text-[12px] leading-[1.7] whitespace-pre-wrap">
-                    {message}
-                    <span className="animate-cursor-blink ml-px inline-block h-[12px] w-[1.5px] translate-y-[2px] bg-neutral-200" />
-                  </div>
-                </>
-              )}
+              </div>
             </div>
           </div>
 
