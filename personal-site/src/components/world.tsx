@@ -1,8 +1,5 @@
 import { FloatingDock } from "@/components/ui/floating-dock";
-import {
-  HoverRevealList,
-  type RevealItem,
-} from "@/components/ui/hover-reveal-list";
+import { LinkFolder, type FolderLink } from "@/components/ui/link-folder";
 import { RadialScrollGallery } from "@/components/ui/portfolio-and-image-gallery";
 import { Mac } from "@/components/ui/mac";
 import Keyboard from "@/components/ui/magic-keyboard-component";
@@ -45,40 +42,17 @@ const FOUNDED = ["vertus", "vanquish", "paktos", "tootski", "omera"];
 const INVESTED = ["aurora", "atlas", "solace", "ember", "northwind"];
 
 // one row per place — swap hrefs/handles/descriptions for the real ones
-const SOCIALS: RevealItem[] = [
-  {
-    title: "instagram",
-    handle: "@alexanderfoster",
-    description: "three doors — the world, the mind, the soul.",
-    href: "https://instagram.com/",
-    icon: Instagram,
-    sublinks: [
-      { title: "the world", href: "https://instagram.com/" },
-      { title: "the mind", href: "https://instagram.com/" },
-      { title: "the soul", href: "https://instagram.com/" },
-    ],
-  },
-  {
-    title: "linkedin",
-    handle: "alexander foster",
-    description: "the professional record — companies, roles, the long game.",
-    href: "https://linkedin.com/",
-    icon: Linkedin,
-  },
-  {
-    title: "youtube",
-    handle: "@alexanderfoster",
-    description: "the moving pictures — films about building and thinking.",
-    href: "https://youtube.com/",
-    icon: Youtube,
-  },
-  {
-    title: "x",
-    handle: "@alexfoster",
-    description: "thoughts as they happen. building in public, quietly.",
-    href: "https://x.com/",
-    icon: Twitter,
-  },
+const SOCIAL_CARDS: FolderLink[] = [
+  { title: "the world", handle: "@alexanderfoster", icon: Instagram, href: "https://instagram.com/" },
+  { title: "the mind", handle: "@alexanderfoster", icon: Instagram, href: "https://instagram.com/" },
+  { title: "the soul", handle: "@alexanderfoster", icon: Instagram, href: "https://instagram.com/" },
+  { title: "linkedin", handle: "alexander foster", icon: Linkedin, href: "https://linkedin.com/" },
+  { title: "youtube", handle: "@alexanderfoster", icon: Youtube, href: "https://youtube.com/" },
+  { title: "x", handle: "@alexfoster", icon: Twitter, href: "https://x.com/" },
+];
+
+const FRAMES_CARDS: FolderLink[] = [
+  { title: "frames", handle: "photographs", icon: Camera, soon: true },
 ];
 
 // small monochrome covers for the letter rows — swap for real imagery
@@ -154,9 +128,13 @@ export function World() {
   const [letter, setLetter] = useState<number | null>(null);
   const [contactSent, setContactSent] = useState(false);
   const [message, setMessage] = useState("");
+  const [openFolder, setOpenFolder] = useState<string | null>(null);
+  const [hoverFolder, setHoverFolder] = useState<string | null>(null);
 
   const setRoom = (next: Room | null) => {
     setLetter(null);
+    setOpenFolder(null);
+    setHoverFolder(null);
     setContactSent(false);
     setMessage("");
     setRoomState(next);
@@ -222,9 +200,13 @@ export function World() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      setLetter((currentLetter) => {
-        if (currentLetter !== null) return null;
-        setRoomState(null);
+      setOpenFolder((currentFolder) => {
+        if (currentFolder !== null) return null;
+        setLetter((currentLetter) => {
+          if (currentLetter !== null) return null;
+          setRoomState(null);
+          return null;
+        });
         return null;
       });
     };
@@ -259,7 +241,7 @@ export function World() {
       {room === "socials" && (
         <section
           key="socials"
-          className="animate-fade-in mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-6 pt-16 pb-36"
+          className="animate-fade-in flex min-h-dvh w-full flex-col items-center justify-center overflow-hidden px-4 pt-14 pb-32"
         >
           <p
             className="animate-fade-up text-[11px] tracking-[0.25em] text-faint"
@@ -273,50 +255,62 @@ export function World() {
           >
             find me everywhere.
           </h1>
-          <div className="animate-fade-up mt-10" style={{ animationDelay: "0.3s" }}>
-            <p className="text-[11px] tracking-[0.25em] text-faint">social media</p>
-            <div className="mt-1">
-              <HoverRevealList items={SOCIALS} />
-            </div>
+          <p
+            className="animate-fade-up mt-2 text-[11px] text-faint"
+            style={{ animationDelay: "0.25s" }}
+          >
+            open a folder &mdash; each card takes you where it goes
+          </p>
 
-            <p className="mt-10 text-[11px] tracking-[0.25em] text-faint">writing</p>
-            <div className="mt-1">
-              <HoverRevealList
-                items={[
-                  {
-                    title: "newsletter",
-                    handle: "letters",
-                    description: "letters, sent occasionally — read them right here.",
-                    href: "#",
-                    icon: Feather,
-                    onSelect: () => setRoom("writing"),
-                  },
-                  {
-                    title: "forbes column",
-                    handle: "forbes",
-                    description: "the column — on building and simulation.",
-                    href: "https://www.forbes.com/",
-                    icon: Newspaper,
-                  },
-                ]}
-              />
-            </div>
-
-            <p className="mt-10 text-[11px] tracking-[0.25em] text-faint">frames</p>
-            <div className="mt-1">
-              <HoverRevealList
-                items={[
-                  {
-                    title: "coming soon",
-                    handle: "photographs",
-                    description: "photographs in frames — coming soon.",
-                    href: "#",
-                    icon: Camera,
-                    soon: true,
-                  },
-                ]}
-              />
-            </div>
+          <div
+            className="animate-fade-up mt-6 flex flex-wrap items-end justify-center gap-3"
+            style={{ animationDelay: "0.35s" }}
+          >
+            <LinkFolder
+              name="social media"
+              links={SOCIAL_CARDS}
+              fanShift={292}
+              open={openFolder === "social"}
+              onOpen={() => setOpenFolder("social")}
+              onClose={() => setOpenFolder(null)}
+              dimmed={openFolder !== null && openFolder !== "social"}
+              hovered={hoverFolder === "social"}
+              onHover={(hovering) => setHoverFolder(hovering ? "social" : null)}
+            />
+            <LinkFolder
+              name="writing"
+              links={[
+                {
+                  title: "newsletter",
+                  handle: "letters",
+                  icon: Feather,
+                  onSelect: () => setRoom("writing"),
+                },
+                {
+                  title: "forbes column",
+                  handle: "forbes",
+                  icon: Newspaper,
+                  href: "https://www.forbes.com/",
+                },
+              ]}
+              open={openFolder === "writing"}
+              onOpen={() => setOpenFolder("writing")}
+              onClose={() => setOpenFolder(null)}
+              dimmed={openFolder !== null && openFolder !== "writing"}
+              hovered={hoverFolder === "writing"}
+              onHover={(hovering) => setHoverFolder(hovering ? "writing" : null)}
+            />
+            <LinkFolder
+              name="frames"
+              links={FRAMES_CARDS}
+              fanShift={-292}
+              open={openFolder === "frames"}
+              onOpen={() => setOpenFolder("frames")}
+              onClose={() => setOpenFolder(null)}
+              dimmed={openFolder !== null && openFolder !== "frames"}
+              hovered={hoverFolder === "frames"}
+              onHover={(hovering) => setHoverFolder(hovering ? "frames" : null)}
+            />
           </div>
         </section>
       )}

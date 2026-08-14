@@ -38,20 +38,18 @@ export default function App() {
   }, [entered]);
 
   let screen;
-  if (!email) {
+  if (!name || !email) {
     screen = (
       <Gate
-        onEmail={(nextEmail) => {
-          setEmail(nextEmail);
-          // the email's local part stands in for a name
-          setName(nextEmail.split("@")[0]);
-        }}
+        initialStep={email ? "name" : "email"}
+        onEmail={setEmail}
+        onName={setName}
       />
     );
   } else if (!entered) {
     screen = (
       <SubscriptionReceipt
-        name={name ?? email.split("@")[0]}
+        name={name}
         email={email}
         onContinue={() => setEntered(true)}
       />
