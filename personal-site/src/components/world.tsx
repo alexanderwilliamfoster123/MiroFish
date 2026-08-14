@@ -238,7 +238,7 @@ export function World({ onLeave }: WorldProps) {
       <button
         type="button"
         onClick={onLeave}
-        className="fixed top-5 right-6 z-50 cursor-pointer text-[11px] tracking-[0.2em] text-faint transition-colors duration-300 hover:text-foreground"
+        className="fixed top-[17px] right-16 z-50 cursor-pointer text-[11px] tracking-[0.2em] text-faint transition-colors duration-300 hover:text-foreground"
       >
         leave
       </button>

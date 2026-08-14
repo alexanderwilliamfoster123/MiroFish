@@ -1,5 +1,6 @@
 import { Gate } from "@/components/email-gate";
 import { SubscriptionReceipt } from "@/components/subscription-receipt";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { World } from "@/components/world";
 import { useEffect, useState } from "react";
 
@@ -41,25 +42,31 @@ export default function App() {
     setEntered(false);
   };
 
+  let screen;
   if (!name || !email) {
-    return (
+    screen = (
       <Gate
         initialStep={email ? "name" : "email"}
         onEmail={setEmail}
         onName={setName}
       />
     );
-  }
-
-  if (!entered) {
-    return (
+  } else if (!entered) {
+    screen = (
       <SubscriptionReceipt
         name={name}
         email={email}
         onContinue={() => setEntered(true)}
       />
     );
+  } else {
+    screen = <World onLeave={reset} />;
   }
 
-  return <World onLeave={reset} />;
+  return (
+    <>
+      <ThemeToggle />
+      {screen}
+    </>
+  );
 }
