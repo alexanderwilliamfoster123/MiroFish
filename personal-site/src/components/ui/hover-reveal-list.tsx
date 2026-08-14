@@ -53,18 +53,18 @@ export function HoverRevealList({ items }: { items: RevealItem[] }) {
           };
           const rowInner = (
             <>
-              <span className="font-mono text-[10px] text-faint tabular-nums">
+              <span className="font-mono text-[9px] text-faint tabular-nums">
                 {String(index + 1).padStart(2, "0")}
               </span>
               <span
                 className={
-                  "text-[15px] font-medium tracking-tight transition-colors duration-300 " +
+                  "text-[12px] font-medium tracking-tight transition-colors duration-300 " +
                   (active === index ? "text-foreground" : "text-neutral-500")
                 }
               >
                 {entry.title}
               </span>
-              <span className="ml-auto flex items-center gap-1.5 text-[11px] text-faint opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <span className="ml-auto flex items-center gap-1.5 text-[10px] text-faint opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 {entry.sublinks ? (isOpen ? "close" : "open") : "open"}
                 {!entry.sublinks && <ArrowUpRight size={12} />}
               </span>
@@ -76,13 +76,13 @@ export function HoverRevealList({ items }: { items: RevealItem[] }) {
               <div
                 key={entry.title}
                 onMouseEnter={() => setActive(index)}
-                className="group flex items-baseline gap-4 border-b border-white/[0.07] py-3.5"
+                className="group flex items-baseline gap-4 border-b border-white/[0.07] py-3"
                 style={rowStyle}
               >
-                <span className="font-mono text-[10px] text-faint tabular-nums">
+                <span className="font-mono text-[9px] text-faint tabular-nums">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <span className="text-[15px] font-medium tracking-tight text-neutral-600">
+                <span className="text-[12px] font-medium tracking-tight text-neutral-600">
                   {entry.title}
                 </span>
                 {entry.title !== "coming soon" && (
@@ -101,7 +101,7 @@ export function HoverRevealList({ items }: { items: RevealItem[] }) {
                 type="button"
                 onClick={entry.onSelect}
                 onMouseEnter={() => setActive(index)}
-                className="group flex w-full cursor-pointer items-baseline gap-4 border-b border-white/[0.07] py-3.5 text-left transition-colors duration-300"
+                className="group flex w-full cursor-pointer items-baseline gap-4 border-b border-white/[0.07] py-3 text-left transition-colors duration-300"
                 style={rowStyle}
               >
                 {rowInner}
@@ -134,9 +134,8 @@ export function HoverRevealList({ items }: { items: RevealItem[] }) {
                         href={sublink.href}
                         target="_blank"
                         rel="noreferrer"
-                        className="group/sub flex items-center gap-2.5 py-2 pl-10 text-[13px] text-neutral-500 transition-colors duration-300 hover:text-foreground"
+                        className="group/sub flex items-center gap-2 py-1.5 pl-9 text-[11px] text-neutral-500 transition-colors duration-300 hover:text-foreground"
                       >
-                        <span className="text-faint">&mdash;</span>
                         {sublink.title}
                         <ArrowUpRight
                           size={11}
@@ -157,7 +156,7 @@ export function HoverRevealList({ items }: { items: RevealItem[] }) {
               target="_blank"
               rel="noreferrer"
               onMouseEnter={() => setActive(index)}
-              className="group flex items-baseline gap-4 border-b border-white/[0.07] py-3.5 transition-colors duration-300"
+              className="group flex items-baseline gap-4 border-b border-white/[0.07] py-3 transition-colors duration-300"
               style={rowStyle}
             >
               {rowInner}

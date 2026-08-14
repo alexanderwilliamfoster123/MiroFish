@@ -7,43 +7,27 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const KEYBOARD_NATURAL = 390;
 const KEYBOARD_MAX_SCALE = 1.55;
 
-type Step = "email" | "name";
-
-const STEPS: Record<
-  Step,
-  { heading: string; sub?: string; placeholder: string; errorText?: string }
-> = {
-  email: {
-    heading: "every world has a key.",
-    sub: "yours is an email.",
-    placeholder: "you@somewhere.com",
-    errorText: "that doesn’t look right.",
-  },
-  name: {
-    heading: "and your name.",
-    placeholder: "your name",
-  },
+const COPY = {
+  heading: "every world has a key.",
+  sub: "yours is an email.",
+  placeholder: "you@somewhere.com",
+  errorText: "that doesn’t look right.",
 };
 
 interface GateProps {
-  initialStep: Step;
   onEmail: (email: string) => void;
-  onName: (name: string) => void;
 }
 
 // One continuous screen: the line collects the email, empties itself,
 // asks for the name, then hands over to the receipt. The keyboard never
 // moves; only the words change.
-export function Gate({ initialStep, onEmail, onName }: GateProps) {
-  const [step, setStep] = useState<Step>(initialStep);
+export function Gate({ onEmail }: GateProps) {
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
   const [leaving, setLeaving] = useState(false);
 
   const valueRef = useRef("");
-  const stepRef = useRef<Step>(initialStep);
   const leavingRef = useRef(false);
-  stepRef.current = step;
 
   // keyboard scales with the screen, capped so the page stays airy
   const scalerRef = useRef<HTMLDivElement>(null);
@@ -75,19 +59,13 @@ export function Gate({ initialStep, onEmail, onName }: GateProps) {
     if (leavingRef.current) return;
     const trimmed = valueRef.current.trim();
     if (!trimmed) return;
-    if (stepRef.current === "email") {
-      if (!EMAIL_PATTERN.test(trimmed)) {
-        setError(true);
-        return;
-      }
-      onEmail(trimmed); // kept immediately, even if they wander off here
-      write("");
-      setStep("name");
-    } else {
-      leavingRef.current = true;
-      setLeaving(true);
-      setTimeout(() => onName(trimmed), 550);
+    if (!EMAIL_PATTERN.test(trimmed)) {
+      setError(true);
+      return;
     }
+    leavingRef.current = true;
+    setLeaving(true);
+    setTimeout(() => onEmail(trimmed), 550);
   };
 
   // one handler for the on-screen keyboard and physical keys
@@ -101,9 +79,6 @@ export function Gate({ initialStep, onEmail, onName }: GateProps) {
         submit();
         break;
       case " ":
-        if (stepRef.current === "name" && current && current.length < 48) {
-          write(current + " ");
-        }
         break;
       case "Tab":
       case "Shift":
@@ -134,8 +109,6 @@ export function Gate({ initialStep, onEmail, onName }: GateProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const copy = STEPS[step];
-
   return (
     <main
       className={cn(
@@ -145,17 +118,17 @@ export function Gate({ initialStep, onEmail, onName }: GateProps) {
     >
       <div className="flex w-full flex-col items-center text-center">
         {/* only the words change between steps */}
-        <div key={step} className="animate-fade-up" style={{ animationDuration: "0.5s" }}>
+        <div className="animate-fade-up" style={{ animationDuration: "0.5s" }}>
           <h1 className="text-[13px] font-medium tracking-tight text-foreground">
-            {copy.heading}
+            {COPY.heading}
           </h1>
           <p
             className={cn(
               "mt-2.5 text-[13px] text-muted-foreground",
-              !copy.sub && "hidden",
+              false,
             )}
           >
-            {copy.sub}
+            {COPY.sub}
           </p>
 
           {/* the line */}
@@ -165,13 +138,13 @@ export function Gate({ initialStep, onEmail, onName }: GateProps) {
                 "border-b pb-2.5 text-center text-[15px] transition-colors duration-300",
                 error ? "border-white/70" : "border-line",
               )}
-              aria-label={copy.heading}
+              aria-label={COPY.heading}
               aria-live="polite"
             >
               {value ? (
                 <span className="text-foreground">{value}</span>
               ) : (
-                <span className="text-faint">{copy.placeholder}</span>
+                <span className="text-faint">{COPY.placeholder}</span>
               )}
               <span className="animate-cursor-blink ml-px inline-block h-[1.05em] w-[2px] translate-y-[3px] bg-foreground" />
             </div>
@@ -183,12 +156,10 @@ export function Gate({ initialStep, onEmail, onName }: GateProps) {
               aria-live="polite"
             >
               {error
-                ? copy.errorText
+                ? COPY.errorText
                 : value
                   ? "press return"
-                  : step === "email"
-                    ? "type your email, then press return"
-                    : "type your name, then press return"}
+                  : "type your email, then press return"}
             </p>
           </div>
         </div>
