@@ -4,13 +4,11 @@ import {
   type RevealItem,
 } from "@/components/ui/hover-reveal-list";
 import { RadialScrollGallery } from "@/components/ui/portfolio-and-image-gallery";
-import { InteractiveFolderGallery } from "@/components/ui/interactive-folder-gallery";
 import { WordReveal } from "@/components/ui/word-reveal";
 import { LETTERS } from "@/lib/letters";
 import {
   AtSign,
   Briefcase,
-  Camera,
   Feather,
   Github,
   Instagram,
@@ -20,7 +18,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-type Room = "writing" | "pictures" | "socials" | "companies";
+type Room = "writing" | "socials" | "companies";
 
 // the wheel of investments, in order around the circle
 const COMPANIES = ["vertus", "vanquish", "paktos", "tootski", "omera"];
@@ -64,55 +62,9 @@ const SOCIALS: RevealItem[] = [
   },
 ];
 
-// monochrome placeholder photographs for the stack — swap for real ones
-const photo = (stops: string, extra: string) =>
-  "data:image/svg+xml;utf8," +
-  encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' width='500' height='700'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>${stops}</linearGradient><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/><feColorMatrix type='matrix' values='0 0 0 0 0.85  0 0 0 0 0.85  0 0 0 0 0.83  0 0 0 0.05 0'/><feComposite operator='over' in2='SourceGraphic'/></filter></defs><g filter='url(%23n)'><rect width='500' height='700' fill='url(%23g)'/>${extra}</g></svg>`,
-  );
-
-const PHOTOS = [
-  {
-    caption: "portra 400\n35mm",
-    image: photo(
-      "<stop offset='0' stop-color='#cfccc5'/><stop offset='1' stop-color='#3a3936'/>",
-      "<polygon points='0,700 120,430 260,560 380,380 500,520 500,700' fill='#232220'/>",
-    ),
-  },
-  {
-    caption: "tri-x 400\n35mm",
-    image: photo(
-      "<stop offset='0' stop-color='#8f8c86'/><stop offset='1' stop-color='#1c1b19'/>",
-      "<rect y='430' width='500' height='4' fill='rgba(235,233,228,0.35)'/>",
-    ),
-  },
-  {
-    caption: "cinestill 800t\n50mm",
-    image: photo(
-      "<stop offset='0' stop-color='#3a3936'/><stop offset='1' stop-color='#050505'/>",
-      "<circle cx='360' cy='170' r='46' fill='rgba(235,233,228,0.75)'/>",
-    ),
-  },
-  {
-    caption: "ektar 100\n28mm",
-    image: photo(
-      "<stop offset='0' stop-color='#e3e0d9'/><stop offset='1' stop-color='#57544f'/>",
-      "<rect x='60' width='16' height='700' fill='rgba(20,19,18,0.5)'/><rect x='180' width='26' height='700' fill='rgba(20,19,18,0.65)'/><rect x='340' width='12' height='700' fill='rgba(20,19,18,0.45)'/>",
-    ),
-  },
-  {
-    caption: "portra 800\n35mm",
-    image: photo(
-      "<stop offset='0' stop-color='#6e6b66'/><stop offset='1' stop-color='#141312'/>",
-      "<polygon points='0,700 200,300 340,470 500,260 500,700' fill='#111010'/>",
-    ),
-  },
-];
-
 const DOCK_ITEMS: Array<{ room: Room; title: string; icon: typeof Feather }> = [
   { room: "companies", title: "companies", icon: Briefcase },
   { room: "writing", title: "writing", icon: Feather },
-  { room: "pictures", title: "pictures", icon: Camera },
   { room: "socials", title: "socials", icon: AtSign },
 ];
 
@@ -318,20 +270,6 @@ export function World({ onLeave }: WorldProps) {
             </span>
           </p>
         </section>
-      )}
-
-      {room === "pictures" && (
-        <div
-          key="pictures"
-          className="animate-fade-in flex min-h-dvh flex-col items-center justify-center overflow-hidden pb-10"
-        >
-          <InteractiveFolderGallery
-            photos={PHOTOS.map((print, index) => ({ id: index, ...print }))}
-            folderName="frames"
-            dragHintText="drag a photo down to close"
-            className="!py-0"
-          />
-        </div>
       )}
 
       {/* the dock — small and quiet */}
