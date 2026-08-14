@@ -9,6 +9,15 @@ const EMAIL_KEY = "gate:email";
 const NAME_KEY = "gate:name";
 const ENTERED_KEY = "gate:entered";
 
+// returning visitors skip the gate; open the site with #fresh to forget
+// the stored visitor and walk the door again (handy for demos)
+if (typeof window !== "undefined" && window.location.hash === "#fresh") {
+  localStorage.removeItem(EMAIL_KEY);
+  localStorage.removeItem(NAME_KEY);
+  localStorage.removeItem(ENTERED_KEY);
+  history.replaceState(null, "", window.location.pathname + window.location.search);
+}
+
 export default function App() {
   const [email, setEmail] = useState<string | null>(() =>
     localStorage.getItem(EMAIL_KEY),
