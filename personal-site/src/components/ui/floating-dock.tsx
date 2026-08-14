@@ -3,7 +3,6 @@
 // the motion package, lucide instead of tabler, buttons (room clicks) instead
 // of hrefs, and monochrome token colors that hold in dark and light.
 import { cn } from "@/lib/utils";
-import { LayoutGrid } from "lucide-react";
 import {
   AnimatePresence,
   motion,
@@ -26,75 +25,11 @@ export interface FloatingDockItem {
 export const FloatingDock = ({
   items,
   desktopClassName,
-  mobileClassName,
 }: {
   items: FloatingDockItem[];
   desktopClassName?: string;
-  mobileClassName?: string;
 }) => {
-  return (
-    <>
-      <FloatingDockDesktop items={items} className={desktopClassName} />
-      <FloatingDockMobile items={items} className={mobileClassName} />
-    </>
-  );
-};
-
-const FloatingDockMobile = ({
-  items,
-  className,
-}: {
-  items: FloatingDockItem[];
-  className?: string;
-}) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className={cn("relative block md:hidden", className)}>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            layoutId="nav"
-            className="absolute inset-x-0 bottom-full mb-2 flex flex-col gap-2"
-          >
-            {items.map((item, idx) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{
-                  opacity: 0,
-                  y: 10,
-                  transition: { delay: idx * 0.05 },
-                }}
-                transition={{ delay: (items.length - 1 - idx) * 0.05 }}
-              >
-                <button
-                  type="button"
-                  onClick={() => {
-                    item.onClick?.();
-                    setOpen(false);
-                  }}
-                  className={cn(
-                    "flex h-10 w-10 cursor-pointer items-center justify-center rounded-full outline-none",
-                    item.active ? "bg-white/15" : "bg-neutral-900",
-                  )}
-                >
-                  <div className="h-4 w-4">{item.icon}</div>
-                </button>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-neutral-900 outline-none"
-      >
-        <LayoutGrid size={18} className="text-neutral-400" />
-      </button>
-    </div>
-  );
+  return <FloatingDockDesktop items={items} className={desktopClassName} />;
 };
 
 const FloatingDockDesktop = ({
@@ -110,7 +45,7 @@ const FloatingDockDesktop = ({
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
       className={cn(
-        "mx-auto hidden h-11 items-end gap-2 rounded-xl px-2.5 pb-2 md:flex",
+        "mx-auto flex h-11 items-end gap-2 rounded-xl px-2.5 pb-2",
         className,
       )}
     >

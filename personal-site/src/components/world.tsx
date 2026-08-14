@@ -306,7 +306,7 @@ export function World() {
           >
 
           <div
-            className="animate-fade-up mt-8 flex flex-wrap items-end justify-center gap-3"
+            className="folder-shelf animate-fade-up mt-8 flex items-end justify-center gap-3"
             style={{ animationDelay: "0.35s" }}
           >
             <LinkFolder

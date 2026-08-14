@@ -234,3 +234,9 @@ body {
 .light .gate-screen [class*="bg-white/"] { background-color: rgba(255, 255, 255, 0.06); }
 .light .gate-screen [class*="border-white/"] { border-color: rgba(255, 255, 255, 0.7); }
 .light .gate-screen [class*="text-neutral-400"] { color: #a3a3a3; }
+
+/* phones: the folder shelf shrinks to fit in one row; the card overlay
+   counter-zooms back to natural size */
+@media (max-width: 640px) {
+  .folder-shelf { zoom: 0.58; }
+}

@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 import { ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 export interface FolderLink {
   title: string;
@@ -160,8 +161,8 @@ export function LinkFolder({
         })}
       </div>
 
-      {/* phones: open folder becomes a card grid overlay */}
-      {open && isMobile && (
+      {/* phones: open folder becomes a card grid overlay (portaled out of the zoomed shelf) */}
+      {open && isMobile && createPortal(
         <div
           className="animate-fade-in fixed inset-0 z-[70] flex flex-col items-center justify-center gap-4 bg-background/92 px-6 backdrop-blur-sm"
           style={{ animationDuration: "0.3s" }}
@@ -206,7 +207,8 @@ export function LinkFolder({
             })}
           </div>
           <p className="text-[10px] text-faint">tap outside to close</p>
-        </div>
+        </div>,
+        document.body,
       )}
 
       {/* folder front */}
