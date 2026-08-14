@@ -2,6 +2,7 @@ import { FloatingDock } from "@/components/ui/floating-dock";
 import { LinkFolder, type FolderLink } from "@/components/ui/link-folder";
 import { RadialScrollGallery } from "@/components/ui/portfolio-and-image-gallery";
 import { Mac } from "@/components/ui/mac";
+import { SpiralAnimation } from "@/components/ui/spiral-animation";
 import Keyboard from "@/components/ui/magic-keyboard-component";
 import { WordReveal } from "@/components/ui/word-reveal";
 import { LETTERS } from "@/lib/letters";
@@ -172,7 +173,7 @@ const companyCards =
 function RoomTitle({ children }: { children: React.ReactNode }) {
   return (
     <h1
-      className="animate-fade-up absolute top-[24vh] left-6 z-10 text-[13px] font-medium tracking-tight sm:left-[33.5vw]"
+      className="animate-fade-up absolute top-[24vh] right-0 left-0 z-10 text-center text-[13px] font-medium tracking-tight"
       style={{ animationDelay: "0.1s" }}
     >
       {children}
@@ -184,9 +185,19 @@ export function World() {
   const [room, setRoomState] = useState<Room | null>(null);
   const [letter, setLetter] = useState<number | null>(null);
   const [contactSent, setContactSent] = useState(false);
+  const [warping, setWarping] = useState(false);
   const [message, setMessage] = useState("");
   const [openFolder, setOpenFolder] = useState<string | null>(null);
   const [hoverFolder, setHoverFolder] = useState<string | null>(null);
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 640px)");
+    const update = () => setIsMobileView(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
 
   const setRoom = (next: Room | null) => {
     setLetter(null);
@@ -214,6 +225,13 @@ export function World() {
         `&body=${encodeURIComponent(body)}`;
     }
     setContactSent(true);
+    setWarping(true);
+    window.setTimeout(() => {
+      setRoomState(null);
+      setMessage("");
+      setContactSent(false);
+      setWarping(false);
+    }, 4600);
   };
 
 
@@ -275,7 +293,7 @@ export function World() {
   return (
     <main className="relative min-h-dvh w-full">
       {room === null && (
-        <div className="min-h-dvh w-full px-6 pt-[24vh] sm:pl-[33.5vw]">
+        <div className="flex min-h-dvh w-full flex-col items-center px-6 pt-[24vh] text-center">
           <div>
             <WordReveal
               lead="by design."
@@ -300,7 +318,7 @@ export function World() {
         <section
           key="socials"
         >
-          <RoomTitle>find me everywhere.</RoomTitle>
+          <RoomTitle>digital real estate.</RoomTitle>
           <div
           className="animate-fade-in flex min-h-dvh w-full flex-col items-center justify-center overflow-hidden px-4 pt-14 pb-32"
           >
@@ -312,7 +330,6 @@ export function World() {
             <LinkFolder
               name="social media"
               links={SOCIAL_CARDS}
-              fanShift={208}
               open={openFolder === "social"}
               onOpen={() => setOpenFolder("social")}
               onClose={() => setOpenFolder(null)}
@@ -349,7 +366,6 @@ export function World() {
             <LinkFolder
               name="frames"
               links={FRAMES_CARDS}
-              fanShift={-208}
               open={openFolder === "frames"}
               onOpen={() => setOpenFolder("frames")}
               onClose={() => setOpenFolder(null)}
@@ -365,33 +381,49 @@ export function World() {
       {room === "companies" && (
         <section key="companies" className="animate-fade-in w-full">
           <RoomTitle>founded.</RoomTitle>
-          <div className="h-[42vh]" />
-          <RadialScrollGallery
-            className="!min-h-[64vh]"
-            baseRadius={430}
-            mobileRadius={210}
-            scrollDuration={1600}
-            visiblePercentage={42}
-            startTrigger="top 35%"
-          >
-            {companyCards(FOUNDED)}
-          </RadialScrollGallery>
+          {isMobileView ? (
+            <div className="px-6 pt-[34vh] pb-32">
+              <div className="grid grid-cols-2 justify-items-center gap-3">
+                {companyCards(FOUNDED)(null)}
+              </div>
+              <h1 className="mt-14 text-center text-[13px] font-medium tracking-tight">
+                invested.
+              </h1>
+              <div className="mt-6 grid grid-cols-2 justify-items-center gap-3">
+                {companyCards(INVESTED)(null)}
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="h-[42vh]" />
+              <RadialScrollGallery
+                className="!min-h-[64vh]"
+                baseRadius={430}
+                mobileRadius={210}
+                scrollDuration={1600}
+                visiblePercentage={42}
+                startTrigger="top 35%"
+              >
+                {companyCards(FOUNDED)}
+              </RadialScrollGallery>
 
-          {/* the first wheel lets go, then the second set begins */}
-          <div className="flex h-[52vh] flex-col justify-end px-6 pl-6 sm:pl-[33.5vw]">
-            <h1 className="text-[13px] font-medium tracking-tight">invested.</h1>
-          </div>
-          <RadialScrollGallery
-            className="!min-h-[64vh]"
-            baseRadius={430}
-            mobileRadius={210}
-            scrollDuration={1600}
-            visiblePercentage={42}
-            startTrigger="top 35%"
-          >
-            {companyCards(INVESTED)}
-          </RadialScrollGallery>
-          <div className="h-[26vh]" />
+              {/* the first wheel lets go, then the second set begins */}
+              <div className="flex h-[52vh] flex-col items-center justify-end px-6">
+                <h1 className="text-[13px] font-medium tracking-tight">invested.</h1>
+              </div>
+              <RadialScrollGallery
+                className="!min-h-[64vh]"
+                baseRadius={430}
+                mobileRadius={210}
+                scrollDuration={1600}
+                visiblePercentage={42}
+                startTrigger="top 35%"
+              >
+                {companyCards(INVESTED)}
+              </RadialScrollGallery>
+              <div className="h-[26vh]" />
+            </>
+          )}
         </section>
       )}
 
@@ -486,8 +518,9 @@ export function World() {
       {room === "contact" && (
         <section
           key="contact"
-          className="animate-fade-in flex min-h-dvh flex-col items-center justify-center gap-3 overflow-hidden px-4 pt-4 pb-24"
+          className="animate-fade-in flex min-h-dvh flex-col items-center gap-3 overflow-hidden px-4 pt-[31vh] pb-24"
         >
+          <RoomTitle>connect with me.</RoomTitle>
           {/* phones: a plain compose card with a real textarea */}
           <div className="animate-fade-up flex w-full max-w-sm flex-col sm:hidden">
             <div className="overflow-hidden rounded-xl border border-white/10 bg-[#0b0b0b]">
@@ -543,7 +576,7 @@ export function World() {
 
           {/* the display — silver, with the desktop running mail */}
           <div
-            className="animate-fade-up relative hidden w-[min(600px,92vw)] sm:block"
+            className="animate-fade-up relative hidden w-[min(520px,92vw)] sm:block"
             style={{ animationDelay: "0.1s" }}
           >
             <Mac className="desk-glass h-auto w-full text-[#050505]" />
@@ -657,12 +690,19 @@ export function World() {
           {/* the keyboard on the desk, true to proportion */}
           <div
             className="animate-fade-up hidden sm:block"
-            style={{ animationDelay: "0.25s", zoom: 0.45 }}
+            style={{ animationDelay: "0.25s", zoom: 0.4 }}
             onClick={onKeyboardClick}
           >
             <Keyboard />
           </div>
         </section>
+      )}
+
+      {/* after send: the spiral swells out of the computer screen, then home */}
+      {warping && (
+        <div className="spiral-swell fixed inset-0 z-[90] overflow-hidden bg-black">
+          <SpiralAnimation />
+        </div>
       )}
 
       {/* the dock — small and quiet */}

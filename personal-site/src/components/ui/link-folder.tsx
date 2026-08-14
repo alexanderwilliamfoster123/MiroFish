@@ -4,9 +4,8 @@
 // tapping a card takes you where it goes. drag a card down to close.
 import { motion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
-import { ArrowUpRight } from "lucide-react";
-import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { CardCarousel } from "@/components/ui/card-carousel";
 
 export interface FolderLink {
   title: string;
@@ -28,7 +27,6 @@ export interface LinkFolderProps {
   fanShift?: number; // px to slide the open fan so it centres on the page
   hovered: boolean;
   onHover: (hovering: boolean) => void;
-  onInspect?: (link: FolderLink, index: number) => void;
 }
 
 export function LinkFolder({
@@ -38,23 +36,20 @@ export function LinkFolder({
   onOpen,
   onClose,
   dimmed,
-  fanShift = 0,
   hovered,
   onHover,
-  onInspect,
 }: LinkFolderProps) {
   const center = (links.length - 1) / 2;
 
-  // phones can't host the wide fan — cards open as a grid instead
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const query = window.matchMedia("(max-width: 640px)");
-    const update = () => setIsMobile(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-  const fanned = open && !isMobile;
+  const activate = (link: FolderLink) => {
+    if (link.soon) return;
+    if (link.onSelect) {
+      onClose();
+      link.onSelect();
+    } else if (link.href) {
+      window.open(link.href, "_blank", "noopener");
+    }
+  };
 
   return (
     <div
@@ -75,7 +70,7 @@ export function LinkFolder({
         <div className="lf-inner pointer-events-none absolute top-6 right-1.5 bottom-1.5 left-1.5 rounded-md bg-black shadow-inner" />
       </motion.div>
 
-      {/* the cards */}
+      {/* the cards peeking from the folder */}
       <div className="absolute bottom-6 z-10 flex justify-center">
         {links.map((link, index) => {
           const offset = index - center;
@@ -83,53 +78,20 @@ export function LinkFolder({
           const stackX = hovered && !open ? offset * 15 : offset * 2;
           const stackRotate = hovered && !open ? offset * 6 : offset * 2.5;
           const stackScale = 1 - Math.abs(offset) * 0.03;
-
           const Icon = link.icon;
-          const activate = () => {
-            if (onInspect) {
-              onInspect(link, index);
-              return;
-            }
-            if (link.soon) return;
-            if (link.onSelect) link.onSelect();
-            else if (link.href) window.open(link.href, "_blank", "noopener");
-          };
 
           return (
             <motion.div
               key={link.title}
-              drag={fanned}
-              dragSnapToOrigin
-              onDragEnd={(_, info) => {
-                if (info.offset.y > 70 && fanned) onClose();
+              className="lf-cardframe pointer-events-none absolute bottom-0 h-[132px] w-[104px] origin-bottom overflow-hidden rounded-lg border border-white/15 shadow-[0_20px_40px_rgba(0,0,0,0.5)]"
+              animate={{
+                y: stackY,
+                x: stackX,
+                rotate: stackRotate,
+                scale: stackScale,
+                zIndex: index + 10,
+                opacity: open ? 0 : 1,
               }}
-              onTap={fanned ? activate : undefined}
-              className={`lf-cardframe group absolute bottom-0 h-[132px] w-[104px] origin-bottom overflow-hidden rounded-lg border border-white/15 shadow-[0_20px_40px_rgba(0,0,0,0.5)] ${
-                fanned
-                  ? link.soon
-                    ? "pointer-events-auto cursor-grab active:cursor-grabbing"
-                    : "pointer-events-auto cursor-pointer active:cursor-grabbing"
-                  : "pointer-events-none"
-              }`}
-              animate={
-                !fanned
-                  ? {
-                      y: stackY,
-                      x: stackX,
-                      rotate: stackRotate,
-                      scale: stackScale,
-                      zIndex: index + 10,
-                    }
-                  : {
-                      y: -88,
-                      x: offset * 112 + fanShift,
-                      rotate: 0,
-                      scale: 1.05,
-                      zIndex: 50,
-                    }
-              }
-              whileHover={fanned ? { scale: 1.1, zIndex: 100 } : {}}
-              whileDrag={fanned ? { scale: 1.15, rotate: 5, zIndex: 150 } : {}}
               transition={{ type: "spring", stiffness: 350, damping: 30 }}
             >
               <div className="lf-card flex h-full w-full flex-col justify-between bg-linear-to-b from-[#191919] to-[#0c0c0c] p-3">
@@ -147,13 +109,6 @@ export function LinkFolder({
                       {link.handle}
                     </p>
                   )}
-                  {link.soon ? (
-                    <p className="mt-1.5 text-[9px] text-faint">coming soon</p>
-                  ) : (
-                    <p className="mt-1.5 flex items-center gap-1 text-[9px] text-neutral-500 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                      open <ArrowUpRight size={9} />
-                    </p>
-                  )}
                 </div>
               </div>
             </motion.div>
@@ -161,55 +116,26 @@ export function LinkFolder({
         })}
       </div>
 
-      {/* phones: open folder becomes a card grid overlay (portaled out of the zoomed shelf) */}
-      {open && isMobile && createPortal(
-        <div
-          className="animate-fade-in fixed inset-0 z-[70] flex flex-col items-center justify-center gap-4 bg-background/92 px-6 backdrop-blur-sm"
-          style={{ animationDuration: "0.3s" }}
-          onClick={onClose}
-        >
-          <p className="text-[11px] font-medium tracking-wide text-foreground">{name}</p>
-          <div className="grid grid-cols-2 gap-3" onClick={(event) => event.stopPropagation()}>
-            {links.map((link) => {
-              const Icon = link.icon;
-              return (
-                <button
-                  key={link.title}
-                  type="button"
-                  onClick={() => {
-                    if (link.soon) return;
-                    if (link.onSelect) link.onSelect();
-                    else if (link.href) window.open(link.href, "_blank", "noopener");
-                  }}
-                  className="lf-cardframe flex h-[122px] w-[132px] cursor-pointer flex-col justify-between overflow-hidden rounded-lg border border-white/15 text-left"
-                >
-                  <div className="lf-card flex h-full w-full flex-col justify-between bg-linear-to-b from-[#191919] to-[#0c0c0c] p-3">
-                    {Icon ? (
-                      <Icon size={14} strokeWidth={1.5} className="text-neutral-300" />
-                    ) : (
-                      <span />
-                    )}
-                    <div>
-                      <p className="text-[11px] font-medium tracking-tight text-foreground">
-                        {link.title}
-                      </p>
-                      {link.soon ? (
-                        <p className="mt-1 text-[9px] text-faint">coming soon</p>
-                      ) : (
-                        link.handle && (
-                          <p className="mt-0.5 font-mono text-[8px] text-faint">{link.handle}</p>
-                        )
-                      )}
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-          <p className="text-[10px] text-faint">tap outside to close</p>
-        </div>,
-        document.body,
-      )}
+      {/* open: the cards become a stacked carousel over the page */}
+      {open &&
+        createPortal(
+          <div
+            className="animate-fade-in fixed inset-0 z-[70] flex flex-col items-center justify-center gap-3 bg-background/92 px-4 backdrop-blur-sm"
+            style={{ animationDuration: "0.3s" }}
+            onClick={onClose}
+          >
+            <p className="text-[13px] font-medium tracking-tight text-foreground">
+              {name}
+            </p>
+            <div className="w-full" onClick={(event) => event.stopPropagation()}>
+              <CardCarousel links={links} onActivate={activate} />
+            </div>
+            <p className="text-[10px] text-faint">
+              drag to browse &mdash; tap the front card to open &mdash; tap outside to close
+            </p>
+          </div>,
+          document.body,
+        )}
 
       {/* folder front */}
       <motion.div
