@@ -211,11 +211,11 @@ export function World({ onLeave }: WorldProps) {
                 "",
                 "now i'm building vanquish, paktos, tootski and omera.",
               ]}
-              paragraphGap="mt-2"
-              className="text-[15px] leading-normal text-neutral-500"
+              paragraphGap="mt-1.5"
+              className="text-[13px] leading-[1.5] text-neutral-500"
             />
             <p
-              className="animate-fade-in mt-8 font-serif text-base italic text-neutral-600"
+              className="animate-fade-in mt-7 font-serif text-[14px] italic text-neutral-600"
               style={{ animationDelay: "1s", animationDuration: "0.8s" }}
             >
               alexander
