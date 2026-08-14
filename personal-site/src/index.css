@@ -219,21 +219,8 @@ body {
 }
 .light .lf-chip span { color: #1a1a1a; }
 
-/* the gate is a dark room in every theme — the key ceremony stays black */
-.gate-screen { background: #000; }
-.light .gate-screen {
-  --color-background: #000000;
-  --color-foreground: #f2f2f2;
-  --color-muted: #171717;
-  --color-muted-foreground: #8a8a8a;
-  --color-border: #262626;
-  --color-faint: #525252;
-  --color-line: #1f1f1f;
-  --color-card: #0d0d0d;
-}
-.light .gate-screen [class*="bg-white/"] { background-color: rgba(255, 255, 255, 0.06); }
-.light .gate-screen [class*="border-white/"] { border-color: rgba(255, 255, 255, 0.7); }
-.light .gate-screen [class*="text-neutral-400"] { color: #a3a3a3; }
+/* the gate follows the theme like every other room */
+.gate-screen { background: var(--color-background); }
 
 /* phones: the folder shelf shrinks to fit in one row; the card overlay
    counter-zooms back to natural size */
