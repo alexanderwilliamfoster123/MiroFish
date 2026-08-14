@@ -2,7 +2,6 @@ import { FloatingDock } from "@/components/ui/floating-dock";
 import { LinkFolder, type FolderLink } from "@/components/ui/link-folder";
 import { RadialScrollGallery } from "@/components/ui/portfolio-and-image-gallery";
 import { Mac } from "@/components/ui/mac";
-import { SpiralAnimation } from "@/components/ui/spiral-animation";
 import Keyboard from "@/components/ui/magic-keyboard-component";
 import { WordReveal } from "@/components/ui/word-reveal";
 import { LETTERS } from "@/lib/letters";
@@ -185,7 +184,6 @@ export function World() {
   const [room, setRoomState] = useState<Room | null>(null);
   const [letter, setLetter] = useState<number | null>(null);
   const [contactSent, setContactSent] = useState(false);
-  const [warping, setWarping] = useState(false);
   const [message, setMessage] = useState("");
   const [openFolder, setOpenFolder] = useState<string | null>(null);
   const [hoverFolder, setHoverFolder] = useState<string | null>(null);
@@ -233,14 +231,13 @@ export function World() {
       link.click();
       link.remove();
     }
+    // the window flips to its sent state, rests a moment, then goes home
     setContactSent(true);
-    setWarping(true);
     window.setTimeout(() => {
       setRoomState(null);
       setMessage("");
       setContactSent(false);
-      setWarping(false);
-    }, 4600);
+    }, 3000);
   };
 
 
@@ -521,7 +518,7 @@ export function World() {
       {room === "contact" && (
         <section
           key="contact"
-          className="animate-fade-in flex min-h-dvh flex-col items-center gap-3 overflow-hidden px-4 pt-[31vh] pb-24"
+          className="animate-fade-in flex min-h-dvh flex-col items-center gap-6 overflow-hidden px-4 pt-[31vh] pb-24"
         >
           <RoomTitle>connect with me.</RoomTitle>
           {/* phones: a plain compose card with a real textarea */}
@@ -584,7 +581,7 @@ export function World() {
 
           {/* the display — silver, with the desktop running mail */}
           <div
-            className="animate-fade-up relative hidden w-[min(520px,92vw)] sm:block"
+            className="animate-fade-up relative hidden w-[min(400px,88vw)] sm:block"
             style={{ animationDelay: "0.1s" }}
           >
             <Mac className="desk-glass h-auto w-full text-[#050505]" />
@@ -596,7 +593,7 @@ export function World() {
                 <div className="flex items-center gap-2.5">
                   <Apple size={9} className="fill-neutral-200 text-neutral-200" />
                   <span className="font-semibold text-neutral-100">mail</span>
-                  {["file", "edit", "view", "mailbox", "message", "format", "window", "help"].map(
+                  {["file", "edit", "view", "mailbox", "message"].map(
                     (menu) => (
                       <span key={menu} className="text-neutral-400">
                         {menu}
@@ -702,19 +699,12 @@ export function World() {
           {/* the keyboard on the desk, true to proportion */}
           <div
             className="animate-fade-up hidden sm:block"
-            style={{ animationDelay: "0.25s", zoom: 0.4 }}
+            style={{ animationDelay: "0.25s", zoom: 0.3 }}
             onClick={onKeyboardClick}
           >
             <Keyboard />
           </div>
         </section>
-      )}
-
-      {/* after send: the spiral swells out of the computer screen, then home */}
-      {warping && (
-        <div className="spiral-swell fixed inset-0 z-[90] overflow-hidden bg-black">
-          <SpiralAnimation />
-        </div>
       )}
 
       {/* the dock — small and quiet */}
