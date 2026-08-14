@@ -297,19 +297,9 @@ export function World() {
           <div>
             <WordReveal
               lead="by design."
-              paragraphs={[
-                "",
-                "in the act of building, don\u2019t forget the art of living.",
-              ]}
-              paragraphGap="mt-1.5"
+              paragraphs={[""]}
               className="text-[13px] leading-[1.5] text-neutral-500"
             />
-            <p
-              className="animate-fade-in mt-7 font-serif text-[14px] italic text-neutral-600"
-              style={{ animationDelay: "1s", animationDuration: "0.8s" }}
-            >
-              alexander
-            </p>
           </div>
         </div>
       )}

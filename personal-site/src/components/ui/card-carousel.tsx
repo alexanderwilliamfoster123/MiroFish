@@ -118,8 +118,8 @@ export function CardCarousel({
   };
 
   return (
-    <div className="flex w-full flex-col items-center justify-center overflow-hidden py-6 select-none">
-      <div className="relative flex h-64 w-full max-w-5xl items-center justify-center sm:h-80">
+    <div className="flex w-full flex-col items-center justify-center py-6 select-none">
+      <div className="relative flex h-72 w-full max-w-5xl items-center justify-center sm:h-96">
         {/* transparent drag surface; a still tap opens the front card */}
         <motion.div
           drag="x"
