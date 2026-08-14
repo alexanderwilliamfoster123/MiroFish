@@ -164,3 +164,4 @@ body {
 .light [role="button"][class*="border-white/30"] {
   background-color: rgba(0, 0, 0, 0.07);
 }
+.light [class*="bg-white/15"] { background-color: rgba(0, 0, 0, 0.09); }

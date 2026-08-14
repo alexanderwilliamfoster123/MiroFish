@@ -1,4 +1,4 @@
-import { Dock, DockIcon, DockItem, DockLabel } from "@/components/ui/dock";
+import { FloatingDock } from "@/components/ui/floating-dock";
 import {
   HoverRevealList,
   type RevealItem,
@@ -560,35 +560,22 @@ export function World({ onLeave }: WorldProps) {
 
       {/* the dock — small and quiet */}
       <div className="fixed bottom-4 left-1/2 z-50 max-w-full -translate-x-1/2">
-        <Dock
-          panelHeight={52}
-          magnification={60}
-          distance={110}
-          className="items-end gap-2 rounded-xl border border-white/10 bg-neutral-950/80 px-2.5 pb-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.6)] backdrop-blur-md"
-        >
-          {DOCK_ITEMS.map((item) => (
-            <DockItem
-              key={item.room}
-              onClick={() => setRoom(room === item.room ? null : item.room)}
-              className={
-                "aspect-square rounded-full border bg-neutral-900 " +
-                (room === item.room ? "border-white/30" : "border-white/10")
-              }
-            >
-              <DockLabel className="border-white/10 bg-neutral-900 text-neutral-200">
-                {item.title}
-              </DockLabel>
-              <DockIcon>
-                <item.icon
-                  className={
-                    "h-full w-full " +
-                    (room === item.room ? "text-neutral-100" : "text-neutral-400")
-                  }
-                />
-              </DockIcon>
-            </DockItem>
-          ))}
-        </Dock>
+        <FloatingDock
+          desktopClassName="border border-white/10 bg-neutral-950/80 shadow-[0_8px_30px_rgba(0,0,0,0.6)] backdrop-blur-md"
+          items={DOCK_ITEMS.map((item) => ({
+            title: item.title,
+            active: room === item.room,
+            onClick: () => setRoom(room === item.room ? null : item.room),
+            icon: (
+              <item.icon
+                className={
+                  "h-full w-full " +
+                  (room === item.room ? "text-foreground" : "text-neutral-400")
+                }
+              />
+            ),
+          }))}
+        />
       </div>
     </main>
   );
