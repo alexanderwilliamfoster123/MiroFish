@@ -135,6 +135,20 @@ export function World() {
 
   const loginInputRef = useRef<HTMLInputElement>(null);
   const keyboardRef = useRef<HTMLDivElement>(null);
+  const displayRef = useRef<HTMLDivElement>(null);
+  const [kbZoom, setKbZoom] = useState(0.72);
+
+  // the keyboard tracks the display: always half its width, like the desk
+  useEffect(() => {
+    if (isMobile) return;
+    const el = displayRef.current;
+    if (!el) return;
+    const compute = () => setKbZoom((el.clientWidth * 0.51) / 600);
+    compute();
+    const observer = new ResizeObserver(compute);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isMobile]);
 
   // each answer is kept the moment it's given
   useEffect(() => {
@@ -184,6 +198,23 @@ export function World() {
     setActiveApp(null);
     setLetter(null);
     setSent(false);
+  };
+
+  // signs out and walks the login again — the email capture, on demand
+  const logOut = () => {
+    localStorage.removeItem(EMAIL_KEY);
+    localStorage.removeItem(NAME_KEY);
+    localStorage.removeItem(ENTERED_KEY);
+    setName(null);
+    setEmail(null);
+    setEntered(false);
+    setLoginStep("name");
+    setLoginValue("");
+    setLoginError(false);
+    setActiveApp(null);
+    setLetter(null);
+    setSent(false);
+    setMessage("");
   };
 
   const sendEmail = () => {
@@ -378,6 +409,15 @@ export function World() {
               .replace(",", "")}{" "}
             {now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
           </span>
+          {entered && (
+            <button
+              type="button"
+              onClick={logOut}
+              className="cursor-pointer text-neutral-500 transition-colors duration-300 outline-none hover:text-neutral-200"
+            >
+              log out
+            </button>
+          )}
         </div>
       </div>
 
@@ -685,8 +725,8 @@ export function World() {
           )}
 
           {/* ---------------------------------------------------- the dock */}
-          <div className="absolute bottom-1.5 left-1/2 z-30 -translate-x-1/2">
-            <div className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.06] px-1.5 py-1 backdrop-blur-md">
+          <div className="absolute bottom-1 left-1/2 z-30 -translate-x-1/2">
+            <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/[0.06] px-1 py-[3px] backdrop-blur-md">
               {(
                 [
                   { id: "mail" as const, title: "mail", icon: Mail },
@@ -701,10 +741,10 @@ export function World() {
                   onClick={() =>
                     activeApp === app.id ? closeApp() : openApp(app.id)
                   }
-                  className="group relative flex h-8 w-8 cursor-pointer flex-col items-center justify-center rounded-lg border border-white/10 bg-neutral-900 transition-transform duration-200 outline-none hover:-translate-y-0.5"
+                  className="group relative flex h-[22px] w-[22px] cursor-pointer flex-col items-center justify-center rounded-[5px] border border-white/10 bg-neutral-900 transition-transform duration-200 outline-none hover:-translate-y-0.5"
                 >
                   <app.icon
-                    size={13}
+                    size={11}
                     strokeWidth={1.5}
                     className={
                       activeApp === app.id
@@ -712,25 +752,25 @@ export function World() {
                         : "text-neutral-400"
                     }
                   />
-                  <span className="pointer-events-none absolute -top-6 rounded border border-white/10 bg-neutral-900 px-1.5 py-0.5 text-[8px] whitespace-nowrap text-neutral-200 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                  <span className="pointer-events-none absolute -top-5 rounded border border-white/10 bg-neutral-900 px-1.5 py-0.5 text-[8px] whitespace-nowrap text-neutral-200 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                     {app.title}
                   </span>
                   {activeApp === app.id && (
-                    <span className="absolute -bottom-[5px] h-[3px] w-[3px] rounded-full bg-neutral-400" />
+                    <span className="absolute -bottom-[4px] h-[2.5px] w-[2.5px] rounded-full bg-neutral-400" />
                   )}
                 </button>
               ))}
-              <div className="mx-0.5 h-6 w-px bg-white/10" />
+              <div className="mx-0.5 h-4 w-px bg-white/10" />
               <button
                 type="button"
                 aria-label="instagram"
                 onClick={() =>
                   activeApp === "instagram" ? closeApp() : openApp("instagram")
                 }
-                className="group relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-white/10 bg-neutral-900 transition-transform duration-200 outline-none hover:-translate-y-0.5"
+                className="group relative flex h-[22px] w-[22px] cursor-pointer items-center justify-center rounded-[5px] border border-white/10 bg-neutral-900 transition-transform duration-200 outline-none hover:-translate-y-0.5"
               >
                 <Instagram
-                  size={13}
+                  size={11}
                   strokeWidth={1.5}
                   className={
                     activeApp === "instagram"
@@ -738,11 +778,11 @@ export function World() {
                       : "text-neutral-400"
                   }
                 />
-                <span className="pointer-events-none absolute -top-6 rounded border border-white/10 bg-neutral-900 px-1.5 py-0.5 text-[8px] whitespace-nowrap text-neutral-200 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                <span className="pointer-events-none absolute -top-5 rounded border border-white/10 bg-neutral-900 px-1.5 py-0.5 text-[8px] whitespace-nowrap text-neutral-200 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                   instagram
                 </span>
                 {activeApp === "instagram" && (
-                  <span className="absolute -bottom-[5px] h-[3px] w-[3px] rounded-full bg-neutral-400" />
+                  <span className="absolute -bottom-[4px] h-[2.5px] w-[2.5px] rounded-full bg-neutral-400" />
                 )}
               </button>
               {SOCIALS.map((social) => (
@@ -751,14 +791,14 @@ export function World() {
                   type="button"
                   aria-label={social.title}
                   onClick={() => window.open(social.href, "_blank", "noopener")}
-                  className="group relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-white/10 bg-neutral-900 transition-transform duration-200 outline-none hover:-translate-y-0.5"
+                  className="group relative flex h-[22px] w-[22px] cursor-pointer items-center justify-center rounded-[5px] border border-white/10 bg-neutral-900 transition-transform duration-200 outline-none hover:-translate-y-0.5"
                 >
                   <social.icon
-                    size={13}
+                    size={11}
                     strokeWidth={1.5}
                     className="text-neutral-400"
                   />
-                  <span className="pointer-events-none absolute -top-6 rounded border border-white/10 bg-neutral-900 px-1.5 py-0.5 text-[8px] whitespace-nowrap text-neutral-200 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                  <span className="pointer-events-none absolute -top-5 rounded border border-white/10 bg-neutral-900 px-1.5 py-0.5 text-[8px] whitespace-nowrap text-neutral-200 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                     {social.title}
                   </span>
                 </button>
@@ -785,8 +825,12 @@ export function World() {
         </div>
       ) : (
         <>
-          {/* the display */}
-          <div className="animate-fade-up relative w-[min(760px,92vw)]">
+          {/* the display — as large as the viewport allows */}
+          <div
+            ref={displayRef}
+            className="animate-fade-up relative"
+            style={{ width: "min(1040px, 94vw, calc((100dvh - 50px) / 1.08))" }}
+          >
             <Mac className="desk-glass h-auto w-full text-[#050505]" />
             <div className="absolute top-[5%] left-[4.9%] h-[61%] w-[90.2%] overflow-hidden">
               {screen}
@@ -797,7 +841,7 @@ export function World() {
           <div
             ref={keyboardRef}
             className="animate-fade-up"
-            style={{ animationDelay: "0.2s", zoom: 0.64 }}
+            style={{ animationDelay: "0.2s", zoom: kbZoom }}
             onClick={onKeyboardClick}
           >
             <Keyboard />
