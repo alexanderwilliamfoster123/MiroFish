@@ -5,6 +5,7 @@
 import { motion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 import { ArrowUpRight } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export interface FolderLink {
   title: string;
@@ -42,6 +43,17 @@ export function LinkFolder({
   onInspect,
 }: LinkFolderProps) {
   const center = (links.length - 1) / 2;
+
+  // phones can't host the wide fan — cards open as a grid instead
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 640px)");
+    const update = () => setIsMobile(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  const fanned = open && !isMobile;
 
   return (
     <div
@@ -85,21 +97,21 @@ export function LinkFolder({
           return (
             <motion.div
               key={link.title}
-              drag={open}
+              drag={fanned}
               dragSnapToOrigin
               onDragEnd={(_, info) => {
-                if (info.offset.y > 70 && open) onClose();
+                if (info.offset.y > 70 && fanned) onClose();
               }}
-              onTap={open ? activate : undefined}
+              onTap={fanned ? activate : undefined}
               className={`lf-cardframe group absolute bottom-0 h-[132px] w-[104px] origin-bottom overflow-hidden rounded-lg border border-white/15 shadow-[0_20px_40px_rgba(0,0,0,0.5)] ${
-                open
+                fanned
                   ? link.soon
                     ? "pointer-events-auto cursor-grab active:cursor-grabbing"
                     : "pointer-events-auto cursor-pointer active:cursor-grabbing"
                   : "pointer-events-none"
               }`}
               animate={
-                !open
+                !fanned
                   ? {
                       y: stackY,
                       x: stackX,
@@ -115,8 +127,8 @@ export function LinkFolder({
                       zIndex: 50,
                     }
               }
-              whileHover={open ? { scale: 1.1, zIndex: 100 } : {}}
-              whileDrag={open ? { scale: 1.15, rotate: 5, zIndex: 150 } : {}}
+              whileHover={fanned ? { scale: 1.1, zIndex: 100 } : {}}
+              whileDrag={fanned ? { scale: 1.15, rotate: 5, zIndex: 150 } : {}}
               transition={{ type: "spring", stiffness: 350, damping: 30 }}
             >
               <div className="lf-card flex h-full w-full flex-col justify-between bg-linear-to-b from-[#191919] to-[#0c0c0c] p-3">
@@ -147,6 +159,55 @@ export function LinkFolder({
           );
         })}
       </div>
+
+      {/* phones: open folder becomes a card grid overlay */}
+      {open && isMobile && (
+        <div
+          className="animate-fade-in fixed inset-0 z-[70] flex flex-col items-center justify-center gap-4 bg-background/92 px-6 backdrop-blur-sm"
+          style={{ animationDuration: "0.3s" }}
+          onClick={onClose}
+        >
+          <p className="text-[11px] font-medium tracking-wide text-foreground">{name}</p>
+          <div className="grid grid-cols-2 gap-3" onClick={(event) => event.stopPropagation()}>
+            {links.map((link) => {
+              const Icon = link.icon;
+              return (
+                <button
+                  key={link.title}
+                  type="button"
+                  onClick={() => {
+                    if (link.soon) return;
+                    if (link.onSelect) link.onSelect();
+                    else if (link.href) window.open(link.href, "_blank", "noopener");
+                  }}
+                  className="lf-cardframe flex h-[122px] w-[132px] cursor-pointer flex-col justify-between overflow-hidden rounded-lg border border-white/15 text-left"
+                >
+                  <div className="lf-card flex h-full w-full flex-col justify-between bg-linear-to-b from-[#191919] to-[#0c0c0c] p-3">
+                    {Icon ? (
+                      <Icon size={14} strokeWidth={1.5} className="text-neutral-300" />
+                    ) : (
+                      <span />
+                    )}
+                    <div>
+                      <p className="text-[11px] font-medium tracking-tight text-foreground">
+                        {link.title}
+                      </p>
+                      {link.soon ? (
+                        <p className="mt-1 text-[9px] text-faint">coming soon</p>
+                      ) : (
+                        link.handle && (
+                          <p className="mt-0.5 font-mono text-[8px] text-faint">{link.handle}</p>
+                        )
+                      )}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+          <p className="text-[10px] text-faint">tap outside to close</p>
+        </div>
+      )}
 
       {/* folder front */}
       <motion.div

@@ -123,6 +123,7 @@ export function Gate({ initialStep, onEmail, onName }: GateProps) {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement | null)?.tagName === "INPUT") return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key.length === 1 || ["Backspace", "Enter"].includes(e.key)) {
         e.preventDefault();
@@ -139,7 +140,7 @@ export function Gate({ initialStep, onEmail, onName }: GateProps) {
   return (
     <main
       className={cn(
-        "flex min-h-dvh flex-col items-center justify-center px-4 py-10 transition-opacity duration-500 ease-out",
+        "gate-screen flex min-h-dvh flex-col items-center justify-center px-4 py-10 transition-opacity duration-500 ease-out",
         leaving && "pointer-events-none opacity-0",
       )}
     >
@@ -162,12 +163,39 @@ export function Gate({ initialStep, onEmail, onName }: GateProps) {
           <div className="mx-auto mt-14 w-full max-w-[300px]">
             <div
               className={cn(
-                "border-b pb-2.5 text-center text-[15px] transition-colors duration-300",
+                "relative border-b pb-2.5 text-center text-[15px] transition-colors duration-300",
                 error ? "border-white/70" : "border-line",
               )}
               aria-label={copy.heading}
               aria-live="polite"
             >
+              {/* real input, invisible: gives mobile the os keyboard and
+                  desktop a click-to-type target. display stays custom. */}
+              <input
+                value={value}
+                onChange={(event) =>
+                  write(
+                    step === "name"
+                      ? event.target.value
+                      : event.target.value.replace(/\s/g, ""),
+                  )
+                }
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    submit();
+                  }
+                }}
+                type={step === "email" ? "email" : "text"}
+                inputMode={step === "email" ? "email" : "text"}
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                autoComplete={step === "email" ? "email" : "name"}
+                aria-label={copy.heading}
+                className="absolute inset-0 h-full w-full cursor-text opacity-0"
+                style={{ fontSize: 16 }}
+              />
               {value ? (
                 <span className="text-foreground">{value}</span>
               ) : (
@@ -182,13 +210,24 @@ export function Gate({ initialStep, onEmail, onName }: GateProps) {
               )}
               aria-live="polite"
             >
-              {error
-                ? copy.errorText
-                : value
-                  ? "press return"
-                  : step === "email"
-                    ? "type your email, then press return"
-                    : "type your name, then press return"}
+              {error ? (
+                copy.errorText
+              ) : value ? (
+                "press return"
+              ) : (
+                <>
+                  <span className="sm:hidden">
+                    {step === "email"
+                      ? "tap the line and type your email"
+                      : "tap the line and type your name"}
+                  </span>
+                  <span className="hidden sm:inline">
+                    {step === "email"
+                      ? "type your email, then press return"
+                      : "type your name, then press return"}
+                  </span>
+                </>
+              )}
             </p>
           </div>
         </div>
