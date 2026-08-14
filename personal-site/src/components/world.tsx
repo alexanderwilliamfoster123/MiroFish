@@ -4,39 +4,42 @@ import {
   type RevealItem,
 } from "@/components/ui/hover-reveal-list";
 import { RadialScrollGallery } from "@/components/ui/portfolio-and-image-gallery";
-import {
-  CoverflowCarousel,
-  type CoverflowSlide,
-} from "@/components/ui/coverflow-carousel";
+import { Mac } from "@/components/ui/mac";
+import Keyboard from "@/components/ui/magic-keyboard-component";
 import { WordReveal } from "@/components/ui/word-reveal";
 import { LETTERS } from "@/lib/letters";
 import {
   AtSign,
   Briefcase,
-  Camera,
   Feather,
   Mail,
-  Github,
   Instagram,
   Linkedin,
   Twitter,
   Youtube,
 } from "lucide-react";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 
-type Room = "writing" | "pictures" | "socials" | "companies" | "contact";
+type Room = "writing" | "socials" | "companies" | "contact";
 
-// the wheel of investments, in order around the circle
-const COMPANIES = ["vertus", "vanquish", "paktos", "tootski", "omera"];
+// the wheels of companies, in order around each circle
+const FOUNDED = ["vertus", "vanquish", "paktos", "tootski", "omera"];
+// placeholder names — swap for the real portfolio
+const INVESTED = ["aurora", "atlas", "solace", "ember", "northwind"];
 
 // one row per place — swap hrefs/handles/descriptions for the real ones
 const SOCIALS: RevealItem[] = [
   {
     title: "instagram",
     handle: "@alexanderfoster",
-    description: "photographs and fragments — the world in monochrome, mostly.",
+    description: "three doors — the world, the mind, the soul.",
     href: "https://instagram.com/",
     icon: Instagram,
+    sublinks: [
+      { title: "the world", href: "https://instagram.com/" },
+      { title: "the mind", href: "https://instagram.com/" },
+      { title: "the soul", href: "https://instagram.com/" },
+    ],
   },
   {
     title: "x",
@@ -59,77 +62,50 @@ const SOCIALS: RevealItem[] = [
     href: "https://youtube.com/",
     icon: Youtube,
   },
-  {
-    title: "github",
-    handle: "@alexanderwilliamfoster123",
-    description: "the code itself. everything i ship starts here.",
-    href: "https://github.com/alexanderwilliamfoster123",
-    icon: Github,
-  },
-];
-
-// monochrome placeholder photographs for the coverflow — swap for real ones
-const photo = (stops: string, extra: string) =>
-  "data:image/svg+xml;utf8," +
-  encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' width='640' height='640'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>${stops}</linearGradient><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/><feColorMatrix type='matrix' values='0 0 0 0 0.85  0 0 0 0 0.85  0 0 0 0 0.83  0 0 0 0.05 0'/><feComposite operator='over' in2='SourceGraphic'/></filter></defs><g filter='url(%23n)'><rect width='640' height='640' fill='url(%23g)'/>${extra}</g></svg>`,
-  );
-
-const PHOTOS: CoverflowSlide[] = [
-  {
-    src: photo(
-      "<stop offset='0' stop-color='#cfccc5'/><stop offset='1' stop-color='#3a3936'/>",
-      "<polygon points='0,640 150,390 330,510 480,340 640,470 640,640' fill='#232220'/>",
-    ),
-    alt: "ridge line in monochrome",
-    title: "portra 400",
-    subtitle: "35mm",
-  },
-  {
-    src: photo(
-      "<stop offset='0' stop-color='#8f8c86'/><stop offset='1' stop-color='#1c1b19'/>",
-      "<rect y='395' width='640' height='4' fill='rgba(235,233,228,0.35)'/>",
-    ),
-    alt: "a horizon, nothing else",
-    title: "tri-x 400",
-    subtitle: "35mm",
-  },
-  {
-    src: photo(
-      "<stop offset='0' stop-color='#3a3936'/><stop offset='1' stop-color='#050505'/>",
-      "<circle cx='450' cy='170' r='52' fill='rgba(235,233,228,0.75)'/>",
-    ),
-    alt: "moon over a dark field",
-    title: "cinestill 800t",
-    subtitle: "50mm",
-  },
-  {
-    src: photo(
-      "<stop offset='0' stop-color='#e3e0d9'/><stop offset='1' stop-color='#57544f'/>",
-      "<rect x='80' width='18' height='640' fill='rgba(20,19,18,0.5)'/><rect x='230' width='30' height='640' fill='rgba(20,19,18,0.65)'/><rect x='430' width='14' height='640' fill='rgba(20,19,18,0.45)'/>",
-    ),
-    alt: "trees against winter light",
-    title: "ektar 100",
-    subtitle: "28mm",
-  },
-  {
-    src: photo(
-      "<stop offset='0' stop-color='#6e6b66'/><stop offset='1' stop-color='#141312'/>",
-      "<polygon points='0,640 250,270 430,430 640,230 640,640' fill='#111010'/>",
-    ),
-    alt: "mountains before rain",
-    title: "portra 800",
-    subtitle: "35mm",
-  },
 ];
 
 const DOCK_ITEMS: Array<{ room: Room; title: string; icon: typeof Feather }> = [
   { room: "companies", title: "companies", icon: Briefcase },
   { room: "writing", title: "writing", icon: Feather },
-  { room: "pictures", title: "pictures", icon: Camera },
   { room: "socials", title: "socials", icon: AtSign },
   { room: "contact", title: "contact", icon: Mail },
 ];
+
+const companyCards =
+  (companies: string[]) => (hoveredIndex: number | null) =>
+    companies.map((company, index) => {
+      const isActive = hoveredIndex === index;
+      return (
+        <div
+          key={company}
+          className={
+            "flex h-[210px] w-[150px] flex-col justify-between rounded-xl border p-5 transition-all duration-500 sm:h-[250px] sm:w-[180px] " +
+            (isActive
+              ? "border-white/40 bg-neutral-900 shadow-2xl"
+              : "border-white/10 bg-[#0d0d0f] opacity-70")
+          }
+        >
+          <span
+            className={
+              "font-mono text-[11px] tabular-nums " +
+              (isActive ? "text-neutral-300" : "text-faint")
+            }
+          >
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <div>
+            <h3
+              className={
+                "text-xl font-medium tracking-tight " +
+                (isActive ? "text-foreground" : "text-neutral-400")
+              }
+            >
+              {company}
+            </h3>
+          </div>
+        </div>
+      );
+    });
 
 interface WorldProps {
   onLeave: () => void;
@@ -139,24 +115,68 @@ export function World({ onLeave }: WorldProps) {
   const [room, setRoomState] = useState<Room | null>(null);
   const [letter, setLetter] = useState<number | null>(null);
   const [contactSent, setContactSent] = useState(false);
+  const [message, setMessage] = useState("");
 
   const setRoom = (next: Room | null) => {
     setLetter(null);
     setContactSent(false);
+    setMessage("");
     setRoomState(next);
   };
 
-  const handleContact = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const name = String(data.get("name") ?? "").trim();
-    const email = String(data.get("email") ?? "").trim();
-    const message = String(data.get("message") ?? "").trim();
-    const subject = encodeURIComponent(name ? `hello from ${name}` : "hello");
-    const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
-    window.location.href = `mailto:alex@vertus.ai?subject=${subject}&body=${body}`;
+  const sendEmail = () => {
+    const name = localStorage.getItem("gate:name") ?? "";
+    const email = localStorage.getItem("gate:email") ?? "";
+    const subject = name ? `hello from ${name}` : "hello";
+    const body = `${message}\n\n— ${name} (${email})`;
+    // gmail's compose screen opens right in the browser; fall back to the
+    // system mail app when the popup is blocked
+    const gmail =
+      "https://mail.google.com/mail/?view=cm&fs=1&to=alex@vertus.ai" +
+      `&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const opened = window.open(gmail, "_blank", "noopener,noreferrer");
+    if (!opened) {
+      window.location.href =
+        `mailto:alex@vertus.ai?subject=${encodeURIComponent(subject)}` +
+        `&body=${encodeURIComponent(body)}`;
+    }
     setContactSent(true);
   };
+
+  // the magic keyboard is markup-only — read whichever key was pressed
+  const onKeyboardClick = (event: MouseEvent<HTMLDivElement>) => {
+    if (contactSent) return;
+    const keyDiv = (event.target as HTMLElement).closest("div");
+    if (!keyDiv) return;
+    const label = (keyDiv.textContent ?? "").trim();
+    if (label === "delete") setMessage((current) => current.slice(0, -1));
+    else if (label === "return") setMessage((current) => current + "\n");
+    else if (label === "" && keyDiv.className.includes("flex-[5]"))
+      setMessage((current) => current + " ");
+    else if (/^[a-z0-9`\-=[\]\\;',./]$/i.test(label))
+      setMessage((current) => current + label.toLowerCase());
+  };
+
+  useEffect(() => {
+    if (room !== "contact" || contactSent) return;
+    // the clicked dock item keeps focus — space/enter would re-trigger it
+    (document.activeElement as HTMLElement | null)?.blur?.();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === "Backspace") {
+        e.preventDefault();
+        setMessage((current) => current.slice(0, -1));
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        setMessage((current) => current + "\n");
+      } else if (e.key.length === 1) {
+        e.preventDefault();
+        setMessage((current) => current + e.key);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [room, contactSent]);
 
   // esc steps back: letter -> writing -> home
   useEffect(() => {
@@ -191,10 +211,11 @@ export function World({ onLeave }: WorldProps) {
                 "",
                 "now i'm building vanquish, paktos, tootski and omera.",
               ]}
-              className="text-[19px] leading-[1.6] font-light text-neutral-400 sm:text-[21px]"
+              paragraphGap="mt-2"
+              className="text-[15px] leading-normal text-neutral-500"
             />
             <p
-              className="animate-fade-in mt-10 font-serif text-2xl italic text-neutral-500"
+              className="animate-fade-in mt-8 font-serif text-base italic text-neutral-600"
               style={{ animationDelay: "1s", animationDuration: "0.8s" }}
             >
               alexander
@@ -247,41 +268,24 @@ export function World({ onLeave }: WorldProps) {
             visiblePercentage={42}
             startTrigger="top 35%"
           >
-            {(hoveredIndex) =>
-              COMPANIES.map((company, index) => {
-                const isActive = hoveredIndex === index;
-                return (
-                  <div
-                    key={company}
-                    className={
-                      "flex h-[210px] w-[150px] flex-col justify-between rounded-xl border p-5 transition-all duration-500 sm:h-[250px] sm:w-[180px] " +
-                      (isActive
-                        ? "border-white/40 bg-neutral-900 shadow-2xl"
-                        : "border-white/10 bg-[#0d0d0f] opacity-70")
-                    }
-                  >
-                    <span
-                      className={
-                        "font-mono text-[11px] tabular-nums " +
-                        (isActive ? "text-neutral-300" : "text-faint")
-                      }
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <div>
-                      <h3
-                        className={
-                          "text-xl font-medium tracking-tight " +
-                          (isActive ? "text-foreground" : "text-neutral-400")
-                        }
-                      >
-                        {company}
-                      </h3>
-                    </div>
-                  </div>
-                );
-              })
-            }
+            {companyCards(FOUNDED)}
+          </RadialScrollGallery>
+
+          {/* the first wheel lets go, then the second set begins */}
+          <div className="flex h-[52vh] flex-col items-center justify-end px-6 text-center">
+            <h1 className="text-[19px] font-medium tracking-tight sm:text-[21px]">
+              invested.
+            </h1>
+          </div>
+          <RadialScrollGallery
+            className="!min-h-[64vh]"
+            baseRadius={430}
+            mobileRadius={210}
+            scrollDuration={1600}
+            visiblePercentage={42}
+            startTrigger="top 35%"
+          >
+            {companyCards(INVESTED)}
           </RadialScrollGallery>
           <div className="h-[26vh]" />
         </section>
@@ -349,80 +353,65 @@ export function World({ onLeave }: WorldProps) {
         </section>
       )}
 
-      {room === "pictures" && (
-        <section
-          key="pictures"
-          className="animate-fade-in mx-auto flex min-h-dvh w-full max-w-5xl flex-col justify-center overflow-hidden px-0 pt-16 pb-32"
-        >
-          <h1
-            className="animate-fade-up text-center text-[19px] font-medium tracking-tight sm:text-[21px]"
-            style={{ animationDelay: "0.1s" }}
-          >
-            frames.
-          </h1>
-          <div className="animate-fade-up mt-2" style={{ animationDelay: "0.25s" }}>
-            <CoverflowCarousel
-              slides={PHOTOS}
-              showCaption
-              label="frames"
-              cardClassName="rounded-lg border border-white/10"
-            />
-          </div>
-        </section>
-      )}
-
       {room === "contact" && (
         <section
           key="contact"
-          className="animate-fade-in mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-6 pt-16 pb-36"
+          className="animate-fade-in flex min-h-dvh flex-col items-center justify-center gap-4 overflow-hidden px-4 pt-10 pb-30"
         >
-          <h1
-            className="animate-fade-up text-[19px] font-medium tracking-tight sm:text-[21px]"
-            style={{ animationDelay: "0.1s" }}
+          <div className="animate-fade-up relative w-[min(620px,94vw)]" style={{ animationDelay: "0.1s" }}>
+            <Mac className="h-auto w-full text-[#101010]" />
+            {/* the mail window, projected onto the screen */}
+            <div className="absolute top-[5%] left-[4.9%] flex h-[61%] w-[90.2%] flex-col overflow-hidden bg-[#f7f7f5] text-neutral-900">
+              <div className="flex items-center justify-between border-b border-neutral-200 px-3 py-1.5">
+                <span className="text-[10px] text-neutral-400">new message</span>
+                {!contactSent && (
+                  <button
+                    type="button"
+                    onClick={sendEmail}
+                    disabled={!message.trim()}
+                    className="cursor-pointer text-[10px] font-medium text-neutral-500 transition-colors duration-300 hover:text-neutral-900 disabled:cursor-default disabled:opacity-40"
+                  >
+                    send &rarr;
+                  </button>
+                )}
+              </div>
+              {contactSent ? (
+                <div className="flex flex-1 items-center justify-center">
+                  <p className="text-[11px] text-neutral-500">
+                    sent — thank you. i&rsquo;ll read it soon.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="border-b border-neutral-200 px-3 py-1 text-[10px] text-neutral-400">
+                    to: <span className="text-neutral-600">alex@vertus.ai</span>
+                  </div>
+                  <div className="border-b border-neutral-200 px-3 py-1 text-[10px] text-neutral-400">
+                    subject:{" "}
+                    <span className="text-neutral-600">
+                      hello from {localStorage.getItem("gate:name") ?? "you"}
+                    </span>
+                  </div>
+                  <div className="flex-1 overflow-y-auto px-3 py-2 text-[11px] leading-relaxed whitespace-pre-wrap">
+                    {message}
+                    <span className="animate-cursor-blink ml-px inline-block h-[11px] w-[1.5px] translate-y-[2px] bg-neutral-900" />
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div
+            className="animate-fade-up"
+            style={{ animationDelay: "0.25s", zoom: 0.78 }}
+            onClick={onKeyboardClick}
           >
-            say hello.
-          </h1>
-          {contactSent ? (
-            <p className="animate-fade-up mt-8 text-[15px] text-neutral-400">
-              thank you — i&rsquo;ll read it soon.
-            </p>
-          ) : (
-            <form
-              className="animate-fade-up mt-8 flex flex-col gap-6"
-              style={{ animationDelay: "0.2s" }}
-              onSubmit={handleContact}
-            >
-              <input
-                name="name"
-                autoComplete="name"
-                placeholder="your name"
-                defaultValue={localStorage.getItem("gate:name") ?? ""}
-                className="w-full border-b border-white/10 bg-transparent py-2 text-[15px] text-foreground outline-none transition-colors duration-300 placeholder:text-faint focus:border-white/40"
-              />
-              <input
-                name="email"
-                type="email"
-                required
-                autoComplete="email"
-                placeholder="your email"
-                defaultValue={localStorage.getItem("gate:email") ?? ""}
-                className="w-full border-b border-white/10 bg-transparent py-2 text-[15px] text-foreground outline-none transition-colors duration-300 placeholder:text-faint focus:border-white/40"
-              />
-              <textarea
-                name="message"
-                required
-                rows={4}
-                placeholder="what&rsquo;s on your mind"
-                className="w-full resize-none border-b border-white/10 bg-transparent py-2 text-[15px] text-foreground outline-none transition-colors duration-300 placeholder:text-faint focus:border-white/40"
-              />
-              <button
-                type="submit"
-                className="cursor-pointer self-start text-[13px] text-neutral-500 transition-colors duration-300 hover:text-foreground"
-              >
-                send &rarr;
-              </button>
-            </form>
-          )}
+            <Keyboard />
+          </div>
+
+          <p className="animate-fade-up text-[11px] tracking-[0.2em] text-faint" style={{ animationDelay: "0.4s" }}>
+            type your note — send opens it in your browser
+          </p>
         </section>
       )}
 

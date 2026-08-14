@@ -10,6 +10,7 @@ interface WordRevealProps {
   paragraphs: string[];
   total?: number; // seconds for the wave to sweep all the text
   className?: string;
+  paragraphGap?: string; // classes on every paragraph after the first
 }
 
 const STYLE_ID = "word-reveal-style";
@@ -41,6 +42,7 @@ export function WordReveal({
   paragraphs,
   total = 0.8,
   className,
+  paragraphGap = "mt-6",
 }: WordRevealProps) {
   ensureStyles();
 
@@ -68,12 +70,12 @@ export function WordReveal({
       });
 
     return paragraphs.map((paragraph, paragraphIndex) => (
-      <p key={paragraphIndex} className={paragraphIndex > 0 ? "mt-6" : undefined}>
+      <p key={paragraphIndex} className={paragraphIndex > 0 ? paragraphGap : undefined}>
         {paragraphIndex === 0 && lead ? splitWords(lead, true) : null}
         {splitWords(paragraph, false)}
       </p>
     ));
-  }, [lead, paragraphs, total]);
+  }, [lead, paragraphs, total, paragraphGap]);
 
   return <div className={className}>{rendered}</div>;
 }
