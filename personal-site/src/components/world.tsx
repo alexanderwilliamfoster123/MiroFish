@@ -247,7 +247,9 @@ export function World() {
         setMessage((current) => current.slice(0, -1));
       } else if (e.key === "Enter") {
         e.preventDefault();
-        setMessage((current) => current + "\n");
+        // return sends; shift+return makes a new line
+        if (e.shiftKey) setMessage((current) => current + "\n");
+        else if (message.trim()) sendEmail();
       } else if (e.key.length === 1) {
         e.preventDefault();
         setMessage((current) => current + e.key);
@@ -255,7 +257,8 @@ export function World() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [room, contactSent]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [room, contactSent, message]);
 
   // the magic keyboard is markup-only — read whichever key was pressed
   const onKeyboardClick = (event: MouseEvent<HTMLDivElement>) => {
@@ -264,8 +267,9 @@ export function World() {
     if (!keyDiv) return;
     const label = (keyDiv.textContent ?? "").trim();
     if (label === "delete") setMessage((current) => current.slice(0, -1));
-    else if (label === "return") setMessage((current) => current + "\n");
-    else if (label === "" && keyDiv.className.includes("flex-[5]"))
+    else if (label === "return") {
+      if (message.trim()) sendEmail();
+    } else if (label === "" && keyDiv.className.includes("flex-[5]"))
       setMessage((current) => current + " ");
     else if (/^[a-z0-9`\-=[\]\;',./]$/i.test(label))
       setMessage((current) => current + label.toLowerCase());
@@ -562,6 +566,11 @@ export function World() {
                 </>
               )}
             </div>
+            {!contactSent && (
+              <p className="animate-fade-in mt-3 text-center text-[11px] text-faint">
+                write your email, then tap send
+              </p>
+            )}
           </div>
 
           {/* the display — silver, with the desktop running mail */}
@@ -676,6 +685,10 @@ export function World() {
               </div>
             </div>
           </div>
+
+          <p className="animate-fade-in hidden text-[11px] text-faint sm:block">
+            {contactSent ? " " : "write your email, then press return to send"}
+          </p>
 
           {/* the keyboard on the desk, true to proportion */}
           <div
