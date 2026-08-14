@@ -189,6 +189,7 @@ export function World({ onLeave }: WorldProps) {
     // the clicked dock item keeps focus — space/enter would re-trigger it
     (document.activeElement as HTMLElement | null)?.blur?.();
     const onKey = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement | null)?.tagName === "TEXTAREA") return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key === "Backspace") {
         e.preventDefault();
@@ -430,9 +431,62 @@ export function World({ onLeave }: WorldProps) {
           key="contact"
           className="animate-fade-in flex min-h-dvh flex-col items-center justify-center gap-3 overflow-hidden px-4 pt-4 pb-24"
         >
+          {/* phones: a plain compose card with a real textarea */}
+          <div className="animate-fade-up flex w-full max-w-sm flex-col sm:hidden">
+            <div className="overflow-hidden rounded-xl border border-white/10 bg-[#0b0b0b]">
+              <div className="flex items-center justify-between border-b border-white/[0.07] bg-white/[0.03] px-4 py-2.5">
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+                </div>
+                <span className="text-[10px] text-neutral-500">new message</span>
+                {!contactSent ? (
+                  <button
+                    type="button"
+                    onClick={sendEmail}
+                    disabled={!message.trim()}
+                    className="cursor-pointer text-[11px] font-medium text-neutral-500 transition-colors duration-300 hover:text-foreground disabled:cursor-default disabled:opacity-40"
+                  >
+                    send &rarr;
+                  </button>
+                ) : (
+                  <div className="w-4" />
+                )}
+              </div>
+              {contactSent ? (
+                <div className="flex min-h-[220px] items-center justify-center">
+                  <p className="text-[12px] text-neutral-500">
+                    sent &mdash; thank you. i&rsquo;ll read it soon.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-baseline gap-2 border-b border-white/[0.06] px-4 py-2 text-[12px]">
+                    <span className="text-neutral-500">to:</span>
+                    <span className="text-neutral-200">alex@vertus.ai</span>
+                  </div>
+                  <div className="flex items-baseline gap-2 border-b border-white/[0.06] px-4 py-2 text-[12px]">
+                    <span className="text-neutral-500">subject:</span>
+                    <span className="text-neutral-200">
+                      hello from {localStorage.getItem("gate:name") ?? "you"}
+                    </span>
+                  </div>
+                  <textarea
+                    value={message}
+                    onChange={(event) => setMessage(event.target.value)}
+                    rows={8}
+                    placeholder="what&rsquo;s on your mind"
+                    className="w-full resize-none bg-transparent px-4 py-3 text-[13px] leading-relaxed text-neutral-200 outline-none placeholder:text-faint"
+                  />
+                </>
+              )}
+            </div>
+          </div>
+
           {/* the display — silver, with the desktop running mail */}
           <div
-            className="animate-fade-up relative w-[min(740px,94vw)]"
+            className="animate-fade-up relative hidden w-[min(600px,92vw)] sm:block"
             style={{ animationDelay: "0.1s" }}
           >
             <Mac className="h-auto w-full text-[#050505]" />
@@ -480,7 +534,7 @@ export function World({ onLeave }: WorldProps) {
                 </div>
 
                 {/* compose window */}
-                <div className="flex h-[86%] w-[62%] flex-col overflow-hidden rounded-md border border-white/10 bg-[#141414] shadow-[0_18px_50px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.06)]">
+                <div className="flex h-[74%] w-[52%] flex-col overflow-hidden rounded-md border border-white/10 bg-[#141414] shadow-[0_18px_50px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.06)]">
                   <div className="flex items-center gap-2.5 border-b border-white/[0.06] bg-white/[0.03] px-2.5 py-1.5">
                     <div className="flex items-center gap-1">
                       <span className="h-1.5 w-1.5 rounded-full bg-[#ff5f57]" />
@@ -549,8 +603,8 @@ export function World({ onLeave }: WorldProps) {
 
           {/* the keyboard on the desk, true to proportion */}
           <div
-            className="animate-fade-up"
-            style={{ animationDelay: "0.25s", zoom: 0.56 }}
+            className="animate-fade-up hidden sm:block"
+            style={{ animationDelay: "0.25s", zoom: 0.45 }}
             onClick={onKeyboardClick}
           >
             <Keyboard />

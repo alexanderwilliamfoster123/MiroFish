@@ -7,12 +7,13 @@ import { LayoutGrid } from "lucide-react";
 import {
   AnimatePresence,
   motion,
+  useMotionTemplate,
   useMotionValue,
   useSpring,
   useTransform,
   type MotionValue,
 } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export interface FloatingDockItem {
   title: string;
@@ -109,7 +110,7 @@ const FloatingDockDesktop = ({
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
       className={cn(
-        "mx-auto hidden h-14 items-end gap-3 rounded-2xl px-3 pb-2.5 md:flex",
+        "mx-auto hidden h-11 items-end gap-2 rounded-xl px-2.5 pb-2 md:flex",
         className,
       )}
     >
@@ -134,10 +135,10 @@ function IconContainer({
     return val - bounds.x - bounds.width / 2;
   });
 
-  const widthTransform = useTransform(distance, [-150, 0, 150], [36, 68, 36]);
-  const heightTransform = useTransform(distance, [-150, 0, 150], [36, 68, 36]);
-  const widthTransformIcon = useTransform(distance, [-150, 0, 150], [17, 32, 17]);
-  const heightTransformIcon = useTransform(distance, [-150, 0, 150], [17, 32, 17]);
+  const widthTransform = useTransform(distance, [-150, 0, 150], [28, 50, 28]);
+  const heightTransform = useTransform(distance, [-150, 0, 150], [28, 50, 28]);
+  const widthTransformIcon = useTransform(distance, [-150, 0, 150], [13, 23, 13]);
+  const heightTransformIcon = useTransform(distance, [-150, 0, 150], [13, 23, 13]);
 
   const spring = { mass: 0.1, stiffness: 150, damping: 12 };
   const width = useSpring(widthTransform, spring);
@@ -147,11 +148,29 @@ function IconContainer({
 
   const [hovered, setHovered] = useState(false);
 
+  // monochrome lamp: the glow answers the cursor from anywhere on the page
+  const glow = useMotionValue(0);
+  useEffect(() => {
+    const onMove = (e: globalThis.MouseEvent) => {
+      const bounds = ref.current?.getBoundingClientRect();
+      if (!bounds) return;
+      const dx = e.clientX - (bounds.x + bounds.width / 2);
+      const dy = e.clientY - (bounds.y + bounds.height / 2);
+      glow.set(Math.max(0, 1 - Math.hypot(dx, dy) / 480));
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [glow]);
+  const glowSpring = useSpring(glow, { stiffness: 140, damping: 22 });
+  const glowInner = useTransform(glowSpring, (v) => v * 0.28);
+  const glowOuter = useTransform(glowSpring, (v) => v * 0.14);
+  const glowShadow = useMotionTemplate`0 0 10px rgba(255,255,255,${glowInner}), 0 0 26px rgba(255,255,255,${glowOuter})`;
+
   return (
     <button type="button" onClick={onClick} className="cursor-pointer outline-none">
       <motion.div
         ref={ref}
-        style={{ width, height }}
+        style={{ width, height, boxShadow: glowShadow }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         className={cn(

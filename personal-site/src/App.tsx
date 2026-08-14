@@ -1,5 +1,6 @@
 import { Gate } from "@/components/email-gate";
 import { SubscriptionReceipt } from "@/components/subscription-receipt";
+import { CursorLight } from "@/components/ui/cursor-light";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { World } from "@/components/world";
 import { useEffect, useState } from "react";
@@ -65,6 +66,7 @@ export default function App() {
 
   return (
     <>
+      <CursorLight />
       <ThemeToggle />
       {screen}
     </>

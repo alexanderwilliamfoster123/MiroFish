@@ -176,3 +176,6 @@ body {
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
+
+/* the lamp and the dock glow are dark-room effects */
+.light .cursor-lamp { display: none; }
