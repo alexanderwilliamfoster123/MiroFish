@@ -146,7 +146,7 @@ export function Gate({ initialStep, onEmail, onName }: GateProps) {
       <div className="flex w-full flex-col items-center text-center">
         {/* only the words change between steps */}
         <div key={step} className="animate-fade-up" style={{ animationDuration: "0.5s" }}>
-          <h1 className="text-[19px] font-medium tracking-tight text-foreground sm:text-[21px]">
+          <h1 className="text-[13px] font-medium tracking-tight text-foreground">
             {copy.heading}
           </h1>
           <p
