@@ -1,4 +1,3 @@
-import { CursorLight } from "@/components/ui/cursor-light";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { World } from "@/components/world";
 
@@ -14,7 +13,6 @@ if (typeof window !== "undefined" && window.location.hash === "#fresh") {
 export default function App() {
   return (
     <>
-      <CursorLight />
       <ThemeToggle />
       <World />
     </>
