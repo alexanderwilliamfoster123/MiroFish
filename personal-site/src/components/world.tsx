@@ -248,10 +248,10 @@ export function World({ onLeave }: WorldProps) {
         <div className="min-h-dvh w-full px-6 pt-[24vh] sm:pl-[33.5vw]">
           <div>
             <WordReveal
-              lead="i built vertus."
+              lead="by design."
               paragraphs={[
                 "",
-                "now i'm building vanquish, paktos, tootski and omera.",
+                "in the act of building, don\u2019t forget the art of living.",
               ]}
               paragraphGap="mt-1.5"
               className="text-[13px] leading-[1.5] text-neutral-500"
