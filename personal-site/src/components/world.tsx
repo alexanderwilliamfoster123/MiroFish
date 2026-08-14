@@ -218,11 +218,20 @@ export function World() {
     const gmail =
       "https://mail.google.com/mail/?view=cm&fs=1&to=alex@vertus.ai" +
       `&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const mailto =
+      `mailto:alex@vertus.ai?subject=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(body)}`;
+    // both attempts open in a separate tab; the site itself never
+    // navigates away (a blocked popup must not blank the page)
     const opened = window.open(gmail, "_blank", "noopener,noreferrer");
     if (!opened) {
-      window.location.href =
-        `mailto:alex@vertus.ai?subject=${encodeURIComponent(subject)}` +
-        `&body=${encodeURIComponent(body)}`;
+      const link = document.createElement("a");
+      link.href = mailto;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
     }
     setContactSent(true);
     setWarping(true);
