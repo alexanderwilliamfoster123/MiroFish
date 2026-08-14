@@ -72,26 +72,41 @@ const photo = (stops: string, extra: string) =>
   );
 
 const PHOTOS = [
-  photo(
-    "<stop offset='0' stop-color='#cfccc5'/><stop offset='1' stop-color='#3a3936'/>",
-    "<polygon points='0,700 120,430 260,560 380,380 500,520 500,700' fill='#232220'/>",
-  ),
-  photo(
-    "<stop offset='0' stop-color='#8f8c86'/><stop offset='1' stop-color='#1c1b19'/>",
-    "<rect y='430' width='500' height='4' fill='rgba(235,233,228,0.35)'/>",
-  ),
-  photo(
-    "<stop offset='0' stop-color='#3a3936'/><stop offset='1' stop-color='#050505'/>",
-    "<circle cx='360' cy='170' r='46' fill='rgba(235,233,228,0.75)'/>",
-  ),
-  photo(
-    "<stop offset='0' stop-color='#e3e0d9'/><stop offset='1' stop-color='#57544f'/>",
-    "<rect x='60' width='16' height='700' fill='rgba(20,19,18,0.5)'/><rect x='180' width='26' height='700' fill='rgba(20,19,18,0.65)'/><rect x='340' width='12' height='700' fill='rgba(20,19,18,0.45)'/>",
-  ),
-  photo(
-    "<stop offset='0' stop-color='#6e6b66'/><stop offset='1' stop-color='#141312'/>",
-    "<polygon points='0,700 200,300 340,470 500,260 500,700' fill='#111010'/>",
-  ),
+  {
+    caption: "portra 400\n35mm",
+    image: photo(
+      "<stop offset='0' stop-color='#cfccc5'/><stop offset='1' stop-color='#3a3936'/>",
+      "<polygon points='0,700 120,430 260,560 380,380 500,520 500,700' fill='#232220'/>",
+    ),
+  },
+  {
+    caption: "tri-x 400\n35mm",
+    image: photo(
+      "<stop offset='0' stop-color='#8f8c86'/><stop offset='1' stop-color='#1c1b19'/>",
+      "<rect y='430' width='500' height='4' fill='rgba(235,233,228,0.35)'/>",
+    ),
+  },
+  {
+    caption: "cinestill 800t\n50mm",
+    image: photo(
+      "<stop offset='0' stop-color='#3a3936'/><stop offset='1' stop-color='#050505'/>",
+      "<circle cx='360' cy='170' r='46' fill='rgba(235,233,228,0.75)'/>",
+    ),
+  },
+  {
+    caption: "ektar 100\n28mm",
+    image: photo(
+      "<stop offset='0' stop-color='#e3e0d9'/><stop offset='1' stop-color='#57544f'/>",
+      "<rect x='60' width='16' height='700' fill='rgba(20,19,18,0.5)'/><rect x='180' width='26' height='700' fill='rgba(20,19,18,0.65)'/><rect x='340' width='12' height='700' fill='rgba(20,19,18,0.45)'/>",
+    ),
+  },
+  {
+    caption: "portra 800\n35mm",
+    image: photo(
+      "<stop offset='0' stop-color='#6e6b66'/><stop offset='1' stop-color='#141312'/>",
+      "<polygon points='0,700 200,300 340,470 500,260 500,700' fill='#111010'/>",
+    ),
+  },
 ];
 
 const DOCK_ITEMS: Array<{ room: Room; title: string; icon: typeof Feather }> = [
@@ -139,40 +154,22 @@ export function World({ onLeave }: WorldProps) {
       </button>
 
       {room === null && (
-        <div className="mx-auto flex min-h-dvh w-full max-w-4xl items-center px-6 pb-28">
-          <div className="grid w-full gap-12 sm:grid-cols-[150px_1fr] sm:gap-16">
-            {/* side links, fey-style */}
-            <nav className="flex flex-row flex-wrap gap-x-5 gap-y-2 sm:flex-col sm:gap-3 sm:pt-1.5">
-              {DOCK_ITEMS.map((item, index) => (
-                <button
-                  key={item.room}
-                  type="button"
-                  onClick={() => setRoom(item.room)}
-                  className="animate-fade-in cursor-pointer text-left text-[13px] text-neutral-500 transition-colors duration-300 hover:text-foreground"
-                  style={{ animationDelay: `${0.3 + index * 0.08}s`, animationDuration: "0.6s" }}
-                >
-                  {item.title}
-                </button>
-              ))}
-            </nav>
-
-            {/* the statement */}
-            <div>
-              <WordReveal
-                lead="every world has a key — you used yours."
-                paragraphs={[
-                  "this is where i keep what i make: the companies i've founded, the letters i write, the pictures i take, and the places you can find me. all of it built quietly, most of it still being carved.",
-                  "take the dock below, or the doors on the left. stay as long as you like.",
-                ]}
-                className="text-[19px] leading-[1.6] font-light text-neutral-400 sm:text-[21px]"
-              />
-              <p
-                className="animate-fade-in mt-10 font-serif text-2xl italic text-neutral-500"
-                style={{ animationDelay: "1s", animationDuration: "0.8s" }}
-              >
-                alexander
-              </p>
-            </div>
+        <div className="mx-auto flex min-h-dvh w-full max-w-2xl items-center px-6 pb-28">
+          <div>
+            <WordReveal
+              lead="i built vertus."
+              paragraphs={[
+                "",
+                "now i'm building vanquish, paktos, tootski and omera.",
+              ]}
+              className="text-[19px] leading-[1.6] font-light text-neutral-400 sm:text-[21px]"
+            />
+            <p
+              className="animate-fade-in mt-10 font-serif text-2xl italic text-neutral-500"
+              style={{ animationDelay: "1s", animationDuration: "0.8s" }}
+            >
+              alexander
+            </p>
           </div>
         </div>
       )}
@@ -329,7 +326,7 @@ export function World({ onLeave }: WorldProps) {
           className="animate-fade-in flex min-h-dvh flex-col items-center justify-center overflow-hidden pb-10"
         >
           <InteractiveFolderGallery
-            photos={PHOTOS.map((image, index) => ({ id: index, image }))}
+            photos={PHOTOS.map((print, index) => ({ id: index, ...print }))}
             folderName="frames"
             dragHintText="drag a photo down to close"
             className="!py-0"

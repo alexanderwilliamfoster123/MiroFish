@@ -1,10 +1,12 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { AspectRatio } from "@/components/ui/reui-aspect-ratio";
 
 export interface GalleryPhoto {
   id: string | number;
   image: string;
+  caption?: string;
 }
 
 const defaultPhotos: GalleryPhoto[] = [
@@ -71,7 +73,7 @@ export function InteractiveFolderGallery({
                       setHoverFolder(false);
                     }
                   }}
-                  className={`absolute bottom-0 w-56 h-72 rounded-xl shadow-[0_20px_40px_rgba(0,0,0,0.5)] overflow-hidden border border-white/20 origin-bottom ${isFolderOpen ? "cursor-grab active:cursor-grabbing pointer-events-auto" : "pointer-events-none"}`}
+                  className={`absolute bottom-0 w-56 h-72 rounded-[3px] shadow-[0_20px_40px_rgba(0,0,0,0.5)] overflow-hidden origin-bottom ${isFolderOpen ? "cursor-grab active:cursor-grabbing pointer-events-auto" : "pointer-events-none"}`}
                   animate={!isFolderOpen ? {
                     y: stackY,
                     x: stackX,
@@ -89,7 +91,24 @@ export function InteractiveFolderGallery({
                   whileDrag={isFolderOpen ? { scale: openScale + 0.1, rotate: 5, zIndex: 150 } : {}}
                   transition={{ type: "spring", stiffness: 350, damping: 30 }}
                 >
-                  <img src={photo.image} alt="Gallery item" className="w-full h-full object-cover pointer-events-none" />
+                  {/* film print: white matte, photo, handwritten film note */}
+                  <div className="flex h-full w-full flex-col bg-[#f4f2ed] px-3 pt-3">
+                    <AspectRatio ratio={1} className="overflow-hidden bg-neutral-300">
+                      <img
+                        src={photo.image}
+                        alt="Gallery item"
+                        className="h-full w-full object-cover pointer-events-none"
+                        draggable={false}
+                      />
+                    </AspectRatio>
+                    {photo.caption && (
+                      <div className="flex flex-1 items-end pb-2">
+                        <span className="font-hand whitespace-pre-line text-[17px] leading-[1.05] text-neutral-600">
+                          {photo.caption}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </motion.div>
               );
             })}
@@ -122,7 +141,7 @@ export function InteractiveFolderGallery({
 
         <motion.div
           animate={{ opacity: isFolderOpen ? 1 : 0, y: isFolderOpen ? 0 : 50 }}
-          className="absolute bottom-10 px-6 py-3 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 backdrop-blur-md text-black/50 dark:text-white/50 text-sm font-medium uppercase tracking-widest pointer-events-none"
+          className="absolute bottom-10 px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-white/40 text-[11px] tracking-[0.2em] pointer-events-none"
         >
           {dragHintText}
         </motion.div>
