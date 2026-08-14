@@ -177,16 +177,18 @@ export function Gate({ initialStep, onEmail, onName }: GateProps) {
             </div>
             <p
               className={cn(
-                "mt-3 h-4 text-[11px] transition-opacity duration-300",
-                error
-                  ? "text-neutral-400 opacity-100"
-                  : value
-                    ? "text-faint opacity-100"
-                    : "opacity-0",
+                "mt-3 h-4 text-[11px] transition-colors duration-300",
+                error ? "text-neutral-400" : "text-faint",
               )}
               aria-live="polite"
             >
-              {error ? copy.errorText : "press return"}
+              {error
+                ? copy.errorText
+                : value
+                  ? "press return"
+                  : step === "email"
+                    ? "type your email, then press return"
+                    : "type your name, then press return"}
             </p>
           </div>
         </div>
