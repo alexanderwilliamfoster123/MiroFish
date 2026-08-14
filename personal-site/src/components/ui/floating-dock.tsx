@@ -102,7 +102,12 @@ function IconContainer({
   const glowShadow = useMotionTemplate`0 0 10px rgba(255,255,255,${glowInner}), 0 0 26px rgba(255,255,255,${glowOuter})`;
 
   return (
-    <button type="button" onClick={onClick} className="cursor-pointer outline-none">
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={title}
+      className="cursor-pointer outline-none"
+    >
       <motion.div
         ref={ref}
         style={{ width, height, boxShadow: glowShadow }}

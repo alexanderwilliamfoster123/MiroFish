@@ -27,6 +27,7 @@ export interface LinkFolderProps {
   fanShift?: number; // px to slide the open fan so it centres on the page
   hovered: boolean;
   onHover: (hovering: boolean) => void;
+  overlayTo?: Element | null; // where the open-carousel overlay mounts (defaults to body)
 }
 
 export function LinkFolder({
@@ -38,6 +39,7 @@ export function LinkFolder({
   dimmed,
   hovered,
   onHover,
+  overlayTo,
 }: LinkFolderProps) {
   const center = (links.length - 1) / 2;
 
@@ -120,7 +122,7 @@ export function LinkFolder({
       {open &&
         createPortal(
           <div
-            className="animate-fade-in fixed inset-0 z-[70] flex flex-col items-center justify-center gap-3 bg-background/92 px-4 backdrop-blur-sm"
+            className={`animate-fade-in ${overlayTo ? "absolute" : "fixed"} inset-0 z-[70] flex flex-col items-center justify-center gap-3 bg-background/92 px-4 backdrop-blur-sm`}
             style={{ animationDuration: "0.3s" }}
             onClick={onClose}
           >
@@ -134,7 +136,7 @@ export function LinkFolder({
               drag to browse &mdash; tap the front card to open &mdash; tap outside to close
             </p>
           </div>,
-          document.body,
+          overlayTo ?? document.body,
         )}
 
       {/* folder front */}
