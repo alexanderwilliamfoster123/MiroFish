@@ -222,10 +222,12 @@ body {
 /* the gate follows the theme like every other room */
 .gate-screen { background: var(--color-background); }
 
-/* phones: the folder shelf shrinks to fit in one row; the card overlay
-   counter-zooms back to natural size */
+/* the folder shelf is drawn at natural size and scaled down to sit
+   quietly in the page; the open-card overlay escapes via a portal so
+   it stays at natural size */
+.folder-shelf { zoom: 0.7; }
 @media (max-width: 640px) {
-  .folder-shelf { zoom: 0.58; }
+  .folder-shelf { zoom: 0.52; }
 }
 
 /* the send warp: grows out of the mac's screen into the whole viewport */
