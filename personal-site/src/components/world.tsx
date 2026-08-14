@@ -4,21 +4,35 @@ import {
   type RevealItem,
 } from "@/components/ui/hover-reveal-list";
 import { RadialScrollGallery } from "@/components/ui/portfolio-and-image-gallery";
-import { MacBookKeyboard } from "@/components/ui/macbook-keyboard";
 import { Mac } from "@/components/ui/mac";
+import Keyboard from "@/components/ui/magic-keyboard-component";
 import { WordReveal } from "@/components/ui/word-reveal";
 import { LETTERS } from "@/lib/letters";
 import {
+  Apple,
+  ArrowRight,
   AtSign,
   Briefcase,
+  ChevronDown,
+  CirclePlus,
   Feather,
+  Folder,
+  Images,
   Mail,
+  Paperclip,
+  PenLine,
+  Search,
+  Send,
+  Smile,
+  Type,
+  Undo2,
+  Wifi,
   Instagram,
   Linkedin,
   Twitter,
   Youtube,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 
 type Room = "writing" | "socials" | "companies" | "contact";
 
@@ -62,6 +76,32 @@ const SOCIALS: RevealItem[] = [
     href: "https://youtube.com/",
     icon: Youtube,
   },
+];
+
+// small monochrome covers for the letter rows — swap for real imagery
+const letterCover = (stops: string, extra: string) =>
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' width='640' height='360'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>${stops}</linearGradient></defs><rect width='640' height='360' fill='url(#g)'/>${extra}</svg>`,
+  );
+
+const LETTER_COVERS = [
+  letterCover(
+    "<stop offset='0' stop-color='#2a2a28'/><stop offset='1' stop-color='#0a0a0a'/>",
+    "<polygon points='0,360 180,210 340,300 480,190 640,280 640,360' fill='#050505'/>",
+  ),
+  letterCover(
+    "<stop offset='0' stop-color='#3c3b38'/><stop offset='1' stop-color='#0c0c0b'/>",
+    "<circle cx='470' cy='110' r='36' fill='rgba(235,233,228,0.5)'/>",
+  ),
+  letterCover(
+    "<stop offset='0' stop-color='#232322'/><stop offset='1' stop-color='#070707'/>",
+    "<rect y='218' width='640' height='3' fill='rgba(235,233,228,0.28)'/>",
+  ),
+  letterCover(
+    "<stop offset='0' stop-color='#31302d'/><stop offset='1' stop-color='#090908'/>",
+    "<rect x='120' width='14' height='360' fill='rgba(10,10,9,0.6)'/><rect x='300' width='22' height='360' fill='rgba(10,10,9,0.7)'/><rect x='470' width='10' height='360' fill='rgba(10,10,9,0.5)'/>",
+  ),
 ];
 
 const DOCK_ITEMS: Array<{ room: Room; title: string; icon: typeof Feather }> = [
@@ -143,12 +183,6 @@ export function World({ onLeave }: WorldProps) {
     setContactSent(true);
   };
 
-  const onVirtualKey = (_key: string, resolved: string) => {
-    if (contactSent) return;
-    if (resolved === "Backspace") setMessage((current) => current.slice(0, -1));
-    else if (resolved === "Enter") setMessage((current) => current + "\n");
-    else if (resolved.length === 1) setMessage((current) => current + resolved);
-  };
 
   useEffect(() => {
     if (room !== "contact" || contactSent) return;
@@ -170,6 +204,20 @@ export function World({ onLeave }: WorldProps) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [room, contactSent]);
+
+  // the magic keyboard is markup-only — read whichever key was pressed
+  const onKeyboardClick = (event: MouseEvent<HTMLDivElement>) => {
+    if (contactSent) return;
+    const keyDiv = (event.target as HTMLElement).closest("div");
+    if (!keyDiv) return;
+    const label = (keyDiv.textContent ?? "").trim();
+    if (label === "delete") setMessage((current) => current.slice(0, -1));
+    else if (label === "return") setMessage((current) => current + "\n");
+    else if (label === "" && keyDiv.className.includes("flex-[5]"))
+      setMessage((current) => current + " ");
+    else if (/^[a-z0-9`\-=[\]\;',./]$/i.test(label))
+      setMessage((current) => current + label.toLowerCase());
+  };
 
   // esc steps back: letter -> writing -> home
   useEffect(() => {
@@ -287,7 +335,7 @@ export function World({ onLeave }: WorldProps) {
       {room === "writing" && letter === null && (
         <section
           key="writing-list"
-          className="animate-fade-in mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-6 pt-16 pb-36"
+          className="animate-fade-in mx-auto flex min-h-dvh w-full max-w-2xl flex-col justify-center px-6 pt-16 pb-36"
         >
           <h1
             className="animate-fade-up text-[13px] font-medium tracking-tight"
@@ -295,22 +343,53 @@ export function World({ onLeave }: WorldProps) {
           >
             writing.
           </h1>
-          <div className="mt-8 flex flex-col">
+          <div className="mt-9 flex flex-col gap-9">
             {LETTERS.map((entry, index) => (
-              <button
+              <div
                 key={entry.num}
-                type="button"
-                onClick={() => setLetter(index)}
-                className="animate-fade-in group flex cursor-pointer items-baseline justify-between gap-6 border-b border-white/[0.07] py-4 text-left"
+                className="animate-fade-in grid items-center gap-4 sm:grid-cols-10 sm:gap-8"
                 style={{ animationDelay: `${0.25 + index * 0.08}s`, animationDuration: "0.6s" }}
               >
-                <span className="text-[13px] font-medium tracking-tight text-neutral-500 transition-colors duration-300 group-hover:text-foreground">
-                  {entry.title}
-                </span>
-                <span className="shrink-0 font-mono text-[10px] text-faint">
-                  {entry.date}
-                </span>
-              </button>
+                <div className="sm:col-span-6">
+                  <p className="text-[9px] tracking-[0.2em] text-faint">
+                    letter {entry.num} &middot; {entry.date}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setLetter(index)}
+                    className="mt-1.5 cursor-pointer text-left text-[13px] font-medium tracking-tight text-neutral-300 transition-colors duration-300 hover:text-foreground"
+                  >
+                    {entry.title}
+                  </button>
+                  <p className="mt-1.5 line-clamp-2 text-[11px] leading-[1.6] text-neutral-500">
+                    {entry.paragraphs[0]}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setLetter(index)}
+                    className="group mt-2.5 inline-flex cursor-pointer items-center gap-1 text-[10px] text-neutral-500 transition-colors duration-300 hover:text-foreground"
+                  >
+                    read
+                    <ArrowRight
+                      size={10}
+                      className="transition-transform duration-300 group-hover:translate-x-0.5"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setLetter(index)}
+                  className="order-first cursor-pointer sm:order-none sm:col-span-4"
+                >
+                  <div className="aspect-video overflow-hidden rounded-md border border-white/10">
+                    <img
+                      src={LETTER_COVERS[index % LETTER_COVERS.length]}
+                      alt={entry.title}
+                      className="h-full w-full object-cover opacity-80 transition-opacity duration-300 hover:opacity-100"
+                    />
+                  </div>
+                </button>
+              </div>
             ))}
           </div>
         </section>
@@ -349,11 +428,11 @@ export function World({ onLeave }: WorldProps) {
       {room === "contact" && (
         <section
           key="contact"
-          className="animate-fade-in flex min-h-dvh flex-col items-center justify-center gap-4 overflow-hidden px-4 pt-6 pb-28"
+          className="animate-fade-in flex min-h-dvh flex-col items-center justify-center gap-3 overflow-hidden px-4 pt-4 pb-24"
         >
-          {/* the imac, its screen running mail in the dark */}
+          {/* the display — silver, with the desktop running mail */}
           <div
-            className="animate-fade-up relative w-[min(520px,92vw)]"
+            className="animate-fade-up relative w-[min(740px,94vw)]"
             style={{ animationDelay: "0.1s" }}
           >
             <Mac className="h-auto w-full text-[#050505]" />
@@ -361,60 +440,105 @@ export function World({ onLeave }: WorldProps) {
               className="absolute top-[5%] left-[4.9%] flex h-[61%] w-[90.2%] flex-col overflow-hidden text-neutral-200"
               style={{
                 background:
-                  "radial-gradient(120% 90% at 50% 0%, #161616 0%, #0a0a0a 55%, #060606 100%)",
+                  "radial-gradient(120% 90% at 50% 0%, #131313 0%, #0a0a0a 55%, #050505 100%)",
               }}
             >
               {/* menu bar */}
-              <div className="flex h-[18px] items-center justify-between bg-white/[0.05] px-3 text-[9px] text-neutral-400 backdrop-blur">
-                <span className="font-medium">mail</span>
-                <span>9:41</span>
+              <div className="flex h-[16px] shrink-0 items-center justify-between bg-white/[0.06] px-2.5 text-[8px] text-neutral-300">
+                <div className="flex items-center gap-2.5">
+                  <Apple size={9} className="fill-neutral-200 text-neutral-200" />
+                  <span className="font-semibold text-neutral-100">mail</span>
+                  {["file", "edit", "view", "mailbox", "message", "format", "window", "help"].map(
+                    (menu) => (
+                      <span key={menu} className="text-neutral-400">
+                        {menu}
+                      </span>
+                    ),
+                  )}
+                </div>
+                <div className="flex items-center gap-2 text-neutral-400">
+                  <Wifi size={9} />
+                  <Search size={8} />
+                  <span className="text-neutral-300">
+                    {new Date()
+                      .toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })
+                      .replace(",", "")}{" "}
+                    {new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
+                  </span>
+                </div>
               </div>
 
-              {/* the little compose window, floating on the desktop */}
-              <div className="flex flex-1 items-center justify-center">
-                <div className="flex h-[82%] w-[68%] flex-col overflow-hidden rounded-lg border border-white/10 bg-[#0d0d0d] shadow-[0_24px_70px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.05)]">
-                  <div className="flex items-center justify-between border-b border-white/[0.07] bg-white/[0.03] px-3 py-1.5">
-                    <div className="flex items-center space-x-1.5">
-                      <span className="h-2 w-2 rounded-full bg-white/15" />
-                      <span className="h-2 w-2 rounded-full bg-white/15" />
-                      <span className="h-2 w-2 rounded-full bg-white/15" />
+              {/* desktop */}
+              <div className="relative flex flex-1 items-center justify-center">
+                <div className="absolute top-2.5 right-3.5 flex gap-4">
+                  {["dumps", "folders"].map((name) => (
+                    <div key={name} className="flex flex-col items-center gap-0.5">
+                      <Folder size={20} strokeWidth={1} className="fill-white/10 text-white/25" />
+                      <span className="text-[7px] font-medium text-neutral-300">{name}</span>
                     </div>
-                    <span className="text-[9px] text-neutral-500">new message</span>
-                    {!contactSent ? (
-                      <button
-                        type="button"
-                        onClick={sendEmail}
-                        disabled={!message.trim()}
-                        className="cursor-pointer text-[10px] font-medium text-neutral-500 transition-colors duration-300 hover:text-foreground disabled:cursor-default disabled:opacity-40"
-                      >
-                        send &rarr;
-                      </button>
-                    ) : (
-                      <div className="w-4" />
-                    )}
+                  ))}
+                </div>
+
+                {/* compose window */}
+                <div className="flex h-[86%] w-[62%] flex-col overflow-hidden rounded-md border border-white/10 bg-[#141414] shadow-[0_18px_50px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.06)]">
+                  <div className="flex items-center gap-2.5 border-b border-white/[0.06] bg-white/[0.03] px-2.5 py-1.5">
+                    <div className="flex items-center gap-1">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#ff5f57]" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#febc2e]" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#28c840]" />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={sendEmail}
+                      disabled={contactSent || !message.trim()}
+                      aria-label="send"
+                      className="flex cursor-pointer items-center gap-0.5 text-neutral-400 transition-colors duration-300 hover:text-foreground disabled:cursor-default disabled:opacity-35"
+                    >
+                      <Send size={10} strokeWidth={1.75} />
+                      <ChevronDown size={7} />
+                    </button>
+                    <div className="ml-auto flex items-center gap-2 text-neutral-500">
+                      <Undo2 size={9} strokeWidth={1.75} />
+                      <Paperclip size={9} strokeWidth={1.75} />
+                      <PenLine size={9} strokeWidth={1.75} />
+                      <Type size={10} strokeWidth={1.75} />
+                      <Smile size={10} strokeWidth={1.75} />
+                      <Images size={10} strokeWidth={1.75} />
+                    </div>
                   </div>
 
                   {contactSent ? (
                     <div className="flex flex-1 items-center justify-center">
-                      <p className="text-[11px] text-neutral-500">
+                      <p className="text-[9px] text-neutral-500">
                         sent &mdash; thank you. i&rsquo;ll read it soon.
                       </p>
                     </div>
                   ) : (
                     <>
-                      <div className="flex items-baseline gap-2 border-b border-white/[0.06] px-4 py-2 text-[10px]">
+                      <div className="flex items-center gap-1.5 border-b border-white/[0.06] px-2.5 py-1 text-[8.5px]">
                         <span className="text-neutral-500">to:</span>
-                        <span className="text-neutral-300">alex@vertus.ai</span>
+                        <span className="text-neutral-200">alex@vertus.ai</span>
+                        <CirclePlus size={9} strokeWidth={1.5} className="ml-auto text-neutral-500" />
                       </div>
-                      <div className="flex items-baseline gap-2 border-b border-white/[0.06] px-4 py-2 text-[10px]">
+                      <div className="flex items-center gap-1.5 border-b border-white/[0.06] px-2.5 py-1 text-[8.5px]">
+                        <span className="text-neutral-500">cc:</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 border-b border-white/[0.06] px-2.5 py-1 text-[8.5px]">
                         <span className="text-neutral-500">subject:</span>
-                        <span className="text-neutral-300">
+                        <span className="text-neutral-200">
                           hello from {localStorage.getItem("gate:name") ?? "you"}
                         </span>
                       </div>
-                      <div className="flex-1 overflow-y-auto px-4 py-3 text-[11px] leading-[1.7] whitespace-pre-wrap">
+                      <div className="flex items-center gap-1.5 border-b border-white/[0.06] px-2.5 py-1 text-[8.5px]">
+                        <span className="text-neutral-500">from:</span>
+                        <span className="text-neutral-200">
+                          {localStorage.getItem("gate:name") ?? "you"} &ndash;{" "}
+                          {localStorage.getItem("gate:email") ?? "your email"}
+                        </span>
+                      </div>
+                      <div className="flex-1 overflow-y-auto px-2.5 py-2 text-[9px] leading-[1.7] whitespace-pre-wrap">
                         {message}
-                        <span className="animate-cursor-blink ml-px inline-block h-[11px] w-[1.5px] translate-y-[2px] bg-neutral-200" />
+                        <span className="animate-cursor-blink ml-px inline-block h-[9px] w-px translate-y-[1.5px] bg-neutral-200" />
                       </div>
                     </>
                   )}
@@ -423,16 +547,14 @@ export function World({ onLeave }: WorldProps) {
             </div>
           </div>
 
-          <div className="animate-fade-up" style={{ animationDelay: "0.25s", zoom: 1.02 }}>
-            <MacBookKeyboard onKey={onVirtualKey} />
-          </div>
-
-          <p
-            className="animate-fade-up text-[11px] tracking-[0.2em] text-faint"
-            style={{ animationDelay: "0.4s" }}
+          {/* the keyboard on the desk, true to proportion */}
+          <div
+            className="animate-fade-up"
+            style={{ animationDelay: "0.25s", zoom: 0.56 }}
+            onClick={onKeyboardClick}
           >
-            type your note &mdash; send opens it in your browser
-          </p>
+            <Keyboard />
+          </div>
         </section>
       )}
 
