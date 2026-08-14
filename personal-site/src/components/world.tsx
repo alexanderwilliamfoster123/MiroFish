@@ -518,7 +518,7 @@ export function World() {
       {room === "contact" && (
         <section
           key="contact"
-          className="animate-fade-in flex min-h-dvh flex-col items-center gap-6 overflow-hidden px-4 pt-[31vh] pb-24"
+          className="animate-fade-in flex min-h-dvh flex-col items-center gap-5 overflow-hidden px-4 pt-[27vh] pb-28"
         >
           <RoomTitle>connect with me.</RoomTitle>
           {/* phones: a plain compose card with a real textarea */}
@@ -581,7 +581,7 @@ export function World() {
 
           {/* the display — silver, with the desktop running mail */}
           <div
-            className="animate-fade-up relative hidden w-[min(360px,85vw)] sm:block"
+            className="animate-fade-up relative hidden w-[min(460px,88vw)] sm:block"
             style={{ animationDelay: "0.1s" }}
           >
             <Mac className="desk-glass h-auto w-full text-[#050505]" />
@@ -625,7 +625,7 @@ export function World() {
                 </div>
 
                 {/* compose window */}
-                <div className="desk-window flex h-[74%] w-[44%] flex-col overflow-hidden rounded-md border border-white/10 bg-[#141414] shadow-[0_18px_50px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.06)]">
+                <div className="desk-window flex h-[78%] w-[50%] flex-col overflow-hidden rounded-md border border-white/10 bg-[#141414] shadow-[0_18px_50px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.06)]">
                   <div className="flex items-center gap-2.5 border-b border-white/[0.06] bg-white/[0.03] px-2.5 py-1.5">
                     <div className="flex items-center gap-1">
                       <span className="h-1.5 w-1.5 rounded-full bg-[#ff5f57]" />
@@ -654,31 +654,31 @@ export function World() {
 
                   {contactSent ? (
                     <div className="flex flex-1 items-center justify-center">
-                      <p className="text-[9px] text-neutral-500">
+                      <p className="text-[10px] text-neutral-500">
                         sent &mdash; thank you. i&rsquo;ll read it soon.
                       </p>
                     </div>
                   ) : (
                     <>
-                      <div className="flex items-center gap-1.5 border-b border-white/[0.06] px-2 py-[3px] text-[8px]">
+                      <div className="flex items-center gap-1.5 border-b border-white/[0.06] px-2.5 py-1 text-[9.5px]">
                         <span className="shrink-0 text-neutral-500">to:</span>
                         <span className="truncate whitespace-nowrap text-neutral-200">alex@vertus.ai</span>
                         <CirclePlus size={8} strokeWidth={1.5} className="ml-auto shrink-0 text-neutral-500" />
                       </div>
-                      <div className="flex items-center gap-1.5 border-b border-white/[0.06] px-2 py-[3px] text-[8px]">
+                      <div className="flex items-center gap-1.5 border-b border-white/[0.06] px-2.5 py-1 text-[9.5px]">
                         <span className="shrink-0 text-neutral-500">subject:</span>
                         <span className="truncate whitespace-nowrap text-neutral-200">
                           hello from {localStorage.getItem("gate:name") ?? "you"}
                         </span>
                       </div>
-                      <div className="flex items-center gap-1.5 border-b border-white/[0.06] px-2 py-[3px] text-[8px]">
+                      <div className="flex items-center gap-1.5 border-b border-white/[0.06] px-2.5 py-1 text-[9.5px]">
                         <span className="shrink-0 text-neutral-500">from:</span>
                         <span className="truncate whitespace-nowrap text-neutral-200">
                           {localStorage.getItem("gate:name") ?? "you"} &ndash;{" "}
                           {localStorage.getItem("gate:email") ?? "your email"}
                         </span>
                       </div>
-                      <div className="flex-1 overflow-y-auto px-2 py-1.5 text-[8px] leading-[1.7] whitespace-pre-wrap">
+                      <div className="flex-1 overflow-y-auto px-2.5 py-2 text-[10px] leading-[1.7] whitespace-pre-wrap">
                         {message}
                         <span className="animate-cursor-blink ml-px inline-block h-[9px] w-px translate-y-[1.5px] bg-neutral-200" />
                       </div>
@@ -697,7 +697,7 @@ export function World() {
           <div
             className="animate-fade-up hidden sm:block"
             // a magic keyboard is about half as wide as the imac it sits under
-            style={{ animationDelay: "0.25s", zoom: 0.305 }}
+            style={{ animationDelay: "0.25s", zoom: 0.39 }}
             onClick={onKeyboardClick}
           >
             <Keyboard />
