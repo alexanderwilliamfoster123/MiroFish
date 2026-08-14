@@ -470,13 +470,7 @@ export function World() {
             }
           />
           <p className="h-3 text-[9px] text-neutral-500" aria-live="polite">
-            {loginError
-              ? "that doesn’t look right."
-              : loginValue
-                ? "press return"
-                : isMobile
-                  ? "tap the field and type"
-                  : "type, then press return"}
+            {loginError ? "that doesn’t look right." : ""}
           </p>
         </div>
       ) : (
