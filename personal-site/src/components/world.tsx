@@ -9,6 +9,7 @@ import { LETTERS } from "@/lib/letters";
 import {
   Apple,
   ArrowLeft,
+  ArrowRight,
   Camera,
   Feather,
   Folder,
@@ -215,6 +216,12 @@ export function World() {
   const enterWorld = () => {
     setEntered(true);
     setReceipt(null);
+  };
+
+  // guests walk straight in — no email, no receipt
+  const enterAsGuest = () => {
+    setName("guest");
+    setEntered(true);
   };
 
   const openApp = (app: AppId) => {
@@ -457,56 +464,77 @@ export function World() {
       </div>
 
       {!entered ? (
-        /* ------------------------------------------------ the login screen */
-        <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/10">
-            <User size={20} strokeWidth={1.5} className="text-neutral-300" />
-          </div>
-          <div className="text-center">
+        /* ---------------------- the login, spare as the real lock screen */
+        <div className="flex flex-1 flex-col items-center px-6">
+          <div className="my-auto flex flex-col items-center gap-3">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/10">
+              <User size={22} strokeWidth={1.5} className="text-neutral-300" />
+            </div>
             <p className="text-[12px] font-medium text-foreground">
-              {loginStep === "name"
-                ? "welcome to alexander’s world."
-                : `hello, ${name}.`}
+              {loginStep === "name" ? "alexander’s world" : name}
             </p>
-            <p className="mt-1 text-[10px] text-neutral-500">
-              {loginStep === "name" ? "sign in with your name" : "and your email"}
+            <div className="relative">
+              <input
+                ref={loginInputRef}
+                key={loginStep}
+                autoFocus
+                value={loginValue}
+                onChange={(event) => {
+                  const next =
+                    loginStep === "email"
+                      ? event.target.value.replace(/\s/g, "")
+                      : event.target.value;
+                  setLoginValue(next);
+                  setLoginError(false);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    submitLogin();
+                  }
+                }}
+                type={loginStep === "email" ? "email" : "text"}
+                inputMode={loginStep === "email" ? "email" : "text"}
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                autoComplete={loginStep === "email" ? "email" : "name"}
+                placeholder={loginStep === "name" ? "your name" : "your email"}
+                aria-label={loginStep === "name" ? "your name" : "your email"}
+                className={
+                  "h-7 w-44 rounded-full border bg-white/10 px-4 pr-7 text-center text-[16px] text-foreground outline-none transition-colors duration-300 placeholder:text-neutral-600 sm:text-[11px] " +
+                  (loginError ? "border-white/60" : "border-white/15 focus:border-white/35")
+                }
+              />
+              {loginValue.trim() && (
+                <button
+                  type="button"
+                  onClick={submitLogin}
+                  aria-label="continue"
+                  className="absolute top-1/2 right-1 flex h-5 w-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/15 text-neutral-200 transition-colors duration-200 outline-none hover:bg-white/25"
+                >
+                  <ArrowRight size={10} strokeWidth={2} />
+                </button>
+              )}
+            </div>
+            <p className="h-3 text-[9px] text-neutral-500" aria-live="polite">
+              {loginError ? "that doesn’t look right." : ""}
             </p>
           </div>
-          <input
-            ref={loginInputRef}
-            key={loginStep}
-            autoFocus
-            value={loginValue}
-            onChange={(event) => {
-              const next =
-                loginStep === "email"
-                  ? event.target.value.replace(/\s/g, "")
-                  : event.target.value;
-              setLoginValue(next);
-              setLoginError(false);
-            }}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                event.preventDefault();
-                submitLogin();
-              }
-            }}
-            type={loginStep === "email" ? "email" : "text"}
-            inputMode={loginStep === "email" ? "email" : "text"}
-            autoCapitalize="none"
-            autoCorrect="off"
-            spellCheck={false}
-            autoComplete={loginStep === "email" ? "email" : "name"}
-            placeholder={loginStep === "name" ? "your name" : "you@somewhere.com"}
-            aria-label={loginStep === "name" ? "your name" : "your email"}
-            className={
-              "h-7 w-48 rounded-full border bg-white/10 text-center text-[16px] text-foreground outline-none transition-colors duration-300 placeholder:text-neutral-600 sm:text-[11px] " +
-              (loginError ? "border-white/60" : "border-white/15 focus:border-white/35")
-            }
-          />
-          <p className="h-3 text-[9px] text-neutral-500" aria-live="polite">
-            {loginError ? "that doesn’t look right." : ""}
-          </p>
+
+          {/* the guest user waits at the bottom, macos style */}
+          <button
+            type="button"
+            onClick={enterAsGuest}
+            className="group mb-4 flex cursor-pointer flex-col items-center gap-1.5 outline-none"
+          >
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 transition-colors duration-200 group-hover:bg-white/[0.16]">
+              <User size={13} strokeWidth={1.5} className="text-neutral-400" />
+            </span>
+            <span className="text-[9px] text-neutral-500 transition-colors duration-200 group-hover:text-neutral-300">
+              guest
+            </span>
+          </button>
         </div>
       ) : (
         /* ----------------------------------------------------- the desktop */
