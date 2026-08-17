@@ -69,3 +69,27 @@ The nurse video was verified playing, circular and mid-aligned at 108 × 108, by
 re-pointing the element at a VP9 transcode — the sandbox's Chromium build is the open-source
 one and reports `canPlayType('video/mp4; codecs="avc1.42E01E") === ''`, so it cannot decode
 H.264. Shipping browsers can; the element itself is unchanged and points at the `.mp4`.
+
+## Standalone HTML
+
+`standalone/nixole.html` is the same page as one self-contained file — no build step, no
+network. Open it directly, or drop it on any static host.
+
+```bash
+python3 tools/fetch-font.py            # tools/inter-tight.woff2 (once)
+bun run build                          # produces the Tailwind CSS it inlines
+python3 tools/build-standalone-html.py # -> standalone/nixole.html
+```
+
+Differences from the TanStack app, all forced by the "no external requests" constraint:
+
+- Inter Tight is inlined as a `@font-face` data URI instead of a Google Fonts `<link>`.
+  Google serves one variable file (weight 300–700) for all five weights, so it costs 44 KB.
+- The framer-motion mount animations are CSS keyframes driven by a `--d` delay custom
+  property; the dotted connector keeps its original `getPointAtLength()` construction in a
+  small inline script. `prefers-reduced-motion` disables all of it.
+- All seven rendered assets are data URIs. Total page weight: 191 KB.
+
+Because the real font actually loads here, the headline sets on two lines
+(`AI that converts patients` / `for your [video] medical practice`) rather than the three it
+takes in a fallback face.
