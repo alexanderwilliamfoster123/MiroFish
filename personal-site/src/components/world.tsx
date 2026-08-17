@@ -1,5 +1,10 @@
 import Keyboard from "@/components/ui/magic-keyboard-component";
 import { Mac } from "@/components/ui/mac";
+import {
+  AccessReceipt,
+  ReceiptPrinter,
+  type ReceiptStage,
+} from "@/components/ui/receipt-printer";
 import { LETTERS } from "@/lib/letters";
 import {
   Apple,
@@ -124,6 +129,12 @@ export function World() {
   const [loginValue, setLoginValue] = useState("");
   const [loginError, setLoginError] = useState(false);
 
+  // after signing up, the printer stamps an access receipt
+  const [receipt, setReceipt] = useState<{ date: Date; ticketId: string } | null>(
+    null,
+  );
+  const [receiptStage, setReceiptStage] = useState<ReceiptStage>("processing");
+
   const [activeApp, setActiveApp] = useState<AppId | null>(null);
   const [companiesTab, setCompaniesTab] = useState<"founded" | "invested">(
     "founded",
@@ -184,8 +195,26 @@ export function World() {
         return;
       }
       setEmail(trimmed);
-      setEntered(true);
+      const stamp = new Date();
+      setReceipt({ date: stamp, ticketId: String(stamp.getTime()).slice(-10) });
+      setReceiptStage("processing");
     }
+  };
+
+  // the printer works through its stages once the receipt exists
+  useEffect(() => {
+    if (!receipt || entered) return;
+    const printTimer = window.setTimeout(() => setReceiptStage("printing"), 1000);
+    const doneTimer = window.setTimeout(() => setReceiptStage("complete"), 2950);
+    return () => {
+      window.clearTimeout(printTimer);
+      window.clearTimeout(doneTimer);
+    };
+  }, [receipt, entered]);
+
+  const enterWorld = () => {
+    setEntered(true);
+    setReceipt(null);
   };
 
   const openApp = (app: AppId) => {
@@ -211,6 +240,7 @@ export function World() {
     setLoginStep("name");
     setLoginValue("");
     setLoginError(false);
+    setReceipt(null);
     setActiveApp(null);
     setLetter(null);
     setSent(false);
@@ -266,7 +296,12 @@ export function World() {
       const tag = (e.target as HTMLElement | null)?.tagName;
       if (tag === "INPUT" || tag === "TEXTAREA") return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
-      if (!entered) {
+      if (!entered && receipt) {
+        if (e.key === "Enter" && receiptStage === "complete") {
+          e.preventDefault();
+          enterWorld();
+        }
+      } else if (!entered) {
         if (e.key === "Backspace") {
           e.preventDefault();
           setLoginValue((current) => current.slice(0, -1));
@@ -299,7 +334,7 @@ export function World() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entered, loginStep, loginValue, activeApp, sent, message]);
+  }, [entered, loginStep, loginValue, activeApp, sent, message, receipt, receiptStage]);
 
   // the aluminium keyboard presses its keys as you type on your real one
   useEffect(() => {
@@ -803,6 +838,35 @@ export function World() {
       )}
     </div>
   );
+
+  // after the login, the printer stamps the visit before the desktop opens
+  if (!entered && receipt) {
+    return (
+      <main className="flex min-h-dvh w-full flex-col items-center justify-start gap-2 overflow-hidden px-4 pt-[12dvh] pb-10">
+        <ReceiptPrinter stage={receiptStage}>
+          <AccessReceipt
+            name={name ?? ""}
+            email={email ?? ""}
+            date={receipt.date}
+            ticketId={receipt.ticketId}
+          />
+        </ReceiptPrinter>
+        <button
+          type="button"
+          onClick={enterWorld}
+          disabled={receiptStage !== "complete"}
+          className={
+            "cursor-pointer text-[12px] font-medium text-neutral-400 transition-all duration-500 outline-none hover:text-foreground " +
+            (receiptStage === "complete"
+              ? "opacity-100"
+              : "pointer-events-none opacity-0")
+          }
+        >
+          enter &rarr;
+        </button>
+      </main>
+    );
+  }
 
   // ------------------------------------------------------------- the scene
   return (
