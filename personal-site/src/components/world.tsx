@@ -423,7 +423,7 @@ export function World() {
 
   // ------------------------------------------------------------------ screen
   const screen = (
-    <div className="desk-screen relative flex h-full w-full flex-col overflow-hidden text-left text-neutral-200 normal-case lowercase">
+    <div className="desk-screen relative flex h-full w-full flex-col overflow-hidden text-left text-neutral-200 lowercase">
       {/* menu bar */}
       <div className="flex h-[18px] shrink-0 items-center justify-between bg-white/[0.06] px-2.5 text-[9px] text-neutral-300 backdrop-blur">
         <div className="flex items-center gap-2.5">
