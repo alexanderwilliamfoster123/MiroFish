@@ -33,6 +33,27 @@ Scripts live in `.claude/skills/moodboard-dna/scripts/`. Run them with `python3`
 `ingest.py` wants Pillow (`python3 -m pip install pillow`); without it the script
 still catalogues the board and reports the degradation rather than failing.
 
+## Getting the images in
+
+Two routes, depending on where the user is working.
+
+**Local checkout** — they drop files straight into `moodboards/<board>/`. Go to step 1.
+
+**Web or mobile session** — they have no way to put files in the repo folder, and
+remote MCP tools cannot read Claude chat attachments. Call `media_upload_widget`
+(`type: "image"`, `min_files: 3`) so they pick images in the browser and the bytes
+go directly to Higgsfield storage. Then mirror them locally so the measurement half
+still runs:
+
+1. `show_medias` (or the widget's return) for the confirmed ids and their URLs
+2. `curl -fsSL '<url>' -o moodboards/<board>/<nn>.png` for each
+3. Put the confirmed ids straight into `dna.json` as `reference_media_ids` — they
+   are already uploaded, so step 4's upload leg is done and only the
+   `show_reference_elements` call remains
+
+Never ask a web-session user to place files in the repo, and never ask them to
+attach moodboard images to Claude chat for Higgsfield — neither works.
+
 ## Workflow
 
 ### 1. Measure the board
