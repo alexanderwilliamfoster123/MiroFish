@@ -1,0 +1,6 @@
+.env
+out/
+*.db
+daily.log
+__pycache__/
+*.pyc

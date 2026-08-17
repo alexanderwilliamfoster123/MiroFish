@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @page { margin: 0; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: {{ width }}px;
+        height: {{ height }}px;
+        background: {{ d.background }};
+        color: {{ d.ink }};
+        font-family: {{ d.body_font }};
+        -webkit-font-smoothing: antialiased;
+      }
+      .frame {
+        width: {{ width }}px;
+        height: {{ height }}px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* ---- cover card ---- */
+      .cover {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: {{ (width * 0.09) | round | int }}px;
+      }
+      .cover .art {
+        position: absolute;
+        inset: 0;
+        background-image: url("{{ cover_image }}");
+        background-size: cover;
+        background-position: center;
+      }
+      .cover .veil {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(0,0,0,0.05) 0%,
+          rgba(0,0,0,0.12) 45%,
+          rgba(0,0,0,0.62) 100%
+        );
+      }
+      .cover .type { position: relative; }
+      .cover h1 {
+        font-family: {{ d.display_font }};
+        font-weight: 400;
+        font-size: {{ (width * 0.105) | round | int }}px;
+        line-height: 1.02;
+        letter-spacing: -0.02em;
+        color: #fff;
+      }
+      .cover h2 {
+        margin-top: {{ (width * 0.022) | round | int }}px;
+        font-size: {{ (width * 0.031) | round | int }}px;
+        font-weight: 400;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.82);
+      }
+      .cover .rule {
+        width: {{ (width * 0.13) | round | int }}px;
+        height: 2px;
+        background: {{ d.accent }};
+        margin-bottom: {{ (width * 0.035) | round | int }}px;
+      }
+
+      /* ---- image slide ---- */
+      .slide { padding: {{ (width * (d.image_inset_pct | float) / 100) | round | int }}px; }
+      .slide .art {
+        width: 100%;
+        height: 100%;
+        background-image: url("{{ image }}");
+        background-size: cover;
+        background-position: center;
+      }
+      .overlay {
+        position: absolute;
+        left: {{ (width * 0.085) | round | int }}px;
+        bottom: {{ (width * 0.085) | round | int }}px;
+        padding: {{ (width * 0.018) | round | int }}px {{ (width * 0.03) | round | int }}px;
+        background: {{ d.background }};
+        font-size: {{ (width * 0.026) | round | int }}px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .index {
+        position: absolute;
+        right: {{ (width * 0.05) | round | int }}px;
+        bottom: {{ (width * 0.042) | round | int }}px;
+        font-size: {{ (width * 0.022) | round | int }}px;
+        letter-spacing: 0.16em;
+        color: {{ d.muted }};
+      }
+      .footer {
+        position: absolute;
+        left: {{ (width * 0.05) | round | int }}px;
+        bottom: {{ (width * 0.042) | round | int }}px;
+        font-size: {{ (width * 0.022) | round | int }}px;
+        letter-spacing: 0.16em;
+        color: {{ d.muted }};
+      }
+    </style>
+  </head>
+  <body>
+    {% if kind == "cover" %}
+    <div class="frame cover">
+      <div class="art"></div>
+      <div class="veil"></div>
+      <div class="type">
+        <div class="rule"></div>
+        <h1>{{ title }}</h1>
+        <h2>{{ subtitle }}</h2>
+      </div>
+    </div>
+    {% else %}
+    <div class="frame slide">
+      <div class="art"></div>
+      {% if overlay %}<div class="overlay">{{ overlay }}</div>{% endif %}
+      {% if d.footer %}<div class="footer">{{ d.footer }}</div>{% endif %}
+      {% if d.show_slide_numbers %}<div class="index">{{ index }} / {{ total }}</div>{% endif %}
+    </div>
+    {% endif %}
+  </body>
+</html>

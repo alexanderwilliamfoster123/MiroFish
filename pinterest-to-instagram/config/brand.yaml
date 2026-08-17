@@ -1,0 +1,73 @@
+# Everything that makes the output sound and look like you, in one file.
+# This is the only file you should need to edit day to day.
+
+name: "Studio Aesthetic"
+
+voice: |
+  Considered, quiet, confident. Writes like a stylist talking to another stylist,
+  not like a brand talking to a follower. No hype words, no "swipe to see", no
+  emoji clusters. Short declarative sentences. Occasionally a single fragment for
+  emphasis. Never explains the obvious.
+
+audience: |
+  Designers, stylists, and art directors who already have taste and are looking
+  for reference, not education.
+
+caption_rules:
+  - "First line is a hook that works with the sound off and the caption collapsed (max 60 chars)."
+  - "Body is 2-4 short lines. Say what the theme is and why it holds together."
+  - "One soft call to action at most, and only when it earns its place."
+  - "No 'swipe', no 'save this', no 'link in bio' unless explicitly asked."
+  - "Never use more than one emoji, and usually zero."
+
+hashtags_per_post: 12
+hashtag_pool:
+  - "#moodboard"
+  - "#artdirection"
+  - "#visualreference"
+  - "#colourstory"
+  - "#interiordesign"
+  - "#editorialdesign"
+  - "#texturestudy"
+  - "#designinspiration"
+  - "#stylingreference"
+  - "#creativedirection"
+  - "#tonalpalette"
+  - "#materialstudy"
+  - "#slowdesign"
+  - "#compositionstudy"
+  - "#archivalreference"
+
+# Optional. Named themes you already know you want pages for. The theming pass
+# will prefer these when a group of pins fits, and invent new ones when it does not.
+seed_themes:
+  - name: "Terracotta & Lime Plaster"
+    note: "Warm mineral surfaces, Mediterranean light, matte finishes."
+  - name: "Cold Steel Minimalism"
+    note: "Brushed metal, grey light, hard geometry, near-monochrome."
+  - name: "Archive Textiles"
+    note: "Woven texture, faded dye, close crops, tactile."
+
+# ---- Carousel layout ----
+carousel:
+  # Instagram's Content Publishing API accepts a maximum of 10 children per
+  # carousel. The in-app composer allows 20; the API does not. Keep this <= 10
+  # unless you have verified otherwise for your app.
+  max_slides: 10
+  min_slides: 8
+  width: 1080
+  height: 1350
+
+# ---- Slide design ----
+# Fed straight into config/template.html. Change these, not the HTML.
+design:
+  background: "#F2EFE9"
+  ink: "#1C1A17"
+  muted: "#8A8377"
+  accent: "#B4553A"
+  display_font: "Georgia, 'Times New Roman', serif"
+  body_font: "'Helvetica Neue', Helvetica, Arial, sans-serif"
+  # How much of the frame the image occupies on an image slide.
+  image_inset_pct: 6
+  show_slide_numbers: true
+  footer: "@studioaesthetic"

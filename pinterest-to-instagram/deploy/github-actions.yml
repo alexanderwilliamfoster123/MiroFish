@@ -1,0 +1,62 @@
+# Daily carousel run on GitHub Actions.
+# Copy to .github/workflows/ and add the secrets listed below to the repository.
+name: daily-carousel
+
+on:
+  schedule:
+    - cron: "0 8 * * *"   # 08:00 UTC
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        working-directory: pinterest-to-instagram
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
+
+      # The pin/carousel database has to survive between runs, or every run
+      # re-tags the whole archive and re-posts themes you have already shipped.
+      - name: Restore state
+        uses: actions/cache@v4
+        with:
+          path: pinterest-to-instagram/out/state.db
+          key: p2i-state-${{ github.run_id }}
+          restore-keys: p2i-state-
+
+      - name: Run
+        working-directory: pinterest-to-instagram
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PINTEREST_ACCESS_TOKEN: ${{ secrets.PINTEREST_ACCESS_TOKEN }}
+          PINTEREST_BOARD_IDS: ${{ vars.PINTEREST_BOARD_IDS }}
+          PUBLISH_ADAPTER: ${{ vars.PUBLISH_ADAPTER }}
+          METRICOOL_USER_ID: ${{ secrets.METRICOOL_USER_ID }}
+          METRICOOL_USER_TOKEN: ${{ secrets.METRICOOL_USER_TOKEN }}
+          METRICOOL_BLOG_ID: ${{ secrets.METRICOOL_BLOG_ID }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          MEDIA_PUBLIC_BASE_URL: ${{ vars.MEDIA_PUBLIC_BASE_URL }}
+          MEDIA_UPLOAD_CMD: ${{ vars.MEDIA_UPLOAD_CMD }}
+          TIMEZONE: ${{ vars.TIMEZONE }}
+          POST_TIME_LOCAL: ${{ vars.POST_TIME_LOCAL }}
+        run: python cli.py daily
+
+      # The rendered slides are the review artefact — the audio track still has
+      # to be added by hand in the Instagram app before the post goes out.
+      - name: Upload rendered slides
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: carousel-slides
+          path: pinterest-to-instagram/out/carousels/
+          if-no-files-found: ignore
