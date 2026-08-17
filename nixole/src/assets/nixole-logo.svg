@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="38" viewBox="0 0 150 38" fill="none">
+  <rect width="38" height="38" rx="11" fill="#111114"/>
+  <path d="M11 27V11h3.1l8.2 10.6V11h3.1v16h-3.1L14.1 16.4V27H11z" fill="#fff"/>
+  <circle cx="28.5" cy="13" r="3" fill="#FFD209"/>
+  <text x="47" y="27" font-family="Inter Tight, Inter, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="26" font-weight="600"
+        letter-spacing="-0.5" fill="#000">Nixole</text>
+</svg>

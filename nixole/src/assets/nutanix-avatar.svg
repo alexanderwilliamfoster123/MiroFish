@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="132" height="28" viewBox="0 0 132 28" fill="none">
+  <circle cx="14" cy="14" r="13" fill="#DDE6F2" stroke="#fff" stroke-width="2"/>
+  <circle cx="14" cy="11" r="4.6" fill="#7C93AE"/>
+  <path d="M5.8 23.6c1.3-4.1 4.4-6.4 8.2-6.4s6.9 2.3 8.2 6.4A13 13 0 0 1 14 27a13 13 0 0 1-8.2-3.4z" fill="#7C93AE"/>
+  <text x="36" y="19" font-family="Inter Tight, Inter, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" font-weight="600"
+        letter-spacing="-0.2" fill="#131318">Nutanix</text>
+</svg>

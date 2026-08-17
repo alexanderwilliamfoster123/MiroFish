@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="112" height="44" viewBox="0 0 112 44" fill="none">
+
+  <g transform="translate(0,0)">
+    <circle cx="22" cy="22" r="21" fill="#F4C77B" stroke="#fff" stroke-width="3"/>
+    <circle cx="22" cy="17.5" r="7" fill="#fff" opacity="0.85"/>
+    <path d="M9.5 36.5c1.8-6.4 6.6-10 12.5-10s10.7 3.6 12.5 10A21 21 0 0 1 22 43a21 21 0 0 1-12.5-6.5z"
+          fill="#fff" opacity="0.85"/>
+  </g>
+  <g transform="translate(30,0)">
+    <circle cx="22" cy="22" r="21" fill="#8FB8E8" stroke="#fff" stroke-width="3"/>
+    <circle cx="22" cy="17.5" r="7" fill="#fff" opacity="0.85"/>
+    <path d="M9.5 36.5c1.8-6.4 6.6-10 12.5-10s10.7 3.6 12.5 10A21 21 0 0 1 22 43a21 21 0 0 1-12.5-6.5z"
+          fill="#fff" opacity="0.85"/>
+  </g>
+  <g transform="translate(60,0)">
+    <circle cx="22" cy="22" r="21" fill="#E79C9C" stroke="#fff" stroke-width="3"/>
+    <circle cx="22" cy="17.5" r="7" fill="#fff" opacity="0.85"/>
+    <path d="M9.5 36.5c1.8-6.4 6.6-10 12.5-10s10.7 3.6 12.5 10A21 21 0 0 1 22 43a21 21 0 0 1-12.5-6.5z"
+          fill="#fff" opacity="0.85"/>
+  </g>
+  <g transform="translate(90,0)">
+    <circle cx="22" cy="22" r="21" fill="#A8D5B5" stroke="#fff" stroke-width="3"/>
+    <circle cx="22" cy="17.5" r="7" fill="#fff" opacity="0.85"/>
+    <path d="M9.5 36.5c1.8-6.4 6.6-10 12.5-10s10.7 3.6 12.5 10A21 21 0 0 1 22 43a21 21 0 0 1-12.5-6.5z"
+          fill="#fff" opacity="0.85"/>
+  </g>
+</svg>
