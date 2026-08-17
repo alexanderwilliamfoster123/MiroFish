@@ -1,0 +1,47 @@
+{
+  "_comment": [
+    "The five background clips, generated with Higgsfield (seedance_2_5, 1080p, 5s, silent).",
+    "build_site.py prefers a local media/hero-N.mp4 and falls back to `url` when there isn't one.",
+    "To inline them: download each url to media/raw/hero-N.mp4, run tools/encode_media.py --all,",
+    "then tools/build_site.py. That produces a genuinely self-contained page.",
+    "This sandbox cannot reach the CDN host (egress allowlist), so the current build references",
+    "the urls directly and leans on the CSS atmosphere beds wherever they cannot load."
+  ],
+  "clips": [
+    {
+      "index": 1,
+      "section": "hero",
+      "job_id": "d700a433-b900-4d03-9934-c47992126465",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_37CJAETJ6HBiRbz97go2lFOfI47/hf_20260817_040251_d700a433-b900-4d03-9934-c47992126465.mp4",
+      "prompt": "Polished chrome and smoked-glass cubes on matte charcoal, rising and settling into an ascending staircase curve. Indigo rim light, warm bone fill, slow dolly-in."
+    },
+    {
+      "index": 2,
+      "section": "research",
+      "job_id": "da6bfaaa-0286-440d-ac02-bf3e22ba7348",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_37CJAETJ6HBiRbz97go2lFOfI47/hf_20260817_040251_da6bfaaa-0286-440d-ac02-bf3e22ba7348.mp4",
+      "prompt": "Dense field of thin vertical glass rods of varying heights on bone, refracting lavender caustics. Slow lateral parallax."
+    },
+    {
+      "index": 3,
+      "section": "backtest",
+      "job_id": "d5188459-ce7d-4017-b479-75279d1deba5",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_37CJAETJ6HBiRbz97go2lFOfI47/hf_20260817_040300_d5188459-ce7d-4017-b479-75279d1deba5.mp4",
+      "prompt": "Translucent frosted-glass sheets stacked like strata, each carrying a carved ridge line, sliding into alignment. Ink-blue, indigo edge light, dust motes."
+    },
+    {
+      "index": 4,
+      "section": "execute",
+      "job_id": "4e065457-92f4-42b8-946a-27e66d6691de",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_37CJAETJ6HBiRbz97go2lFOfI47/hf_20260817_040251_4e065457-92f4-42b8-946a-27e66d6691de.mp4",
+      "prompt": "Polished steel sphere travelling through a lattice of brushed-metal rails in near darkness, trailing warm light. Motion blur, fast tracking."
+    },
+    {
+      "index": 5,
+      "section": "risk",
+      "job_id": "8c84dd8e-8ed9-4d66-b541-4b3d5cd7a3d6",
+      "url": null,
+      "prompt": "Taut dark fabric membrane deforming into deep wells under invisible weights, contour ridges rippling. Raking terracotta light, slow drift."
+    }
+  ]
+}

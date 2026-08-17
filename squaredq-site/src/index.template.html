@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SquaredQ</title>
+<meta name="description" content="The research, backtesting and execution stack for systematic traders. Write a strategy, prove it against a decade of ticks, route it to forty venues.">
+<meta name="theme-color" content="#141318">
+<meta property="og:title" content="SquaredQ">
+<meta property="og:description" content="The research, backtesting and execution stack for systematic traders.">
+<link rel="icon" href="{{MARK_URI}}">
+
+<style>
+/* ==========================================================================
+   Fonts — inlined so the page makes no network requests at all.
+   ========================================================================== */
+@font-face{font-family:sq-sans;src:url({{FONT_SANS_400}}) format("woff2");font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:sq-sans;src:url({{FONT_SANS_500}}) format("woff2");font-weight:500;font-style:normal;font-display:block}
+@font-face{font-family:sq-serif;src:url({{FONT_SERIF_400}}) format("woff2");font-weight:400;font-style:normal;font-display:block}
+
+/* ==========================================================================
+   Tokens
+   ========================================================================== */
+:root{
+  --ink:#141318;
+  --ink-soft:#5e5b69;
+  --paper:#f5f3ef;
+  --bone:#eae7e0;
+  --line:#dfdcd6;
+  --accent:#3a2fd8;
+  --accent-strong:#2a21b0;
+  --accent-tint:#dedbf7;
+  --on-dark:#f4f2f7;
+  --on-dark-soft:#b6b2c4;
+
+  --shell:min(1360px, 100% - 2 * var(--gutter));
+  --gutter:1.5rem;
+
+  --step-0:1.0625rem;
+  --step-1:1.1875rem;
+  --step-2:clamp(1.35rem, .9rem + 1.6vw, 1.75rem);
+  --display-xl:clamp(3.4rem, 1.2rem + 9vw, 8.5rem);
+  --display-l:clamp(2.6rem, 1.2rem + 5.6vw, 5.5rem);
+  --display-m:clamp(2rem, 1.2rem + 3.2vw, 3.4rem);
+
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --dur:.55s;
+}
+@media (min-width:768px){:root{--gutter:2.5rem}}
+
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--paper);color-scheme:light;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:sq-sans,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:var(--step-0);line-height:1.45;font-weight:400;
+  text-wrap:pretty;overflow-x:hidden;
+}
+img,video,svg{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3,h4,p,figure,blockquote{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px;border-radius:2px}
+.shell{width:var(--shell);margin-inline:auto}
+.vh{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.serif{font-family:sq-serif,Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.015em;line-height:1.02;text-wrap:balance}
+
+/* skip link */
+.skip{position:absolute;left:1rem;top:-4rem;z-index:100;background:var(--ink);color:var(--paper);
+  padding:.75rem 1.25rem;border-radius:.5rem;transition:top .2s var(--ease);text-decoration:none}
+.skip:focus{top:1rem}
+
+/* ==========================================================================
+   Buttons — squared shoulders, the one literal nod to the name
+   ========================================================================== */
+.btn{
+  --bg:var(--accent);--fg:#fff;--bd:transparent;
+  display:inline-flex;align-items:center;justify-content:center;gap:.6rem;
+  background:var(--bg);color:var(--fg);border:1.5px solid var(--bd);
+  padding:.85rem 1.4rem;border-radius:.55rem;font-size:.9375rem;font-weight:500;
+  text-decoration:none;cursor:pointer;white-space:nowrap;
+  transition:background var(--dur) var(--ease),color var(--dur) var(--ease),border-color var(--dur) var(--ease),transform .18s var(--ease);
+}
+.btn:hover{background:var(--accent-strong)}
+.btn:active{transform:translateY(1px)}
+.btn--lg{padding:1.15rem 2rem;font-size:1rem}
+.btn--ghost{--bg:transparent;--fg:var(--ink);--bd:var(--ink)}
+.btn--ghost:hover{background:var(--ink);color:var(--paper)}
+.btn--onDark{--bg:transparent;--fg:#fff;--bd:rgba(255,255,255,.55)}
+.btn--onDark:hover{background:#fff;color:var(--ink);border-color:#fff}
+
+/* circular arrow link used on the product heroes */
+.arrow{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:3rem;height:3rem;border:1.5px solid currentColor;border-radius:.55rem;
+  text-decoration:none;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),gap .2s;
+}
+.arrow svg{width:1.15rem;height:1.15rem;transition:transform var(--dur) var(--ease)}
+.arrow:hover svg{transform:translateX(3px)}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+.hdr{position:fixed;inset:0 0 auto;z-index:60;padding:.75rem 0;transition:padding .4s var(--ease)}
+.hdr__bar{
+  display:flex;align-items:center;gap:1.5rem;
+  background:color-mix(in srgb, var(--paper) 88%, transparent);
+  -webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);
+  border:1px solid transparent;border-radius:.9rem;padding:.6rem .7rem .6rem 1.1rem;
+  transition:border-color .4s var(--ease),background .4s var(--ease);
+}
+.hdr[data-stuck="true"] .hdr__bar{border-color:var(--line);background:color-mix(in srgb, var(--paper) 96%, transparent)}
+.hdr__mark{display:flex;align-items:center;text-decoration:none;padding:.25rem}
+.hdr__mark img{width:8.25rem}
+.hdr__nav{display:none;gap:.25rem;margin-inline-start:.5rem}
+.hdr__nav a{padding:.55rem .7rem;border-radius:.45rem;text-decoration:none;font-size:.9375rem;
+  transition:background var(--dur) var(--ease)}
+.hdr__nav a:hover{background:color-mix(in srgb,var(--ink) 8%,transparent)}
+.hdr__end{display:flex;align-items:center;gap:.5rem;margin-inline-start:auto}
+.hdr__login{display:none;text-decoration:none;font-size:.9375rem;padding:.85rem 1.2rem;
+  border:1.5px solid var(--line);border-radius:.55rem;transition:border-color var(--dur) var(--ease)}
+.hdr__login:hover{border-color:var(--ink)}
+.burger{display:grid;place-items:center;width:2.9rem;height:2.9rem;background:none;
+  border:1.5px solid var(--line);border-radius:.55rem;cursor:pointer;color:inherit}
+.burger svg{width:1.15rem;height:1.15rem}
+@media (min-width:1040px){
+  .hdr__nav{display:flex}
+  .hdr__login{display:inline-flex}
+  .burger{display:none}
+}
+
+/* mobile drawer */
+.drawer{
+  position:fixed;inset:0;z-index:70;background:var(--paper);
+  display:grid;grid-template-rows:auto 1fr auto;gap:2rem;padding:1.35rem var(--gutter) 2.5rem;
+  transform:translateY(-100%);visibility:hidden;
+  transition:transform .5s var(--ease),visibility .5s;
+}
+.drawer[data-open="true"]{transform:translateY(0);visibility:visible}
+.drawer__top{display:flex;align-items:center;justify-content:space-between}
+.drawer__top img{width:8.25rem}
+.drawer nav{display:flex;flex-direction:column;gap:.25rem;align-content:start}
+.drawer nav a{font-family:sq-serif,Georgia,serif;font-size:clamp(2rem,9vw,3rem);line-height:1.15;
+  text-decoration:none;padding:.2rem 0}
+.drawer__end{display:grid;gap:.75rem}
+
+/* ==========================================================================
+   Media sections — a video bed with content on top
+   ========================================================================== */
+.bed{position:relative;isolation:isolate;overflow:hidden;background:var(--ink)}
+.bed__media{position:absolute;inset:0;z-index:-2}
+.bed__media video,.bed__media img{width:100%;height:100%;object-fit:cover}
+.bed__scrim{position:absolute;inset:0;z-index:-1}
+
+/* Atmosphere bed. Sits under the video so the section is alive from the first
+   paint and stays alive anywhere the clip cannot load — an offline viewer, a
+   sandbox that blocks external media, a slow connection before first frame. */
+.bed__atmos{position:absolute;inset:-15%;z-index:-3;filter:blur(28px)}
+.bed__atmos span{position:absolute;inset:0;background:var(--a);
+  animation:drift var(--t,42s) var(--ease) infinite alternate}
+.bed__atmos span:nth-child(2){background:var(--b);animation-duration:calc(var(--t,42s) * 1.45);
+  animation-direction:alternate-reverse}
+.bed__atmos span:nth-child(3){background:var(--c);animation-duration:calc(var(--t,42s) * .8)}
+@keyframes drift{
+  0%{transform:translate3d(-3%,-2%,0) scale(1.05)}
+  50%{transform:translate3d(2%,3%,0) scale(1.16)}
+  100%{transform:translate3d(4%,-3%,0) scale(1.08)}
+}
+@media (prefers-reduced-motion:reduce){.bed__atmos span{animation:none}}
+
+.hero{min-height:100svh;display:grid;align-items:end;padding:9rem 0 4rem}
+.hero .bed__atmos{
+  --a:radial-gradient(58% 62% at 22% 30%, #3a2fd8 0%, transparent 62%);
+  --b:radial-gradient(64% 58% at 78% 24%, #6f5bc4 0%, transparent 60%);
+  --c:radial-gradient(72% 66% at 52% 88%, #241f3d 0%, transparent 66%);
+  background:#16141f}
+.hero .bed__scrim{background:
+  radial-gradient(120% 90% at 50% 105%, rgba(10,9,14,.82) 0%, rgba(10,9,14,.30) 45%, rgba(10,9,14,0) 75%),
+  linear-gradient(180deg, rgba(10,9,14,.55) 0%, rgba(10,9,14,0) 32%)}
+.hero__inner{display:grid;gap:1.75rem;grid-template-columns:minmax(0,52rem)}
+.hero h1{font-size:var(--display-xl);color:#fff}
+.hero p{font-size:var(--step-2);color:var(--on-dark);max-width:34ch;line-height:1.35}
+.hero__cta{display:flex;flex-wrap:wrap;gap:.75rem}
+
+/* eyebrow lockup: wordmark + product name */
+.eyebrow{display:flex;align-items:baseline;gap:.5rem;font-size:1.0625rem;letter-spacing:.005em}
+.eyebrow img{width:6.6rem;flex:none;align-self:baseline}
+.eyebrow--dark img{filter:brightness(0) invert(1)}
+
+.prod{min-height:min(100svh,58rem);display:grid;align-items:center;padding:7rem 0}
+.prod__inner{display:grid;gap:1.5rem;grid-template-columns:minmax(0,38rem)}
+.prod h2{font-size:var(--display-m);font-weight:500;line-height:1.08;letter-spacing:-.02em;text-wrap:balance}
+.prod p{font-size:var(--step-1);max-width:44ch;line-height:1.5}
+.prod ul{display:grid;gap:.55rem;font-size:1rem}
+.prod li{display:grid;grid-template-columns:auto 1fr;gap:.7rem;align-items:start}
+.prod li svg{width:1.05rem;height:1.05rem;margin-top:.3rem;flex:none}
+.prod--dark{color:var(--on-dark)}
+.prod--dark p{color:var(--on-dark-soft)}
+.prod--dark .bed__scrim{background:linear-gradient(96deg, rgba(9,8,12,.92) 0%, rgba(9,8,12,.72) 38%, rgba(9,8,12,.15) 72%, rgba(9,8,12,0) 100%)}
+.prod--light{color:var(--ink);background:var(--bone)}
+.prod--light .bed__scrim{background:linear-gradient(96deg, rgba(240,238,233,.94) 0%, rgba(240,238,233,.78) 40%, rgba(240,238,233,.1) 78%, rgba(240,238,233,0) 100%)}
+
+/* per-section atmosphere, keyed to that clip's art direction */
+#research .bed__atmos{--t:50s;background:#e8e4dc;
+  --a:radial-gradient(60% 60% at 72% 34%, #cfc7ea 0%, transparent 62%);
+  --b:radial-gradient(58% 62% at 88% 72%, #b9aee0 0%, transparent 60%);
+  --c:radial-gradient(70% 60% at 40% 90%, #efe9dd 0%, transparent 64%)}
+#backtest .bed__atmos{--t:46s;background:#0e1020;
+  --a:radial-gradient(58% 60% at 74% 36%, #2c2f66 0%, transparent 62%);
+  --b:radial-gradient(62% 56% at 90% 76%, #4038a8 0%, transparent 58%);
+  --c:radial-gradient(70% 64% at 46% 12%, #14162c 0%, transparent 66%)}
+#execute .bed__atmos{--t:34s;background:#08070c;
+  --a:radial-gradient(48% 52% at 78% 42%, #3a2fd8 0%, transparent 58%);
+  --b:radial-gradient(44% 46% at 92% 62%, #d08a4a 0%, transparent 56%);
+  --c:radial-gradient(72% 68% at 36% 84%, #101018 0%, transparent 66%)}
+#risk .bed__atmos{--t:56s;background:#eae4dd;
+  --a:radial-gradient(62% 58% at 76% 40%, #d8a988 0%, transparent 62%);
+  --b:radial-gradient(56% 60% at 92% 78%, #c08d6c 0%, transparent 58%);
+  --c:radial-gradient(70% 62% at 34% 8%, #f2ece4 0%, transparent 64%)}
+@media (max-width:900px){
+  .prod{align-items:end;min-height:46rem;padding-top:14rem}
+  .prod--dark .bed__scrim{background:linear-gradient(180deg, rgba(9,8,12,0) 0%, rgba(9,8,12,.45) 38%, rgba(9,8,12,.92) 72%)}
+  .prod--light .bed__scrim{background:linear-gradient(180deg, rgba(240,238,233,0) 0%, rgba(240,238,233,.55) 38%, rgba(240,238,233,.95) 72%)}
+}
+
+/* video pause control */
+.vctl[hidden]{display:none}
+.vctl{position:absolute;right:var(--gutter);bottom:1.5rem;z-index:2;
+  width:2.75rem;height:2.75rem;display:grid;place-items:center;cursor:pointer;
+  background:color-mix(in srgb,#fff 82%, transparent);color:var(--ink);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border:none;border-radius:.55rem}
+.vctl svg{width:1.05rem;height:1.05rem}
+
+/* ==========================================================================
+   Capability index — the big serif list
+   ========================================================================== */
+.index{padding:clamp(5rem,10vw,9rem) 0}
+.index__row{
+  display:grid;grid-template-columns:1fr;gap:.35rem;
+  padding:1.6rem 0;border-top:1px solid var(--line);text-decoration:none;
+  transition:padding-inline-start .5s var(--ease)}
+.index__row:last-child{border-bottom:1px solid var(--line)}
+.index__row:hover{padding-inline-start:1rem}
+.index__row h3{font-family:sq-serif,Georgia,serif;font-weight:400;
+  font-size:clamp(2.6rem,7vw,4.75rem);line-height:1;letter-spacing:-.02em}
+.index__row p{color:var(--ink-soft);max-width:46ch}
+@media (min-width:860px){
+  .index__row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2rem;align-items:baseline}
+  .index__row p{justify-self:start;padding-top:.5rem}
+}
+
+/* ==========================================================================
+   Thesis
+   ========================================================================== */
+.thesis{padding:clamp(5rem,10vw,9rem) 0;background:var(--paper)}
+.thesis__inner{display:grid;gap:2rem;grid-template-columns:minmax(0,44rem)}
+.thesis h2{font-size:var(--display-l)}
+.thesis p{font-size:var(--step-2);line-height:1.4;max-width:32ch}
+.thesis__note{font-size:.8125rem;color:var(--ink-soft);max-width:52ch;line-height:1.45}
+
+/* ==========================================================================
+   Code panel
+   ========================================================================== */
+.code{padding:clamp(4rem,8vw,7rem) 0;background:var(--ink);color:var(--on-dark)}
+.code__head{display:grid;gap:1rem;max-width:52rem;margin-bottom:2.5rem}
+.code__head h2{font-size:var(--display-m);font-weight:500;letter-spacing:-.02em;line-height:1.1;color:#fff}
+.code__head p{color:var(--on-dark-soft);max-width:46ch}
+.code__tabs{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1rem}
+.code__tab{background:none;border:1.5px solid rgba(255,255,255,.2);color:var(--on-dark-soft);
+  padding:.6rem 1rem;border-radius:.5rem;font:inherit;font-size:.875rem;cursor:pointer;
+  transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),background var(--dur) var(--ease)}
+.code__tab:hover{color:#fff;border-color:rgba(255,255,255,.5)}
+.code__tab[aria-selected="true"]{background:#fff;color:var(--ink);border-color:#fff}
+.code__panel{border:1px solid rgba(255,255,255,.16);border-radius:.9rem;overflow:hidden;background:#0d0c11}
+.code__panel[hidden]{display:none}
+.code__bar{display:flex;align-items:center;gap:.5rem;padding:.7rem 1rem;
+  border-bottom:1px solid rgba(255,255,255,.12);font-size:.8125rem;color:var(--on-dark-soft)}
+.code__dot{width:.55rem;height:.55rem;border-radius:2px;background:rgba(255,255,255,.22)}
+.code__panel pre{margin:0;padding:1.35rem;overflow-x:auto;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  font-size:.875rem;line-height:1.65;tab-size:2}
+.code__panel code{color:#d7d3e4;white-space:pre}
+.t-key{color:#a99cff}.t-fn{color:#8fd9c4}.t-str{color:#e5b98a}.t-num{color:#e5b98a}
+.t-dim{color:#6f6b80}.t-ok{color:#7fd6a4}.t-hi{color:#fff}
+
+/* ==========================================================================
+   Spec strip
+   ========================================================================== */
+.spec{padding:clamp(4rem,8vw,6.5rem) 0;background:var(--paper);border-top:1px solid var(--line)}
+.spec__grid{display:grid;gap:2.5rem 2rem;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr))}
+.spec__n{font-family:sq-serif,Georgia,serif;font-size:clamp(2.75rem,5vw,3.75rem);line-height:1;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.spec__l{margin-top:.6rem;color:var(--ink-soft);max-width:22ch;font-size:.9375rem;line-height:1.4}
+
+/* ==========================================================================
+   Newsletter
+   ========================================================================== */
+.news{padding:0 0 clamp(4rem,8vw,7rem);background:var(--paper)}
+.news__panel{background:var(--accent-tint);border-radius:1.5rem;
+  padding:clamp(3rem,7vw,5.5rem) clamp(1.5rem,4vw,3rem);text-align:center;display:grid;
+  gap:1.5rem;justify-items:center}
+.news__panel img{width:clamp(10rem,22vw,15rem);margin-bottom:.25rem}
+.news__panel p{font-size:var(--step-2);max-width:26ch;line-height:1.35}
+.news__form{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;width:min(30rem,100%)}
+.news__form input{flex:1 1 15rem;min-width:0;background:#fff;border:1.5px solid transparent;
+  border-radius:.55rem;padding:1.05rem 1.1rem;font:inherit;color:var(--ink)}
+.news__form input::placeholder{color:var(--ink-soft)}
+.news__form input:focus-visible{border-color:var(--accent);outline-offset:1px}
+.news__msg{font-size:.875rem;min-height:1.2em;color:var(--ink-soft)}
+
+/* ==========================================================================
+   Final CTA + footer
+   ========================================================================== */
+.final{padding:clamp(5rem,11vw,10rem) 0;text-align:center;background:var(--paper)}
+.final h2{font-size:var(--display-l);max-width:18ch;margin-inline:auto}
+.final .btn{margin-top:2.5rem}
+
+.ftr{background:var(--paper);padding-bottom:2.5rem}
+.ftr__nav{display:grid;gap:2.5rem 1.5rem;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));
+  padding-bottom:clamp(3rem,7vw,5rem)}
+.ftr h3{font-size:.9375rem;font-weight:500;margin-bottom:1rem}
+.ftr li+li{margin-top:.6rem}
+.ftr__nav a{color:var(--ink-soft);text-decoration:none;font-size:.9375rem;
+  transition:color var(--dur) var(--ease)}
+.ftr__nav a:hover{color:var(--ink)}
+.ftr__mark{border-bottom:1px solid var(--ink);padding-bottom:clamp(2rem,4vw,3rem)}
+.ftr__mark img{width:100%}
+.ftr__legal{display:flex;flex-wrap:wrap;gap:1rem 2rem;justify-content:space-between;
+  padding-top:2rem;font-size:.8125rem;color:var(--ink-soft);line-height:1.6}
+.ftr__legal a{color:inherit;text-decoration-color:var(--accent);text-underline-offset:2px}
+.ftr__legal p{max-width:62ch}
+
+/* ==========================================================================
+   Scroll reveal
+   ========================================================================== */
+[data-reveal]{opacity:0;transform:translateY(1.35rem);
+  transition:opacity .85s var(--ease),transform .85s var(--ease)}
+[data-reveal].is-in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  [data-reveal]{opacity:1;transform:none;transition:none}
+  .btn,.arrow,.index__row{transition:none}
+}
+</style>
+<noscript><style>[data-reveal]{opacity:1;transform:none}</style></noscript>
+
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="hdr" id="hdr">
+  <div class="shell hdr__bar">
+    <a class="hdr__mark" href="#top" aria-label="SquaredQ — home"><img src="{{WORDMARK_URI}}" alt="" width="132" height="30"></a>
+    <nav class="hdr__nav" aria-label="Primary">
+      <a href="#research">Research</a>
+      <a href="#backtest">Backtest</a>
+      <a href="#execute">Execute</a>
+      <a href="#risk">Risk</a>
+      <a href="#build">Docs</a>
+    </nav>
+    <div class="hdr__end">
+      <a class="hdr__login" href="#top">Log in</a>
+      <a class="btn" href="#build">Start building</a>
+      <button class="burger" type="button" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
+        <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h16M2 14h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" data-open="false" aria-hidden="true">
+  <div class="drawer__top">
+    <img src="{{WORDMARK_URI}}" alt="SquaredQ" width="132" height="30">
+    <button class="burger" type="button" id="drawerClose" aria-label="Close menu">
+      <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 4l12 12M16 4L4 16"/></svg>
+    </button>
+  </div>
+  <nav aria-label="Mobile">
+    <a href="#research">Research</a>
+    <a href="#backtest">Backtest</a>
+    <a href="#execute">Execute</a>
+    <a href="#risk">Risk</a>
+    <a href="#build">Docs</a>
+  </nav>
+  <div class="drawer__end">
+    <a class="btn btn--lg" href="#build">Start building</a>
+    <a class="btn btn--lg btn--ghost" href="#top">Log in</a>
+  </div>
+</div>
+
+<span id="top"></span>
+<main id="main" tabindex="-1">
+
+  <!-- ===================================================== hero -->
+  <section class="bed hero">
+    <div class="bed__atmos" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="bed__media">
+      <video autoplay muted loop playsinline preload="auto" poster="{{POSTER_1}}" aria-label="Polished cubes settling into a rising staircase curve">
+        <source src="{{VIDEO_1}}" type="video/mp4">
+      </video>
+    </div>
+    <div class="bed__scrim"></div>
+    <button class="vctl" type="button" data-vctl aria-label="Pause background video"></button>
+    <div class="shell hero__inner">
+      <h1 class="serif">Signal, squared.</h1>
+      <p>The research, backtesting and execution stack for systematic traders.</p>
+      <div class="hero__cta">
+        <a class="btn btn--lg" href="#build">Start building</a>
+        <a class="btn btn--lg btn--onDark" href="#index">See the platform</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== capability index -->
+  <section class="index" id="index" aria-label="Platform">
+    <div class="shell">
+      <a class="index__row" href="#research" data-reveal>
+        <h3>Research</h3>
+        <p>A notebook wired straight into consolidated tick, book and reference data.</p>
+      </a>
+      <a class="index__row" href="#backtest" data-reveal>
+        <h3>Backtest</h3>
+        <p>Event-driven simulation with real fills, real fees and real borrow.</p>
+      </a>
+      <a class="index__row" href="#execute" data-reveal>
+        <h3>Execute</h3>
+        <p>Smart routing to forty venues from a single order interface.</p>
+      </a>
+      <a class="index__row" href="#risk" data-reveal>
+        <h3>Risk</h3>
+        <p>Pre-trade limits and live exposure that stop a bad day becoming a bad year.</p>
+      </a>
+      <a class="index__row" href="#build" data-reveal>
+        <h3>Deploy</h3>
+        <p>One command from notebook to production. No infrastructure to run.</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===================================================== research -->
+  <section class="bed prod prod--light" id="research">
+    <div class="bed__atmos" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="bed__media">
+      <video autoplay muted loop playsinline preload="none" poster="{{POSTER_2}}" aria-hidden="true">
+        <source src="{{VIDEO_2}}" type="video/mp4">
+      </video>
+    </div>
+    <div class="bed__scrim"></div>
+    <button class="vctl" type="button" data-vctl aria-label="Pause background video"></button>
+    <div class="shell prod__inner" data-reveal>
+      <p class="eyebrow"><img src="{{WORDMARK_URI}}" alt=""><span class="vh">SquaredQ</span> Research</p>
+      <h2>A notebook that speaks fluent market data</h2>
+      <p>Twelve years of consolidated ticks, full depth of book, corporate actions and borrow rates — queried in the same breath as your model. No CSV wrangling, no survivorship bias, no vendor stitching.</p>
+      <ul>
+        <li>{{CHECK}}<span>Point-in-time universes, so yesterday's index is yesterday's index</span></li>
+        <li>{{CHECK}}<span>Python and SQL against the same store</span></li>
+        <li>{{CHECK}}<span>Notebooks that version with your strategy</span></li>
+      </ul>
+      <a class="arrow" href="#build" aria-label="Explore Research">{{ARROW}}</a>
+    </div>
+  </section>
+
+  <!-- ===================================================== backtest -->
+  <section class="bed prod prod--dark" id="backtest">
+    <div class="bed__atmos" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="bed__media">
+      <video autoplay muted loop playsinline preload="none" poster="{{POSTER_3}}" aria-hidden="true">
+        <source src="{{VIDEO_3}}" type="video/mp4">
+      </video>
+    </div>
+    <div class="bed__scrim"></div>
+    <button class="vctl" type="button" data-vctl aria-label="Pause background video"></button>
+    <div class="shell prod__inner" data-reveal>
+      <p class="eyebrow eyebrow--dark"><img src="{{WORDMARK_URI}}" alt=""><span class="vh">SquaredQ</span> Backtest</p>
+      <h2>Ten years of ticks.<br>Ninety seconds.</h2>
+      <p>Event-driven, not vectorised — so your simulated fills obey the same queue, the same spread and the same fee schedule your live orders will. Walk-forward and purged cross-validation are built in, because a Sharpe you fit is a Sharpe you lose.</p>
+      <ul>
+        <li>{{CHECK}}<span>Modelled queue position, slippage and market impact</span></li>
+        <li>{{CHECK}}<span>Walk-forward, purged k-fold and combinatorial splits</span></li>
+        <li>{{CHECK}}<span>Every run reproducible from its commit hash</span></li>
+      </ul>
+      <a class="arrow" href="#build" aria-label="Explore Backtest">{{ARROW}}</a>
+    </div>
+  </section>
+
+  <!-- ===================================================== thesis -->
+  <section class="thesis">
+    <div class="shell thesis__inner" data-reveal>
+      <img src="{{MARK_URI}}" alt="" width="64" height="64" style="width:4rem;border-radius:.9rem">
+      <h2 class="serif">Strategies fail<br>in the gaps</h2>
+      <p>Between the research notebook and the production trader sits a translation layer, and that is where edge quietly dies. A different data snapshot. A fill model that flattered you. A risk limit nobody wired up. SquaredQ collapses that gap: the code you researched is the code that trades.</p>
+      <p class="thesis__note">Placeholder copy. Platform figures and capability claims on this page are illustrative and must be replaced with SquaredQ's own substantiated numbers before this page faces a public audience.</p>
+    </div>
+  </section>
+
+  <!-- ===================================================== execute -->
+  <section class="bed prod prod--dark" id="execute">
+    <div class="bed__atmos" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="bed__media">
+      <video autoplay muted loop playsinline preload="none" poster="{{POSTER_4}}" aria-hidden="true">
+        <source src="{{VIDEO_4}}" type="video/mp4">
+      </video>
+    </div>
+    <div class="bed__scrim"></div>
+    <button class="vctl" type="button" data-vctl aria-label="Pause background video"></button>
+    <div class="shell prod__inner" data-reveal>
+      <p class="eyebrow eyebrow--dark"><img src="{{WORDMARK_URI}}" alt=""><span class="vh">SquaredQ</span> Execute</p>
+      <h2>Determinism, without the rack</h2>
+      <p>One order interface, forty venues, colocated where it matters. Slice with TWAP, VWAP, implementation shortfall or your own scheduler — and read back every child order, every ack, every reject.</p>
+      <ul>
+        <li>{{CHECK}}<span>Median acknowledgement measured in single-digit milliseconds</span></li>
+        <li>{{CHECK}}<span>Bring your own broker, or route through ours</span></li>
+        <li>{{CHECK}}<span>Full audit trail, exportable for compliance</span></li>
+      </ul>
+      <a class="arrow" href="#build" aria-label="Explore Execute">{{ARROW}}</a>
+    </div>
+  </section>
+
+  <!-- ===================================================== risk -->
+  <section class="bed prod prod--light" id="risk">
+    <div class="bed__atmos" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="bed__media">
+      <video autoplay muted loop playsinline preload="none" poster="{{POSTER_5}}" aria-hidden="true">
+        <source src="{{VIDEO_5}}" type="video/mp4">
+      </video>
+    </div>
+    <div class="bed__scrim"></div>
+    <button class="vctl" type="button" data-vctl aria-label="Pause background video"></button>
+    <div class="shell prod__inner" data-reveal>
+      <p class="eyebrow"><img src="{{WORDMARK_URI}}" alt=""><span class="vh">SquaredQ</span> Risk</p>
+      <h2>Know your exposure before the market does</h2>
+      <p>Gross, net, factor and per-name limits enforced pre-trade, not reported after. Stress your book against 2008, 2015, 2020 and your own scenarios, and get paged when a live position drifts outside its mandate.</p>
+      <ul>
+        <li>{{CHECK}}<span>Pre-trade limit checks on every child order</span></li>
+        <li>{{CHECK}}<span>Factor decomposition against your chosen risk model</span></li>
+        <li>{{CHECK}}<span>Kill switch that reaches every venue at once</span></li>
+      </ul>
+      <a class="arrow" href="#build" aria-label="Explore Risk">{{ARROW}}</a>
+    </div>
+  </section>
+
+  <!-- ===================================================== code -->
+  <section class="code" id="build">
+    <div class="shell">
+      <div class="code__head" data-reveal>
+        <h2>Research it, prove it, ship it &mdash; without changing languages</h2>
+        <p>The same strategy object drives the simulator and the live trader. Three commands take it from an idea to a paper account.</p>
+      </div>
+      <div class="code__tabs" role="tablist" aria-label="Workflow">
+        <button class="code__tab" role="tab" id="tab-1" aria-controls="pane-1" aria-selected="true">1 · Write</button>
+        <button class="code__tab" role="tab" id="tab-2" aria-controls="pane-2" aria-selected="false" tabindex="-1">2 · Backtest</button>
+        <button class="code__tab" role="tab" id="tab-3" aria-controls="pane-3" aria-selected="false" tabindex="-1">3 · Deploy</button>
+      </div>
+
+      <div class="code__panel" role="tabpanel" id="pane-1" aria-labelledby="tab-1">
+        <div class="code__bar"><span class="code__dot"></span><span class="code__dot"></span><span class="code__dot"></span><span>mean_reversion.py</span></div>
+<pre><code><span class="t-key">from</span> squaredq <span class="t-key">import</span> Strategy, signals
+
+<span class="t-key">class</span> <span class="t-fn">MeanReversion</span>(Strategy):
+    universe = <span class="t-str">"us_equity_liquid_500"</span>
+    schedule = <span class="t-str">"every 5m during rth"</span>
+
+    <span class="t-key">def</span> <span class="t-fn">on_bar</span>(self, book):
+        z = signals.<span class="t-fn">zscore</span>(book.close, window=<span class="t-num">60</span>)
+        edge = -z.<span class="t-fn">clip</span>(-<span class="t-num">2</span>, <span class="t-num">2</span>)
+
+        self.<span class="t-fn">target_weights</span>(
+            edge / edge.<span class="t-fn">abs</span>().<span class="t-fn">sum</span>(),
+            max_participation=<span class="t-num">0.05</span>,
+        )</code></pre>
+      </div>
+
+      <div class="code__panel" role="tabpanel" id="pane-2" aria-labelledby="tab-2" hidden>
+        <div class="code__bar"><span class="code__dot"></span><span class="code__dot"></span><span class="code__dot"></span><span>terminal</span></div>
+<pre><code><span class="t-dim">$</span> sq backtest mean_reversion <span class="t-str">--from</span> 2015-01-01 <span class="t-str">--to</span> 2026-06-30
+
+  <span class="t-dim">loading</span>   us_equity_liquid_500 · 11y · 1m bars        <span class="t-dim">4.1s</span>
+  <span class="t-dim">running</span>   2,847 sessions                             <span class="t-dim">82.3s</span>
+  <span class="t-dim">──────────────────────────────────────────────────────────</span>
+  sharpe          <span class="t-hi">1.84</span>       max drawdown        <span class="t-hi">-8.2%</span>
+  turnover     <span class="t-hi">412%</span>/yr       capacity            <span class="t-hi">$180M</span>
+  hit rate       <span class="t-hi">53.1%</span>       avg holding        <span class="t-hi">2.4d</span>
+  <span class="t-dim">──────────────────────────────────────────────────────────</span>
+  <span class="t-ok">✓</span> walk-forward stable across 6 folds
+  <span class="t-dim">report →</span> runs/mean_reversion/2026-08-17T09:14Z</code></pre>
+      </div>
+
+      <div class="code__panel" role="tabpanel" id="pane-3" aria-labelledby="tab-3" hidden>
+        <div class="code__bar"><span class="code__dot"></span><span class="code__dot"></span><span class="code__dot"></span><span>terminal</span></div>
+<pre><code><span class="t-dim">$</span> sq deploy mean_reversion <span class="t-str">--account</span> paper <span class="t-str">--venues</span> nyse,arca,edgx
+
+  <span class="t-ok">✓</span> compiled            mean_reversion<span class="t-dim">@</span>a41f0c2
+  <span class="t-ok">✓</span> limits attached     gross 2.0x · net 0.4x · per-name 1.5%
+  <span class="t-ok">✓</span> routed              3 venues · median ack 1.1 ms
+  <span class="t-ok">✓</span> kill switch armed   sq halt mean_reversion
+
+  <span class="t-hi">● live</span>  <span class="t-dim">paper · $1,000,000 notional · streaming to sq monitor</span></code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== spec strip -->
+  <section class="spec" aria-label="Platform facts">
+    <div class="shell spec__grid">
+      <div data-reveal><p class="spec__n">12 yrs</p><p class="spec__l">of consolidated tick and full-depth book history</p></div>
+      <div data-reveal><p class="spec__n">40+</p><p class="spec__l">venues and brokers behind one order interface</p></div>
+      <div data-reveal><p class="spec__n">1.1 ms</p><p class="spec__l">median order acknowledgement from colocated gateways</p></div>
+      <div data-reveal><p class="spec__n">0</p><p class="spec__l">servers for you to patch, scale or page someone about</p></div>
+    </div>
+  </section>
+
+  <!-- ===================================================== newsletter -->
+  <section class="news">
+    <div class="shell news__panel" data-reveal>
+      <img src="{{WEEKLY_URI}}" alt="SQ Weekly">
+      <p>A weekly read on market microstructure, execution and the craft of systematic trading</p>
+      <form class="news__form" id="newsForm" novalidate>
+        <label class="vh" for="newsEmail">Email address</label>
+        <input id="newsEmail" name="email" type="email" placeholder="you@fund.com" autocomplete="email" required>
+        <button class="btn btn--lg" type="submit">Subscribe</button>
+      </form>
+      <p class="news__msg" id="newsMsg" role="status"></p>
+    </div>
+  </section>
+
+  <!-- ===================================================== final cta -->
+  <section class="final">
+    <div class="shell" data-reveal>
+      <h2 class="serif">Start on paper.<br>Ship to production.</h2>
+      <a class="btn btn--lg" href="#build">Start building</a>
+    </div>
+  </section>
+</main>
+
+<footer class="ftr">
+  <div class="shell">
+    <nav class="ftr__nav" aria-label="Footer">
+      <div>
+        <h3>Platform</h3>
+        <ul>
+          <li><a href="#research">Research</a></li>
+          <li><a href="#backtest">Backtest</a></li>
+          <li><a href="#execute">Execute</a></li>
+          <li><a href="#risk">Risk</a></li>
+          <li><a href="#build">Deploy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Data</h3>
+        <ul>
+          <li><a href="#research">US equities</a></li>
+          <li><a href="#research">Options</a></li>
+          <li><a href="#research">Futures</a></li>
+          <li><a href="#research">FX &amp; crypto</a></li>
+          <li><a href="#research">Reference &amp; corporate actions</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Developers</h3>
+        <ul>
+          <li><a href="#build">Documentation</a></li>
+          <li><a href="#build">Python SDK</a></li>
+          <li><a href="#build">CLI reference</a></li>
+          <li><a href="#build">Status</a></li>
+          <li><a href="#build">Changelog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Company</h3>
+        <ul>
+          <li><a href="#top">About</a></li>
+          <li><a href="#top">Careers</a></li>
+          <li><a href="#top">Engineering blog</a></li>
+          <li><a href="#news">SQ Weekly</a></li>
+          <li><a href="#top">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="#top">Terms of use</a></li>
+          <li><a href="#top">Privacy policy</a></li>
+          <li><a href="#top">Security</a></li>
+          <li><a href="#top">Disclosures</a></li>
+          <li><a href="#top">Accessibility</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="ftr__mark">
+      <img src="{{WORDMARK_URI}}" alt="SquaredQ" width="1000" height="225">
+    </div>
+    <div class="ftr__legal">
+      <p>© 2026 SquaredQ Technologies Inc. All rights reserved. SquaredQ provides software for systematic trading. Nothing on this page is investment advice, an offer, or a solicitation, and no result shown here is a prediction of future performance.</p>
+      <p><a href="#top">Terms</a> · <a href="#top">Privacy</a> · <a href="#top">Disclosures</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  /* ---- header solidifies once you leave the hero ---- */
+  var hdr = document.getElementById("hdr");
+  var onScroll = function () { hdr.dataset.stuck = window.scrollY > 24 ? "true" : "false"; };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  /* ---- mobile drawer ---- */
+  var drawer = document.getElementById("drawer");
+  var burger = document.getElementById("burger");
+  var lastFocus = null;
+  function setDrawer(open) {
+    drawer.dataset.open = String(open);
+    drawer.setAttribute("aria-hidden", String(!open));
+    burger.setAttribute("aria-expanded", String(open));
+    document.body.style.overflow = open ? "hidden" : "";
+    if (open) { lastFocus = document.activeElement; drawer.querySelector("a").focus(); }
+    else if (lastFocus) { lastFocus.focus(); }
+  }
+  burger.addEventListener("click", function () { setDrawer(drawer.dataset.open !== "true"); });
+  document.getElementById("drawerClose").addEventListener("click", function () { setDrawer(false); });
+  drawer.querySelectorAll("a").forEach(function (a) {
+    a.addEventListener("click", function () { setDrawer(false); });
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && drawer.dataset.open === "true") setDrawer(false);
+  });
+
+  /* ---- background video play/pause ---- */
+  var PLAY = '<svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M5.5 3.6a1 1 0 0 1 1.53-.85l9 5.9a1 1 0 0 1 0 1.7l-9 5.9A1 1 0 0 1 5.5 15.4z"/></svg>';
+  var PAUSE = '<svg viewBox="0 0 20 20" aria-hidden="true"><rect width="2.4" height="14" x="5.4" y="3" rx="1.2" fill="currentColor"/><rect width="2.4" height="14" x="12.2" y="3" rx="1.2" fill="currentColor"/></svg>';
+  document.querySelectorAll("[data-vctl]").forEach(function (btn) {
+    var video = btn.closest(".bed").querySelector("video");
+    var sync = function () {
+      var paused = video.paused;
+      btn.innerHTML = paused ? PLAY : PAUSE;
+      btn.setAttribute("aria-label", (paused ? "Play" : "Pause") + " background video");
+    };
+    btn.addEventListener("click", function () { video.paused ? video.play() : video.pause(); });
+    video.addEventListener("play", sync);
+    video.addEventListener("pause", sync);
+    sync();
+    if (reduced.matches) video.pause();
+
+    /* A control for a clip that never arrives is a dead control. Reveal it only
+       once there are frames to pause — otherwise the section runs on its CSS
+       atmosphere bed alone and needs no control at all. */
+    btn.hidden = true;
+    var show = function () { btn.hidden = false; };
+    if (video.readyState >= 2) show(); else video.addEventListener("loadeddata", show, { once: true });
+  });
+
+  /* ---- load the off-screen videos only when they are nearly in view ---- */
+  if ("IntersectionObserver" in window) {
+    var lazy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var v = entry.target;
+        if (v.preload === "none") { v.preload = "auto"; v.load(); if (!reduced.matches) v.play().catch(function () {}); }
+        lazy.unobserve(v);
+      });
+    }, { rootMargin: "300px 0px" });
+    document.querySelectorAll('video[preload="none"]').forEach(function (v) { lazy.observe(v); });
+
+    /* ---- scroll reveal ---- */
+    var reveal = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in");
+        reveal.unobserve(entry.target);
+      });
+    }, { rootMargin: "0px 0px -12% 0px" });
+    document.querySelectorAll("[data-reveal]").forEach(function (el, i) {
+      el.style.transitionDelay = Math.min(i % 5, 3) * 70 + "ms";
+      reveal.observe(el);
+    });
+  } else {
+    document.querySelectorAll("[data-reveal]").forEach(function (el) { el.classList.add("is-in"); });
+    document.querySelectorAll('video[preload="none"]').forEach(function (v) { v.preload = "auto"; v.load(); });
+  }
+
+  /* ---- code tabs ---- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  function selectTab(tab) {
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute("aria-selected", String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+    });
+  }
+  tabs.forEach(function (tab, i) {
+    tab.addEventListener("click", function () { selectTab(tab); });
+    tab.addEventListener("keydown", function (e) {
+      var d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (!d) return;
+      e.preventDefault();
+      var next = tabs[(i + d + tabs.length) % tabs.length];
+      next.focus(); selectTab(next);
+    });
+  });
+
+  /* ---- newsletter: validates locally, no backend wired up yet ---- */
+  var form = document.getElementById("newsForm");
+  var msg = document.getElementById("newsMsg");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = document.getElementById("newsEmail");
+    if (!email.value || !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email.value)) {
+      msg.textContent = "That does not look like an email address — check it and try again.";
+      email.focus();
+      return;
+    }
+    msg.textContent = "Thanks — " + email.value + " is on the list. (Demo only: no address is stored or sent.)";
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

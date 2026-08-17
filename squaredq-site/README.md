@@ -1,78 +1,131 @@
 # SquaredQ — marketing site
 
-A single-file, self-contained landing page. `index.html` (~2.2 MB) carries every
-asset it needs — fonts, images, video poster frames, and the full stylesheet are
-all inlined — so it makes **zero network requests** and can be dropped on any
-static host.
-
-## Deploy
-
-Serve the directory, or the file on its own:
+Single-page marketing site for SquaredQ, an algorithmic trading software company.
+Built from scratch: own layout, own copy, own brand assets, own generated media.
 
 ```bash
-python3 -m http.server -d squaredq-site 8000   # local preview
+python3 tools/build_site.py            # -> index.html
+python3 -m http.server -d . 8000       # local preview
 ```
 
-Any static host works — S3 + CloudFront, Netlify, Vercel, GitHub Pages, Cloudflare
-Pages, nginx. There is no build step and no runtime.
+`index.html` is the whole deliverable. Fonts, brand marks and icons are inlined,
+there is no framework, no build toolchain at runtime and no third-party script.
+Any static host works.
 
-## Where it came from
+## Layout of the repo
 
-The page was built by reskinning a saved capture of an existing financial-services
-homepage that the team supplied as the design reference. `tools/rebrand.py` is the
-transform that produced `index.html`, so the work is reproducible and auditable:
-drop the source capture in as `src.html`, run `make_brand_assets.py` then
-`rebrand.py`, and you get the same output.
+```
+src/index.template.html   markup, styles and behaviour with {{TOKEN}} slots
+src/*.woff2               the three faces the page uses
+tools/build_site.py       resolves the tokens -> index.html
+tools/encode_media.py     raw clips -> seamless, size-budgeted web loops
+tools/brand/*.svg         wordmark, Q² app mark, SQ Weekly logotype
+media/sources.json        the five generated background clips and their prompts
+media/hero-N.mp4|jpg      encoded loops + posters (absent = see "Background clips")
+index.html                built output
+```
 
-What the transform does:
+## Design
+
+Same DNA as the reference the team picked — editorial spacing, a modern serif
+against a geometric sans, full-bleed media beds alternating with quiet paper
+sections, a giant footer wordmark — pointed at a quant audience rather than a
+consumer one.
 
 | | |
 |---|---|
-| **Identity** | New SquaredQ wordmark in all 7 placements (nav, 5 product eyebrows, footer), new `Q²` app mark as the favicon, new `SQ WEEKLY` newsletter logotype |
-| **Palette** | Warm greys cooled toward the brand ink `#141318`; electric indigo `#3a2fd8` carries primary action; newsletter panel retinted to `#dedbf7` |
-| **Geometry** | Pill buttons squared off to a 10px radius — the one literal nod to the name |
-| **Copy** | Brand names swapped in visible text and accessibility attributes only, never in CSS class names |
-| **Cleanup** | Browser-extension injections, a third-party chat widget, and tracking pixels removed; all 68 outbound links neutered to `#`; remote video sources dropped |
-| **Responsive** | The capture froze the page at desktop width, hiding every mobile-only asset. Those subtrees were unpinned so the stylesheet's own breakpoints work again |
+| **Ink** | `#141318` — text and wordmark |
+| **Paper / bone** | `#f5f3ef` / `#eae7e0` — section grounds |
+| **Accent** | `#3a2fd8` — primary action only, never decoration |
+| **Accent tint** | `#dedbf7` — the SQ Weekly panel |
+| **Type** | `tiempos` for display, `the-future` 400/500 for everything else, system monospace for code |
+| **Geometry** | 10px button radius — the one literal nod to the name |
 
-## Before this goes in front of a public audience
+The page commits to a single light-grounded treatment rather than shipping a
+dark variant: `html` and `body` both paint an explicit background, so it holds
+its own appearance on any host, including a dark-themed one.
 
-Three things are inherited from the reference layout and are **placeholders**, not
-SquaredQ facts:
+## Background clips
 
-1. **Marketing claims.** "Canada's most rewarding chequing account", "the fastest
-   growing financial company in Canada", "Trusted by over 4 million Canadians",
-   "2% cash back", "$0 commissions". Replace with SquaredQ's own substantiated
-   copy. The one footnote that cited named third-party research firms has already
-   been replaced with a visible placeholder rather than re-attributed.
-2. **Product imagery.** The phone screenshots and video poster frames are raster
-   assets from the reference and still show the original app UI. They need
-   SquaredQ renders.
-3. **Fonts.** `the-future` and `tiempos` are commercial faces inlined in the
-   capture. Confirm SquaredQ holds a webfont licence for them, or substitute.
+The five section beds were generated with Higgsfield (`seedance_2_5`, 1080p, 5s,
+silent, 16:9). The art direction is deliberately sculptural — lit CGI objects
+with real depth of field, not the neon-grid trading-terminal cliché:
 
-Every link is currently `#`. Point them at real destinations before launch.
+| # | Section | Subject |
+|---|---|---|
+| 1 | Hero | chrome and smoked-glass cubes settling into a rising staircase curve |
+| 2 | Research | a field of glass rods refracting lavender caustics |
+| 3 | Backtest | frosted-glass strata sliding into alignment |
+| 4 | Execute | a steel sphere running a lattice of rails, trailing light |
+| 5 | Risk | a taut membrane deforming under invisible weights |
 
-## Brand assets
+Prompts and job IDs are in `media/sources.json`.
 
-`tools/brand/` holds the source SVGs:
+### Inlining them
 
-- `squaredq-wordmark.svg` — primary wordmark, 4.44:1
-- `squaredq-mark.svg` — `Q²` app mark, 1:1, used as the favicon
-- `sq-weekly.svg` — newsletter logotype
+`media/hero-N.mp4` is **not committed** — the environment this was built in
+cannot reach the generation CDN (`d8j0ntlcm91z4.cloudfront.net` is not on its
+egress allowlist), so the clips could not be downloaded and encoded here. The
+build handles both states:
 
-All three are single-path, single-fill, and survive a `brightness(0) invert(1)`
-filter intact — which is how the page renders the wordmark white on dark sections.
+- **file present** → inlined as a data URI, page stays fully self-contained
+- **file absent** → `<source>` points at the URL in `media/sources.json`
 
-## Brand tokens
+To finish the job on a machine that can reach the CDN:
 
-Everything the rebrand touches lives in one `<style id="squaredq-brand">` block at
-the end of `index.html`. Tune the palette there; nothing else needs editing.
-
-```css
---sq-ink:          #141318   /* text, wordmark */
---sq-accent:       #3a2fd8   /* primary action only */
---sq-accent-strong:#2a21b0   /* accent hover */
---sq-accent-tint:  #dedbf7   /* newsletter panel */
---sq-paper:        #f5f3ef   /* section ground */
+```bash
+mkdir -p media/raw
+# download each clips[].url from media/sources.json to media/raw/hero-N.mp4
+python3 tools/encode_media.py --all     # loop, downscale, budget, poster
+python3 tools/build_site.py             # -> ~11 MB self-contained index.html
 ```
+
+`encode_media.py` cross-fades each clip's tail back over its head before cutting
+it, so `<video loop>` has no visible seam, then two-passes it to a per-section
+size budget and pulls a JPEG poster.
+
+Build with `--no-remote` for a page that makes no network requests at all, even
+with clips missing.
+
+### Atmosphere beds
+
+Every media section also carries a CSS-only animated bed — three slowly drifting
+radial gradients keyed to that clip's palette — layered beneath the video. It is
+the load-in state before the first frame decodes, and the whole treatment
+anywhere the clip cannot play: offline, on a slow connection, or inside a sandbox
+that blocks external media. Sections are never flat. Both the beds and the
+scroll reveals stand down under `prefers-reduced-motion`.
+
+## Behaviour
+
+Vanilla JS, ~120 lines, no dependencies.
+
+- Header solidifies once you leave the hero
+- Full-screen mobile drawer — focus moves in and back out, Escape closes it
+- Scroll reveals via `IntersectionObserver`, with a `<noscript>` guard so the
+  page is never blank when scripting is off
+- Off-screen clips load only when they are ~300px from the viewport
+- Per-section play/pause, which stays hidden unless the clip actually decoded —
+  no dead controls
+- Code tabs with arrow-key roving focus
+- Newsletter field validates locally and says so; nothing is stored or sent
+
+## Before this faces a public audience
+
+Copy is written for the fictional product; the numbers are **illustrative and
+must be replaced**:
+
+1. **Platform figures** — "12 yrs of tick history", "40+ venues", "1.1 ms median
+   ack", and every backtest figure in the code panel (Sharpe 1.84, -8.2% drawdown,
+   $180M capacity). Substitute measured numbers or drop the strip.
+2. **Capability claims** — colocation, venue coverage, borrow and corporate-action
+   data, the audit trail. Each needs to be true before it ships.
+3. **Fonts** — `the-future` and `tiempos` came from the reference capture the team
+   supplied and are commercial faces. Confirm SquaredQ holds a webfont licence, or
+   substitute before launch. Swapping them is two `@font-face` blocks in
+   `src/index.template.html`.
+4. **Links** — nav and footer are in-page anchors. Point them at real destinations.
+5. **Newsletter** — wire the form to a real list; today it only validates.
+
+The footer already carries a "nothing here is investment advice" line, which a
+trading-software site needs regardless.
