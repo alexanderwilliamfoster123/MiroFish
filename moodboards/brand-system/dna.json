@@ -1,0 +1,22 @@
+{
+  "board": "brand-system",
+  "version": 0,
+  "_status": "INCOMPLETE - visual DNA pending. The egress policy for this session blocks d2ol7oe51mr4n9.cloudfront.net, so the images could not be mirrored locally for measurement or reading. Element registration and generation are unaffected (Higgsfield resolves media ids server-side). Re-attach the images in chat to complete palette/lighting/texture/grade/composition/subject_world, then set version to 1.",
+  "model": "nano_banana_2",
+  "element_id": "f97aaeef-70f2-4d26-bfd0-59f00b186912",
+  "reference_media_ids": [
+    "12ab3ec2-fc6e-48bb-b615-bb890095c472",
+    "2622f155-8c6a-468d-9de1-9298ac17297a",
+    "2a7a9e06-3e53-48ea-b48f-c19a51030f77",
+    "d876035d-508f-4c8a-a807-a8427d14ec33",
+    "20aee709-311f-4689-9c7a-84e159b20c5c",
+    "c665850f-d1da-4781-9c3a-cee5cff86bd5",
+    "a3ef2adc-8a96-4784-8cea-8a98ba6c442f",
+    "d39ad310-724b-4548-8517-2f5050a69e69",
+    "2433d2c2-3cf7-492f-a7d2-ea333a8df916"
+  ],
+  "palette": { "dominant": [], "accent": [], "neutral": [] },
+  "lighting": "", "texture": "", "grade": "", "composition": "", "subject_world": "",
+  "mood": [],
+  "anti_dna": ["no visible text, logos or watermarks"]
+}
