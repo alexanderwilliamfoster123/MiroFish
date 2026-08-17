@@ -43,7 +43,11 @@ htmlcov/
 
 # Cursor
 .cursor/
-.claude/
+
+# 本地 Claude 配置不入库，但共享的 skills 需要提交
+# Local Claude config stays out of git; shared skills are committed
+.claude/*
+!.claude/skills/
 
 # 文档与测试程序
 mydoc/
@@ -58,3 +62,5 @@ backend/uploads/
 
 # Docker 数据
 data/
+# Moodboard generated assets (reproducible from runs/<id>/plan.json)
+moodboards/*/runs/*/assets/
