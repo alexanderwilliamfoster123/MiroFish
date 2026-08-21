@@ -1,6 +1,7 @@
 import Keyboard from "@/components/ui/magic-keyboard-component";
 import { Mac } from "@/components/ui/mac";
 import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
+import { subscribeVisitor } from "@/lib/subscribe";
 import { LETTERS } from "@/lib/letters";
 import {
   Apple,
@@ -191,6 +192,7 @@ export function World() {
         return;
       }
       setEmail(trimmed);
+      subscribeVisitor(name ?? "", trimmed);
       const stamp = new Date();
       setReceipt({ date: stamp, ticketId: String(stamp.getTime()).slice(-10) });
     }
