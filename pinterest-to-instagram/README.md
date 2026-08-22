@@ -144,6 +144,72 @@ Roughly, at current list prices, for a 1,000-pin archive:
 
 Steady state, once the archive is tagged, is a handful of calls a day.
 
+## Bulk-downloading Instagram content
+
+Three different answers depending on whose account it is. Only the first two are
+things this repo can do for you.
+
+### Your own account, programmatically
+
+```bash
+python cli.py download --dest out/ig-archive        # everything
+python cli.py download --limit 50                   # newest 50 posts
+```
+
+Uses the `IG_USER_ID` / `IG_ACCESS_TOKEN` you already set for publishing. Writes
+originals foldered by month, expands carousels into one file per slide, and
+appends a `manifest.jsonl` carrying caption, permalink, timestamp, `like_count`
+and `comments_count` for every post. It is resumable — re-running skips files
+already on disk, so an interrupted run picks up where it stopped.
+
+Limits that are Meta's, not this tool's:
+
+- **10,000 most recent media, and no Stories.** For an older or larger account,
+  use the account export below to get the tail.
+- **200 API calls per hour, per Instagram account.** At 100 posts per page that
+  is 10,000 posts an hour, so pagination is rarely the bottleneck. Downloading
+  the media bytes hits the CDN, not the Graph API, and does not count.
+- **`media_url` is a short-lived signed CDN URL, not a permalink.** It expires.
+  This is why the downloader fetches bytes in the same pass as the listing —
+  storing URLs to fetch later gives you a folder of 403s. If you want a durable
+  link, keep `permalink`.
+
+### Your own account, complete, no code
+
+Instagram → Settings → Accounts Center → Your information and permissions →
+**Download your information**. Choose JSON or HTML, high quality, all date
+ranges. This is the only route that gives you *everything*: Stories, archived
+posts, Reels, comments, DMs, follower history, original upload quality. It takes
+hours to days to be prepared and arrives as a zip. Use this for the one-time
+full backup and the API for the ongoing incremental one.
+
+### Someone else's account
+
+```bash
+python cli.py discover someaccount
+```
+
+`business_discovery` is the only sanctioned route, and it is narrow: it works
+only for **Business and Creator** accounts, returns public fields for recent
+media, and gives no insights, no follower lists, no Stories. Personal accounts
+return nothing at all — the Basic Display API that used to allow personal-account
+reads was switched off on 4 December 2024, and nothing replaced it.
+
+Scraper libraries and paid scraping APIs do exist and will pull down a personal
+account. They work by impersonating a logged-in client, which breaks Instagram's
+terms, tends to get the account or IP blocked, and puts you on the wrong side of
+the copyright question the moment you republish what you pulled. Worth knowing
+they exist; not something to build a daily pipeline on. If the goal is reference
+material for theme pages, Pinterest is the better source anyway — that is what
+the rest of this repo does, and saving to a board is a sanctioned action.
+
+### Feeding your own back catalogue into the theming pipeline
+
+The manifest carries `like_count` and `comments_count` per post, so a downloaded
+archive is also a record of what worked. Point the tagger at the downloaded
+files and your own best posts join the Pinterest pool as reference material,
+with performance data attached.
+
 ## Files
 
 ```
@@ -151,7 +217,8 @@ cli.py                    entry point
 smoke_test.py             offline check of the render path and store
 config/brand.yaml         voice, hashtags, themes, slide design
 config/template.html      the slide layout
-p2i/pinterest.py          API v5 reader
+p2i/pinterest.py          Pinterest API v5 reader
+p2i/ig_archive.py         bulk-download your own IG media, business discovery
 p2i/vision.py             per-pin cataloguing
 p2i/themes.py             grouping into theme pages
 p2i/brief.py              cover, order, caption, hashtags, audio brief
