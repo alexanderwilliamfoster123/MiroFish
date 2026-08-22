@@ -183,25 +183,51 @@ posts, Reels, comments, DMs, follower history, original upload quality. It takes
 hours to days to be prepared and arrives as a zip. Use this for the one-time
 full backup and the API for the ongoing incremental one.
 
-### Someone else's account
+### Someone else's content
+
+There is no route that mirrors another account. Nothing replaced the Basic
+Display API when it was switched off on 4 December 2024, and the endpoints that
+remain are discovery tools with hard caps, not backfills.
 
 ```bash
-python cli.py discover someaccount
+python cli.py discover someaccount --save out/reference/someaccount
+python cli.py hashtag terracotta --kind top --limit 50 --save out/reference/terracotta
+python cli.py oembed https://www.instagram.com/p/XXXXXXXXX/
 ```
 
-`business_discovery` is the only sanctioned route, and it is narrow: it works
-only for **Business and Creator** accounts, returns public fields for recent
-media, and gives no insights, no follower lists, no Stories. Personal accounts
-return nothing at all — the Basic Display API that used to allow personal-account
-reads was switched off on 4 December 2024, and nothing replaced it.
+| Route | Gives you | Costs you |
+|---|---|---|
+| `discover` (business_discovery) | Recent public media for one **Business or Creator** account. Personal accounts return nothing. | Counts against 200 calls/hour |
+| `hashtag` | Public media carrying a tag. `top` is ranked by engagement, `recent` covers the **last 24 hours only**. 50 per request. | **30 unique hashtags per rolling 7 days, per account** |
+| `oembed` | One public post by URL — embed HTML, author, thumbnail. **No token or App Review since 15 June 2026.** | Effectively free |
 
-Scraper libraries and paid scraping APIs do exist and will pull down a personal
-account. They work by impersonating a logged-in client, which breaks Instagram's
-terms, tends to get the account or IP blocked, and puts you on the wrong side of
-the copyright question the moment you republish what you pulled. Worth knowing
-they exist; not something to build a daily pipeline on. If the goal is reference
-material for theme pages, Pinterest is the better source anyway — that is what
-the rest of this repo does, and saving to a board is a sanctioned action.
+The 30-tags-per-week ceiling is the binding constraint, and it is per unique tag
+rather than per call, so hashtag IDs are cached to `out/hashtag_ids.json` on
+first lookup. Re-querying a cached tag costs nothing against that budget. Pick
+your tags deliberately; you get about four new ones a day.
+
+`--save` downloads the result set and writes an `attribution.jsonl` next to it
+carrying `@username`, permalink, caption and engagement counts for every file.
+That is not decoration. Content pulled this way belongs to whoever posted it —
+collecting it as private reference is one thing, and republishing it on a page
+you run is a copyright question with a real answer, so it is worth having the
+credit line and, for anything past fair-use reference, the poster's permission.
+Building attribution into the data model from the first commit is much easier
+than reconstructing it across a thousand files later.
+
+**On scrapers.** Libraries like instaloader and gallery-dl, and paid scraping
+APIs, will pull down a personal account in full. They work by impersonating a
+logged-in client. In practice that means the account or IP gets blocked, the
+tool breaks whenever Instagram changes its internals, and the copyright exposure
+is sharper because there is no public-API fig leaf. Fine to know they exist;
+a poor foundation for something that has to run every morning.
+
+**If the goal is a reference archive, Pinterest is the better source.** Saving
+to a board is a sanctioned action, the API gives you clean access to what you
+saved, and most of the aesthetic content on Instagram ends up there anyway. That
+is what the rest of this repo runs on. The realistic pattern is: use `hashtag`
+and `discover` to *find* accounts and work worth following, then curate what you
+find onto a Pinterest board, and let the existing pipeline take it from there.
 
 ### Feeding your own back catalogue into the theming pipeline
 
@@ -218,7 +244,8 @@ smoke_test.py             offline check of the render path and store
 config/brand.yaml         voice, hashtags, themes, slide design
 config/template.html      the slide layout
 p2i/pinterest.py          Pinterest API v5 reader
-p2i/ig_archive.py         bulk-download your own IG media, business discovery
+p2i/ig_archive.py         bulk-download your own IG media
+p2i/ig_discover.py        other accounts: business discovery, hashtags, oEmbed
 p2i/vision.py             per-pin cataloguing
 p2i/themes.py             grouping into theme pages
 p2i/brief.py              cover, order, caption, hashtags, audio brief

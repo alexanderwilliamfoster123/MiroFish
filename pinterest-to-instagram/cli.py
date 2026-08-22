@@ -15,6 +15,8 @@ Archiving Instagram:
 
     python cli.py download         bulk-download your own account's media
     python cli.py discover NAME    public media for another business/creator account
+    python cli.py hashtag TAG      public media carrying a hashtag
+    python cli.py oembed URL       one public post by URL (no token needed)
 """
 
 from __future__ import annotations
@@ -26,6 +28,7 @@ import sys
 
 from p2i.config import Settings
 from p2i.ig_archive import InstagramArchive
+from p2i.ig_discover import Discover
 from p2i.pipeline import Pipeline
 
 
@@ -51,10 +54,20 @@ def main() -> int:
 
     p_disc = sub.add_parser("discover", help="public media for another business/creator account")
     p_disc.add_argument("username")
+    p_disc.add_argument("--save", metavar="DIR", help="download the results with attribution")
+
+    p_hash = sub.add_parser("hashtag", help="public media carrying a hashtag")
+    p_hash.add_argument("tag")
+    p_hash.add_argument("--kind", choices=["top", "recent"], default="top")
+    p_hash.add_argument("--limit", type=int, default=50)
+    p_hash.add_argument("--save", metavar="DIR", help="download the results with attribution")
+
+    p_oe = sub.add_parser("oembed", help="one public post by URL")
+    p_oe.add_argument("url")
 
     args = parser.parse_args()
 
-    if args.command in {"download", "discover"}:
+    if args.command in {"download", "discover", "hashtag", "oembed"}:
         return _instagram(args)
 
     pipeline = Pipeline()
@@ -84,22 +97,52 @@ def main() -> int:
 
 def _instagram(args: argparse.Namespace) -> int:
     settings = Settings()
-    with InstagramArchive(settings) as archive:
-        if args.command == "discover":
-            data = archive.business_discovery(args.username.lstrip("@"))
-            print(json.dumps(data, indent=2, ensure_ascii=False))
+
+    if args.command == "download":
+        with InstagramArchive(settings) as archive:
+            dest = pathlib.Path(args.dest)
+            print(f"downloading to {dest.resolve()}")
+            stats = archive.download_all(
+                dest, max_items=args.limit, skip_existing=not args.redownload
+            )
+            print(
+                f"\n{stats['posts']} posts | {stats['files']} files downloaded | "
+                f"{stats['skipped']} already present | {stats['failed']} failed"
+            )
+            print(f"metadata: {dest / 'manifest.jsonl'}")
+            return 1 if stats["failed"] else 0
+
+    with Discover(settings) as discover:
+        if args.command == "oembed":
+            print(json.dumps(discover.oembed(args.url), indent=2, ensure_ascii=False))
             return 0
 
-        dest = pathlib.Path(args.dest)
-        print(f"downloading to {dest.resolve()}")
-        stats = archive.download_all(
-            dest, max_items=args.limit, skip_existing=not args.redownload
-        )
+        if args.command == "discover":
+            data = discover.account(args.username.lstrip("@"))
+            items = (data.get("media") or {}).get("data", [])
+            print(
+                f"@{data.get('username', args.username)} | "
+                f"{data.get('followers_count', '?')} followers | "
+                f"{data.get('media_count', '?')} posts | {len(items)} returned"
+            )
+        else:
+            items = discover.hashtag_media(args.tag, kind=args.kind, limit=args.limit)
+            print(f"#{args.tag.lstrip('#')} ({args.kind}) | {len(items)} returned")
+            if args.kind == "recent" and not items:
+                print("  recent_media only covers the last 24 hours — try --kind top")
+
+        if not args.save:
+            print(json.dumps(items, indent=2, ensure_ascii=False))
+            return 0
+
+        dest = pathlib.Path(args.save)
+        stats = discover.save_reference(items, dest)
         print(
-            f"\n{stats['posts']} posts | {stats['files']} files downloaded | "
-            f"{stats['skipped']} already present | {stats['failed']} failed"
+            f"\n{stats['saved']} saved | {stats['skipped']} skipped (no media URL or "
+            f"already present) | {stats['failed']} failed"
         )
-        print(f"metadata: {dest / 'manifest.jsonl'}")
+        print(f"credits: {dest / 'attribution.jsonl'}")
+        print("These files belong to the people who posted them — keep the credit line.")
         return 1 if stats["failed"] else 0
 
 
