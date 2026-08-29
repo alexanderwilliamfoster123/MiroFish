@@ -4,6 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Paktos — Live Tournaments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
 <style>
 /* ==================================================================
    Paktos live dashboard — standalone HTML build.
@@ -13,18 +17,18 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  --bg: #eef1f6;
-  --surface: #f4f6fa;
-  --surface-raised: #f8fafd;
-  --card: #fbfcfe;
-  --text: #17181c;
-  --text-soft: #5f6672;
-  --text-faint: #9aa1ad;
-  --line: rgba(23, 24, 28, 0.06);
-  --shadow-dark: #d3d9e3;
+  --bg: #efeef1;
+  --surface: #f2f1f3;
+  --surface-raised: #f7f6f8;
+  --card: #fcfcfd;
+  --text: #18181b;
+  --text-soft: #494851;
+  --text-faint: #94939f;
+  --line: rgba(24, 24, 27, 0.07);
+  --shadow-dark: #d9d7dd;
   --shadow-light: #ffffff;
-  --accent-a: #7c3aed;
-  --accent-b: #d946ef;
+  --accent-a: #6A2E9E;
+  --accent-b: #D95DDF;
   --green: #16a34a;
   --neu-out: -8px -8px 18px var(--shadow-light), 8px 8px 18px var(--shadow-dark);
   --neu-out-sm: -4px -4px 10px var(--shadow-light), 4px 4px 10px var(--shadow-dark);
@@ -36,23 +40,23 @@ body {
   zoom: 0.85;
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Inter, Roboto, sans-serif;
+  font-family: 'Satoshi', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Inter, Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   letter-spacing: -0.01em;
   transition: background 0.4s ease, color 0.4s ease;
 }
 
 body.dark {
-  --bg: #16181d;
-  --surface: #1b1e24;
-  --surface-raised: #20242b;
-  --card: #1e2228;
-  --text: #eef0f4;
-  --text-soft: #a4abb8;
-  --text-faint: #6b7280;
-  --line: rgba(255, 255, 255, 0.06);
-  --shadow-dark: #0d0e12;
-  --shadow-light: #23272f;
+  --bg: #18181b;
+  --surface: #1d1d21;
+  --surface-raised: #232327;
+  --card: #202024;
+  --text: #f2f1f3;
+  --text-soft: #c9c9cf;
+  --text-faint: #94939f;
+  --line: rgba(255, 255, 255, 0.07);
+  --shadow-dark: #0e0e10;
+  --shadow-light: #26262b;
 }
 
 button { font-family: inherit; }
@@ -90,10 +94,10 @@ button { font-family: inherit; }
 
 .brand { display: flex; align-items: center; gap: 10px; }
 
-.brand-mark { width: 28px; height: 22px; color: var(--text); display: inline-flex; }
+.brand-mark { width: 24px; height: 24px; color: var(--text); display: inline-flex; }
 .brand-mark svg { width: 100%; height: 100%; }
 
-.brand-name { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+.brand-name { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif; }
 
 .nav { display: flex; flex-direction: column; gap: 10px; }
 
@@ -141,7 +145,7 @@ button { font-family: inherit; }
 .nav-item.active .nav-icon {
   background: linear-gradient(135deg, #f7a8d8, var(--accent-a));
   color: #fff;
-  box-shadow: 0 6px 14px rgba(124, 58, 237, 0.35);
+  box-shadow: 0 6px 14px rgba(106, 46, 158, 0.35);
 }
 
 .sidebar-bottom { margin-top: auto; }
@@ -397,8 +401,8 @@ button { font-family: inherit; }
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(52% 90% at 12% 0%, rgba(217, 70, 239, 0.07), transparent 60%),
-    radial-gradient(45% 80% at 88% 100%, rgba(124, 58, 237, 0.06), transparent 60%);
+    radial-gradient(52% 90% at 12% 0%, rgba(217, 93, 223, 0.07), transparent 60%),
+    radial-gradient(45% 80% at 88% 100%, rgba(106, 46, 158, 0.06), transparent 60%);
   pointer-events: none;
 }
 
@@ -432,7 +436,7 @@ button { font-family: inherit; }
 
 .pulse-dot.purple {
   background: var(--accent-a);
-  box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.45);
+  box-shadow: 0 0 0 0 rgba(106, 46, 158, 0.45);
   animation-name: pulse-purple;
 }
 
@@ -447,9 +451,9 @@ button { font-family: inherit; }
 }
 
 @keyframes pulse-purple {
-  0% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); }
-  70% { box-shadow: 0 0 0 7px rgba(124, 58, 237, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(106, 46, 158, 0.4); }
+  70% { box-shadow: 0 0 0 7px rgba(106, 46, 158, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(106, 46, 158, 0); }
 }
 
 .hero-title {
@@ -799,7 +803,7 @@ button { font-family: inherit; }
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #f9a8d4 0%, #c084fc 55%, #a855f7 100%);
+  background: linear-gradient(135deg, #f9a8d4 0%, #c084fc 55%, #9081DF 100%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -991,11 +995,11 @@ button { font-family: inherit; }
 
 .coin-square {
   border-radius: 26px;
-  background: linear-gradient(140deg, #f472b6 0%, #c026d3 48%, #7c3aed 100%);
+  background: linear-gradient(140deg, #f472b6 0%, #c026d3 48%, #6A2E9E 100%);
   box-shadow:
     inset 0 -6px 14px rgba(76, 15, 130, 0.55),
     inset 0 6px 10px rgba(255, 255, 255, 0.45),
-    0 22px 34px rgba(124, 58, 237, 0.4);
+    0 22px 34px rgba(106, 46, 158, 0.4);
   color: rgba(255, 255, 255, 0.92);
 }
 
@@ -1005,7 +1009,7 @@ button { font-family: inherit; }
   box-shadow:
     inset 0 -6px 14px rgba(76, 15, 130, 0.55),
     inset 0 6px 10px rgba(255, 255, 255, 0.45),
-    0 22px 34px rgba(124, 58, 237, 0.4);
+    0 22px 34px rgba(106, 46, 158, 0.4);
   color: rgba(255, 255, 255, 0.92);
 }
 
@@ -1289,7 +1293,7 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
 .idea-top { display: flex; align-items: center; gap: 9px; }
 .idea-cat {
   font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--accent-a); background: rgba(124, 58, 237, 0.09);
+  color: var(--accent-a); background: rgba(106, 46, 158, 0.09);
   padding: 4px 9px; border-radius: 999px;
 }
 .idea-age { font-size: 11px; color: var(--text-faint); margin-left: auto; font-variant-numeric: tabular-nums; }
@@ -1426,7 +1430,7 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
   position: absolute;
   inset: -2px;
   border-radius: 30px;
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.45), rgba(217, 70, 239, 0.2) 45%, rgba(245, 158, 11, 0.35));
+  background: linear-gradient(135deg, rgba(106, 46, 158, 0.45), rgba(217, 93, 223, 0.2) 45%, rgba(245, 158, 11, 0.35));
   filter: blur(16px);
   opacity: 0.3;
   animation: glowShift 6s ease-in-out infinite alternate;
@@ -1466,7 +1470,7 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
   gap: 14px;
   padding: 14px 18px;
   border-radius: 16px;
-  background: linear-gradient(150deg, rgba(245, 158, 11, 0.09), rgba(217, 70, 239, 0.05));
+  background: linear-gradient(150deg, rgba(245, 158, 11, 0.09), rgba(217, 93, 223, 0.05));
   border: 1px solid rgba(245, 158, 11, 0.18);
 }
 .sc-rank svg { color: #b45309; opacity: 0.25; flex: 0 0 auto; }
@@ -1488,7 +1492,7 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
 .shc-foot .sc-rank { margin-top: 0; flex: 1; }
 .shc-ins { padding: 0 18px; font-size: 12.5px; font-weight: 700; border-radius: 16px; white-space: nowrap; }
 .shc-ins .ins-chev { font-size: 10px; opacity: 0.6; margin-left: 4px; }
-.shc-ins.on { color: #7c3aed; }
+.shc-ins.on { color: #6A2E9E; }
 
 /* Post composer — write your own thoughts from your profile */
 
@@ -1644,27 +1648,27 @@ canvas.chart { width: 100%; height: 290px; display: block; border-radius: 12px; 
   position: relative;
   height: 104px;
   background:
-    radial-gradient(75% 160% at 85% 0%, rgba(217, 70, 239, 0.26), transparent 55%),
-    radial-gradient(70% 150% at 12% 20%, rgba(124, 58, 237, 0.20), transparent 60%),
+    radial-gradient(75% 160% at 85% 0%, rgba(217, 93, 223, 0.26), transparent 55%),
+    radial-gradient(70% 150% at 12% 20%, rgba(106, 46, 158, 0.20), transparent 60%),
     radial-gradient(55% 130% at 55% 100%, rgba(56, 189, 248, 0.16), transparent 65%),
     linear-gradient(120deg, #ede9fe, #fdf4ff 55%, #e0f2fe);
 }
 .tpc-cover::before {
   content: '';
   position: absolute; inset: 0;
-  background-image: radial-gradient(rgba(124, 58, 237, 0.16) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(106, 46, 158, 0.16) 1px, transparent 1px);
   background-size: 13px 13px;
   -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, .65), transparent 85%);
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, .65), transparent 85%);
 }
 body.dark .tpc-cover {
   background:
-    radial-gradient(75% 160% at 85% 0%, rgba(217, 70, 239, 0.30), transparent 55%),
-    radial-gradient(70% 150% at 12% 20%, rgba(139, 92, 246, 0.26), transparent 60%),
+    radial-gradient(75% 160% at 85% 0%, rgba(217, 93, 223, 0.30), transparent 55%),
+    radial-gradient(70% 150% at 12% 20%, rgba(144, 129, 223, 0.26), transparent 60%),
     radial-gradient(55% 130% at 55% 100%, rgba(56, 189, 248, 0.18), transparent 65%),
     linear-gradient(120deg, #2a2352, #3a2360 55%, #1c3355);
 }
-body.dark .tpc-cover::before { background-image: radial-gradient(rgba(196, 181, 253, 0.18) 1px, transparent 1px); }
+body.dark .tpc-cover::before { background-image: radial-gradient(rgba(211, 194, 240, 0.18) 1px, transparent 1px); }
 .view[data-view="trader"] .xfeed { max-width: 900px; margin: 0; }
 .view[data-view="trader"] .composer { max-width: 900px; }
 .tpc-cover .past-chip { top: 12px; }
@@ -1694,7 +1698,7 @@ body.dark .tpc-cover::before { background-image: radial-gradient(rgba(196, 181, 
 }
 .tp-level-ic {
   width: 40px; height: 40px; border-radius: 12px; flex: 0 0 auto;
-  background: linear-gradient(145deg, #38bdf8, #2563eb);
+  background: linear-gradient(145deg, #9081DF, #6A2E9E);
   color: #fff; display: flex; align-items: center; justify-content: center; font-size: 17px;
   box-shadow: 0 6px 14px rgba(37, 99, 235, 0.3);
 }
@@ -1702,7 +1706,7 @@ body.dark .tpc-cover::before { background-image: radial-gradient(rgba(196, 181, 
 .tp-level-name { display: flex; align-items: center; justify-content: space-between; font-size: 14px; font-weight: 700; }
 .tp-level-lv { font-size: 10px; font-weight: 700; color: var(--text-faint); background: var(--card); padding: 3px 9px; border-radius: 999px; }
 .tp-level-bar { height: 8px; border-radius: 4px; background: var(--card); overflow: hidden; margin: 8px 0 6px; }
-.tp-level-bar span { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, #38bdf8, #2563eb); }
+.tp-level-bar span { display: block; height: 100%; border-radius: 4px; background: var(--brandGrad); }
 .tp-level-sub { font-size: 10.5px; color: var(--text-faint); }
 
 .tp-strip { display: flex; gap: 30px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); flex-wrap: wrap; }
@@ -1846,7 +1850,7 @@ body.side-collapsed .brand { display: none; }
 .np-row.unread { background: var(--surface); box-shadow: var(--neu-in-sm); margin-bottom: 4px; }
 .np-ic {
   width: 30px; height: 30px; border-radius: 10px; flex: 0 0 auto;
-  background: linear-gradient(135deg, #f9a8d4, #a855f7); color: #fff;
+  background: linear-gradient(135deg, #f9a8d4, #9081DF); color: #fff;
   display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
 }
 .np-t { font-size: 12.5px; font-weight: 700; }
@@ -1932,7 +1936,7 @@ body.side-collapsed .brand { display: none; }
 .b-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .mine-tag {
   font-size: 9px; font-weight: 800; letter-spacing: 0.1em;
-  color: var(--accent-a); background: rgba(124, 58, 237, 0.1);
+  color: var(--accent-a); background: rgba(106, 46, 158, 0.1);
   padding: 3px 8px; border-radius: 999px;
 }
 .blive {
@@ -2434,14 +2438,14 @@ body.dark .pkp-card { box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5); }
   font-family: 'SF Mono', ui-monospace, Menlo, monospace;
   font-size: 9.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
   padding: 7px 14px; border-radius: 999px;
-  box-shadow: 0 6px 14px rgba(124, 58, 237, 0.3);
+  box-shadow: 0 6px 14px rgba(106, 46, 158, 0.3);
 }
 .ai-brief-box {
   position: relative;
   border-radius: 15px;
   padding: 14px 17px 14px 20px;
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.06), rgba(217, 70, 239, 0.03));
-  border: 1px solid rgba(124, 58, 237, 0.14);
+  background: linear-gradient(135deg, rgba(106, 46, 158, 0.06), rgba(217, 93, 223, 0.03));
+  border: 1px solid rgba(106, 46, 158, 0.14);
   overflow: hidden;
 }
 .ai-brief-box::before {
@@ -2706,10 +2710,10 @@ body.dark .pkp-card { box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5); }
   padding: 15px 26px; border: none; border-radius: 14px; cursor: pointer;
   background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
   color: #fff; font-size: 14px; font-weight: 600; letter-spacing: -.01em;
-  box-shadow: 0 10px 22px rgba(124, 58, 237, .32);
+  box-shadow: 0 10px 22px rgba(106, 46, 158, .32);
   transition: transform .2s ease, box-shadow .2s ease;
 }
-.btn-invite:hover { transform: translateY(-1px); box-shadow: 0 13px 26px rgba(124, 58, 237, .4); }
+.btn-invite:hover { transform: translateY(-1px); box-shadow: 0 13px 26px rgba(106, 46, 158, .4); }
 .hero-foot { display: flex; align-items: center; gap: 9px; margin-top: 18px; font-size: 10.5px; letter-spacing: .1em; color: var(--text-faint); }
 .hero-foot .hf-close { margin-left: auto; }
 .hero-foot .hf-close b { color: #e5484d; font-weight: 700; font-variant-numeric: tabular-nums; }
@@ -3010,7 +3014,7 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .auth-veil[hidden] { display: none; }
 .auth-card { position: relative; width: 384px; max-width: 100%; background: var(--card); border-radius: 28px; box-shadow: var(--neu-out), 0 30px 70px rgba(20, 20, 45, 0.14); padding: 34px 30px 28px; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
 .auth-card::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--brandGrad); }
-.auth-logo { width: 56px; height: 56px; border-radius: 18px; background: var(--surface); box-shadow: var(--neu-in-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; color: var(--text); }
+.auth-logo { width: 56px; height: 56px; border-radius: 18px; background: var(--surface); box-shadow: var(--neu-in-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; color: var(--text); padding: 14px; }
 .auth-logo svg { width: 30px; height: 24px; }
 .auth-h { font-size: 21px; font-weight: 800; letter-spacing: -0.01em; }
 .auth-s { font-size: 12.5px; color: var(--text-faint); text-align: center; margin: 7px 0 20px; line-height: 1.55; }
@@ -3381,7 +3385,7 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
 .pt-title { font-size: 26px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 8px; }
 .pt-desc { font-size: 13px; color: var(--text-soft); line-height: 1.6; max-width: 560px; }
 .pt-desc b { color: var(--text); }
-.pt-rate { border-radius: 20px; background: linear-gradient(160deg, rgba(124, 58, 237, .1), rgba(217, 70, 239, .07)); box-shadow: var(--neu-in-sm); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; padding: 20px; }
+.pt-rate { border-radius: 20px; background: linear-gradient(160deg, rgba(106, 46, 158, .1), rgba(217, 93, 223, .07)); box-shadow: var(--neu-in-sm); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; padding: 20px; }
 .pt-rate b { font-size: 44px; font-weight: 800; letter-spacing: -.03em; background: linear-gradient(135deg, var(--accent-a), var(--accent-b)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .pt-rate span { font-size: 11.5px; color: var(--text-soft); }
 .pt-rate .mono { font-size: 8.5px; letter-spacing: .12em; color: var(--text-faint); }
@@ -3409,7 +3413,7 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
 .mach-head { display: flex; align-items: flex-start; gap: 12px; }
 .mach-head .tile-ic { color: #fff; }
 .mach-name { font-size: 15.5px; font-weight: 800; letter-spacing: -.01em; }
-.house-chip { margin-left: 8px; font-size: 8.5px; letter-spacing: .1em; padding: 3px 8px; border-radius: 999px; background: linear-gradient(135deg, rgba(124, 58, 237, .14), rgba(217, 70, 239, .14)); color: var(--accent-a); font-weight: 800; vertical-align: 2px; }
+.house-chip { margin-left: 8px; font-size: 8.5px; letter-spacing: .1em; padding: 3px 8px; border-radius: 999px; background: linear-gradient(135deg, rgba(106, 46, 158, .14), rgba(217, 93, 223, .14)); color: var(--accent-a); font-weight: 800; vertical-align: 2px; }
 .mach-by { display: block; font-size: 11px; color: var(--text-faint); margin-top: 3px; }
 .mach-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .mach-stats > div { background: var(--card); box-shadow: var(--neu-out-sm); border-radius: 13px; padding: 9px 11px; min-width: 0; }
@@ -3579,7 +3583,7 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
 /* ---------------- Challenge card trader brief ---------------- */
 .ch-bio { font-size: 11.5px; color: var(--text-soft); line-height: 1.5; margin: 2px 0 10px; }
 .ch-stats { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 9.5px; letter-spacing: .08em; color: var(--text-faint); margin-bottom: 13px; }
-.tier-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 9px; font-weight: 800; letter-spacing: .06em; padding: 3px 8px; border-radius: 999px; background: linear-gradient(135deg, rgba(124, 58, 237, .14), rgba(217, 70, 239, .14)); color: var(--accent-a); }
+.tier-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 9px; font-weight: 800; letter-spacing: .06em; padding: 3px 8px; border-radius: 999px; background: linear-gradient(135deg, rgba(106, 46, 158, .14), rgba(217, 93, 223, .14)); color: var(--accent-a); }
 
 /* ---------------- Ideas grid — market cards ---------------- */
 .icg-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
@@ -3610,10 +3614,7 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
   <div class="sidebar-top">
     <div class="brand">
       <span class="brand-mark">
-        <svg viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2 3h12l-7 18H2l5-13H2V3z" fill="currentColor" />
-          <path d="M17 3h12l-7 18h-5l5-13h-5V3z" fill="currentColor" />
-        </svg>
+        <svg viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13.7 0.4 L0.9 13.3 C0 14.1 0.6 15.6 1.8 15.6 L25.7 15.6 C26.5 15.6 27.1 16.3 27.1 17 L27.1 40.9 C27.1 42.1 28.6 42.8 29.5 41.9 L42.4 29 C42.6 28.8 42.8 28.4 42.8 28 L42.8 1.4 C42.8 0.6 42.1 0 41.4 0 L14.7 0 C14.3 0 14 0.1 13.7 0.4 Z"/><path d="M58 13.4 L45.1 26.3 C44.3 27.1 44.9 28.6 46.1 28.6 L70 28.6 C70.8 28.6 71.4 29.2 71.4 30 L71.4 53.9 C71.4 55.1 72.9 55.8 73.7 54.9 L86.6 42 C86.9 41.8 87 41.4 87 41 L87 14.4 C87 13.6 86.4 13 85.6 13 L59 13 C58.6 13 58.3 13.1 58 13.4 Z"/><path d="M26.7 44.7 L13.8 57.6 C12.9 58.5 13.5 60 14.8 60 L38.7 60 C39.4 60 40 60.6 40 61.3 L40 85.2 C40 86.5 41.5 87.1 42.4 86.2 L55.3 73.3 C55.5 73.1 55.7 72.7 55.7 72.4 L55.7 45.7 C55.7 44.9 55.1 44.3 54.3 44.3 L27.6 44.3 C27.3 44.3 26.9 44.5 26.7 44.7 Z"/><path d="M71 57.7 L58.1 70.5 C57.2 71.4 57.9 72.9 59.1 72.9 L83 72.9 C83.7 72.9 84.4 73.5 84.4 74.3 L84.4 98.2 C84.4 99.4 85.9 100 86.7 99.1 L99.6 86.3 C99.9 86 100 85.7 100 85.3 L100 58.6 C100 57.9 99.4 57.3 98.6 57.3 L72 57.3 C71.6 57.3 71.2 57.4 71 57.7 Z"/></svg>
       </span>
       <span class="brand-name">Paktos</span>
     </div>
@@ -3730,7 +3731,7 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
 
 <div class="auth-veil" id="authVeil" hidden>
   <div class="auth-card">
-    <div class="auth-logo"><svg viewBox="0 0 32 24" fill="none"><path d="M2 3h12l-7 18H2l5-13H2V3z" fill="currentColor"/><path d="M17 3h12l-7 18h-5l5-13h-5V3z" fill="currentColor"/></svg></div>
+    <div class="auth-logo"><svg viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13.7 0.4 L0.9 13.3 C0 14.1 0.6 15.6 1.8 15.6 L25.7 15.6 C26.5 15.6 27.1 16.3 27.1 17 L27.1 40.9 C27.1 42.1 28.6 42.8 29.5 41.9 L42.4 29 C42.6 28.8 42.8 28.4 42.8 28 L42.8 1.4 C42.8 0.6 42.1 0 41.4 0 L14.7 0 C14.3 0 14 0.1 13.7 0.4 Z"/><path d="M58 13.4 L45.1 26.3 C44.3 27.1 44.9 28.6 46.1 28.6 L70 28.6 C70.8 28.6 71.4 29.2 71.4 30 L71.4 53.9 C71.4 55.1 72.9 55.8 73.7 54.9 L86.6 42 C86.9 41.8 87 41.4 87 41 L87 14.4 C87 13.6 86.4 13 85.6 13 L59 13 C58.6 13 58.3 13.1 58 13.4 Z"/><path d="M26.7 44.7 L13.8 57.6 C12.9 58.5 13.5 60 14.8 60 L38.7 60 C39.4 60 40 60.6 40 61.3 L40 85.2 C40 86.5 41.5 87.1 42.4 86.2 L55.3 73.3 C55.5 73.1 55.7 72.7 55.7 72.4 L55.7 45.7 C55.7 44.9 55.1 44.3 54.3 44.3 L27.6 44.3 C27.3 44.3 26.9 44.5 26.7 44.7 Z"/><path d="M71 57.7 L58.1 70.5 C57.2 71.4 57.9 72.9 59.1 72.9 L83 72.9 C83.7 72.9 84.4 73.5 84.4 74.3 L84.4 98.2 C84.4 99.4 85.9 100 86.7 99.1 L99.6 86.3 C99.9 86 100 85.7 100 85.3 L100 58.6 C100 57.9 99.4 57.3 98.6 57.3 L72 57.3 C71.6 57.3 71.2 57.4 71 57.7 Z"/></svg></div>
     <h2 class="auth-h">Sign in to Paktos</h2>
     <p class="auth-s">Verified returns, escrowed pots, live battles.<br>Your seat in the arena is waiting.</p>
     <div class="auth-field">
@@ -3762,7 +3763,7 @@ body.dark .wm-card { --wm-dot: rgba(255, 255, 255, .2); }
 <script>
 /* ---------------- Data ---------------- */
 
-const MARK_SVG = '<svg viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 3h12l-7 18H2l5-13H2V3z" fill="currentColor"/><path d="M17 3h12l-7 18h-5l5-13h-5V3z" fill="currentColor"/></svg>';
+const MARK_SVG = '<svg viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13.7 0.4 L0.9 13.3 C0 14.1 0.6 15.6 1.8 15.6 L25.7 15.6 C26.5 15.6 27.1 16.3 27.1 17 L27.1 40.9 C27.1 42.1 28.6 42.8 29.5 41.9 L42.4 29 C42.6 28.8 42.8 28.4 42.8 28 L42.8 1.4 C42.8 0.6 42.1 0 41.4 0 L14.7 0 C14.3 0 14 0.1 13.7 0.4 Z"/><path d="M58 13.4 L45.1 26.3 C44.3 27.1 44.9 28.6 46.1 28.6 L70 28.6 C70.8 28.6 71.4 29.2 71.4 30 L71.4 53.9 C71.4 55.1 72.9 55.8 73.7 54.9 L86.6 42 C86.9 41.8 87 41.4 87 41 L87 14.4 C87 13.6 86.4 13 85.6 13 L59 13 C58.6 13 58.3 13.1 58 13.4 Z"/><path d="M26.7 44.7 L13.8 57.6 C12.9 58.5 13.5 60 14.8 60 L38.7 60 C39.4 60 40 60.6 40 61.3 L40 85.2 C40 86.5 41.5 87.1 42.4 86.2 L55.3 73.3 C55.5 73.1 55.7 72.7 55.7 72.4 L55.7 45.7 C55.7 44.9 55.1 44.3 54.3 44.3 L27.6 44.3 C27.3 44.3 26.9 44.5 26.7 44.7 Z"/><path d="M71 57.7 L58.1 70.5 C57.2 71.4 57.9 72.9 59.1 72.9 L83 72.9 C83.7 72.9 84.4 73.5 84.4 74.3 L84.4 98.2 C84.4 99.4 85.9 100 86.7 99.1 L99.6 86.3 C99.9 86 100 85.7 100 85.3 L100 58.6 C100 57.9 99.4 57.3 98.6 57.3 L72 57.3 C71.6 57.3 71.2 57.4 71 57.7 Z"/></svg>';
 
 const TROPHY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="__S__" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4.5M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4.5"/></svg>';
 
@@ -3787,9 +3788,9 @@ const leaderboard = [
 const tournaments = [
   { name: 'DAILY SPRINT', cad: 'Daily', series: 'Daily Sprint', icon: 'D', tint: 'linear-gradient(145deg,#fbbf24,#f59e0b)', poolN: 18400, entries: 736, secondsLeft: 13 * 3600 + 38 * 60 + 2 },
   { name: 'WEEKLY OPEN', cad: 'Weekly', series: 'Weekly Open', icon: 'W', tint: 'linear-gradient(145deg,#5b8bff,#2f6bff)', poolN: 62500, entries: 2500, secondsLeft: ((2 * 24 + 1) * 3600) + 4 * 60 + 17 },
-  { name: 'JULY GLOBAL OPEN', cad: 'Monthly', series: 'July Global Open', icon: 'M', tint: 'linear-gradient(145deg,#9a7cff,#7c5cff)', poolN: 250000, entries: 10000, secondsLeft: ((4 * 24 + 2) * 3600) + 10 * 60 + 12 },
+  { name: 'JULY GLOBAL OPEN', cad: 'Monthly', series: 'July Global Open', icon: 'M', tint: 'linear-gradient(145deg,#9081DF,#9081DF)', poolN: 250000, entries: 10000, secondsLeft: ((4 * 24 + 2) * 3600) + 10 * 60 + 12 },
   { name: 'Q3 CHAMPIONSHIP', cad: 'Quarterly', series: 'Q3 Championship', icon: 'Q', tint: 'linear-gradient(145deg,#34d399,#10b981)', poolN: 842000, entries: 33680, secondsLeft: ((61 * 24 + 23) * 3600) + 51 * 60 + 48 },
-  { name: '2026 WORLD SERIES', cad: 'Yearly', series: '2026 World Series', icon: 'Y', tint: 'linear-gradient(145deg,#f9a8d4,#d946ef)', poolN: 3150000, entries: 126000, secondsLeft: ((186 * 24 + 23) * 3600) + 47 * 60 + 31 }
+  { name: '2026 WORLD SERIES', cad: 'Yearly', series: '2026 World Series', icon: 'Y', tint: 'linear-gradient(145deg,#f9a8d4,#D95DDF)', poolN: 3150000, entries: 126000, secondsLeft: ((186 * 24 + 23) * 3600) + 47 * 60 + 31 }
 ];
 
 const fmtPool = v => v >= 1e6 ? '£' + (v / 1e6).toFixed(2) + 'M' : '£' + (v / 1e3).toFixed(1) + 'K';
@@ -4692,7 +4693,7 @@ function renderTerminal() {
         <div class="tile-tx"><div class="tile-label mono">${ACCTS[term.acct].id}&nbsp;BALANCE</div><div class="tile-value" id="tileBal">${gbp0(term.bal)}</div></div></div>
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#ffc24b,#f59e0b)">★</span>
         <div class="tile-tx"><div class="tile-label mono">BEST&nbsp;RANK</div><div class="tile-value">#13</div></div></div>
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9a7cff,#7c5cff)">S</span>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9081DF,#9081DF)">S</span>
         <div class="tile-tx"><div class="tile-label mono">WIN&nbsp;STREAK</div><div class="tile-value" id="tileStreak">${winStreak()}</div></div></div>
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">▲</span>
         <div class="tile-tx"><div class="tile-label mono">TOTAL&nbsp;WINNINGS</div><div class="tile-value">£121,300</div></div></div>
@@ -5773,7 +5774,7 @@ function renderPerformance() {
           <div class="tile-bar"><span style="width:${wr}%"></span></div></div></div>
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#f87171,#e5484d)">▼</span>
         <div class="tile-tx"><div class="tile-label mono">MAX&nbsp;DRAWDOWN</div><div class="tile-value down">−${dd.toFixed(1)}%</div></div></div>
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9a7cff,#7c5cff)">σ</span>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9081DF,#9081DF)">σ</span>
         <div class="tile-tx"><div class="tile-label mono">SHARPE</div><div class="tile-value">2.14</div></div></div>
     </div>
     ${body}`;
@@ -6001,7 +6002,7 @@ function ordinal(n) {
 const BADGES_DEF = [
   ['#f59e0b', 'Seven-Figure Club', '£1M+ banked profits', d => d.winnings >= 1e6],
   ['#10b981', 'Six-Figure Club', '£100K+ banked profits', d => d.winnings >= 1e5],
-  ['#a855f7', 'Podium Regular', '5+ podium finishes', d => d.podiums >= 5],
+  ['#9081DF', 'Podium Regular', '5+ podium finishes', d => d.podiums >= 5],
   ['#ef4444', 'Gladiator', '25+ arena battle wins', d => d.wins >= 25],
   ['#0ea5e9', 'Sharpshooter', '65%+ win rate', d => d.winRate >= 65],
   ['#6366f1', 'Whale Hunter', 'A £250K+ single win', d => d.big >= 250000],
@@ -6161,7 +6162,7 @@ function tpSpecHTML(d) {
 
 function tpMediaHTML(d) {
   const caps = ['Battle win', 'Tournament finish', 'Best day', 'Arena KO', 'Streak', 'Podium'];
-  const tints = ['linear-gradient(135deg,#f472b6,#7c3aed)', 'linear-gradient(135deg,#fbbf24,#ef4444)', 'linear-gradient(135deg,#34d399,#0891b2)', 'linear-gradient(135deg,#818cf8,#d946ef)', 'linear-gradient(135deg,#f97316,#db2777)', 'linear-gradient(135deg,#22d3ee,#6d28d9)'];
+  const tints = ['linear-gradient(135deg,#f472b6,#6A2E9E)', 'linear-gradient(135deg,#fbbf24,#ef4444)', 'linear-gradient(135deg,#34d399,#0891b2)', 'linear-gradient(135deg,#818cf8,#D95DDF)', 'linear-gradient(135deg,#f97316,#db2777)', 'linear-gradient(135deg,#22d3ee,#6d28d9)'];
   return `<div class="media-grid">${d.mediaRets.map((r, i) => `
     <div class="media-tile" style="background:${tints[i]}">
       <span class="media-ret">+${r}%</span><span class="media-cap">${caps[i]}</span>
@@ -6294,14 +6295,14 @@ function renderTrader() {
         </div></div>
         <div class="bk-card" id="insightsCard" hidden>
           <div class="bk-title">How these winnings were won</div>
-          <div class="bk-bar"><i style="width:${tourPct}%;background:linear-gradient(90deg,#fbbf24,#f59e0b)"></i><i style="width:${100 - tourPct}%;background:linear-gradient(90deg,#a855f7,#7c3aed)"></i></div>
+          <div class="bk-bar"><i style="width:${tourPct}%;background:linear-gradient(90deg,#fbbf24,#f59e0b)"></i><i style="width:${100 - tourPct}%;background:linear-gradient(90deg,#9081DF,#6A2E9E)"></i></div>
           <div class="bk-row">
             <span class="bk-ic" style="background:rgba(245,158,11,.15);color:#f59e0b;font-weight:800">T</span>
             <span class="bk-tx"><span class="bk-t">Tournament prizes</span><span class="bk-s">${d.podiums} podium finishes</span></span>
             <span class="bk-v up">+£${kfmt(tour)}</span>
           </div>
           <div class="bk-row">
-            <span class="bk-ic" style="background:rgba(124,58,237,.12);color:#7c3aed;font-weight:800">A</span>
+            <span class="bk-ic" style="background:rgba(124,58,237,.12);color:#6A2E9E;font-weight:800">A</span>
             <span class="bk-tx"><span class="bk-t">Arena battle winnings</span><span class="bk-s">${d.wins}–${d.losses} record</span></span>
             <span class="bk-v up">+£${kfmt(arena)}</span>
           </div>
@@ -6591,7 +6592,7 @@ function drawCallout(cv) {
     x.font = '600 23px ui-monospace, Menlo, monospace';
     x.fillText('@' + name, cx2, 604);
   };
-  face(W * 0.3, me, '#7c3aed', '#d946ef');
+  face(W * 0.3, me, '#6A2E9E', '#D95DDF');
   face(W * 0.7, opp, '#9081DF', '#D3C2F0');
   x.fillStyle = '#cbcad6';
   x.font = '800 28px ui-monospace, Menlo, monospace';
@@ -6781,7 +6782,7 @@ function drawPostShare(cv, p) {
   x.beginPath(); x.roundRect(84, cy + 4, W - 168, 120, 34); x.fill();
   /* avatar */
   const av = x.createLinearGradient(150, cy + 60, 250, cy + 160);
-  av.addColorStop(0, '#7c3aed'); av.addColorStop(1, '#d946ef');
+  av.addColorStop(0, '#6A2E9E'); av.addColorStop(1, '#D95DDF');
   x.fillStyle = av;
   x.beginPath(); x.arc(190, cy + 100, 52, 0, 7); x.fill();
   x.fillStyle = '#fff';
@@ -6901,13 +6902,13 @@ function renderLbPage() {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to Tournaments</button>
     <div class="lb-toolbar"><div class="chip-row" style="margin:0">${tourPills}</div></div>
     <div class="tile-row">
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(135deg,#f9a8d4,#a855f7)">★</span>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(135deg,#f9a8d4,#9081DF)">★</span>
         <div class="tile-tx"><div class="tile-label mono">PRIZE&nbsp;POOL</div><div class="tile-value">£${t.pool}</div></div></div>
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#5b8bff,#2f6bff)">+</span>
         <div class="tile-tx"><div class="tile-label mono">PLAYERS&nbsp;IN</div><div class="tile-value">${t.entries.toLocaleString('en-GB')}</div></div></div>
       <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#34d399,#10b981)">◷</span>
         <div class="tile-tx"><div class="tile-label mono">CLOSES&nbsp;IN</div><div class="tile-value" style="font-size:16px">${formatCountdown(t.secondsLeft)}</div></div></div>
-      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9a7cff,#7c5cff)">★</span>
+      <div class="tile"><span class="tile-ic" style="background:linear-gradient(145deg,#9081DF,#9081DF)">★</span>
         <div class="tile-tx"><div class="tile-label mono">YOUR&nbsp;RANK</div><div class="tile-value">#13</div></div></div>
     </div>
     <div class="lb-table-card"><div class="fame-scroll"><table class="fame-table">
@@ -7161,7 +7162,7 @@ function drawBattleShare(cv, b) {
     x.font = '800 44px -apple-system, "Segoe UI", sans-serif';
     x.fillText((ret >= 0 ? '+' : '') + ret.toFixed(2) + '%', cx2, 622);
   };
-  face(W * 0.3, me, b.my, '#7c3aed', '#d946ef');
+  face(W * 0.3, me, b.my, '#6A2E9E', '#D95DDF');
   face(W * 0.7, b.opp, b.op, b.machine ? '#24262c' : '#9081DF', b.machine ? '#3a3d46' : '#D3C2F0');
   x.fillStyle = '#cbcad6';
   x.font = '800 28px ui-monospace, Menlo, monospace';
@@ -7356,7 +7357,7 @@ const HUB_CHANNELS = () => [
 
 let HUBS = [
   { id: 'hq', name: 'Paktos HQ', host: 'Paktos', official: true, tint: 'linear-gradient(135deg,#6A2E9E,#9081DF)', desc: 'The official house — announcements, help and the big battles.', members: 48210, channels: HUB_CHANNELS() },
-  { id: 'war', name: "Theo's War Room", host: 'Theo4', tint: 'linear-gradient(135deg,#7c3aed,#d946ef)', desc: 'Process over outcome. Daily prep, session reviews, no hopium.', members: 12840, channels: HUB_CHANNELS() },
+  { id: 'war', name: "Theo's War Room", host: 'Theo4', tint: 'linear-gradient(135deg,#6A2E9E,#D95DDF)', desc: 'Process over outcome. Daily prep, session reviews, no hopium.', members: 12840, channels: HUB_CHANNELS() },
   { id: 'fx', name: 'FX Degens', host: 'swisstony', tint: 'linear-gradient(135deg,#0ea5e9,#6366f1)', desc: 'London opens, New York closes, zero sleep in between.', members: 9310, channels: HUB_CHANNELS() },
   { id: 'gold', name: 'Gold Bugs', host: 'mintblade', tint: 'linear-gradient(135deg,#f59e0b,#eab308)', desc: 'XAU or nothing. Stops mandatory, moonboys banned.', members: 477, channels: HUB_CHANNELS() },
 ];
@@ -8210,7 +8211,7 @@ function myBattlesHTML() {
 
 /* ---------------- Trade Clans — team up, fly a banner, battle as one ---------------- */
 
-const CLAN_TINTS = ['linear-gradient(135deg,#7c3aed,#d946ef)', 'linear-gradient(135deg,#0ea5e9,#6366f1)', 'linear-gradient(135deg,#10b981,#0d9488)', 'linear-gradient(135deg,#f59e0b,#ef4444)'];
+const CLAN_TINTS = ['linear-gradient(135deg,#6A2E9E,#D95DDF)', 'linear-gradient(135deg,#0ea5e9,#6366f1)', 'linear-gradient(135deg,#10b981,#0d9488)', 'linear-gradient(135deg,#f59e0b,#ef4444)'];
 
 let CLANS = [
   { id: 'ALFA', name: 'Alpha Decay', tint: 0, members: ['Theo4', 'kch123', 'RN1', 'delta_dan', 'macro_mia'], wins: 38, losses: 12, winnings: 2140000, desc: 'Process, patience, pain for opponents.' },
@@ -8236,7 +8237,7 @@ const clanChip = (c, sm) => `<span class="clan-chip${sm ? ' sm' : ''}" style="ba
 const MACHINES = [
   { name: 'GPT-5', by: 'OpenAI', ic: '✳', tint: 'linear-gradient(160deg,#24262c,#0c0d10)', win: 64, rec: '41–23', form: '+3.8% avg session', you: 25, house: 75, window: '1h', battling: '1.8K' },
   { name: 'Claude', by: 'Anthropic', ic: '✦', tint: 'linear-gradient(135deg,#e8935a,#da7756)', win: 69, rec: '53–24', form: '5-win streak', you: 50, house: 100, window: '4h', battling: '2.4K' },
-  { name: 'Gemini', by: 'Google DeepMind', ic: '◆', tint: 'linear-gradient(135deg,#5b8bff,#9a7cff)', win: 61, rec: '38–24', form: '+11.2% best day', you: 25, house: 100, window: '1 day', battling: '1.3K' },
+  { name: 'Gemini', by: 'Google DeepMind', ic: '◆', tint: 'linear-gradient(135deg,#5b8bff,#9081DF)', win: 61, rec: '38–24', form: '+11.2% best day', you: 25, house: 100, window: '1 day', battling: '1.3K' },
 ];
 
 function machinesHTML() {
@@ -9252,7 +9253,7 @@ function assetChip(tag) {
   const k = String(tag).toUpperCase().replace(/[^A-Z0-9]/g, '');
   const a = INSTR[k];
   if (a) return `<span class="asset-ic sm" style="background:${a.tint}">${a.ic}</span>`;
-  return `<span class="asset-ic sm" style="background:linear-gradient(135deg,#c4b5fd,#8b5cf6)">${k.charAt(0) || 'M'}</span>`;
+  return `<span class="asset-ic sm" style="background:linear-gradient(135deg,#D3C2F0,#9081DF)">${k.charAt(0) || 'M'}</span>`;
 }
 
 const shxHead = (kick, title, sub, sm, ic) => `<div class="shx-head${sm ? ' sm' : ''}">
@@ -9662,7 +9663,7 @@ function renderPartner() {
       const bh = (v / max) * (h - 52);
       const x = 20 + i * bw + bw * 0.2, y = h - 26 - bh;
       const g = ctx.createLinearGradient(0, y, 0, h - 26);
-      g.addColorStop(0, '#d946ef'); g.addColorStop(1, '#7c3aed');
+      g.addColorStop(0, '#D95DDF'); g.addColorStop(1, '#6A2E9E');
       ctx.fillStyle = g;
       ctx.beginPath();
       ctx.roundRect(x, y, bw * 0.55, bh, 5);
@@ -9754,7 +9755,7 @@ function fireConfetti() {
   document.body.appendChild(c);
   const ctx = c.getContext('2d');
   const W = c.width = window.innerWidth, H = c.height = window.innerHeight;
-  const cols = ['#7c3aed', '#d946ef', '#10b981', '#f59e0b', '#3b82f6', '#ef4444'];
+  const cols = ['#6A2E9E', '#D95DDF', '#10b981', '#f59e0b', '#3b82f6', '#ef4444'];
   const ps = Array.from({ length: 170 }, () => ({
     x: Math.random() * W, y: -30 - Math.random() * H * 0.4,
     w: 5 + Math.random() * 6, h: 8 + Math.random() * 8,
