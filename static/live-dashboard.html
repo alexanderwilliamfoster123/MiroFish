@@ -2959,8 +2959,33 @@ body.dark { --lbA: #D3C2F0; --lbBsoft: #494851; }
 .act-ago { font-size: 9.5px; color: var(--text-faint); flex: none; }
 
 /* Fan carousel — the Flick deck spread like a hand of cards */
-.fan-wrap { position: relative; height: 730px; margin: 4px 0 8px; }
-@media (max-width: 700px) { .fan-wrap { height: 680px; } }
+.fan-wrap { position: relative; height: 552px; margin: 0 0 4px; }
+
+/* Flick — compact single-screen layout */
+.flickwrap { max-width: 640px; }
+.flickwrap .fhead { margin-bottom: 8px; align-items: center; }
+.fh-models { display: flex; gap: 6px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+.fh-models .pill-btn { padding: 6px 11px; font-size: 11.5px; }
+.fan-card .tcard { padding: 18px 22px 16px; }
+.fan-card .tc-hero { margin-top: 12px; padding: 12px 16px 10px; }
+.fan-card .tc-dir { font-size: 21px; }
+.fan-card .ai-sig-kick { margin-top: 5px; }
+.fan-card .tc-arow { margin: 12px 0 8px; }
+.fan-card .tc-why { font-size: 13.5px; margin-bottom: 10px; }
+.fan-card .tc-levels { margin-bottom: 8px; }
+.fan-card .tcl { padding: 8px 11px; }
+.fan-card .ai-brief-head { margin: 10px 0 8px; }
+.fan-card .ai-brief-box { padding: 10px 14px 10px 17px; }
+.fan-card .ai-brief-box .tc-brief-p { font-size: 12px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.fan-card .tc-hist { margin-top: 8px !important; }
+.flickwrap .fan-nav { margin: 0 0 6px; gap: 18px; }
+.flickwrap .f1c-risk { margin: 6px 0 6px; }
+.flickwrap .f1c-payoff { margin-top: 4px; }
+.flickwrap .flick-actions { margin-top: 10px; gap: 22px; }
+.flickwrap .fbtn { width: 52px; height: 52px; font-size: 19px; }
+.flickwrap .flick-hint { margin-top: 8px; font-size: 10.5px; }
+.flickwrap .fpicks { margin-top: 12px; }
+@media (max-width: 700px) { .fan-wrap { height: 540px; } }
 .fan-card { position: absolute; left: 50%; top: 8px; width: min(480px, 92%); transform: translateX(-50%) translateY(3rem) scale(0.6); opacity: 0; transition: transform 0.65s cubic-bezier(0.3, 1.4, 0.45, 1), opacity 0.45s ease; will-change: transform; transform-origin: center 115%; }
 .fan-card:not(.ctr) { cursor: pointer; }
 .fan-card .tcard { width: 100%; }
@@ -4897,7 +4922,7 @@ function ideaCrowd(c) {
 function flickSpark(c) {
   const up = c.dir === 'up';
   const col = up ? '#10b981' : '#e5484d';
-  const W = 300, H = 84, pad = 6, N = 40, ys = [];
+  const W = 300, H = 58, pad = 6, N = 40, ys = [];
   let s = (c.uid + 7) * 2654435761 % 2147483647, v = H * 0.5;
   const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
   for (let i = 0; i < N; i++) {
@@ -5062,15 +5087,14 @@ function flickBuild() {
 }
 
 
-function flickHead() {
-  return `<div class="fhead"><div><div class="fh-t">Flick</div><div class="fh-s">The AI finds the signal — you decide whether to take it</div></div></div>`;
+function flickHead(withModels) {
+  return `<div class="fhead"><div><div class="fh-t">Flick</div><div class="fh-s">The AI finds the signal — you decide whether to take it</div></div>${withModels ? `<div class="fh-models">${flickModelBar()}</div>` : ''}</div>`;
 }
 
 function flickModelBar() {
   const provs = Object.keys(FLICK_MODELS).map(k =>
     `<button class="pill-btn${flick.prov === k ? ' on' : ''}" data-fprov="${k}">${FLICK_MODELS[k].ic} ${FLICK_MODELS[k].name}</button>`).join('');
-  return `<div class="fmodels">${provs}</div>
-    <div style="margin-bottom:14px"><button class="pill-btn fmodel-pill" data-fmodel title="Switch model"><span class="fmodel-dot"></span>${flick.model} ▾</button></div>`;
+  return `${provs}<button class="pill-btn fmodel-pill" data-fmodel title="Switch model"><span class="fmodel-dot"></span>${flick.model} ▾</button>`;
 }
 
 function flickCardHTML(c) {
@@ -5217,11 +5241,13 @@ function flickHTML() {
   const riskAmt = term.bal * flick.risk / 100, rr = HZCFG[c.hz].rr;
   const rbs = [1, 2, 5, 10].map(v =>
     `<button class="pill-btn${v === flick.risk ? ' on' : ''}" data-frisk="${v}">${v}%</button>`).join('');
-  return `<div class="flickwrap">${flickHead()}${flickModelBar()}
+  return `<div class="flickwrap">${flickHead(true)}
     <div class="fan-wrap" id="fanWrap">${d.map((cc, i2) => `<div class="fan-card${i2 === pos ? ' ctr' : ''}" data-fi="${i2}"${i2 === pos ? '' : ` data-fango="${i2}"`}>${i2 === pos ? flickCardHTML(cc) : fanPrevHTML(cc)}</div>`).join('')}</div>
     <div class="fan-nav">
+      <button class="fbtn skip" data-fskip aria-label="Skip">✕</button>
       <button class="fan-arrow" data-fanprev aria-label="Previous signal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
       <button class="fan-arrow" data-fannext aria-label="Next signal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+      <button class="fbtn exec" data-ftake aria-label="Take trade">✓</button>
     </div>
     <div class="f1c-risk"><span class="f1c-risk-l">How much to risk</span><div style="display:flex;gap:8px">${rbs}</div></div>
     <div class="f1c-payoff">
@@ -5229,11 +5255,7 @@ function flickHTML() {
       <div class="f1c-po-x">→<small>${rr}×</small></div>
       <div class="f1c-po"><span>You could win</span><b class="win">${gbp(riskAmt * rr)}</b></div>
     </div>
-    <div class="flick-actions">
-      <button class="fbtn skip" data-fskip aria-label="Skip">✕</button>
-      <button class="fbtn exec" data-ftake aria-label="Take trade">✓</button>
-    </div>
-    <div class="flick-hint">Swipe right to take the signal · left to reject · or use the buttons</div>
+    <div class="flick-hint">Swipe right to take · left to reject · or use the buttons</div>
     ${flickPicks()}</div>`;
 }
 
