@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import { LAUNCH_DATE } from "@/lib/launch";
 import { PaktosLogo } from "@/components/paktos-logo";
 import { CoinOrbit } from "@/components/coin-orbit";
-import { CoinsLoop } from "@/components/coins-loop";
 import { AnimatedCountdown } from "@/components/ui/animated-countdown";
 import { Button } from "@/components/ui/button";
 import {
@@ -220,11 +219,7 @@ export default function SitePage() {
           </a>
         </div>
 
-        <div className="mt-16 w-full overflow-hidden rounded-[28px] bg-[#f5f5f7]">
-          <CoinsLoop className="h-auto" />
-        </div>
-
-        <div className="mt-10 grid w-full max-w-md grid-cols-3 gap-4 text-center">
+        <div className="mt-16 grid w-full max-w-md grid-cols-3 gap-4 border-t border-[#e8e8ed] pt-8 text-center">
           <div>
             <p className="text-xs text-[#86868b]">Entry</p>
             <p className="mt-1.5 text-sm font-medium">$25</p>
