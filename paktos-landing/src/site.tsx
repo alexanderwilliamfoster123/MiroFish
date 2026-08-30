@@ -163,7 +163,7 @@ export default function SitePage() {
   return (
     <div className="min-h-screen w-full bg-white text-[#1d1d1f]">
       {/* ——— Nav ——— */}
-      <header className="sticky top-0 z-40 border-b border-[#e8e8ed]/80 bg-white/80 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-[#e8e8ed]/80 bg-white supports-[backdrop-filter]:bg-white/85 supports-[backdrop-filter]:backdrop-blur-md">
         <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-6">
           <a href="#" aria-label="Paktos home" className="flex items-center">
             <PaktosLogo className="w-[96px]" />
