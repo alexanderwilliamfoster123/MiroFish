@@ -7,10 +7,10 @@ import { AnimatedCountdown } from "@/components/ui/animated-countdown";
 import { Button } from "@/components/ui/button";
 import { RiInstagramFill, RiLinkedinFill, RiTwitterXFill } from "@remixicon/react";
 
-const XP_BONUS = 500;
+import SitePage from "@/site";
+import { LAUNCH_DATE } from "@/lib/launch";
 
-// The Paktos launch date — 60 days out.
-const GIVEAWAY_DATE = new Date("2026-10-11T18:00:00Z");
+const XP_BONUS = 500;
 
 type Stage = "email" | "name" | "handle" | "ticket" | "card" | "countdown";
 
@@ -114,6 +114,12 @@ export default function App() {
     );
   }
 
+  // The full site is the landing page; the waitlist flow lives at #join.
+  // Any other hash (#arena, #card, #faq) is an in-page anchor on the site.
+  if (route !== "#join") {
+    return <SitePage />;
+  }
+
   return (
     <main className="flex min-h-screen w-full items-center justify-center bg-background p-4 py-10">
       {stage === "ticket" && ticket ? (
@@ -164,7 +170,7 @@ export default function App() {
                 Paktos Launch
               </p>
               <AnimatedCountdown
-                targetDate={GIVEAWAY_DATE}
+                targetDate={LAUNCH_DATE}
                 variant="minimal"
                 size="md"
                 containerClassName="border-transparent"
