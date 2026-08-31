@@ -2,27 +2,21 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 const FONT = '"Satoshi", "Satoshi", "Inter Tight", system-ui, sans-serif';
+import { PublicMark, AlpacaMark, PublicLogo, AlpacaLogo } from "./BrokerLogos";
 
-// Brokerages we execute through
-const BROKERAGES = [
-  { name: "Robinhood", color: "#00C805", glyph: "R" },
-  { name: "Public.com", color: "#3D3DF5", glyph: "P" },
-  { name: "Alpaca", color: "#D9A404", glyph: "A" },
-];
+type Item = { id: string; brand: "public" | "alpaca" | "core" };
 
-type Item = { id: string; short: string; color: string };
-
-// Arc carousel cycles the offered brokerages: Robinhood, Public.com, Alpaca
+// Arc carousel cycles the two offered brokerages: Public.com and Alpaca
 const INITIAL_ITEMS: Item[] = [
-  { id: "robinhood-1", short: "R", color: "#00C805" },
-  { id: "public-1", short: "P", color: "#3D3DF5" },
-  { id: "alpaca-1", short: "A", color: "#D9A404" },
-  { id: "robinhood-2", short: "R", color: "#00C805" },
-  { id: "core", short: "", color: "" }, // CENTER
-  { id: "public-2", short: "P", color: "#3D3DF5" },
-  { id: "alpaca-2", short: "A", color: "#D9A404" },
-  { id: "robinhood-3", short: "R", color: "#00C805" },
-  { id: "public-3", short: "P", color: "#3D3DF5" },
+  { id: "alpaca-1", brand: "alpaca" },
+  { id: "public-1", brand: "public" },
+  { id: "alpaca-2", brand: "alpaca" },
+  { id: "public-2", brand: "public" },
+  { id: "core", brand: "core" }, // CENTER
+  { id: "alpaca-3", brand: "alpaca" },
+  { id: "public-3", brand: "public" },
+  { id: "alpaca-4", brand: "alpaca" },
+  { id: "public-4", brand: "public" },
 ];
 
 // Indices 0..8 map to slot positions -4..+4 relative to center (index 4).
@@ -183,15 +177,13 @@ export default function Integrations() {
                       ? { duration: 0 }
                       : { duration: 0.5, ease: "easeInOut" }
                   }
-                  className="absolute inset-0 flex items-center justify-center font-bold"
-                  style={{
-                    fontFamily: FONT,
-                    fontSize: 18,
-                    letterSpacing: "-0.5px",
-                    color: item.color || "#111",
-                  }}
+                  className="absolute inset-0 flex items-center justify-center"
                 >
-                  {item.short}
+                  {item.brand === "public" ? (
+                    <PublicMark size={26} />
+                  ) : item.brand === "alpaca" ? (
+                    <AlpacaMark size={30} />
+                  ) : null}
                 </motion.span>
                 {/* Core background layer — fades in when slot becomes center */}
                 <motion.img
@@ -212,34 +204,25 @@ export default function Integrations() {
 
         {/* Offered brokerages */}
         <div className="mt-[50px] flex flex-wrap items-center justify-center gap-4" aria-label="Supported brokerages">
-          {BROKERAGES.map((b) => (
-            <span
-              key={b.name}
-              className="flex items-center gap-3 whitespace-nowrap rounded-full border border-black/10 bg-white py-2 pl-2 pr-6 text-[15px] font-medium text-black/80 shadow-sm"
-              style={{ fontFamily: FONT }}
-            >
-              <span
-                className="flex h-9 w-9 items-center justify-center rounded-xl text-[13px] font-bold text-white"
-                style={{ backgroundColor: b.color }}
-              >
-                {b.glyph}
-              </span>
-              {b.name}
-            </span>
-          ))}
+          <span className="flex items-center whitespace-nowrap rounded-full border border-black/10 bg-white px-7 py-3.5 shadow-sm">
+            <PublicLogo height={26} />
+          </span>
+          <span className="flex items-center whitespace-nowrap rounded-full border border-black/10 bg-white px-7 py-3.5 shadow-sm">
+            <AlpacaLogo height={26} />
+          </span>
         </div>
 
         {/* Bottom text */}
         <div className="mt-[50px] flex flex-col items-center text-center">
           <p className="text-black text-lg font-medium">
-            {"Three trusted brokerages. Real-time sync. Zero fragmentation."
+            {"Two trusted brokerages. Real-time sync. Zero fragmentation."
               .split(" ")
               .map((w, i) => (
                 <RevealWord key={`b1-${i}`} text={w} delay={i * 0.06} />
               ))}
           </p>
           <p className="mt-[15px] max-w-[475px] text-black/30 text-lg font-medium">
-            {"Connect Robinhood, Public.com, or Alpaca. Every trade executes in your own brokerage account — synchronized in real time, never pooled."
+            {"Connect Public.com or Alpaca. Every trade executes in your own brokerage account — synchronized in real time, never pooled."
               .split(" ")
               .map((w, i) => (
                 <RevealWord key={`b2-${i}`} text={w} delay={0.2 + i * 0.04} />

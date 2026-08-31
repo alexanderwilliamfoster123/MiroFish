@@ -11,6 +11,7 @@ import Strategies from "../components/qsigma/Strategies";
 import Calculator from "../components/qsigma/Calculator";
 import Pricing from "../components/qsigma/Pricing";
 import Faq from "../components/qsigma/Faq";
+import Press from "../components/qsigma/Press";
 import TakeControl from "../components/qsigma/TakeControl";
 import Footer from "../components/qsigma/Footer";
 import AuthModal from "../components/qsigma/AuthModal";
@@ -60,6 +61,7 @@ const Index = () => {
           <Calculator />
           <Pricing />
           <Faq />
+          <Press />
           <TakeControl onRequestAccess={() => setAuthOpen(true)} />
           <Footer />
         </div>

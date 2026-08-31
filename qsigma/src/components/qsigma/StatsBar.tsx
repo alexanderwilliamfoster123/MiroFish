@@ -1,5 +1,15 @@
 import FadeUp from "./FadeUp";
 
+const SEEN_IN = [
+  { name: "Fortune", serif: true },
+  { name: "USA Today" },
+  { name: "Business Insider" },
+  { name: "Investing.com" },
+  { name: "The Street" },
+  { name: "Benzinga" },
+  { name: "Chicago Tribune", serif: true },
+];
+
 const STATS = [
   { value: "$2.4B", label: "Assets under strategy" },
   { value: "31,000+", label: "Active subscribers" },
@@ -13,6 +23,41 @@ const StatsBar = () => {
       id="stats"
       style={{ backgroundColor: "#05050C", padding: "96px 24px" }}
     >
+      {/* As seen in — press strip */}
+      <FadeUp className="mx-auto mb-16 max-w-[1100px]">
+        <p
+          className="text-center text-[11px] uppercase"
+          style={{ fontWeight: 600, letterSpacing: "0.16em", color: "rgba(255,255,255,0.35)" }}
+        >
+          As seen in
+        </p>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+          {SEEN_IN.map((o) => (
+            <span
+              key={o.name}
+              className="whitespace-nowrap text-[15px] sm:text-[17px]"
+              style={{
+                fontWeight: o.serif ? 600 : 700,
+                letterSpacing: o.serif ? "0.01em" : "-0.02em",
+                color: "rgba(255,255,255,0.42)",
+                fontFamily: o.serif ? 'Georgia, "Times New Roman", serif' : "inherit",
+              }}
+            >
+              {o.name}
+            </span>
+          ))}
+          <a
+            href="#press"
+            className="whitespace-nowrap text-[13px] transition-colors duration-200"
+            style={{ fontWeight: 600, color: "rgba(255,255,255,0.55)", textDecoration: "none" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
+          >
+            + 6 more →
+          </a>
+        </div>
+      </FadeUp>
+
       <div className="mx-auto grid max-w-[1100px] grid-cols-2 gap-y-12 lg:grid-cols-4"
       >
         {STATS.map((stat, i) => (

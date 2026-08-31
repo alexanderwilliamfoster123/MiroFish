@@ -9,7 +9,7 @@ import { openCheckout } from "@/lib/checkout";
 const FAQS = [
   {
     q: "How does Squared³ actually work?",
-    a: "You subscribe once, connect the brokerage you already use — Robinhood, Public.com, or Alpaca — and choose your strategies. Every trade executes directly in your own account and you can watch each position in real time. There is nothing to transfer and no new account to fund.",
+    a: "You subscribe once, connect the brokerage you already use — Public.com or Alpaca — and choose your strategies. Every trade executes directly in your own account and you can watch each position in real time. There is nothing to transfer and no new account to fund.",
   },
   {
     q: "Does Squared³ ever hold my money?",
