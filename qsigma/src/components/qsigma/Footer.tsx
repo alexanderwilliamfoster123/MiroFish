@@ -1,5 +1,62 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import Logo from "./Logo";
+import { openAuth } from "@/lib/auth";
+
+const SITEMAP: { title: string; links: { label: string; to?: string; auth?: "login" | "signup" }[] }[] = [
+  {
+    title: "Product",
+    links: [
+      { label: "Pricing", to: "/pricing" },
+      { label: "Strategies", to: "/strategies" },
+      { label: "Payment methods", to: "/payments" },
+      { label: "Rewards", to: "/rewards" },
+    ],
+  },
+  {
+    title: "Account",
+    links: [
+      { label: "Log in", auth: "login" },
+      { label: "Sign up", auth: "signup" },
+      { label: "Manage subscription", auth: "login" },
+      { label: "Referral link", to: "/rewards" },
+    ],
+  },
+  {
+    title: "Learn",
+    links: [
+      { label: "Blog", to: "/blog" },
+      { label: "Return calculator", to: "/strategies" },
+      { label: "FAQ", to: "/support" },
+      { label: "Methodology", to: "/blog/eleven-thousand-streams-one-trade" },
+      { label: "Press", to: "/newsroom" },
+    ],
+  },
+  {
+    title: "Company",
+    links: [
+      { label: "About", to: "/about" },
+      { label: "Careers", to: "/careers" },
+      { label: "Newsroom", to: "/newsroom" },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { label: "Terms & Conditions", to: "/terms" },
+      { label: "Privacy Policy", to: "/privacy" },
+      { label: "Financial Services Guide", to: "/disclosures" },
+    ],
+  },
+  {
+    title: "Contact Us",
+    links: [
+      { label: "Support", to: "/support" },
+      { label: "Contact Us", to: "/contact" },
+      { label: "Security and Scams", to: "/security" },
+    ],
+  },
+];
 
 const FONT = '"Satoshi", "Satoshi", "Inter Tight", system-ui, sans-serif';
 
@@ -89,6 +146,44 @@ export default function Footer() {
             </a>
           </motion.div>
         </div>
+
+        {/* Sitemap */}
+        <nav
+          aria-label="Site map"
+          className="grid grid-cols-2 gap-x-6 gap-y-10 border-t border-black/10 pb-16 pt-12 sm:grid-cols-3 lg:grid-cols-6"
+        >
+          {SITEMAP.map((col) => (
+            <div key={col.title}>
+              <h3 className="text-[13px] font-medium" style={{ color: "rgba(0,0,0,0.40)" }}>
+                {col.title}
+              </h3>
+              <ul className="mt-4 flex flex-col gap-3" style={{ listStyle: "none", margin: "16px 0 0", padding: 0 }}>
+                {col.links.map((l) => (
+                  <li key={l.label}>
+                    {l.to ? (
+                      <Link
+                        to={l.to}
+                        className="text-[14px] font-medium text-black transition-opacity hover:opacity-60"
+                        style={{ textDecoration: "none" }}
+                      >
+                        {l.label}
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => openAuth(l.auth)}
+                        className="text-[14px] font-medium text-black transition-opacity hover:opacity-60"
+                        style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}
+                      >
+                        {l.label}
+                      </button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
 
         {/* Legal small print */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-8 border-t border-black/10 pt-6">

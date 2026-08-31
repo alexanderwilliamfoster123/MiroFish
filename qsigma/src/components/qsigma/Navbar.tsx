@@ -1,12 +1,14 @@
 import { motion } from "framer-motion";
 import { Globe } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
+import { scrollToId } from "@/lib/nav";
 
 const NAV_LINKS = [
-  { label: "PLATFORM", href: "#platform" },
-  { label: "STRATEGIES", href: "#strategies" },
-  { label: "CALCULATOR", href: "#calculator" },
-  { label: "PRICING", href: "#pricing" },
+  { label: "PLATFORM", id: "platform" },
+  { label: "STRATEGIES", id: "strategies" },
+  { label: "CALCULATOR", id: "calculator" },
+  { label: "PRICING", id: "pricing" },
 ];
 
 interface NavbarProps {
@@ -16,6 +18,12 @@ interface NavbarProps {
 }
 
 const Navbar = ({ dark: scrolled = false, onLaunch }: NavbarProps) => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const goToSection = (id: string) => {
+    if (pathname === "/") scrollToId(id);
+    else navigate("/", { state: { scrollTo: id } });
+  };
   return (
     <motion.nav
       initial={{ opacity: 0, y: -12 }}
@@ -35,26 +43,32 @@ const Navbar = ({ dark: scrolled = false, onLaunch }: NavbarProps) => {
       }}
       className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-5"
     >
-      <a href="/" aria-label="Squared³ home" style={{ textDecoration: "none" }}>
+      <Link to="/" aria-label="Squared³ home" style={{ textDecoration: "none" }}>
         <Logo />
-      </a>
+      </Link>
 
       <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center gap-8 text-[13px] tracking-tight">
         {NAV_LINKS.map((link) => (
-          <a
+          <button
             key={link.label}
-            href={link.href}
+            type="button"
+            onClick={() => goToSection(link.id)}
             style={{
               fontWeight: 500,
               color: "#111111",
               textTransform: "uppercase",
               letterSpacing: "1.5px",
-              textDecoration: "none",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontFamily: "inherit",
+              fontSize: "inherit",
+              padding: 0,
             }}
             className="hover:opacity-60 transition-opacity duration-200"
           >
             {link.label}
-          </a>
+          </button>
         ))}
       </div>
 

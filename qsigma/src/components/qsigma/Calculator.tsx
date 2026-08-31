@@ -1,6 +1,7 @@
 import { CSSProperties, useMemo, useState } from "react";
 import FadeUp from "./FadeUp";
 import { openCheckout } from "@/lib/checkout";
+import { scrollToId } from "@/lib/nav";
 
 // Average monthly rates derived from each portfolio's backtested CAGR
 const STRATS = [
@@ -360,7 +361,8 @@ const Calculator = () => {
             Stop rewinding — start compounding
           </button>
           <a
-            href="#strategies"
+            href="#/"
+            onClick={(e) => { e.preventDefault(); scrollToId("strategies"); }}
             className="text-[13px] transition-colors duration-200"
             style={{ fontWeight: 500, color: "rgba(255,255,255,0.45)", textDecoration: "none" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")}

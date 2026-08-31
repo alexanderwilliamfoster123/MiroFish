@@ -14,22 +14,22 @@ import Faq from "../components/qsigma/Faq";
 import Press from "../components/qsigma/Press";
 import TakeControl from "../components/qsigma/TakeControl";
 import Footer from "../components/qsigma/Footer";
-import AuthModal from "../components/qsigma/AuthModal";
-import CheckoutModal from "../components/qsigma/CheckoutModal";
-import { CHECKOUT_EVENT } from "@/lib/checkout";
+import { useLocation } from "react-router-dom";
+import { openAuth } from "@/lib/auth";
+import { scrollToId } from "@/lib/nav";
 
 const Index = () => {
   const [dark, setDark] = useState(false);
-  const [authOpen, setAuthOpen] = useState(false);
-  const [checkout, setCheckout] = useState<string | null>(null);
+  const location = useLocation();
 
+  // Arriving from a subpage nav link: scroll to the requested section.
   useEffect(() => {
-    const onCheckout = (e: Event) => {
-      setCheckout((e as CustomEvent<{ name: string }>).detail.name);
-    };
-    window.addEventListener(CHECKOUT_EVENT, onCheckout);
-    return () => window.removeEventListener(CHECKOUT_EVENT, onCheckout);
-  }, []);
+    const target = (location.state as { scrollTo?: string } | null)?.scrollTo;
+    if (target) {
+      const t = setTimeout(() => scrollToId(target), 120);
+      return () => clearTimeout(t);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -45,7 +45,7 @@ const Index = () => {
   return (
     <main>
       <h1 className="sr-only">Squared³ — A New Standard in Algorithmic Trading</h1>
-      <Navbar dark={dark} onLaunch={() => setAuthOpen(true)} />
+      <Navbar dark={dark} onLaunch={() => openAuth()} />
       <div className="relative">
         <div className="sticky top-0 z-0" style={{ height: "calc(100vh + 80px)" }}>
           <Hero />
@@ -62,12 +62,10 @@ const Index = () => {
           <Pricing />
           <Faq />
           <Press />
-          <TakeControl onRequestAccess={() => setAuthOpen(true)} />
+          <TakeControl onRequestAccess={() => openAuth()} />
           <Footer />
         </div>
       </div>
-      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
-      <CheckoutModal portfolio={checkout} onClose={() => setCheckout(null)} />
     </main>
   );
 };

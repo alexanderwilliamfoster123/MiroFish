@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import StoneReveal from "./StoneReveal";
 import { openCheckout } from "@/lib/checkout";
+import { scrollToId } from "@/lib/nav";
 
 const ASSETS = {
   star: "https://qclay.design/lovable/synex/star.svg",
@@ -96,7 +97,8 @@ const Hero = () => {
             Get started
           </button>
           <a
-            href="#strategies"
+            href="#/"
+            onClick={(e) => { e.preventDefault(); scrollToId("strategies"); }}
             className="h-11 px-6 rounded-full inline-flex items-center text-[14px] font-semibold text-black/70 hover:text-black transition-colors"
             style={{ border: "1px solid rgba(0,0,0,0.15)", textDecoration: "none" }}
           >

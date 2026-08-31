@@ -1,4 +1,5 @@
 import FadeUp from "./FadeUp";
+import { scrollToId } from "@/lib/nav";
 
 const SEEN_IN = [
   { name: "Fortune", serif: true },
@@ -47,7 +48,8 @@ const StatsBar = () => {
             </span>
           ))}
           <a
-            href="#press"
+            href="#/"
+            onClick={(e) => { e.preventDefault(); scrollToId("press"); }}
             className="whitespace-nowrap text-[13px] transition-colors duration-200"
             style={{ fontWeight: 600, color: "rgba(255,255,255,0.55)", textDecoration: "none" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")}
@@ -84,7 +86,8 @@ const StatsBar = () => {
       </div>
       <FadeUp className="mt-14 text-center" delay={0.3}>
         <a
-          href="#strategies"
+          href="#/"
+          onClick={(e) => { e.preventDefault(); scrollToId("strategies"); }}
           className="text-[13px] transition-colors duration-200"
           style={{
             fontWeight: 500,

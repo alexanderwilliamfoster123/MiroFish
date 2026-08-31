@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 const FONT = '"Satoshi", "Satoshi", "Inter Tight", system-ui, sans-serif';
 import { PublicMark, AlpacaMark, IbkrMark, PublicLogo, AlpacaLogo, IbkrLogo } from "./BrokerLogos";
+import { scrollToId } from "@/lib/nav";
 
 type Item = { id: string; brand: "public" | "alpaca" | "ibkr" | "core" };
 
@@ -234,7 +235,8 @@ export default function Integrations() {
               ))}
           </p>
           <motion.a
-            href="#pricing"
+            href="#/"
+            onClick={(e) => { e.preventDefault(); scrollToId("pricing"); }}
             className="relative z-40 mt-8 inline-block rounded-full bg-black px-6 py-3 text-[13px] font-semibold text-white transition-colors duration-200 hover:bg-zinc-800"
             style={{ fontFamily: FONT, textDecoration: "none" }}
             initial={{ opacity: 0, y: 14 }}
