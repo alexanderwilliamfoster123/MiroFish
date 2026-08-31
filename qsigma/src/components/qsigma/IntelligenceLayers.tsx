@@ -246,7 +246,7 @@ export default function IntelligenceLayers() {
               {/* Description below */}
               <div
                 className="absolute -translate-x-1/2 text-center whitespace-nowrap text-black/30 text-[12px] leading-[16px]"
-                style={{ fontFamily: FONT, fontWeight: 500, left: 0, top: 50 }}
+                style={{ fontFamily: FONT, fontWeight: 500, left: 0, top: 84 }}
               >
                 Self-evolving model swarm
                 <br />

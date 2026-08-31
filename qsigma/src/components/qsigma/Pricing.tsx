@@ -1,5 +1,4 @@
 import FadeUp from "./FadeUp";
-import CoinsScene from "./CoinsScene";
 import { openCheckout } from "@/lib/checkout";
 
 const FEATURES = [
@@ -58,12 +57,7 @@ const Pricing = () => {
           </p>
         </FadeUp>
 
-        <div className="mt-14 grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
-          {/* Shiny coins loop — Spline 3D scene */}
-          <FadeUp delay={0.05} className="order-last lg:order-first">
-            <CoinsScene className="h-[300px] w-full sm:h-[380px] lg:h-[540px]" />
-          </FadeUp>
-
+        <div className="mt-14">
           <FadeUp delay={0.1}>
           <article
             className="relative mx-auto flex w-full max-w-[560px] flex-col"
