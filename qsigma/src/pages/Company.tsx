@@ -31,7 +31,7 @@ const MILESTONES = [
 
 export function About() {
   return (
-    <PageShell>
+    <PageShell title="About">
       <PageHero
         eyebrow="About"
         titleDim="Built to be"
@@ -106,7 +106,7 @@ const ROLES = [
 
 export function Careers() {
   return (
-    <PageShell>
+    <PageShell title="Careers">
       <PageHero
         eyebrow="Careers"
         titleDim="Do the work"
@@ -159,7 +159,7 @@ export function Careers() {
 
 export function Newsroom() {
   return (
-    <PageShell>
+    <PageShell title="Newsroom">
       <PageHero
         eyebrow="Newsroom"
         titleDim="What the press"

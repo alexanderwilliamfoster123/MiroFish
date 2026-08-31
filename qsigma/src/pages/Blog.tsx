@@ -127,7 +127,7 @@ export const POSTS: Post[] = [
 
 export function BlogIndex() {
   return (
-    <PageShell>
+    <PageShell title="Blog">
       <PageHero
         eyebrow="Blog"
         titleDim="Signal,"
@@ -180,7 +180,7 @@ export function BlogPost() {
   const { slug } = useParams();
   const post = POSTS.find((p) => p.slug === slug) ?? POSTS[0];
   return (
-    <PageShell>
+    <PageShell title={post.title}>
       <article>
         <header style={{ padding: "96px 24px 56px" }}>
           <div className="mx-auto max-w-[720px]">

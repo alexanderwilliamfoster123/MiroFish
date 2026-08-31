@@ -274,7 +274,7 @@ function GroupTitle({ children }: { children: string }) {
   );
 }
 
-const Strategies = () => {
+const Strategies = ({ noHeader = false }: { noHeader?: boolean }) => {
   const [sheet, setSheet] = useState<PortfolioData | null>(null);
 
   return (
@@ -283,6 +283,7 @@ const Strategies = () => {
       style={{ backgroundColor: "#F2F2F0", padding: "120px 24px" }}
     >
       <div className="mx-auto max-w-[1180px]">
+        {!noHeader && (
         <FadeUp className="text-center">
           <p
             className="text-[12px] sm:text-[13px] md:text-[14px] mb-3 md:mb-4"
@@ -310,6 +311,7 @@ const Strategies = () => {
             subscribe in one tap.
           </p>
         </FadeUp>
+        )}
 
         {/* Flagship portfolios */}
         <GroupTitle>Flagship portfolios</GroupTitle>

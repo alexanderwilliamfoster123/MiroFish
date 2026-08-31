@@ -5,14 +5,14 @@ import Faq from "@/components/qsigma/Faq";
 
 export default function PricingPage() {
   return (
-    <PageShell>
+    <PageShell title="Pricing">
       <PageHero
         eyebrow="Pricing"
         titleDim="One number,"
         title="nothing behind it"
         intro="A single onboarding fee, a light monthly AUM fee, and a written promise: every fee disclosed before you pay anything."
       />
-      <Pricing />
+      <Pricing noHeader />
       <WhyQSigma />
       <Faq />
       <CtaBand />

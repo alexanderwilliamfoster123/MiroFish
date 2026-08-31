@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import FadeUp from "./FadeUp";
@@ -7,8 +7,16 @@ import { openAuth } from "@/lib/auth";
 
 const FONT = '"Satoshi", "Inter Tight", system-ui, sans-serif';
 
+const DEFAULT_TITLE = "Squared³ — A New Standard in Algorithmic Trading";
+
 /** Shared chrome for every subpage: solid navbar, content, sitemap footer. */
-export default function PageShell({ children }: { children: ReactNode }) {
+export default function PageShell({ children, title }: { children: ReactNode; title?: string }) {
+  useEffect(() => {
+    document.title = title ? `${title} — Squared³` : DEFAULT_TITLE;
+    return () => {
+      document.title = DEFAULT_TITLE;
+    };
+  }, [title]);
   return (
     <main style={{ fontFamily: FONT, backgroundColor: "#F2F2F0" }}>
       <Navbar dark onLaunch={() => openAuth()} />

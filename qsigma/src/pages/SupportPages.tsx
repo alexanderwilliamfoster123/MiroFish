@@ -15,7 +15,7 @@ const CHANNELS = [
 
 export function Support() {
   return (
-    <PageShell>
+    <PageShell title="Support">
       <PageHero
         eyebrow="Support"
         titleDim="Real answers,"
@@ -62,7 +62,7 @@ export function Contact() {
     outline: "none",
   } as const;
   return (
-    <PageShell>
+    <PageShell title="Contact">
       <PageHero
         eyebrow="Contact"
         titleDim="Talk to"
@@ -144,7 +144,7 @@ const SCAM_RULES = [
 
 export function Security() {
   return (
-    <PageShell>
+    <PageShell title="Security & Scams">
       <PageHero
         eyebrow="Security & Scams"
         titleDim="Paranoid"
@@ -193,7 +193,7 @@ export function Security() {
 
 export function Payments() {
   return (
-    <PageShell>
+    <PageShell title="Payment methods">
       <PageHero
         eyebrow="Payment methods"
         titleDim="Pay once,"
@@ -252,7 +252,7 @@ const REWARD_STEPS = [
 
 export function Rewards() {
   return (
-    <PageShell>
+    <PageShell title="Rewards">
       <PageHero
         eyebrow="Rewards"
         titleDim="Good words,"

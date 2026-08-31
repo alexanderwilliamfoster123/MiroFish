@@ -23,13 +23,14 @@ const Check = () => (
   </svg>
 );
 
-const Pricing = () => {
+const Pricing = ({ noHeader = false }: { noHeader?: boolean }) => {
   return (
     <section
       id="pricing"
       style={{ backgroundColor: "#F2F2F0", padding: "120px 24px" }}
     >
       <div className="mx-auto max-w-[1100px]">
+        {!noHeader && (
         <FadeUp className="text-center">
           <p
             className="text-[12px] sm:text-[13px] md:text-[14px] mb-3 md:mb-4"
@@ -56,6 +57,7 @@ const Pricing = () => {
             and every fee disclosed.
           </p>
         </FadeUp>
+        )}
 
         <div className="mt-14">
           <FadeUp delay={0.1}>

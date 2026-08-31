@@ -4,7 +4,7 @@ const UPDATED = "Last updated: August 31, 2026";
 
 export function Terms() {
   return (
-    <PageShell>
+    <PageShell title="Terms & Conditions">
       <PageHero eyebrow="Legal" title="Terms & Conditions" intro={UPDATED} />
       <PageSection white narrow>
         <Prose>
@@ -89,7 +89,7 @@ export function Terms() {
 
 export function Privacy() {
   return (
-    <PageShell>
+    <PageShell title="Privacy Policy">
       <PageHero eyebrow="Legal" title="Privacy Policy" intro={UPDATED} />
       <PageSection white narrow>
         <Prose>
@@ -145,7 +145,7 @@ export function Privacy() {
 
 export function Disclosures() {
   return (
-    <PageShell>
+    <PageShell title="Financial Services Guide">
       <PageHero eyebrow="Legal" title="Financial Services Guide" intro={UPDATED} />
       <PageSection white narrow>
         <Prose>
