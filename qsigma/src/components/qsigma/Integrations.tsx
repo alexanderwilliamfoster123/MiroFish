@@ -2,21 +2,21 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 const FONT = '"Satoshi", "Satoshi", "Inter Tight", system-ui, sans-serif';
-import { PublicMark, AlpacaMark, PublicLogo, AlpacaLogo } from "./BrokerLogos";
+import { PublicMark, AlpacaMark, IbkrMark, PublicLogo, AlpacaLogo, IbkrLogo } from "./BrokerLogos";
 
-type Item = { id: string; brand: "public" | "alpaca" | "core" };
+type Item = { id: string; brand: "public" | "alpaca" | "ibkr" | "core" };
 
-// Arc carousel cycles the two offered brokerages: Public.com and Alpaca
+// Arc carousel cycles the offered brokerages: Public.com, Alpaca, Interactive Brokers
 const INITIAL_ITEMS: Item[] = [
   { id: "alpaca-1", brand: "alpaca" },
   { id: "public-1", brand: "public" },
+  { id: "ibkr-1", brand: "ibkr" },
   { id: "alpaca-2", brand: "alpaca" },
-  { id: "public-2", brand: "public" },
   { id: "core", brand: "core" }, // CENTER
+  { id: "public-2", brand: "public" },
+  { id: "ibkr-2", brand: "ibkr" },
   { id: "alpaca-3", brand: "alpaca" },
   { id: "public-3", brand: "public" },
-  { id: "alpaca-4", brand: "alpaca" },
-  { id: "public-4", brand: "public" },
 ];
 
 // Indices 0..8 map to slot positions -4..+4 relative to center (index 4).
@@ -183,6 +183,8 @@ export default function Integrations() {
                     <PublicMark size={26} />
                   ) : item.brand === "alpaca" ? (
                     <AlpacaMark size={30} />
+                  ) : item.brand === "ibkr" ? (
+                    <IbkrMark size={28} />
                   ) : null}
                 </motion.span>
                 {/* Core background layer — fades in when slot becomes center */}
@@ -210,19 +212,22 @@ export default function Integrations() {
           <span className="flex items-center whitespace-nowrap rounded-full border border-black/10 bg-white px-7 py-3.5 shadow-sm">
             <AlpacaLogo height={26} />
           </span>
+          <span className="flex items-center whitespace-nowrap rounded-full border border-black/10 bg-white px-7 py-3.5 shadow-sm">
+            <IbkrLogo height={26} />
+          </span>
         </div>
 
         {/* Bottom text */}
         <div className="mt-[50px] flex flex-col items-center text-center">
           <p className="text-black text-lg font-medium">
-            {"Two trusted brokerages. Real-time sync. Zero fragmentation."
+            {"Three trusted brokerages. Real-time sync. Zero fragmentation."
               .split(" ")
               .map((w, i) => (
                 <RevealWord key={`b1-${i}`} text={w} delay={i * 0.06} />
               ))}
           </p>
           <p className="mt-[15px] max-w-[475px] text-black/30 text-lg font-medium">
-            {"Connect Public.com or Alpaca. Every trade executes in your own brokerage account — synchronized in real time, never pooled."
+            {"Connect Public.com, Alpaca, or Interactive Brokers. Every trade executes in your own brokerage account — synchronized in real time, never pooled."
               .split(" ")
               .map((w, i) => (
                 <RevealWord key={`b2-${i}`} text={w} delay={0.2 + i * 0.04} />

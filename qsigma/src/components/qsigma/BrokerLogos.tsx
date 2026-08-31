@@ -26,6 +26,21 @@ export const AlpacaMark = ({ size = 28 }: { size?: number }) => (
   </svg>
 );
 
+const IBKR_RED = "#DB0F16";
+const IBKR_DARK = "#8F0E14";
+
+/** Interactive Brokers — red angular figure with dot. */
+export const IbkrMark = ({ size = 28 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 64 64" fill="none" aria-hidden="true" style={{ display: "block" }}>
+    {/* Spike + base */}
+    <path d="M37 2 L37 20 L26 33 L33 62 L12 62 L12 46 Z" fill={IBKR_RED} />
+    {/* Darker facet at the base */}
+    <path d="M12 62 L33 62 L26 44 L12 50 Z" fill={IBKR_DARK} />
+    {/* Dot */}
+    <circle cx="43" cy="37" r="8.5" fill={IBKR_RED} />
+  </svg>
+);
+
 const wordmarkStyle = (height: number) => ({
   fontFamily: '"Satoshi", "Inter Tight", system-ui, sans-serif',
   fontSize: height * 0.62,
@@ -38,6 +53,17 @@ export const PublicLogo = ({ height = 30 }: { height?: number }) => (
   <span className="inline-flex items-center" style={{ gap: height * 0.3 }}>
     <PublicMark size={height * 0.86} />
     <span style={{ ...wordmarkStyle(height), fontWeight: 500, color: "#0B0B0F" }}>public</span>
+  </span>
+);
+
+/** Interactive Brokers lockup — mark + "InteractiveBrokers" wordmark. */
+export const IbkrLogo = ({ height = 30 }: { height?: number }) => (
+  <span className="inline-flex items-center" style={{ gap: height * 0.28 }}>
+    <IbkrMark size={height * 0.9} />
+    <span style={{ ...wordmarkStyle(height), fontSize: height * 0.52, color: "#111111" }}>
+      <span style={{ fontWeight: 700 }}>Interactive</span>
+      <span style={{ fontWeight: 400 }}>Brokers</span>
+    </span>
   </span>
 );
 
