@@ -1,5 +1,6 @@
 import { CSSProperties, useMemo, useState } from "react";
 import FadeUp from "./FadeUp";
+import { openCheckout } from "@/lib/checkout";
 
 // Average monthly rates derived from each portfolio's backtested CAGR
 const STRATS = [
@@ -349,15 +350,23 @@ const Calculator = () => {
           </div>
         </FadeUp>
 
-        <FadeUp className="mt-10 text-center" delay={0.15}>
+        <FadeUp className="mt-10 flex flex-col items-center gap-3 text-center" delay={0.15}>
+          <button
+            type="button"
+            onClick={() => openCheckout("Squared³ All Access")}
+            className="h-11 px-7 rounded-full bg-white text-[14px] font-semibold transition-colors hover:bg-[#E8E8E4]"
+            style={{ color: "#05050C", cursor: "pointer", border: "none" }}
+          >
+            Stop rewinding — start compounding
+          </button>
           <a
             href="#strategies"
-            className="text-[14px] transition-colors duration-200"
-            style={{ fontWeight: 500, color: "rgba(255,255,255,0.55)", textDecoration: "none" }}
+            className="text-[13px] transition-colors duration-200"
+            style={{ fontWeight: 500, color: "rgba(255,255,255,0.45)", textDecoration: "none" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.45)")}
           >
-            Stop rewinding — pick your portfolio →
+            or compare the portfolios first →
           </a>
         </FadeUp>
       </div>

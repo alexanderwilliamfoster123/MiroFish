@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { openCheckout } from "@/lib/checkout";
 
 const FONT = '"Satoshi", "Satoshi", "Inter Tight", system-ui, sans-serif';
 
@@ -101,7 +102,7 @@ export default function TakeControl({ onRequestAccess }: { onRequestAccess?: () 
           </motion.button>
           <motion.button
             type="button"
-            onClick={onRequestAccess}
+            onClick={() => openCheckout("Squared³ All Access")}
             initial={{ scale: 0, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true, amount: 0.6 }}
@@ -115,7 +116,7 @@ export default function TakeControl({ onRequestAccess }: { onRequestAccess?: () 
               className="w-6 h-6"
             />
             <span className="w-px h-8 bg-white/20" />
-            Launch app
+            Get started
           </motion.button>
         </div>
 

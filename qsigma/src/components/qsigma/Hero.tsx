@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import StoneReveal from "./StoneReveal";
+import { openCheckout } from "@/lib/checkout";
 
 const ASSETS = {
   star: "https://qclay.design/lovable/synex/star.svg",
@@ -79,6 +80,35 @@ const Hero = () => {
         >
           Take full control of your assets with a unified platform for
           investing, tracking, and growing your portfolio in real time.
+        </motion.p>
+
+        {/* Above-the-fold CTAs */}
+        <motion.div
+          {...blurUp(0.55, 20, 8, 0.7)}
+          className="mt-6 flex flex-wrap items-center justify-center gap-3 pointer-events-auto"
+        >
+          <button
+            type="button"
+            onClick={() => openCheckout("Squared³ All Access")}
+            className="h-11 px-7 rounded-full bg-black text-white text-[14px] font-semibold hover:bg-zinc-800 transition-colors"
+            style={{ cursor: "pointer", border: "none" }}
+          >
+            Get started
+          </button>
+          <a
+            href="#strategies"
+            className="h-11 px-6 rounded-full inline-flex items-center text-[14px] font-semibold text-black/70 hover:text-black transition-colors"
+            style={{ border: "1px solid rgba(0,0,0,0.15)", textDecoration: "none" }}
+          >
+            See audited performance
+          </a>
+        </motion.div>
+        <motion.p
+          {...blurUp(0.68, 16, 6, 0.7)}
+          className="mt-4 text-[12px] sm:text-[13px]"
+          style={{ fontWeight: 500, color: "rgba(0, 0, 0, 0.35)" }}
+        >
+          US CPA-audited · Funds stay in your own brokerage · No lock-ups
         </motion.p>
       </div>
 

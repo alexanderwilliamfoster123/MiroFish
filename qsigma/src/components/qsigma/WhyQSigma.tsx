@@ -268,6 +268,23 @@ export default function WhyQSigma() {
             })()}
           </div>
         </motion.div>
+
+        {/* Close the comparison while the anchor is fresh */}
+        <motion.div
+          className="mt-12 flex justify-center"
+          initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <a
+            href="#pricing"
+            className="inline-flex h-11 items-center rounded-full bg-black px-7 text-[14px] font-semibold text-white transition hover:bg-zinc-800"
+            style={{ textDecoration: "none" }}
+          >
+            Join the different league →
+          </a>
+        </motion.div>
       </div>
     </section>
   );
