@@ -104,7 +104,7 @@ const Hero = () => {
         >
           <img
             src={ASSETS.dashboard}
-            alt="alpha³ algorithmic trading dashboard"
+            alt="Squared³ algorithmic trading dashboard"
             className="w-full h-auto object-contain"
             style={{
               borderRadius: "12px 12px 0 0",

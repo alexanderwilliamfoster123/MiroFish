@@ -1,72 +1,61 @@
 interface LogoProps {
   /** White-on-dark variant */
   light?: boolean;
-  /** Height of the square mark in px */
+  /** Height of the layered-cube mark in px */
   markSize?: number;
   /** Wordmark font size in px */
   textSize?: number;
   withText?: boolean;
 }
 
-const MOSS_DARKBG = "#A3B18A";
-const MOSS_LIGHTBG = "#5F7052";
+const INK = "#0D1B16";
 
-/** alpha³ — square α mark with a cubed accent, plus lowercase wordmark. */
+/**
+ * Squared³ — three layers, stacked until they form a cube.
+ * Mark: stacked isometric layers. Wordmark: "Squared³" in Satoshi.
+ */
 const Logo = ({ light = false, markSize = 26, textSize = 20, withText = true }: LogoProps) => {
-  const markBg = light ? "#FFFFFF" : "#111111";
-  const markFg = light ? "#05050C" : "#FFFFFF";
-  const cube = light ? MOSS_LIGHTBG : MOSS_DARKBG;
+  const mark = light ? "#FFFFFF" : INK;
   const text = light ? "#FFFFFF" : "#05050C";
-  const cubeText = light ? MOSS_DARKBG : MOSS_LIGHTBG;
 
   return (
-    <span className="inline-flex items-center" style={{ gap: markSize * 0.32 }}>
-      <span
-        className="relative inline-flex shrink-0 items-center justify-center"
-        style={{
-          width: markSize,
-          height: markSize,
-          borderRadius: markSize * 0.28,
-          backgroundColor: markBg,
-        }}
+    <span className="inline-flex items-center" style={{ gap: markSize * 0.38 }}>
+      <svg
+        width={markSize}
+        height={markSize}
+        viewBox="0 0 64 64"
+        fill="none"
         aria-hidden="true"
+        style={{ display: "block", flexShrink: 0 }}
       >
-        <span
-          style={{
-            color: markFg,
-            fontSize: markSize * 0.62,
-            lineHeight: 1,
-            fontWeight: 600,
-            transform: `translate(-${markSize * 0.05}px, ${markSize * 0.02}px)`,
-          }}
-        >
-          α
-        </span>
-        <span
-          className="absolute"
-          style={{
-            top: markSize * 0.12,
-            right: markSize * 0.14,
-            color: cube,
-            fontSize: markSize * 0.34,
-            lineHeight: 1,
-            fontWeight: 700,
-          }}
-        >
-          3
-        </span>
-      </span>
+        <g fill={mark}>
+          <path d="M32 7 L52 19 L32 31 L12 19 Z" />
+          <path d="M12 27 L32 39 L52 27 L52 33 L32 45 L12 33 Z" />
+          <path d="M12 38 L32 50 L52 38 L52 44 L32 56 L12 44 Z" />
+        </g>
+      </svg>
       {withText && (
         <span
           style={{
-            fontWeight: 700,
+            fontWeight: 600,
             fontSize: textSize,
-            letterSpacing: "-0.5px",
+            letterSpacing: "-0.4px",
             color: text,
             lineHeight: 1,
+            fontFamily: '"Satoshi", "Inter Tight", system-ui, sans-serif',
           }}
         >
-          alpha<span style={{ color: cubeText }}>³</span>
+          Squared
+          <span
+            style={{
+              fontSize: textSize * 0.62,
+              verticalAlign: "super",
+              lineHeight: 0,
+              marginLeft: 1,
+            }}
+          >
+            3
+          </span>
         </span>
       )}
     </span>

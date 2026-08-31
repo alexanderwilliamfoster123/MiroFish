@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 
 const MOSS = "#5F7052";
 const CLAY = "#C25E5E";
-const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
+const FONT = '"Satoshi", "Satoshi", "Inter Tight", system-ui, sans-serif';
 
 const N = 90;
 const W = 400;

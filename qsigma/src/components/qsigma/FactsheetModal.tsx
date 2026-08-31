@@ -3,7 +3,7 @@ import { useEffect, useMemo } from "react";
 import { X } from "lucide-react";
 import type { PortfolioCardProps } from "@/components/ui/portfolio-card";
 
-const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
+const FONT = '"Satoshi", "Satoshi", "Inter Tight", system-ui, sans-serif';
 const DD_COLOR = "#A85C50";
 
 export interface FactsheetData extends Omit<PortfolioCardProps, "onSubscribe" | "cta"> {

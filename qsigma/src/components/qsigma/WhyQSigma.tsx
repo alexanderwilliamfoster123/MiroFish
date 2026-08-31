@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import Logo from "./Logo";
 import { useEffect, useState } from "react";
 
-const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
+const FONT = '"Satoshi", "Satoshi", "Inter Tight", system-ui, sans-serif';
 
 const ROWS: { label: string; other: string; value?: string }[] = [
   { label: "Cost to get started", value: "$2,497, once", other: "$10,000+ upfront" },
@@ -83,7 +83,7 @@ export default function WhyQSigma() {
             viewport={{ once: true, amount: 0.6 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="text-black/60 text-sm font-medium">WHY ALPHA³</span>
+            <span className="text-black/60 text-sm font-medium">WHY SQUARED³</span>
           </motion.div>
           <h2 className="mt-6 text-4xl md:text-5xl font-medium leading-[1.15]">
             <span className="text-black/35">

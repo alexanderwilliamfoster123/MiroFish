@@ -35,7 +35,7 @@ const Navbar = ({ dark: scrolled = false, onLaunch }: NavbarProps) => {
       }}
       className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-5"
     >
-      <a href="/" aria-label="alpha³ home" style={{ textDecoration: "none" }}>
+      <a href="/" aria-label="Squared³ home" style={{ textDecoration: "none" }}>
         <Logo />
       </a>
 

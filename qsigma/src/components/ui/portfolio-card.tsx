@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
  *  chart, CAGR/volatility/max-drawdown metric bars, and a Sharpe /
  *  benchmark / history row. QSigma light palette. */
 
-const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
+const FONT = '"Satoshi", "Satoshi", "Inter Tight", system-ui, sans-serif';
 const DD_COLOR = "#A85C50";
 const VOL_COLOR = "#9A9A97";
 

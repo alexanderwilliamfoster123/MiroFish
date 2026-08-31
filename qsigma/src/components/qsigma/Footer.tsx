@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Logo from "./Logo";
 
-const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
+const FONT = '"Satoshi", "Satoshi", "Inter Tight", system-ui, sans-serif';
 
 export default function Footer() {
   return (
@@ -54,11 +54,11 @@ export default function Footer() {
               </p>
             </div>
             <a
-              href="mailto:info@qsigma.com"
+              href="mailto:info@squaredq.com"
               className="mt-8 inline-flex items-center gap-2 text-black text-base font-normal hover:opacity-80 transition"
             >
               <span>
-                info@<span className="lowercase">qsigma</span>.com
+                info@squaredq.com
               </span>
               <img src="https://qclay.design/lovable/synex/RedArrow.svg" alt="" className="w-4 h-4" />
             </a>
@@ -81,7 +81,7 @@ export default function Footer() {
               </p>
             </div>
             <a
-              href="#"
+              href="mailto:info@squaredq.com?subject=Book%20a%20call"
               className="mt-8 inline-flex items-center gap-2 text-black text-base font-normal hover:opacity-80 transition"
             >
               <span>Let&apos;s talk</span>
@@ -95,7 +95,7 @@ export default function Footer() {
           <div className="flex items-center gap-3">
             <Logo markSize={22} textSize={17} />
             <p className="text-black/30 text-xs font-medium">
-              © 2026 alpha³. All rights reserved.
+              © 2026 Squared³. All rights reserved.
             </p>
           </div>
           <p className="text-black/30 text-xs font-medium md:max-w-[560px] md:text-right leading-relaxed">

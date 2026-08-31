@@ -137,7 +137,7 @@ function WordsReveal({
   );
 }
 
-const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
+const FONT = '"Satoshi", "Satoshi", "Inter Tight", system-ui, sans-serif';
 
 interface CardProps {
   image: string;

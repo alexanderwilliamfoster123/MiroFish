@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
+const FONT = '"Satoshi", "Satoshi", "Inter Tight", system-ui, sans-serif';
 
 function ArrowRight({ className = "w-3.5 h-3.5" }: { className?: string }) {
   return (

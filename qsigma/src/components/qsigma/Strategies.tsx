@@ -264,7 +264,7 @@ function GroupTitle({ children }: { children: string }) {
   return (
     <FadeUp className="mt-16 mb-6 flex items-center gap-5">
       <h3
-        className="whitespace-nowrap text-[22px] sm:text-[26px]"
+        className="font-display whitespace-nowrap text-[22px] sm:text-[26px]"
         style={{ fontWeight: 600, letterSpacing: "-0.5px", color: "#05050C" }}
       >
         {children}
@@ -305,7 +305,7 @@ const Strategies = () => {
             className="mx-auto mt-4 md:mt-5 text-[14px] sm:text-[16px]"
             style={{ fontWeight: 500, color: "rgba(0, 0, 0, 0.40)", maxWidth: "520px" }}
           >
-            Every alpha³ strategy is researched, executed, and rebalanced
+            Every Squared³ strategy is researched, executed, and rebalanced
             end-to-end by our AI engine. Pick the ones that fit your goals and
             subscribe in one tap.
           </p>
@@ -340,7 +340,7 @@ const Strategies = () => {
             Politician Portfolios
           </p>
           <h3
-            className="text-[28px] sm:text-[34px] md:text-[44px]"
+            className="font-display text-[28px] sm:text-[34px] md:text-[44px]"
             style={{ fontWeight: 500, letterSpacing: "-1px", lineHeight: 1.05 }}
           >
             <span className="block" style={{ color: "rgba(0, 0, 0, 0.20)" }}>

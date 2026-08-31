@@ -5,7 +5,7 @@ import { PaymentMethodSelector } from "@/components/ui/payment-1";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
+const FONT = '"Satoshi", "Satoshi", "Inter Tight", system-ui, sans-serif';
 const MOSS = "#5F7052";
 
 const VisaIcon = () => (

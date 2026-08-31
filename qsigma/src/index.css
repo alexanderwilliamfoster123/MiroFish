@@ -24,7 +24,16 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f2f2f0;
-  font-family: "Inter Tight", system-ui, sans-serif;
+  font-family: "Satoshi", "Inter Tight", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Squared³ brand typography — headings in LT Superior Serif (Sentient stands in
+   until the licensed files are added), body in Satoshi Variable. */
+h1,
+h2,
+.font-display {
+  font-family: "LT Superior", "Sentient", Georgia, "Times New Roman", serif !important;
+  font-weight: 500;
 }

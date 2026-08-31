@@ -92,7 +92,7 @@ const Pricing = () => {
               className="text-[16px]"
               style={{ fontWeight: 600, color: "rgba(255,255,255,0.85)" }}
             >
-              alpha³
+              Squared³
             </h3>
             <div className="mt-4 flex items-baseline gap-2">
               <span
@@ -136,7 +136,7 @@ const Pricing = () => {
             </ul>
 
             <button
-              onClick={() => openCheckout("alpha³ All Access")}
+              onClick={() => openCheckout("Squared³ All Access")}
               className="mt-9 w-full transition-colors duration-200 hover:bg-[#E8E8E4]"
               style={{
                 backgroundColor: "#FFFFFF",

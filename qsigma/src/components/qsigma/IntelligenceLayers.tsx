@@ -1,7 +1,7 @@
 import { motion, motionValue, type MotionValue, useAnimationFrame } from "framer-motion";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
-const FONT = '"Inter Tight", Inter, system-ui, sans-serif';
+const FONT = '"Satoshi", "Satoshi", "Inter Tight", system-ui, sans-serif';
 
 // Node positions as % of container (x, y), with float amplitudes in px and phase
 type NodeDef = {
@@ -231,7 +231,7 @@ export default function IntelligenceLayers() {
                   style={{ width: 14, height: 14 }}
                 />
               </div>
-              {/* ALPHA³ CORE label above */}
+              {/* SQUARED³ CORE label above */}
               <span
                 className="absolute -translate-x-1/2 whitespace-nowrap text-black text-[13px] tracking-wide"
                 style={{
@@ -241,7 +241,7 @@ export default function IntelligenceLayers() {
                   top: -64,
                 }}
               >
-                ALPHA³ CORE
+                SQUARED³ CORE
               </span>
               {/* Description below */}
               <div
@@ -368,7 +368,7 @@ export default function IntelligenceLayers() {
             >
               <span className="text-black/50 text-sm font-medium">CORE CAPABILITIES</span>
             </motion.div>
-            <h3 className="text-black/75 text-4xl font-normal leading-[1.02]" style={{ fontFamily: FONT }}>
+            <h3 className="font-display text-black/75 text-4xl font-normal leading-[1.02]" style={{ fontFamily: FONT }}>
               {["Powering", "every"].map((w, i) => (
                 <RevealWord key={`p1-${i}`} text={w} delay={i * 0.08} />
               ))}
