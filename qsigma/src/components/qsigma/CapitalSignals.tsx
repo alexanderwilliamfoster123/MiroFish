@@ -2,61 +2,59 @@ import { motion } from "framer-motion";
 import TreeReveal from "./TreeReveal";
 import { PublicLogo, AlpacaLogo, IbkrLogo } from "./BrokerLogos";
 
-const FONT = '"Satoshi", "Inter Tight", system-ui, sans-serif';
+const BROKERS = [
+  { Logo: PublicLogo, rotate: -4, delay: 0 },
+  { Logo: AlpacaLogo, rotate: 3, delay: 0.14 },
+  { Logo: IbkrLogo, rotate: -2, delay: 0.28 },
+];
 
 /**
  * CapitalSignals is a tall scroll-spacer section.
  * The morphing visual is rendered by <MorphingCard /> (fixed),
  * which uses #morph-scroll-target (this section) for its scroll progress.
  *
- * The broker capsule below sits over the tree artwork, replacing the
- * "Core — best choice" pill that is baked into the source image.
+ * A white fade at the base of the tree artwork hides the capsule graphic
+ * baked into the source image; the broker logos pop up over it on scroll.
  */
 export default function CapitalSignals() {
   return (
     <section
       id="morph-scroll-target"
       className="relative bg-white overflow-hidden"
-      style={{ height: "115vh", fontFamily: FONT }}
+      style={{ height: "115vh" }}
     >
       <div className="absolute bottom-0 left-0 right-0">
         <TreeReveal className="w-full" />
 
-        {/* Broker highlight capsule */}
+        {/* White fog over the lower artwork — covers the baked-in pill */}
         <div
-          className="pointer-events-none absolute inset-x-0 flex justify-center px-4"
-          style={{ top: "26%" }}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0"
+          style={{
+            height: "68%",
+            background:
+              "linear-gradient(to top, #FFFFFF 0%, #FFFFFF 42%, rgba(255,255,255,0.88) 66%, rgba(255,255,255,0) 100%)",
+          }}
+        />
+
+        {/* Brokers pop up on scroll */}
+        <div
+          className="pointer-events-none absolute inset-x-0 flex flex-wrap items-center justify-center gap-3 px-4 sm:gap-4"
+          style={{ bottom: "16%" }}
         >
-          <motion.div
-            initial={{ opacity: 0, y: 26, filter: "blur(10px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-col items-center gap-4 rounded-[40px] px-7 py-6 sm:px-10"
-            style={{
-              backgroundColor: "rgba(11, 16, 11, 0.92)",
-              border: "1px solid rgba(255,255,255,0.18)",
-              boxShadow: "0 30px 80px rgba(0,0,0,0.35)",
-            }}
-          >
-            <span
-              className="text-center text-[13px] sm:text-[14px]"
-              style={{ fontWeight: 500, color: "rgba(255,255,255,0.75)", letterSpacing: "0.02em" }}
+          {BROKERS.map(({ Logo, rotate, delay }, i) => (
+            <motion.span
+              key={i}
+              initial={{ scale: 0, opacity: 0, y: 26, rotate }}
+              whileInView={{ scale: 1, opacity: 1, y: 0, rotate: 0 }}
+              viewport={{ once: true, amount: 0.8 }}
+              transition={{ type: "spring", stiffness: 260, damping: 17, delay }}
+              className="flex items-center whitespace-nowrap rounded-full border border-black/10 bg-white px-6 py-3.5 sm:px-7"
+              style={{ boxShadow: "0 18px 40px rgba(5,5,12,0.14)" }}
             >
-              Executes in your own account at
-            </span>
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <span className="flex items-center whitespace-nowrap rounded-full bg-white px-6 py-3">
-                <PublicLogo height={22} />
-              </span>
-              <span className="flex items-center whitespace-nowrap rounded-full bg-white px-6 py-3">
-                <AlpacaLogo height={22} />
-              </span>
-              <span className="flex items-center whitespace-nowrap rounded-full bg-white px-6 py-3">
-                <IbkrLogo height={22} />
-              </span>
-            </div>
-          </motion.div>
+              <Logo height={24} />
+            </motion.span>
+          ))}
         </div>
       </div>
     </section>
