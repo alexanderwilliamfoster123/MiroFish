@@ -1,0 +1,450 @@
+<title>Paktos Fleet Economics</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+<style>
+:root {
+  --bg: #efeef1; --surface: #f5f4f6; --card: #fcfcfd;
+  --ink: #18181b; --ink-soft: #494851; --ink-faint: #94939f;
+  --line: rgba(24, 24, 27, 0.09); --grid: rgba(24, 24, 27, 0.07);
+  --accent: #6a2e9e; --accent-soft: rgba(106, 46, 158, 0.10);
+  --s-comm: #6a2e9e;   /* commission revenue */
+  --s-agent: #c05c21;  /* agent battle P&L */
+  --s-base: #16739e;   /* no-fleet baseline scenario */
+  --zone: rgba(192, 92, 33, 0.07);
+  --chip: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #18181b; --surface: #1d1d21; --card: #202024;
+    --ink: #f2f1f3; --ink-soft: #c9c9cf; --ink-faint: #94939f;
+    --line: rgba(255, 255, 255, 0.10); --grid: rgba(255, 255, 255, 0.08);
+    --accent: #d3c2f0; --accent-soft: rgba(211, 194, 240, 0.12);
+    --s-comm: #9d68d6; --s-agent: #ce7b42; --s-base: #4293c2;
+    --zone: rgba(206, 123, 66, 0.10);
+    --chip: #2a2a2f;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #18181b; --surface: #1d1d21; --card: #202024;
+  --ink: #f2f1f3; --ink-soft: #c9c9cf; --ink-faint: #94939f;
+  --line: rgba(255, 255, 255, 0.10); --grid: rgba(255, 255, 255, 0.08);
+  --accent: #d3c2f0; --accent-soft: rgba(211, 194, 240, 0.12);
+  --s-comm: #9d68d6; --s-agent: #ce7b42; --s-base: #4293c2;
+  --zone: rgba(206, 123, 66, 0.10);
+  --chip: #2a2a2f;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 14px/1.5 'Plus Jakarta Sans', -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 28px 22px 60px; }
+header { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
+.brand { font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 21px; }
+h1 { font-size: 21px; font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+.sub { color: var(--ink-faint); font-size: 13px; max-width: 66ch; margin: 0 0 22px; }
+.layout { display: grid; grid-template-columns: 296px minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 880px) { .layout { grid-template-columns: 1fr; } }
+
+/* controls rail */
+.rail { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 16px; }
+.group { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px 6px; }
+.group h2 { font-size: 10px; letter-spacing: 0.14em; color: var(--ink-faint); font-weight: 700; margin: 0 0 10px; }
+.ctl { margin-bottom: 12px; }
+.ctl-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 5px; }
+.ctl label { font-size: 12.5px; color: var(--ink-soft); font-weight: 600; }
+.ctl output { font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums; background: var(--surface); border: 1px solid var(--line); border-radius: 7px; padding: 1px 8px; }
+input[type=range] { width: 100%; accent-color: var(--accent); height: 22px; margin: 0; }
+input[type=range]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.group.star { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.group.star .ctl output { color: var(--accent); }
+
+/* main column */
+main { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media (max-width: 720px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+.tile { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 13px 16px 12px; }
+.tile .k { font-size: 10px; letter-spacing: 0.12em; color: var(--ink-faint); font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.tile .k i { width: 8px; height: 8px; border-radius: 3px; display: inline-block; }
+.tile b { display: block; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; margin-top: 4px; }
+.tile small { color: var(--ink-faint); font-size: 11px; }
+.tile.hero { background: var(--accent-soft); border-color: transparent; }
+
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px 14px; }
+.panel h3 { margin: 0; font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.panel .note { color: var(--ink-faint); font-size: 12px; margin: 3px 0 10px; max-width: 74ch; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 11.5px; color: var(--ink-soft); margin: 0 0 6px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; }
+.legend i.ln { height: 3px; border-radius: 2px; width: 14px; }
+.chart { position: relative; }
+.chart svg { display: block; width: 100%; height: auto; }
+.tip {
+  position: absolute; pointer-events: none; background: var(--chip); border: 1px solid var(--line);
+  border-radius: 9px; padding: 7px 10px; font-size: 11.5px; box-shadow: 0 6px 18px rgba(0,0,0,0.14);
+  white-space: nowrap; opacity: 0; transform: translate(-50%, -110%); font-variant-numeric: tabular-nums; z-index: 3;
+}
+.tip b { font-weight: 800; }
+.tip .r { display: flex; gap: 10px; justify-content: space-between; }
+.tip .r i { width: 8px; height: 8px; border-radius: 3px; display: inline-block; margin-right: 5px; }
+details.data { margin-top: 8px; }
+details.data summary { cursor: pointer; font-size: 11.5px; color: var(--ink-faint); font-weight: 600; }
+details.data .scroll { overflow-x: auto; margin-top: 8px; }
+table { border-collapse: collapse; font-size: 11.5px; font-variant-numeric: tabular-nums; min-width: 640px; }
+th, td { text-align: right; padding: 4px 10px; border-bottom: 1px solid var(--line); }
+th { color: var(--ink-faint); font-weight: 600; font-size: 10px; letter-spacing: 0.08em; }
+th:first-child, td:first-child { text-align: left; }
+.foot { color: var(--ink-faint); font-size: 11.5px; max-width: 78ch; }
+.foot b { color: var(--ink-soft); }
+</style>
+
+<div class="wrap">
+  <header><span class="brand">Paktos</span><h1>Fleet Economics</h1></header>
+  <p class="sub">What a disclosed agent fleet is worth to the business — and where pushing its win rate
+    stops paying. Commission compounds with battle volume; agent winnings come out of player balances and
+    feed churn. Drag the sliders; every figure recomputes over a 24-month cohort model.</p>
+
+  <div class="layout">
+    <div class="rail" id="rail">
+      <div class="group"><h2>MARKET</h2>
+        <div class="ctl"><div class="ctl-row"><label for="u0">Active traders today</label><output id="u0o"></output></div><input type="range" id="u0" min="200" max="20000" step="100" value="2000"></div>
+        <div class="ctl"><div class="ctl-row"><label for="acq">New traders / month</label><output id="acqo"></output></div><input type="range" id="acq" min="0" max="3000" step="50" value="300"></div>
+        <div class="ctl"><div class="ctl-row"><label for="bpm">Battles per trader / month</label><output id="bpmo"></output></div><input type="range" id="bpm" min="2" max="40" step="1" value="12"></div>
+        <div class="ctl"><div class="ctl-row"><label for="pot">Average pot</label><output id="poto"></output></div><input type="range" id="pot" min="20" max="2000" step="20" value="100"></div>
+        <div class="ctl"><div class="ctl-row"><label for="fee">Commission</label><output id="feeo"></output></div><input type="range" id="fee" min="5" max="20" step="0.5" value="10"></div>
+      </div>
+      <div class="group"><h2>MATCHING</h2>
+        <div class="ctl"><div class="ctl-row"><label for="match">Matches found without agents</label><output id="matcho"></output></div><input type="range" id="match" min="20" max="95" step="1" value="55"></div>
+        <div class="ctl"><div class="ctl-row"><label for="pref">Players choosing machine battles</label><output id="prefo"></output></div><input type="range" id="pref" min="0" max="60" step="1" value="20"></div>
+      </div>
+      <div class="group star"><h2>THE FLEET</h2>
+        <div class="ctl"><div class="ctl-row"><label for="wr">Agent win rate vs humans</label><output id="wro"></output></div><input type="range" id="wr" min="40" max="75" step="0.5" value="52"></div>
+      </div>
+      <div class="group"><h2>PLAYERS</h2>
+        <div class="ctl"><div class="ctl-row"><label for="churn">Base churn / month</label><output id="churno"></output></div><input type="range" id="churn" min="2" max="20" step="0.5" value="6"></div>
+        <div class="ctl"><div class="ctl-row"><label for="sens">Churn sensitivity to bot losses</label><output id="senso"></output></div><input type="range" id="sens" min="0" max="2" step="0.1" value="1.2"></div>
+        <div class="ctl"><div class="ctl-row"><label for="ref">Acquisition from referrals</label><output id="refo"></output></div><input type="range" id="ref" min="0" max="80" step="5" value="50"></div>
+      </div>
+      <div class="group"><h2>FLEET COSTS</h2>
+        <div class="ctl"><div class="ctl-row"><label for="infra">Infra per agent battle</label><output id="infrao"></output></div><input type="range" id="infra" min="0" max="0.5" step="0.01" value="0.05"></div>
+        <div class="ctl"><div class="ctl-row"><label for="fixed">Fleet fixed cost / month</label><output id="fixedo"></output></div><input type="range" id="fixed" min="0" max="20000" step="500" value="2000"></div>
+      </div>
+    </div>
+
+    <main>
+      <div class="tiles">
+        <div class="tile hero"><span class="k">NET REVENUE · 24 MO</span><b id="tNet"></b><small id="tNetD"></small></div>
+        <div class="tile"><span class="k"><i style="background:var(--s-comm)"></i>COMMISSION</span><b id="tComm"></b><small>risk-free, all battles</small></div>
+        <div class="tile"><span class="k"><i style="background:var(--s-agent)"></i>AGENT BATTLE P&amp;L</span><b id="tAgent"></b><small id="tAgentD"></small></div>
+        <div class="tile"><span class="k">TRADERS AT MONTH 24</span><b id="tUsers"></b><small id="tUsersD"></small></div>
+      </div>
+
+      <div class="panel">
+        <h3>Where the win rate stops paying</h3>
+        <p class="note">24-month net revenue as the fleet's win rate varies, everything else held at your
+          settings. The peak is the revenue-optimal win rate; past it, churn and dying referrals from farmed
+          players eat more commission than the pots bring in.</p>
+        <div class="legend"><span><i class="ln" style="background:var(--ink)"></i>Net with fleet</span><span><i class="ln" style="background:var(--s-base)"></i>No-fleet baseline</span></div>
+        <div class="chart" id="cCurve"><div class="tip"></div></div>
+        <details class="data"><summary>View the numbers</summary><div class="scroll" id="dCurve"></div></details>
+      </div>
+
+      <div class="panel">
+        <h3>Monthly revenue composition</h3>
+        <p class="note">Commission on every settled battle, plus the fleet's expected battle P&amp;L, minus fleet
+          costs. Agent P&amp;L is an expected value — real months swing around it.</p>
+        <div class="legend"><span><i style="background:var(--s-comm)"></i>Commission</span><span><i style="background:var(--s-agent)"></i>Agent battle P&amp;L</span><span><i class="ln" style="background:var(--ink)"></i>Net after costs</span><span><i class="ln" style="background:var(--s-base)"></i>No-fleet net</span></div>
+        <div class="chart" id="cMonthly"><div class="tip"></div></div>
+        <details class="data"><summary>View the numbers</summary><div class="scroll" id="dMonthly"></div></details>
+      </div>
+
+      <div class="panel">
+        <h3>Traders over time</h3>
+        <p class="note">The growth cost of an aggressive fleet: players who keep losing to machines stop showing up,
+          and every lost trader is lost commission forever.</p>
+        <div class="legend"><span><i class="ln" style="background:var(--ink)"></i>With fleet at your win rate</span><span><i class="ln" style="background:var(--s-base)"></i>No fleet</span></div>
+        <div class="chart" id="cUsers"><div class="tip"></div></div>
+      </div>
+
+      <div class="panel">
+        <h3>Four ways to run it</h3>
+        <p class="note">24-month net revenue under your market settings. The liquidity a fleet adds is worth
+          far more than the pots it can farm.</p>
+        <div class="chart" id="cScen"><div class="tip"></div></div>
+      </div>
+
+      <p class="foot"><b>Model notes.</b> Pot = two equal stakes; winner receives the pot net of commission.
+        On agent battles the house stakes one side, so its expected take per battle is
+        S·(2p−1+2f(1−p)) — at a 10% commission the fleet must win 44.4% just to match staying out.
+        Churn each month is base churn plus sensitivity × (win rate − 50%) × the share of a trader's battles
+        played against machines; referral acquisition scales with community size and squared retention, so
+        farming players also dries up the pipeline that replaces them. Expected values only: no variance, no seasonality — a planning tool, not a forecast.
+        Fair-play boundary: this models a <b>disclosed</b> fleet with published strategy cards; undisclosed house
+        players aren't a scenario here because they aren't a business.</p>
+    </main>
+  </div>
+</div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const IDS = ['u0', 'acq', 'bpm', 'pot', 'fee', 'match', 'pref', 'wr', 'churn', 'sens', 'ref', 'infra', 'fixed'];
+const gbp = v => {
+  const a = Math.abs(v), s = v < 0 ? '−' : '';
+  if (a >= 1e6) return s + '£' + (a / 1e6).toFixed(2) + 'M';
+  if (a >= 1e3) return s + '£' + (a / 1e3).toFixed(a >= 1e4 ? 0 : 1) + 'K';
+  return s + '£' + Math.round(a).toLocaleString('en-GB');
+};
+const num = v => Math.round(v).toLocaleString('en-GB');
+const css = n => getComputedStyle(document.body).getPropertyValue(n).trim();
+
+function params() {
+  return {
+    u0: +$('u0').value, acq: +$('acq').value, bpm: +$('bpm').value, pot: +$('pot').value,
+    fee: +$('fee').value / 100, match: +$('match').value / 100, pref: +$('pref').value / 100,
+    wr: +$('wr').value / 100, churn: +$('churn').value / 100, sens: +$('sens').value, ref: +$('ref').value / 100,
+    infra: +$('infra').value, fixed: +$('fixed').value,
+  };
+}
+
+/* 24-month cohort model. fleet=false gives the counterfactual. */
+function simulate(p, wr, fleet, months = 24) {
+  let users = p.u0;
+  const rows = [];
+  const S = p.pot / 2;
+  const evAgent = S * (2 * wr - 1 + 2 * p.fee * (1 - wr));
+  for (let m = 1; m <= months; m++) {
+    const demand = users * p.bpm;
+    const matched = demand * p.match;
+    const hvh = fleet ? matched * (1 - p.pref) : matched;
+    const agentB = fleet ? demand * (1 - p.match) + matched * p.pref : 0;
+    const commission = hvh * p.pot * p.fee;
+    const agentPL = agentB * evAgent;
+    const costs = fleet ? agentB * p.infra + p.fixed : 0;
+    const net = commission + agentPL - costs;
+    const exposure = demand > 0 ? agentB / demand : 0;
+    const churn = Math.min(0.6, p.churn + (fleet ? p.sens * Math.max(0, wr - 0.5) * exposure : 0));
+    rows.push({ m, users, hvh, agentB, commission, agentPL, costs, net, churn });
+    /* referral inflow scales with community size and retention — a fleet that
+       farms players also strangles the word-of-mouth that replaces them */
+    const refQ = Math.pow(Math.min(1, p.churn / churn), 2) * (users / p.u0);
+    users = users * (1 - churn) + p.acq * (1 - p.ref) + p.acq * p.ref * Math.min(2.5, refQ);
+  }
+  return rows;
+}
+const year1 = rows => rows.reduce((a, r) => a + r.net, 0);
+
+/* ---- shared chart helpers (drawn to measured width) ---- */
+function frame(el, H, padL, padR) {
+  const W = Math.max(420, el.clientWidth);
+  return { W, H, padL, padR, padT: 14, padB: 26, iw: W - padL - padR, ih: H - 14 - 26 };
+}
+function yTicks(f, lo, hi, fmt) {
+  let g = '';
+  for (let i = 0; i <= 4; i++) {
+    const v = lo + (hi - lo) * i / 4, y = f.padT + f.ih * (1 - i / 4);
+    g += `<line x1="${f.padL}" x2="${f.W - f.padR}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${css('--grid')}" stroke-dasharray="2 6"/>`
+      + `<text x="${f.padL - 8}" y="${(y + 3.5).toFixed(1)}" text-anchor="end" font-size="10" fill="${css('--ink-faint')}">${fmt(v)}</text>`;
+  }
+  return g;
+}
+function hover(el, onMove) {
+  const tip = el.querySelector('.tip');
+  el.onpointermove = e => {
+    const r = el.getBoundingClientRect();
+    const res = onMove(e.clientX - r.left, r.width);
+    if (!res) { tip.style.opacity = 0; return; }
+    tip.innerHTML = res.html;
+    tip.style.left = res.x + 'px';
+    tip.style.top = res.y + 'px';
+    tip.style.opacity = 1;
+  };
+  el.onpointerleave = () => { tip.style.opacity = 0; };
+}
+
+/* ---- chart 1: net vs win rate ---- */
+let curveData = null;
+function drawCurve(p) {
+  const el = $('cCurve');
+  const f = frame(el, 260, 58, 16);
+  const pts = [];
+  for (let w = 0.40; w <= 0.7501; w += 0.005) {
+    pts.push({ w, net: year1(simulate(p, w, true)) });
+  }
+  const base = year1(simulate(p, p.wr, false));
+  const lo = Math.min(base, ...pts.map(q => q.net)), hi = Math.max(base, ...pts.map(q => q.net));
+  const pad = (hi - lo) * 0.1 || 1;
+  const Y = v => f.padT + f.ih * (1 - (v - (lo - pad)) / ((hi + pad) - (lo - pad)));
+  const X = w => f.padL + (w - 0.40) / 0.35 * f.iw;
+  const best = pts.reduce((a, b) => (b.net > a.net ? b : a));
+  const curNet = year1(simulate(p, p.wr, true));
+  const belowIdx = pts.findIndex((q, i) => i > pts.indexOf(best) && q.net < base);
+  const zoneX = belowIdx > 0 ? X(pts[belowIdx].w) : null;
+  const path = pts.map((q, i) => `${i ? 'L' : 'M'}${X(q.w).toFixed(1)},${Y(q.net).toFixed(1)}`).join(' ');
+  let svg = `<svg viewBox="0 0 ${f.W} ${f.H}" role="img" aria-label="Net revenue versus agent win rate">`;
+  if (zoneX) svg += `<rect x="${zoneX.toFixed(1)}" y="${f.padT}" width="${(f.W - f.padR - zoneX).toFixed(1)}" height="${f.ih}" fill="${css('--zone')}"/>`
+    + `<text x="${(zoneX + (f.W - f.padR - zoneX) / 2).toFixed(1)}" y="${f.padT + 14}" text-anchor="middle" font-size="9.5" font-weight="700" letter-spacing="1" fill="${css('--s-agent')}">WORSE THAN NO FLEET</text>`;
+  svg += yTicks(f, lo - pad, hi + pad, gbp);
+  for (let w = 0.40; w <= 0.76; w += 0.05) {
+    svg += `<text x="${X(w).toFixed(1)}" y="${f.H - 8}" text-anchor="middle" font-size="10" fill="${css('--ink-faint')}">${Math.round(w * 100)}%</text>`;
+  }
+  svg += `<line x1="${f.padL}" x2="${f.W - f.padR}" y1="${Y(base).toFixed(1)}" y2="${Y(base).toFixed(1)}" stroke="${css('--s-base')}" stroke-width="2" stroke-dasharray="5 5"/>`
+    + `<path d="${path}" fill="none" stroke="${css('--ink')}" stroke-width="2.5" stroke-linejoin="round"/>`
+    + `<circle cx="${X(best.w).toFixed(1)}" cy="${Y(best.net).toFixed(1)}" r="5" fill="${css('--s-comm')}" stroke="${css('--card')}" stroke-width="2"/>`
+    + `<text x="${X(best.w).toFixed(1)}" y="${(Y(best.net) - 12).toFixed(1)}" text-anchor="middle" font-size="10.5" font-weight="700" fill="${css('--ink-soft')}">optimum ${Math.round(best.w * 100)}% · ${gbp(best.net)}</text>`
+    + `<circle cx="${X(p.wr).toFixed(1)}" cy="${Y(curNet).toFixed(1)}" r="5.5" fill="${css('--s-agent')}" stroke="${css('--card')}" stroke-width="2"/>`
+    + `<text x="${X(p.wr).toFixed(1)}" y="${(Y(curNet) + 20).toFixed(1)}" text-anchor="middle" font-size="10.5" font-weight="700" fill="${css('--s-agent')}">you · ${Math.round(p.wr * 100)}%</text>`
+    + `</svg>`;
+  const old = el.querySelector('svg'); if (old) old.remove();
+  el.insertAdjacentHTML('afterbegin', svg);
+  curveData = { pts, base, f, X, Y };
+  hover(el, (mx, w) => {
+    const scale = f.W / w;
+    const xw = 0.40 + Math.max(0, Math.min(1, (mx * scale - f.padL) / f.iw)) * 0.35;
+    const q = pts.reduce((a, b) => Math.abs(b.w - xw) < Math.abs(a.w - xw) ? b : a);
+    return { x: X(q.w) / scale, y: Y(q.net) / scale,
+      html: `<b>${(q.w * 100).toFixed(1)}% win rate</b><div class="r"><span>Net 24 mo</span><b>${gbp(q.net)}</b></div><div class="r"><span>vs no fleet</span><b>${gbp(q.net - base)}</b></div>` };
+  });
+  $('dCurve').innerHTML = tableHTML(['Win rate', 'Net 24 mo', 'vs no fleet'],
+    pts.filter((_, i) => i % 10 === 0).map(q => [(q.w * 100).toFixed(0) + '%', gbp(q.net), gbp(q.net - base)]));
+  return { best, curNet, base };
+}
+
+/* ---- chart 2: monthly composition ---- */
+function drawMonthly(p, rows, rowsOff) {
+  const el = $('cMonthly');
+  const f = frame(el, 240, 58, 16);
+  const n = rows.length;
+  const tops = rows.map(r => r.commission + Math.max(0, r.agentPL));
+  const lows = rows.map((r, i) => Math.min(0, r.agentPL, r.net, rowsOff[i].net));
+  const hi = Math.max(...tops) * 1.08 || 1, lo = Math.min(0, ...lows) * 1.15;
+  const Y = v => f.padT + f.ih * (1 - (v - lo) / (hi - lo));
+  const X = i => f.padL + (i + 0.5) / n * f.iw;
+  const bw = Math.max(4, f.iw / n - 3);
+  let svg = `<svg viewBox="0 0 ${f.W} ${f.H}" role="img" aria-label="Monthly revenue composition">` + yTicks(f, lo, hi, gbp);
+  rows.forEach((r, i) => {
+    const x = (X(i) - bw / 2).toFixed(1);
+    const cTop = Y(r.commission), zero = Y(0);
+    svg += `<rect x="${x}" width="${bw.toFixed(1)}" y="${cTop.toFixed(1)}" height="${Math.max(1, zero - cTop).toFixed(1)}" rx="2.5" fill="${css('--s-comm')}"/>`;
+    if (r.agentPL >= 0) {
+      const aTop = Y(r.commission + r.agentPL);
+      svg += `<rect x="${x}" width="${bw.toFixed(1)}" y="${aTop.toFixed(1)}" height="${Math.max(1, cTop - aTop - 2).toFixed(1)}" rx="2.5" fill="${css('--s-agent')}"/>`;
+    } else {
+      svg += `<rect x="${x}" width="${bw.toFixed(1)}" y="${(zero + 2).toFixed(1)}" height="${Math.max(1, Y(r.agentPL) - zero - 2).toFixed(1)}" rx="2.5" fill="${css('--s-agent')}"/>`;
+    }
+  });
+  const netP = rows.map((r, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(r.net).toFixed(1)}`).join(' ');
+  const offP = rowsOff.map((r, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(r.net).toFixed(1)}`).join(' ');
+  svg += `<path d="${offP}" fill="none" stroke="${css('--s-base')}" stroke-width="2" stroke-dasharray="5 5"/>`
+    + `<path d="${netP}" fill="none" stroke="${css('--ink')}" stroke-width="2.5" stroke-linejoin="round"/>`;
+  for (let m = 0; m < n; m += 4) svg += `<text x="${X(m).toFixed(1)}" y="${f.H - 8}" text-anchor="middle" font-size="10" fill="${css('--ink-faint')}">m${m + 1}</text>`;
+  svg += '</svg>';
+  const old = el.querySelector('svg'); if (old) old.remove();
+  el.insertAdjacentHTML('afterbegin', svg);
+  hover(el, (mx, w) => {
+    const scale = f.W / w;
+    const i = Math.max(0, Math.min(n - 1, Math.round((mx * scale - f.padL) / f.iw * n - 0.5)));
+    const r = rows[i];
+    return { x: X(i) / scale, y: Y(r.net) / scale,
+      html: `<b>Month ${r.m}</b><div class="r"><span><i style="background:${css('--s-comm')}"></i>Commission</span><b>${gbp(r.commission)}</b></div>`
+        + `<div class="r"><span><i style="background:${css('--s-agent')}"></i>Agent P&amp;L</span><b>${gbp(r.agentPL)}</b></div>`
+        + `<div class="r"><span>Net</span><b>${gbp(r.net)}</b></div><div class="r"><span>No fleet</span><b>${gbp(rowsOff[i].net)}</b></div>` };
+  });
+  $('dMonthly').innerHTML = tableHTML(['Month', 'Traders', 'Commission', 'Agent P&L', 'Costs', 'Net', 'No-fleet net'],
+    rows.filter((_, i) => i % 3 === 0).map((r, i) => [ 'm' + r.m, num(r.users), gbp(r.commission), gbp(r.agentPL), gbp(r.costs), gbp(r.net), gbp(rowsOff[Math.min(rowsOff.length - 1, (r.m - 1))].net)]));
+}
+
+/* ---- chart 3: users over time ---- */
+function drawUsers(p, rows, rowsOff) {
+  const el = $('cUsers');
+  const f = frame(el, 190, 58, 16);
+  const n = rows.length;
+  const all = rows.map(r => r.users).concat(rowsOff.map(r => r.users));
+  const hi = Math.max(...all) * 1.06, lo = Math.min(...all) * 0.9;
+  const Y = v => f.padT + f.ih * (1 - (v - lo) / (hi - lo || 1));
+  const X = i => f.padL + i / (n - 1) * f.iw;
+  const line = rs => rs.map((r, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(r.users).toFixed(1)}`).join(' ');
+  let svg = `<svg viewBox="0 0 ${f.W} ${f.H}" role="img" aria-label="Traders over 24 months">` + yTicks(f, lo, hi, num);
+  svg += `<path d="${line(rowsOff)}" fill="none" stroke="${css('--s-base')}" stroke-width="2" stroke-dasharray="5 5"/>`
+    + `<path d="${line(rows)}" fill="none" stroke="${css('--ink')}" stroke-width="2.5"/>`;
+  for (let m = 0; m < n; m += 4) svg += `<text x="${X(m).toFixed(1)}" y="${f.H - 8}" text-anchor="middle" font-size="10" fill="${css('--ink-faint')}">m${m + 1}</text>`;
+  svg += '</svg>';
+  const old = el.querySelector('svg'); if (old) old.remove();
+  el.insertAdjacentHTML('afterbegin', svg);
+  hover(el, (mx, w) => {
+    const scale = f.W / w;
+    const i = Math.max(0, Math.min(n - 1, Math.round((mx * scale - f.padL) / f.iw * (n - 1))));
+    return { x: X(i) / scale, y: Y(rows[i].users) / scale,
+      html: `<b>Month ${i + 1}</b><div class="r"><span>With fleet</span><b>${num(rows[i].users)}</b></div><div class="r"><span>No fleet</span><b>${num(rowsOff[i].users)}</b></div>` };
+  });
+}
+
+/* ---- chart 4: scenarios ---- */
+function drawScen(p) {
+  const el = $('cScen');
+  const f = frame(el, 210, 58, 16);
+  const scen = [
+    { k: 'No fleet', v: year1(simulate(p, p.wr, false)), on: false },
+    { k: 'Entertainer 52%', v: year1(simulate(p, 0.52, true)), on: false },
+    { k: `You · ${Math.round(p.wr * 100)}%`, v: year1(simulate(p, p.wr, true)), on: true },
+    { k: 'Crusher 70%', v: year1(simulate(p, 0.70, true)), on: false },
+  ];
+  const hi = Math.max(...scen.map(s => s.v)) * 1.12 || 1;
+  const lo = Math.min(0, ...scen.map(s => s.v));
+  const Y = v => f.padT + f.ih * (1 - (v - lo) / (hi - lo));
+  let svg = `<svg viewBox="0 0 ${f.W} ${f.H}" role="img" aria-label="Scenario comparison">` + yTicks(f, lo, hi, gbp);
+  const bw = Math.min(90, f.iw / 4 - 26);
+  scen.forEach((s, i) => {
+    const x = f.padL + (i + 0.5) / 4 * f.iw - bw / 2;
+    const y = Y(Math.max(0, s.v)), h = Math.abs(Y(s.v) - Y(0));
+    svg += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw}" height="${Math.max(2, h).toFixed(1)}" rx="4" fill="${s.on ? css('--s-comm') : css('--ink-faint')}" opacity="${s.on ? 1 : 0.55}"/>`
+      + `<text x="${(x + bw / 2).toFixed(1)}" y="${(y - 7).toFixed(1)}" text-anchor="middle" font-size="11.5" font-weight="800" fill="${css('--ink')}">${gbp(s.v)}</text>`
+      + `<text x="${(x + bw / 2).toFixed(1)}" y="${f.H - 8}" text-anchor="middle" font-size="10.5" font-weight="${s.on ? 700 : 500}" fill="${s.on ? css('--ink') : css('--ink-faint')}">${s.k}</text>`;
+  });
+  svg += '</svg>';
+  const old = el.querySelector('svg'); if (old) old.remove();
+  el.insertAdjacentHTML('afterbegin', svg);
+  hover(el, () => null);
+}
+
+function tableHTML(heads, rows) {
+  return `<table><thead><tr>${heads.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${
+    rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+}
+
+function fmtOutputs(p) {
+  $('u0o').value = num(p.u0); $('acqo').value = '+' + num(p.acq); $('bpmo').value = p.bpm;
+  $('poto').value = '£' + num(p.pot); $('feeo').value = (p.fee * 100).toFixed(1) + '%';
+  $('matcho').value = Math.round(p.match * 100) + '%'; $('prefo').value = Math.round(p.pref * 100) + '%';
+  $('wro').value = (p.wr * 100).toFixed(1) + '%'; $('churno').value = (p.churn * 100).toFixed(1) + '%';
+  $('senso').value = '×' + p.sens.toFixed(1); $('refo').value = Math.round(p.ref * 100) + '%'; $('infrao').value = '£' + p.infra.toFixed(2);
+  $('fixedo').value = '£' + num(p.fixed);
+}
+
+function recalc() {
+  const p = params();
+  fmtOutputs(p);
+  const rows = simulate(p, p.wr, true);
+  const rowsOff = simulate(p, p.wr, false);
+  const y1 = rows, comm = y1.reduce((a, r) => a + r.commission, 0);
+  const agent = y1.reduce((a, r) => a + r.agentPL, 0);
+  const net = year1(rows), base = year1(rowsOff);
+  $('tNet').textContent = gbp(net);
+  $('tNetD').textContent = (net >= base ? '+' : '') + gbp(net - base).replace('£', '£') + ' vs no fleet';
+  $('tComm').textContent = gbp(comm);
+  $('tAgent').textContent = gbp(agent);
+  $('tAgentD').textContent = 'expected value at ' + Math.round(p.wr * 100) + '% win rate';
+  $('tUsers').textContent = num(rows[rows.length - 1].users);
+  const du = rows[rows.length - 1].users - rowsOff[rowsOff.length - 1].users;
+  $('tUsersD').textContent = (du >= 0 ? '+' : '−') + num(Math.abs(du)) + ' vs no fleet';
+  drawCurve(p);
+  drawMonthly(p, rows, rowsOff);
+  drawUsers(p, rows, rowsOff);
+  drawScen(p);
+}
+
+IDS.forEach(id => $(id).addEventListener('input', recalc));
+addEventListener('resize', () => { clearTimeout(window.__rz); window.__rz = setTimeout(recalc, 150); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', recalc);
+recalc();
+</script>
