@@ -83,7 +83,7 @@ Scratchpad Playwright scripts (`audit.mjs` = the 50-check forensic sweep incl. p
 
 1. **Backend / persistence**: accounts, battles, escrow, DMs, feed need a server; localStorage is a stand-in.
 2. **Real payments + escrow**: the SECURE CHECKOUT is a demo (labelled as such on-card); real money movement needs a PSP + client-money handling behind legal sign-off.
-3. **Live prices / real AI opponents**: `INSTR` drift is simulated; machine opponents are scripted. Live data source candidate: WorldMonitor via REST/MCP — *consume the API, do NOT fork the repo* (AGPL-3.0).
+3. **Live prices / real AI opponents**: `INSTR` drift is simulated; the in-page machine opponents are scripted, but the real agent engine now lives in **`agents/`** (pure-stdlib Python: SimMarket, ExecutionAdapter with an MT5 Manager API stub for our own broker, the score/clock-aware **BattleDirector**, persona fleet, tests + demo — see `agents/README.md`). Live data source candidate: WorldMonitor via REST/MCP — *consume the API, do NOT fork the repo* (AGPL-3.0). TradingAgents (Apache-2.0) is approved as a long-window strategy-selector sidecar only, never in the tick loop.
 4. **Unified always-on pools**: fold tournaments into join-anytime pooled pots ranked by return — the cleanest regulatory model. Keep 1v1-odds / house-backed mechanics separate.
 
 ## 6. Product & regulatory context (load-bearing — don't undermine)
