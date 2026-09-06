@@ -17,6 +17,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 
 BATTLE_CAPITAL = 10_000.0
+COMMISSION = 0.00004  # per side, fraction of notional — MT5-broker-ish
 
 
 @dataclass
@@ -88,15 +89,19 @@ class SimAdapter(ExecutionAdapter):
         return self.market.vol_s(sym)
 
     def open_position(self, acct_id, sym, direction, exposure, now) -> None:
-        self.accounts[acct_id].positions.append(
-            Position(sym, direction, exposure, self.market.price(sym), now))
+        # cross the spread on entry and pay commission — churn is not free
+        px = self.market.price(sym) * (1 + direction * self.market.spread(sym) / 2)
+        acct = self.accounts[acct_id]
+        acct.balance -= COMMISSION * exposure * BATTLE_CAPITAL
+        acct.positions.append(Position(sym, direction, exposure, px, now))
 
     def close_all(self, acct_id, now) -> float:
         acct = self.accounts[acct_id]
         total = 0.0
         for p in acct.positions:
-            ret = (self.market.price(p.sym) / p.entry_px - 1) * p.direction
-            pnl = ret * p.exposure * BATTLE_CAPITAL
+            exit_px = self.market.price(p.sym) * (1 - p.direction * self.market.spread(p.sym) / 2)
+            ret = (exit_px / p.entry_px - 1) * p.direction
+            pnl = ret * p.exposure * BATTLE_CAPITAL - COMMISSION * p.exposure * BATTLE_CAPITAL
             acct.balance += pnl
             acct.closed.append(ClosedTrade(p.sym, p.direction, pnl, p.opened_at, now))
             total += pnl
@@ -107,7 +112,8 @@ class SimAdapter(ExecutionAdapter):
         acct = self.accounts[acct_id]
         eq = acct.balance
         for p in acct.positions:
-            ret = (self.market.price(p.sym) / p.entry_px - 1) * p.direction
+            exit_px = self.market.price(p.sym) * (1 - p.direction * self.market.spread(p.sym) / 2)
+            ret = (exit_px / p.entry_px - 1) * p.direction
             eq += ret * p.exposure * BATTLE_CAPITAL
         return eq
 

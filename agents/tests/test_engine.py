@@ -6,6 +6,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from paktos_agents import (BattleDirector, Mode, SimAdapter, SimMarket,
                            run_exhibition)
+from paktos_agents.execution import BATTLE_CAPITAL, COMMISSION
+from paktos_agents.fleet import make_personas
+from paktos_agents.league import League
 
 passed = failed = 0
 
@@ -49,6 +52,29 @@ for _ in range(60):
 a.close_all('T1', 60.0)
 ok('closed trade recorded', len(a.closed_trades('T1')) == 1)
 ok('return is finite and plausible', abs(a.ret_pct('T1')) < 50)
+
+# costs: an instant round-trip on an unmoved market loses exactly
+# spread + two commissions — churn is not free
+mc = SimMarket(seed=2)
+ac = SimAdapter(mc)
+for _ in range(10):
+    mc.tick(1.0)  # build history but measure without further ticks
+ac.create_account('C1')
+ac.open_position('C1', 'BTC', 1, 1.0, 0.0)
+ac.close_all('C1', 1.0)
+expected_loss = (mc.spread('BTC') + 2 * COMMISSION) * BATTLE_CAPITAL
+actual_loss = BATTLE_CAPITAL - ac.equity('C1')
+ok('round-trip costs spread + commission', abs(actual_loss - expected_loss) < 0.01)
+
+# league: ratings move, population is stable, roster is sorted
+lg = League(make_personas(8, seed=3), seed=4)
+lg.run(generations=2, rounds_per_gen=3, duration_s=120)
+ok('league battles played', lg.battles_played == 2 * 3 * 4)
+ok('population size stable', len(lg.entries) == 8)
+ok('elo separated', lg.table()[0].elo > lg.table()[-1].elo)
+r = lg.roster(4)
+ok('roster sorted by elo', all(r[i]['elo'] >= r[i + 1]['elo'] for i in range(3)))
+ok('mutants entered the pool', any(e.gen > 0 for e in lg.entries))
 
 # full exhibition battles settle
 results = run_exhibition(n_battles=4, duration_s=300, seed=5)

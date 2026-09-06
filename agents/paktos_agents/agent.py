@@ -33,6 +33,7 @@ class BattleAgent:
     directed: bool = True            # False = no Director (used for human sims)
     last_trade_at: float = -1e9
     hold_until: float = 0.0
+    cur: tuple | None = None      # (sym, direction, exposure) we currently hold
     log: list = field(default_factory=list)
     director: BattleDirector = None
     scalper: Scalper = None
@@ -55,6 +56,7 @@ class BattleAgent:
 
         if d.mode is Mode.PARK:
             self.adapter.close_all(self.acct_id, now)
+            self.cur = None
             return
         if now - self.last_trade_at < d.trade_interval and now < self.hold_until:
             return
@@ -70,9 +72,17 @@ class BattleAgent:
         if direction == 0:
             return
 
-        self.adapter.close_all(self.acct_id, now)
         exposure = min(4.0, self.persona.base_exposure * d.risk_mult * (0.5 + conviction))
+        # same view, similar size: let it ride rather than paying spread to flip
+        if (self.cur and self.cur[0] == sym and self.cur[1] == direction
+                and abs(self.cur[2] - exposure) / max(exposure, 1e-9) < 0.35
+                and d.mode is not Mode.MOONSHOT):
+            self.last_trade_at = now
+            self.hold_until = now + d.trade_interval * 2
+            return
+        self.adapter.close_all(self.acct_id, now)
         self.adapter.open_position(self.acct_id, sym, direction, exposure, now)
+        self.cur = (sym, direction, exposure)
         self.last_trade_at = now
         self.hold_until = now + (seconds_left if d.mode is Mode.MOONSHOT
                                  else d.trade_interval * 2)

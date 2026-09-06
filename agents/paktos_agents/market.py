@@ -18,6 +18,7 @@ class Instrument:
     sym: str
     px: float
     vol_s: float          # per-second return std at 1x exposure (fraction)
+    spread: float = 0.0002  # full bid-ask spread as a return fraction
     regime: float = 1.0   # current vol multiplier
     history: list = field(default_factory=list)
 
@@ -40,12 +41,12 @@ class SimMarket:
         self.instruments: dict[str, Instrument] = {
             i.sym: i
             for i in [
-                Instrument('BTC', 118432.0, 0.00050),
-                Instrument('ETH', 4212.5, 0.00060),
-                Instrument('NAS100', 23841.2, 0.00022),
-                Instrument('XAUUSD', 3392.4, 0.00018),
-                Instrument('EURUSD', 1.17432, 0.00007),
-                Instrument('GBPJPY', 199.842, 0.00012),
+                Instrument('BTC', 118432.0, 0.00050, spread=0.00020),
+                Instrument('ETH', 4212.5, 0.00060, spread=0.00030),
+                Instrument('NAS100', 23841.2, 0.00022, spread=0.00010),
+                Instrument('XAUUSD', 3392.4, 0.00018, spread=0.00012),
+                Instrument('EURUSD', 1.17432, 0.00007, spread=0.00004),
+                Instrument('GBPJPY', 199.842, 0.00012, spread=0.00008),
             ]
         }
 
@@ -60,6 +61,9 @@ class SimMarket:
     def vol_s(self, sym: str) -> float:
         ins = self.instruments[sym]
         return ins.vol_s * ins.regime
+
+    def spread(self, sym: str) -> float:
+        return self.instruments[sym].spread
 
     def hottest(self) -> str:
         """Highest current volatility — where a trailing agent goes hunting."""

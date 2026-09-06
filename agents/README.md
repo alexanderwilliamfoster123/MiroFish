@@ -13,7 +13,9 @@ Pure-stdlib Python. No dependencies to run the sim, the demo, or the tests.
 ```sh
 python3 agents/demo.py              # two 15-min battles, incl. a handicapped
                                     # fight showing grind→push→sprint→moonshot
-python3 agents/tests/test_engine.py # 12 engine invariants
+python3 agents/build_roster.py      # run the League, graduate the top 8 to
+                                    # agents/roster.json (the battle roster)
+python3 agents/tests/test_engine.py # 18 engine invariants
 ```
 
 ## Architecture
@@ -36,6 +38,10 @@ director.py    THE BATTLE DIRECTOR — z = gap / (vol·√t_left) mapped to
 agent.py       Persona + BattleAgent (director → strategy → orders)
 battle.py      one window: clock, tape, settlement (higher return sweeps)
 fleet.py       mass-produce jittered personas; run many battles
+league.py      THE LEAGUE — Elo-rated self-play: every candidate fights
+               rated battles, each generation the bottom third retires and
+               mutants of the top third enter; only graduates face humans,
+               and their league Elo is the disclosed difficulty rating
 llm.py         optional: Claude-written strategy cards; TradingAgents
                (Apache-2.0) as a long-window strategy-selector sidecar —
                never in the per-second loop
@@ -49,6 +55,14 @@ the *human* side's `BTL-<seq>` accounts), DealerSend for orders,
 UserAccountGet for equity, DealRequest for the settlement-grade closed-trade
 record. Implement it against the .NET Manager API or a REST wrapper and the
 whole fleet moves to real MT5 demo accounts without touching agents.
+
+## Costs are real
+
+SimAdapter charges the spread on entry/exit plus per-side commission, and
+equity marks to the closable side — so churn has a price and sprint mode
+must earn it. Agents ride a position when the signal hasn't changed
+instead of paying the spread to re-open the same view. A deterministic
+test pins the exact round-trip cost.
 
 ## Honest notes
 
