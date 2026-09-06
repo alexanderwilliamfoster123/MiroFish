@@ -1,0 +1,46 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    restart: always
+    command: mongod --oplogSize 128 --replSet rs0 --bind_ip_all
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: mongosh --quiet --eval "try { rs.status().ok } catch (e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongodb:27017'}]}).ok }"
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 15s
+
+  rocketchat:
+    image: registry.rocket.chat/rocketchat/rocket.chat:latest
+    restart: always
+    environment:
+      MONGO_URL: mongodb://mongodb:27017/rocketchat?replicaSet=rs0
+      MONGO_OPLOG_URL: mongodb://mongodb:27017/local?replicaSet=rs0
+      ROOT_URL: ${ROOT_URL:-http://localhost:3000}
+      PORT: "3000"
+      DEPLOY_METHOD: docker
+      # First-boot admin account — change the password before exposing this anywhere
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASS: ${ADMIN_PASS:-paktos-admin-2026}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@paktos.local}
+      OVERWRITE_SETTING_Show_Setup_Wizard: completed
+      # Let the Paktos UI (served from another origin) call the REST API
+      OVERWRITE_SETTING_API_Enable_CORS: "true"
+      OVERWRITE_SETTING_API_CORS_Origin: "*"
+      # The Hubs UI polls channel history — the default per-endpoint limiter is too strict
+      OVERWRITE_SETTING_API_Enable_Rate_Limiter: "false"
+      # REST login from the Paktos connect modal needs 2FA off
+      OVERWRITE_SETTING_Accounts_TwoFactorAuthentication_Enabled: "false"
+      OVERWRITE_SETTING_Accounts_TwoFactorAuthentication_By_Email_Enabled: "false"
+      # Serve uploaded photos/files without an auth cookie so <img> tags can load them
+      OVERWRITE_SETTING_FileUpload_ProtectFiles: "false"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+
+volumes:
+  mongo-data:
