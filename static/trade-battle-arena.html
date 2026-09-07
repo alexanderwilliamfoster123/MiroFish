@@ -13,78 +13,70 @@
   #app { position:fixed; inset:0; }
   canvas { display:block; }
 
-  /* ------- HUD ------- */
   #hud { position:fixed; inset:0; pointer-events:none; z-index:10; }
   .hidden { display:none !important; }
 
-  #crosshair { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:22px; height:22px; }
-  #crosshair::before, #crosshair::after { content:""; position:absolute; background:rgba(233,238,246,.85); box-shadow:0 0 3px rgba(0,0,0,.8); }
+  #crosshair { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:20px; height:20px; opacity:.9; }
+  #crosshair::before, #crosshair::after { content:""; position:absolute; background:rgba(233,238,246,.9); box-shadow:0 0 4px rgba(0,0,0,.9); border-radius:2px; }
   #crosshair::before { left:50%; top:0; width:2px; height:100%; transform:translateX(-50%); }
   #crosshair::after { top:50%; left:0; height:2px; width:100%; transform:translateY(-50%); }
   #crosshair.hit::before, #crosshair.hit::after { background:#ffb52e; }
 
-  /* top center: round + P&L ticker */
-  #top-center { position:absolute; left:50%; top:16px; transform:translateX(-50%); text-align:center; }
-  #round-label { font-size:12px; letter-spacing:5px; opacity:.65; }
-  #round-timer { font-size:34px; font-weight:800; font-variant-numeric:tabular-nums; text-shadow:0 2px 10px rgba(0,0,0,.7); }
-  #pnl-row { display:flex; gap:22px; justify-content:center; margin-top:4px; font-variant-numeric:tabular-nums; font-weight:700; font-size:17px; }
+  #top-center { position:absolute; left:50%; top:14px; transform:translateX(-50%); text-align:center;
+    background:linear-gradient(180deg, rgba(5,8,14,.65), rgba(5,8,14,.25)); padding:8px 26px 10px; border-radius:8px;
+    border:1px solid rgba(255,255,255,.07); backdrop-filter:blur(6px); }
+  #round-label { font-size:11px; letter-spacing:5px; opacity:.6; }
+  #round-timer { font-size:32px; font-weight:800; font-variant-numeric:tabular-nums; text-shadow:0 2px 10px rgba(0,0,0,.7); }
+  #pnl-row { display:flex; gap:20px; justify-content:center; margin-top:2px; font-variant-numeric:tabular-nums; font-weight:700; font-size:16px; }
   #pnl-row .bull { color:#2ee06f; } #pnl-row .bear { color:#ff4640; }
-  #series-score { font-size:12px; letter-spacing:3px; opacity:.7; margin-top:3px; }
-
-  /* hype meters */
-  #hype { position:absolute; left:50%; top:118px; transform:translateX(-50%); width:420px; }
-  .hype-bar { display:flex; height:10px; border:1px solid rgba(255,255,255,.18); border-radius:3px; overflow:hidden; background:rgba(0,0,0,.4); }
+  #series-score { font-size:11px; letter-spacing:3px; opacity:.7; margin-top:3px; }
+  #hype-wrap { margin-top:7px; }
+  .hype-bar { display:flex; height:8px; border:1px solid rgba(255,255,255,.15); border-radius:4px; overflow:hidden; background:rgba(0,0,0,.4); width:340px; }
   #hype-bull { background:linear-gradient(90deg,#1c9c4c,#2ee06f); width:50%; transition:width .3s; }
   #hype-bear { background:linear-gradient(90deg,#ff4640,#a12420); flex:1; }
-  #hype-labels { display:flex; justify-content:space-between; font-size:10px; letter-spacing:3px; opacity:.6; margin-top:3px; }
+  #hype-labels { display:flex; justify-content:space-between; font-size:9px; letter-spacing:3px; opacity:.6; margin-top:3px; }
 
-  /* bottom left: health */
   #bottom-left { position:absolute; left:26px; bottom:24px; width:250px; }
-  #team-tag { font-size:12px; letter-spacing:3px; font-weight:700; margin-bottom:6px; }
-  #health-bar { height:13px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:3px; overflow:hidden; }
+  #team-tag { font-size:12px; letter-spacing:3px; font-weight:700; margin-bottom:6px; text-shadow:0 1px 6px rgba(0,0,0,.8); }
+  #health-bar { height:12px; background:rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.18); border-radius:6px; overflow:hidden; }
   #health-fill { height:100%; width:100%; background:linear-gradient(90deg,#37c26a,#7ee08a); transition:width .12s linear; }
   #health-fill.low { background:linear-gradient(90deg,#d63b2f,#ff7a5c); }
-  #stamina-bar { height:5px; margin-top:5px; background:rgba(255,255,255,.07); border-radius:3px; overflow:hidden; }
-  #stamina-fill { height:100%; width:100%; background:#57d7ff; opacity:.8; }
+  #stamina-bar { height:5px; margin-top:5px; background:rgba(0,0,0,.4); border-radius:3px; overflow:hidden; }
+  #stamina-fill { height:100%; width:100%; background:#57d7ff; opacity:.85; }
 
-  /* bottom right: actions */
-  #bottom-right { position:absolute; right:26px; bottom:22px; text-align:right; font-size:12px; letter-spacing:1.5px; opacity:.85; line-height:1.9; }
+  #bottom-right { position:absolute; right:26px; bottom:22px; text-align:right; font-size:12px; letter-spacing:1.5px; opacity:.9; line-height:1.9; text-shadow:0 1px 6px rgba(0,0,0,.9); }
   #bottom-right b { color:#ffb52e; font-weight:700; }
-  #cups { font-size:26px; font-weight:800; letter-spacing:1px; }
+  #cups { font-size:24px; font-weight:800; letter-spacing:1px; }
   #cheer-cd { color:#57d7ff; height:16px; font-weight:700; }
 
-  /* event feed */
-  #feed { position:absolute; right:24px; top:70px; text-align:right; font-size:13px; max-width:340px; }
-  #feed div { background:rgba(0,0,0,.4); display:inline-block; padding:3px 9px; border-radius:3px; margin-bottom:5px; opacity:0; animation:fin .2s forwards; }
+  #feed { position:absolute; right:24px; top:70px; text-align:right; font-size:13px; max-width:360px; }
+  #feed div { background:rgba(2,4,8,.55); display:inline-block; padding:4px 10px; border-radius:4px; margin-bottom:5px; opacity:0; animation:fin .2s forwards; border:1px solid rgba(255,255,255,.06); }
   #feed .bull { color:#7ee08a; } #feed .bear { color:#ff8a7a; } #feed .amber { color:#ffcf4d; }
   @keyframes fin { to { opacity:1; } }
 
-  /* big banner */
-  #banner { position:absolute; left:50%; top:36%; transform:translate(-50%,-50%); text-align:center; font-size:46px; font-weight:900; letter-spacing:5px; text-shadow:0 4px 24px rgba(0,0,0,.85); opacity:0; transition:opacity .4s; }
-  #banner .sub { display:block; font-size:15px; letter-spacing:6px; opacity:.75; font-weight:600; margin-top:8px; }
+  #banner { position:absolute; left:50%; top:34%; transform:translate(-50%,-50%); text-align:center; font-size:46px; font-weight:900; letter-spacing:5px; text-shadow:0 4px 30px rgba(0,0,0,.9), 0 0 60px rgba(255,181,46,.25); opacity:0; transition:opacity .4s; white-space:nowrap; }
+  #banner .sub { display:block; font-size:14px; letter-spacing:6px; opacity:.8; font-weight:600; margin-top:8px; }
 
-  /* damage vignette */
   #vignette { position:absolute; inset:0; box-shadow:inset 0 0 140px 60px rgba(214,40,30,0); transition:box-shadow .25s; }
 
-  /* ------- start / KO overlays ------- */
-  .overlay { position:fixed; inset:0; z-index:20; background:radial-gradient(ellipse at 50% 35%, #0c1420 0%, #04060a 75%); display:flex; align-items:center; justify-content:center; text-align:center; }
-  .overlay h1 { font-size:58px; font-weight:900; letter-spacing:8px; }
+  .overlay { position:fixed; inset:0; z-index:20; background:radial-gradient(ellipse at 50% 30%, rgba(12,20,32,.92) 0%, rgba(4,6,10,.97) 75%); display:flex; align-items:center; justify-content:center; text-align:center; }
+  .overlay h1 { font-size:58px; font-weight:900; letter-spacing:8px; text-shadow:0 0 50px rgba(87,215,255,.25); }
   .overlay h1 .grn { color:#2ee06f; } .overlay h1 .red { color:#ff4640; }
   .overlay .tag { font-size:13px; letter-spacing:6px; opacity:.6; margin-top:6px; }
-  .teams { display:flex; gap:26px; justify-content:center; margin:38px 0 26px; }
-  .team-card { width:250px; padding:22px 18px 18px; border:1px solid rgba(255,255,255,.14); border-radius:6px; background:rgba(255,255,255,.03); cursor:pointer; transition:transform .15s, border-color .15s, background .15s; }
+  .teams { display:flex; gap:26px; justify-content:center; margin:36px 0 24px; }
+  .team-card { width:250px; padding:22px 18px 18px; border:1px solid rgba(255,255,255,.14); border-radius:8px; background:rgba(255,255,255,.03); cursor:pointer; transition:transform .15s, border-color .15s, background .15s, box-shadow .15s; }
   .team-card:hover, .team-card:focus-visible { transform:translateY(-4px); background:rgba(255,255,255,.06); outline:none; }
-  .team-card.bull:hover, .team-card.bull:focus-visible { border-color:#2ee06f; }
-  .team-card.bear:hover, .team-card.bear:focus-visible { border-color:#ff4640; }
+  .team-card.bull:hover, .team-card.bull:focus-visible { border-color:#2ee06f; box-shadow:0 8px 40px rgba(46,224,111,.18); }
+  .team-card.bear:hover, .team-card.bear:focus-visible { border-color:#ff4640; box-shadow:0 8px 40px rgba(255,70,64,.18); }
   .team-card .t-name { font-size:22px; font-weight:800; letter-spacing:3px; }
   .team-card.bull .t-name { color:#2ee06f; } .team-card.bear .t-name { color:#ff4640; }
   .team-card .t-trader { font-size:12px; letter-spacing:2px; opacity:.7; margin-top:4px; }
   .team-card .t-desc { font-size:12.5px; opacity:.65; margin-top:12px; line-height:1.5; }
-  .controls-list { font-size:12.5px; letter-spacing:1px; opacity:.6; line-height:2; }
+  .controls-list { font-size:12.5px; letter-spacing:1px; opacity:.65; line-height:2.1; }
   .controls-list b { color:#ffb52e; }
   #ko-overlay h1 { color:#ff4640; }
   #ko-overlay .tag { margin-bottom:24px; }
-  .btn { pointer-events:auto; display:inline-block; margin-top:18px; padding:12px 34px; font-size:14px; letter-spacing:4px; font-weight:700; color:#04060a; background:#ffb52e; border:none; border-radius:4px; cursor:pointer; }
+  .btn { pointer-events:auto; display:inline-block; margin-top:18px; padding:12px 34px; font-size:14px; letter-spacing:4px; font-weight:700; color:#04060a; background:#ffb52e; border:none; border-radius:5px; cursor:pointer; }
   .btn:hover { background:#ffcf4d; }
 </style>
 </head>
@@ -102,10 +94,10 @@
       <span class="bear">VOLKOV <span id="pnl-bear">+0.00%</span></span>
     </div>
     <div id="series-score">BULLS 0 — 0 BEARS</div>
-  </div>
-  <div id="hype">
-    <div class="hype-bar"><div id="hype-bull"></div><div id="hype-bear"></div></div>
-    <div id="hype-labels"><span style="color:#2ee06f">BULL HYPE</span><span style="color:#ff4640">BEAR HYPE</span></div>
+    <div id="hype-wrap">
+      <div class="hype-bar"><div id="hype-bull"></div><div id="hype-bear"></div></div>
+      <div id="hype-labels"><span style="color:#2ee06f">BULL HYPE</span><span style="color:#ff4640">BEAR HYPE</span></div>
+    </div>
   </div>
   <div id="bottom-left">
     <div id="team-tag">TEAM BULL</div>
@@ -115,8 +107,8 @@
   <div id="bottom-right">
     <div id="cups">🥤 ×6</div>
     <div id="cheer-cd"></div>
-    <div><b>LMB</b> PUNCH &nbsp; <b>RMB / G</b> THROW CUP</div>
-    <div><b>C</b> CHEER &nbsp; <b>SHIFT</b> SPRINT &nbsp; <b>SPACE</b> JUMP</div>
+    <div><b>CLICK / F</b> PUNCH &nbsp; <b>E</b> THROW CUP</div>
+    <div><b>C</b> CHEER &nbsp; <b>⇧ SHIFT</b> SPRINT &nbsp; <b>SPACE</b> JUMP</div>
   </div>
   <div id="feed"></div>
   <div id="banner"></div>
@@ -140,7 +132,8 @@
       </div>
     </div>
     <div class="controls-list">
-      <b>WASD</b> MOVE · <b>MOUSE</b> LOOK · <b>LMB</b> PUNCH RIVAL FANS · <b>RMB/G</b> THROW DRINK · <b>C</b> CHEER (BUFFS YOUR TRADER)<br/>
+      <b>W A S D</b> MOVE · <b>TRACKPAD / MOUSE</b> LOOK · <b>CLICK or F</b> PUNCH RIVAL FANS · <b>E</b> THROW DRINK · <b>C</b> CHEER (BUFFS YOUR TRADER)<br/>
+      <b>⇧ SHIFT</b> SPRINT · <b>SPACE</b> JUMP · <b>ESC</b> RELEASE CURSOR<br/>
       BEST OF 5 ROUNDS · 90s EACH · HIGHEST P&amp;L WINS THE ROUND · DON'T GET KNOCKED OUT
     </div>
   </div>
@@ -167,22 +160,28 @@ const TEAM_COLOR = [0x2ee06f, 0xff4640];
 const TRADER_NAME = ["OKONKWO", "VOLKOV"];
 const ROUND_SECONDS = 90;
 const ROUNDS_TO_WIN = 3;
-const PIT_RADIUS = 34;          // walkable floor radius
+const PIT_RADIUS = 34;
 const EYE = 1.7;
+// newer three uses physical light units; scale point/spot intensities to match
+const LI = Number(THREE.REVISION) >= 155 ? Math.PI : 1;
 
 /* ============================== RENDERER ============================== */
 const app = document.getElementById("app");
 const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
-renderer.shadowMap.enabled = false;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+if ("outputColorSpace" in renderer) renderer.outputColorSpace = THREE.SRGBColorSpace;
 app.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x04060a);
-scene.fog = new THREE.FogExp2(0x05070c, 0.006);
+scene.background = new THREE.Color(0x030509);
+scene.fog = new THREE.FogExp2(0x05070c, 0.0052);
 
-const camera = new THREE.PerspectiveCamera(72, innerWidth / innerHeight, 0.1, 400);
+const camera = new THREE.PerspectiveCamera(74, innerWidth / innerHeight, 0.1, 420);
 
 addEventListener("resize", () => {
   camera.aspect = innerWidth / innerHeight;
@@ -190,184 +189,354 @@ addEventListener("resize", () => {
   renderer.setSize(innerWidth, innerHeight);
 });
 
-/* ============================== LIGHTS ============================== */
-scene.add(new THREE.AmbientLight(0x30405a, 0.9));
-const hemi = new THREE.HemisphereLight(0x8fb4ff, 0x0a0c10, 0.5);
-scene.add(hemi);
-const stageLight = new THREE.PointLight(0xfff2d8, 1.6, 90, 1.7);
-stageLight.position.set(0, 18, 0);
-scene.add(stageLight);
-const bullWash = new THREE.PointLight(TEAM_COLOR[BULL], 1.0, 70, 1.9);
-bullWash.position.set(-22, 10, 0);
-scene.add(bullWash);
-const bearWash = new THREE.PointLight(TEAM_COLOR[BEAR], 1.0, 70, 1.9);
-bearWash.position.set(22, 10, 0);
-scene.add(bearWash);
-
-/* ============================== ARENA ============================== */
-const mat = (c, extra = {}) => new THREE.MeshLambertMaterial(Object.assign({ color: c }, extra));
-
-// floor
-{
-  const floor = new THREE.Mesh(new THREE.CircleGeometry(PIT_RADIUS + 8, 64), mat(0x11151d));
-  floor.rotation.x = -Math.PI / 2;
-  scene.add(floor);
-  // team halves painted on floor
-  const half = new THREE.CircleGeometry(PIT_RADIUS + 8, 64, Math.PI / 2, Math.PI);
-  const bullHalf = new THREE.Mesh(half, mat(0x0d2417));
-  bullHalf.rotation.x = -Math.PI / 2; bullHalf.position.y = 0.01;
-  scene.add(bullHalf);
-  const bearHalf = new THREE.Mesh(new THREE.CircleGeometry(PIT_RADIUS + 8, 64, -Math.PI / 2, Math.PI), mat(0x2a1210));
-  bearHalf.rotation.x = -Math.PI / 2; bearHalf.position.y = 0.01;
-  scene.add(bearHalf);
-  // center divider stripe
-  const stripe = new THREE.Mesh(new THREE.PlaneGeometry(0.6, (PIT_RADIUS + 8) * 2), mat(0xffb52e, { emissive: 0x664400 }));
-  stripe.rotation.x = -Math.PI / 2; stripe.position.y = 0.02;
-  scene.add(stripe);
+/* ============================== TEXTURE HELPERS ============================== */
+function canvasTex(w, h, draw, repeat) {
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  draw(c.getContext("2d"), w, h);
+  const t = new THREE.CanvasTexture(c);
+  if ("colorSpace" in t) t.colorSpace = THREE.SRGBColorSpace;
+  if (repeat) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(repeat[0], repeat[1]); }
+  t.anisotropy = renderer.capabilities.getMaxAnisotropy ? renderer.capabilities.getMaxAnisotropy() : 4;
+  return t;
+}
+// concrete-ish noise
+const concreteTex = canvasTex(512, 512, (x, w, h) => {
+  x.fillStyle = "#171c26"; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < 9000; i++) {
+    x.fillStyle = `rgba(${20 + Math.random() * 40 | 0},${26 + Math.random() * 40 | 0},${36 + Math.random() * 46 | 0},${0.05 + Math.random() * 0.12})`;
+    x.fillRect(Math.random() * w, Math.random() * h, 1 + Math.random() * 3, 1 + Math.random() * 3);
+  }
+  // scuffs
+  x.strokeStyle = "rgba(0,0,0,.18)";
+  for (let i = 0; i < 60; i++) {
+    x.beginPath();
+    const sx = Math.random() * w, sy = Math.random() * h;
+    x.moveTo(sx, sy); x.lineTo(sx + (Math.random() - .5) * 90, sy + (Math.random() - .5) * 90);
+    x.stroke();
+  }
+}, [6, 6]);
+// glow sprite
+const glowTex = canvasTex(128, 128, (x, w, h) => {
+  const g = x.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2);
+  g.addColorStop(0, "rgba(255,255,255,1)");
+  g.addColorStop(0.35, "rgba(255,255,255,.35)");
+  g.addColorStop(1, "rgba(255,255,255,0)");
+  x.fillStyle = g; x.fillRect(0, 0, w, h);
+});
+function addGlow(x, y, z, color, size, opacity) {
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color, transparent: true, opacity, depthWrite: false, blending: THREE.AdditiveBlending }));
+  s.position.set(x, y, z);
+  s.scale.setScalar(size);
+  scene.add(s);
+  return s;
 }
 
-// tiered stands (rings of steps rising outward) + roof
+/* ============================== LIGHTS ============================== */
+scene.add(new THREE.AmbientLight(0x33445e, 0.75));
+scene.add(new THREE.HemisphereLight(0x7ea6e8, 0x0a0c10, 0.35));
+
+const stageSpot = new THREE.SpotLight(0xfff0d0, 2.4 * LI, 80, 0.62, 0.45, 1.2);
+stageSpot.position.set(0, 24, 0);
+stageSpot.target.position.set(0, 1.4, 0);
+stageSpot.castShadow = true;
+stageSpot.shadow.mapSize.set(2048, 2048);
+stageSpot.shadow.bias = -0.0007;
+scene.add(stageSpot, stageSpot.target);
+
+const bullWash = new THREE.PointLight(TEAM_COLOR[BULL], 1.1 * LI, 78, 1.8);
+bullWash.position.set(-24, 11, 0);
+scene.add(bullWash);
+const bearWash = new THREE.PointLight(TEAM_COLOR[BEAR], 1.1 * LI, 78, 1.8);
+bearWash.position.set(24, 11, 0);
+scene.add(bearWash);
+const pitFill = new THREE.PointLight(0xbdd4ff, 0.7 * LI, 60, 1.6);
+pitFill.position.set(0, 9, 18);
+scene.add(pitFill);
+
+/* ============================== MATERIAL HELPERS ============================== */
+const std = (c, extra = {}) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.85, metalness: 0.05 }, extra));
+const metal = (c, extra = {}) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.35, metalness: 0.75 }, extra));
+const emissiveMat = (c, i = 1.6) => new THREE.MeshStandardMaterial({ color: 0x0a0d12, emissive: c, emissiveIntensity: i, roughness: 0.6 });
+
+/* ============================== ARENA FLOOR ============================== */
+{
+  const floorMat = new THREE.MeshStandardMaterial({ map: concreteTex, color: 0xbfc6d4, roughness: 0.92, metalness: 0.04 });
+  const floor = new THREE.Mesh(new THREE.CircleGeometry(PIT_RADIUS + 8, 72), floorMat);
+  floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
+  scene.add(floor);
+  // painted team halves (subtle tint decals)
+  const tint = (color, start) => {
+    const m = new THREE.Mesh(new THREE.CircleGeometry(PIT_RADIUS + 8, 72, start, Math.PI),
+      new THREE.MeshStandardMaterial({ color, transparent: true, opacity: 0.16, roughness: 1 }));
+    m.rotation.x = -Math.PI / 2; m.position.y = 0.012; m.receiveShadow = true;
+    scene.add(m);
+  };
+  tint(TEAM_COLOR[BULL], Math.PI / 2);
+  tint(TEAM_COLOR[BEAR], -Math.PI / 2);
+  // glowing center line
+  const stripe = new THREE.Mesh(new THREE.PlaneGeometry(0.5, (PIT_RADIUS + 8) * 2), emissiveMat(0xffb52e, 1.2));
+  stripe.rotation.x = -Math.PI / 2; stripe.position.y = 0.02;
+  scene.add(stripe);
+  // center-court crest under the stage lighting
+  const crest = canvasTex(512, 512, (x, w, h) => {
+    x.translate(w / 2, h / 2);
+    x.strokeStyle = "rgba(255,181,46,.9)"; x.lineWidth = 10;
+    x.beginPath(); x.arc(0, 0, 210, 0, 7); x.stroke();
+    x.fillStyle = "rgba(233,238,246,.85)";
+    x.font = "900 64px 'Segoe UI', system-ui, sans-serif"; x.textAlign = "center";
+    x.fillText("MERIDIAN PIT", 0, -160 + 300);
+  });
+  const crestM = new THREE.Mesh(new THREE.CircleGeometry(10.5, 48),
+    new THREE.MeshStandardMaterial({ map: crest, transparent: true, roughness: 1 }));
+  crestM.rotation.x = -Math.PI / 2; crestM.rotation.z = Math.PI / 2; crestM.position.y = 0.015;
+  scene.add(crestM);
+}
+
+/* ============================== STANDS / BOWL ============================== */
 const standTiers = [];
 {
-  const standMat = mat(0x1a2230);
+  const standMat = std(0x1d2431, { roughness: 0.95 });
+  const faceMat = std(0x141a24);
   for (let i = 0; i < 14; i++) {
     const inner = PIT_RADIUS + 8 + i * 2.4;
-    const g = new THREE.CylinderGeometry(inner + 2.4, inner + 2.4, 1.15, 56, 1, true);
-    const ring = new THREE.Mesh(g, standMat);
+    const ring = new THREE.Mesh(new THREE.CylinderGeometry(inner + 2.4, inner + 2.4, 1.15, 64, 1, true), faceMat);
     ring.position.y = 1.5 + i * 1.15 - 0.57;
     scene.add(ring);
-    const top = new THREE.Mesh(new THREE.RingGeometry(inner, inner + 2.4, 56), standMat);
+    const top = new THREE.Mesh(new THREE.RingGeometry(inner, inner + 2.4, 64), standMat);
     top.rotation.x = -Math.PI / 2;
     top.position.y = 1.5 + i * 1.15;
     scene.add(top);
     standTiers.push({ inner, y: 1.5 + i * 1.15 });
   }
-  // outer wall + roof
   const wallR = PIT_RADIUS + 8 + 14 * 2.4 + 2;
-  const wall = new THREE.Mesh(new THREE.CylinderGeometry(wallR, wallR, 30, 64, 1, true), mat(0x0d1119, { side: THREE.BackSide }));
-  wall.position.y = 15;
+  const wall = new THREE.Mesh(new THREE.CylinderGeometry(wallR, wallR, 34, 72, 1, true), std(0x0c1017, { side: THREE.BackSide }));
+  wall.position.y = 17;
   scene.add(wall);
-  const roof = new THREE.Mesh(new THREE.CylinderGeometry(wallR, wallR * 0.35, 14, 64, 1, true), mat(0x090c12, { side: THREE.DoubleSide }));
-  roof.position.y = 30 + 7;
+  const roof = new THREE.Mesh(new THREE.CylinderGeometry(wallR, wallR * 0.3, 15, 72, 1, true), std(0x080b11, { side: THREE.DoubleSide }));
+  roof.position.y = 34 + 7.5;
   scene.add(roof);
-  // roof trusses
-  const trussMat = mat(0x232c3c);
-  for (let i = 0; i < 10; i++) {
-    const t = new THREE.Mesh(new THREE.BoxGeometry(wallR * 2, 0.5, 0.5), trussMat);
-    t.position.y = 29;
-    t.rotation.y = (i / 10) * Math.PI;
+  // roof truss ring + radial trusses
+  const trussMat = metal(0x2b3547);
+  const ringTruss = new THREE.Mesh(new THREE.TorusGeometry(26, 0.45, 8, 60), trussMat);
+  ringTruss.rotation.x = Math.PI / 2;
+  ringTruss.position.y = 30;
+  scene.add(ringTruss);
+  for (let i = 0; i < 12; i++) {
+    const t = new THREE.Mesh(new THREE.BoxGeometry(wallR * 2, 0.45, 0.45), trussMat);
+    t.position.y = 32.5;
+    t.rotation.y = (i / 12) * Math.PI;
     scene.add(t);
   }
-  // pit barrier (low wall around walkable area)
-  const barrier = new THREE.Mesh(new THREE.CylinderGeometry(PIT_RADIUS + 0.6, PIT_RADIUS + 0.6, 1.1, 64, 1, true), mat(0x2c3648, { side: THREE.DoubleSide }));
+  // rig lights on the ring truss
+  for (let i = 0; i < 16; i++) {
+    const a = (i / 16) * Math.PI * 2;
+    const x = Math.cos(a) * 26, z = Math.sin(a) * 26;
+    const can = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.42, 0.7, 10), metal(0x11151d));
+    can.position.set(x, 29.5, z);
+    scene.add(can);
+    addGlow(x, 29.1, z, i % 2 ? 0xffe9c0 : 0xcfe4ff, 2.2, 0.7);
+  }
+  // pit barrier: dark base + emissive LED lip
+  const barrier = new THREE.Mesh(new THREE.CylinderGeometry(PIT_RADIUS + 0.6, PIT_RADIUS + 0.6, 1.1, 72, 1, true), std(0x27303f, { side: THREE.DoubleSide }));
   barrier.position.y = 0.55;
   scene.add(barrier);
+  const lip = new THREE.Mesh(new THREE.TorusGeometry(PIT_RADIUS + 0.6, 0.06, 8, 72), emissiveMat(0x57d7ff, 2.2));
+  lip.rotation.x = Math.PI / 2;
+  lip.position.y = 1.12;
+  scene.add(lip);
 }
 
-// spotlight cones from roof (fake volumetric)
-for (let i = 0; i < 8; i++) {
-  const a = (i / 8) * Math.PI * 2;
-  const cone = new THREE.Mesh(
-    new THREE.ConeGeometry(4.5, 26, 20, 1, true),
-    new THREE.MeshBasicMaterial({ color: i % 2 ? TEAM_COLOR[BEAR] : TEAM_COLOR[BULL], transparent: true, opacity: 0.05, side: THREE.DoubleSide, depthWrite: false })
+/* ------- LED ribbon boards (scrolling ticker) ------- */
+const tickerCanvas = document.createElement("canvas");
+tickerCanvas.width = 2048; tickerCanvas.height = 96;
+const tickerCtx = tickerCanvas.getContext("2d");
+const tickerTex = new THREE.CanvasTexture(tickerCanvas);
+if ("colorSpace" in tickerTex) tickerTex.colorSpace = THREE.SRGBColorSpace;
+tickerTex.wrapS = THREE.RepeatWrapping;
+let tickerText = "MERIDIAN PIT ✦ VOLATILITY NIGHT ✦ OKONKWO VS VOLKOV ✦ BEST OF 5 ✦ NO FINANCIAL ADVICE ✦ ";
+function drawTicker() {
+  const x = tickerCtx, w = tickerCanvas.width, h = tickerCanvas.height;
+  x.fillStyle = "#050810"; x.fillRect(0, 0, w, h);
+  x.font = "900 62px 'Segoe UI', system-ui, sans-serif";
+  x.textBaseline = "middle";
+  let px = 10;
+  const words = tickerText.split("✦");
+  for (let i = 0; i < words.length; i++) {
+    x.fillStyle = i % 2 ? "#ff4640" : "#2ee06f";
+    x.fillText(words[i].trim(), px, h / 2 + 4);
+    px += x.measureText(words[i].trim()).width + 30;
+    if (i < words.length - 1) { x.fillStyle = "#ffb52e"; x.fillText("✦", px, h / 2 + 4); px += 60; }
+  }
+  tickerTex.needsUpdate = true;
+}
+drawTicker();
+{
+  const tickMat = new THREE.MeshBasicMaterial({ map: tickerTex });
+  for (const r of [PIT_RADIUS + 8 + 4 * 2.4, PIT_RADIUS + 8 + 9 * 2.4]) {
+    const tier = standTiers.find(t => t.inner === r) || standTiers[4];
+    const board = new THREE.Mesh(new THREE.CylinderGeometry(r - 0.05, r - 0.05, 0.9, 72, 1, true), tickMat.clone());
+    board.material.side = THREE.BackSide;
+    board.material.map = tickerTex;
+    board.position.y = tier.y + 0.55;
+    scene.add(board);
+  }
+}
+
+/* ------- sweeping spotlight beams + haze ------- */
+const sweeps = [];
+for (let i = 0; i < 6; i++) {
+  const g = new THREE.Group();
+  const beam = new THREE.Mesh(
+    new THREE.ConeGeometry(3.4, 30, 20, 1, true),
+    new THREE.MeshBasicMaterial({ color: i % 2 ? TEAM_COLOR[BEAR] : TEAM_COLOR[BULL], transparent: true, opacity: 0.06, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending })
   );
-  cone.position.set(Math.cos(a) * 18, 15, Math.sin(a) * 18);
-  scene.add(cone);
+  beam.position.y = -15;
+  g.add(beam);
+  const a = (i / 6) * Math.PI * 2;
+  g.position.set(Math.cos(a) * 22, 29, Math.sin(a) * 22);
+  scene.add(g);
+  sweeps.push({ g, phase: i * 1.1, speed: 0.35 + (i % 3) * 0.12 });
+}
+// hanging haze
+for (let i = 0; i < 10; i++) {
+  const a = Math.random() * Math.PI * 2, r = 8 + Math.random() * 30;
+  addGlow(Math.cos(a) * r, 8 + Math.random() * 14, Math.sin(a) * r, 0x224066, 16 + Math.random() * 14, 0.05);
 }
 
 /* ============================== STAGE + SCREENS ============================== */
-// central raised stage where the two traders battle
 {
-  const stage = new THREE.Mesh(new THREE.CylinderGeometry(7.5, 8, 1.4, 48), mat(0x222b3c));
+  const stage = new THREE.Mesh(new THREE.CylinderGeometry(7.5, 8, 1.4, 56), metal(0x1c2432, { roughness: 0.5 }));
   stage.position.y = 0.7;
+  stage.receiveShadow = true;
   scene.add(stage);
-  const trim = new THREE.Mesh(new THREE.TorusGeometry(7.6, 0.12, 10, 48), new THREE.MeshBasicMaterial({ color: 0xffb52e }));
+  const trim = new THREE.Mesh(new THREE.TorusGeometry(7.6, 0.1, 10, 56), emissiveMat(0xffb52e, 2.4));
   trim.rotation.x = Math.PI / 2;
   trim.position.y = 1.42;
   scene.add(trim);
+  // LED skirt around the stage edge
+  const skirt = new THREE.Mesh(new THREE.CylinderGeometry(7.9, 8.02, 1.1, 56, 1, true), new THREE.MeshBasicMaterial({ map: tickerTex }));
+  skirt.position.y = 0.62;
+  scene.add(skirt);
+  addGlow(0, 2.2, 0, 0xffe9c0, 10, 0.16);
 }
 
-// chart canvases -> textures
 function makeChartCanvas() {
   const c = document.createElement("canvas");
-  c.width = 512; c.height = 300;
-  return { canvas: c, ctx: c.getContext("2d"), tex: new THREE.CanvasTexture(c) };
+  c.width = 640; c.height = 360;
+  const tex = new THREE.CanvasTexture(c);
+  if ("colorSpace" in tex) tex.colorSpace = THREE.SRGBColorSpace;
+  return { canvas: c, ctx: c.getContext("2d"), tex };
 }
 const chartBull = makeChartCanvas();
 const chartBear = makeChartCanvas();
-const chartVs = makeChartCanvas();   // combined jumbotron chart
+const chartVs = makeChartCanvas();
 
-// four giant screens around the bowl + hanging jumbotron cube
-const screens = [];
-function addScreen(tex, x, z, ry, w = 22, h = 12.5, y = 17) {
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex }));
-  m.position.set(x, y, z);
-  m.rotation.y = ry;
-  scene.add(m);
-  const frame = new THREE.Mesh(new THREE.PlaneGeometry(w + 1, h + 1), mat(0x080a0e));
+const R = PIT_RADIUS + 20;
+function addScreen(tex, x, z, ry, w = 24, h = 13.5, y = 18) {
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(w + 1.4, h + 1.4, 0.7), metal(0x0a0d13, { roughness: 0.4 }));
   frame.position.set(x, y, z);
   frame.rotation.y = ry;
-  frame.translateZ(-0.08);
   scene.add(frame);
-  screens.push(m);
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false }));
+  m.position.set(x, y, z);
+  m.rotation.y = ry;
+  m.translateZ(0.4);
+  scene.add(m);
+  addGlow(x, y, z, 0x57d7ff, h * 1.5, 0.10);
 }
-const R = PIT_RADIUS + 20;
-addScreen(chartBull.tex, -R, 0, Math.PI / 2);           // bull side big screen
-addScreen(chartBear.tex, R, 0, -Math.PI / 2);           // bear side big screen
-addScreen(chartVs.tex, 0, -R, 0);                       // end screens: combined
+addScreen(chartBull.tex, -R, 0, Math.PI / 2);
+addScreen(chartBear.tex, R, 0, -Math.PI / 2);
+addScreen(chartVs.tex, 0, -R, 0);
 addScreen(chartVs.tex, 0, R, Math.PI);
-// jumbotron cube above stage
+// jumbotron cube
 for (let i = 0; i < 4; i++) {
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(7, 4.2), new THREE.MeshBasicMaterial({ map: chartVs.tex }));
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(7, 4.2), new THREE.MeshBasicMaterial({ map: chartVs.tex, toneMapped: false }));
   const a = i * Math.PI / 2;
-  m.position.set(Math.sin(a) * 3.6, 12.5, Math.cos(a) * 3.6);
+  m.position.set(Math.sin(a) * 3.62, 12.5, Math.cos(a) * 3.62);
   m.rotation.y = a;
   scene.add(m);
 }
 {
-  const box = new THREE.Mesh(new THREE.BoxGeometry(7.4, 4.8, 7.4), mat(0x0a0d13));
+  const box = new THREE.Mesh(new THREE.BoxGeometry(7.4, 4.8, 7.4), metal(0x0a0d13, { roughness: 0.45 }));
   box.position.y = 12.5;
   scene.add(box);
-  const cable = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 14), mat(0x232c3c));
-  cable.position.y = 22;
+  const under = new THREE.Mesh(new THREE.PlaneGeometry(6.8, 6.8), emissiveMat(0xffb52e, 0.35));
+  under.rotation.x = Math.PI / 2;
+  under.position.y = 10.05;
+  scene.add(under);
+  const cable = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 18), metal(0x2b3547));
+  cable.position.y = 24;
   scene.add(cable);
 }
 
-/* ============================== TRADERS (on stage) ============================== */
-function buildHuman(shirt, skin, scale = 1) {
+/* ============================== HUMANS (rounded, GTA-ish silhouettes) ============================== */
+const Capsule = THREE.CapsuleGeometry ? THREE.CapsuleGeometry : null;
+function limbGeo(r, len) {
+  if (Capsule) { const g = new THREE.CapsuleGeometry(r, len, 4, 10); g.translate(0, -len / 2, 0); return g; }
+  const g = new THREE.CylinderGeometry(r, r * 0.85, len, 10); g.translate(0, -len / 2, 0); return g;
+}
+function buildHuman(shirt, skin, scale = 1, jerseyNum) {
   const g = new THREE.Group();
-  const torso = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.75, 0.34), mat(shirt));
-  torso.position.y = 1.12; g.add(torso);
-  const head = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.36, 0.32), mat(skin));
-  head.position.y = 1.72; g.add(head);
-  const legMatl = mat(0x1c2026);
-  const lLeg = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.78, 0.24), legMatl);
-  lLeg.position.set(-0.17, 0.39, 0); g.add(lLeg);
-  const rLeg = lLeg.clone(); rLeg.position.x = 0.17; g.add(rLeg);
-  const armG = new THREE.BoxGeometry(0.16, 0.66, 0.2);
-  armG.translate(0, -0.26, 0); // pivot at shoulder
-  const lArm = new THREE.Mesh(armG, mat(shirt));
-  lArm.position.set(-0.42, 1.42, 0); g.add(lArm);
-  const rArm = new THREE.Mesh(armG.clone(), mat(shirt));
-  rArm.position.set(0.42, 1.42, 0); g.add(rArm);
+  const shirtM = std(shirt, { roughness: 0.75 });
+  const skinM = std(skin, { roughness: 0.6 });
+  const pantsM = std(0x191d24, { roughness: 0.9 });
+  // torso: capsule, slightly flattened
+  const torso = new THREE.Mesh(Capsule ? new THREE.CapsuleGeometry(0.26, 0.5, 4, 12) : new THREE.CylinderGeometry(0.26, 0.24, 0.75, 12), shirtM);
+  torso.position.y = 1.15; torso.scale.z = 0.72;
+  g.add(torso);
+  // shoulders
+  const shoulders = new THREE.Mesh(new THREE.SphereGeometry(0.27, 12, 10), shirtM);
+  shoulders.position.y = 1.42; shoulders.scale.set(1.15, 0.55, 0.7);
+  g.add(shoulders);
+  // head + neck
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.09, 0.14, 8), skinM);
+  neck.position.y = 1.55; g.add(neck);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.17, 14, 12), skinM);
+  head.position.y = 1.74; head.scale.y = 1.12;
+  g.add(head);
+  // team cap
+  const cap = new THREE.Mesh(new THREE.SphereGeometry(0.175, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2.3), std(shirt, { roughness: 0.8 }));
+  cap.position.y = 1.78;
+  g.add(cap);
+  // legs
+  const lLeg = new THREE.Mesh(limbGeo(0.1, 0.68), pantsM);
+  lLeg.position.set(-0.13, 0.78, 0); g.add(lLeg);
+  const rLeg = new THREE.Mesh(limbGeo(0.1, 0.68), pantsM);
+  rLeg.position.set(0.13, 0.78, 0); g.add(rLeg);
+  // arms pivoted at shoulder
+  const lArm = new THREE.Mesh(limbGeo(0.075, 0.6), shirtM);
+  lArm.position.set(-0.34, 1.42, 0); g.add(lArm);
+  const rArm = new THREE.Mesh(limbGeo(0.075, 0.6), shirtM);
+  rArm.position.set(0.34, 1.42, 0); g.add(rArm);
+  // fists
+  const lF = new THREE.Mesh(new THREE.SphereGeometry(0.085, 8, 8), skinM); lF.position.y = -0.62; lArm.add(lF);
+  const rF = new THREE.Mesh(new THREE.SphereGeometry(0.085, 8, 8), skinM); rF.position.y = -0.62; rArm.add(rF);
+  g.traverse(o => { if (o.isMesh) { o.castShadow = true; } });
   g.scale.setScalar(scale);
   return { g, lArm, rArm, head, torso };
 }
+
+/* ------- traders on stage ------- */
 const traders = [];
 {
   const skins = [0x8a5a3b, 0xe8c39c];
   for (let t = 0; t < 2; t++) {
-    const h = buildHuman(TEAM_COLOR[t], skins[t], 1.25);
+    const h = buildHuman(TEAM_COLOR[t], skins[t], 1.28);
     const x = t === BULL ? -3 : 3;
     h.g.position.set(x, 1.4, 0);
-    h.g.rotation.y = t === BULL ? Math.PI / 2 : -Math.PI / 2; // face each other
+    h.g.rotation.y = t === BULL ? Math.PI / 2 : -Math.PI / 2;
     scene.add(h.g);
-    // trading desk with glowing terminal
-    const desk = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.1, 1), mat(0x2a3345));
+    const desk = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.09, 1), metal(0x2a3345, { roughness: 0.4 }));
     desk.position.set(x + (t === BULL ? 0.9 : -0.9), 2.45, 0);
+    desk.castShadow = true;
     scene.add(desk);
-    const term = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.7), new THREE.MeshBasicMaterial({ map: (t === BULL ? chartBull : chartBear).tex }));
-    term.position.set(x + (t === BULL ? 1.3 : -1.3), 3.0, 0);
+    const legA = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.05, 8), metal(0x2a3345));
+    legA.position.set(desk.position.x, 1.93, 0.35); scene.add(legA);
+    const legB = legA.clone(); legB.position.z = -0.35; scene.add(legB);
+    const term = new THREE.Mesh(new THREE.PlaneGeometry(1.25, 0.72), new THREE.MeshBasicMaterial({ map: (t === BULL ? chartBull : chartBear).tex, toneMapped: false }));
+    term.position.set(x + (t === BULL ? 1.32 : -1.32), 3.0, 0);
     term.rotation.y = t === BULL ? -Math.PI / 2 : Math.PI / 2;
     scene.add(term);
     traders.push(h);
@@ -376,14 +545,8 @@ const traders = [];
 
 /* ============================== MARKET SIM ============================== */
 const market = {
-  pnl: [0, 0],            // percent
-  hist: [[0], [0]],
-  hype: [0.5, 0.5],       // 0..1 crowd hype per team
-  round: 1,
-  timeLeft: ROUND_SECONDS,
-  wins: [0, 0],
-  live: true,
-  over: false,
+  pnl: [0, 0], hist: [[0], [0]], hype: [0.5, 0.5],
+  round: 1, timeLeft: ROUND_SECONDS, wins: [0, 0], live: true, over: false,
 };
 let simAcc = 0;
 function stepMarket(dt) {
@@ -392,67 +555,75 @@ function stepMarket(dt) {
   while (simAcc > 0.25) {
     simAcc -= 0.25;
     for (let t = 0; t < 2; t++) {
-      const edge = (market.hype[t] - 0.5) * 0.14;             // crowd hype gives real edge
-      const drift = edge + (Math.random() - 0.5) * 0.001;
-      const shock = (Math.random() - 0.5) * 0.42;
-      market.pnl[t] += drift + shock;
+      const edge = (market.hype[t] - 0.5) * 0.14;
+      market.pnl[t] += edge + (Math.random() - 0.5) * 0.001 + (Math.random() - 0.5) * 0.42;
       market.hist[t].push(market.pnl[t]);
       if (market.hist[t].length > 160) market.hist[t].shift();
     }
-    // hype decays toward .5
     for (let t = 0; t < 2; t++) market.hype[t] += (0.5 - market.hype[t]) * 0.01;
   }
 }
+const fmtPnl = v => (v >= 0 ? "+" : "") + v.toFixed(2) + "%";
 
-/* ------- chart drawing ------- */
 function drawChart(cc, team) {
   const { ctx, canvas, tex } = cc;
   const W = canvas.width, H = canvas.height;
-  ctx.fillStyle = "#060a12";
-  ctx.fillRect(0, 0, W, H);
-  // grid
+  const bg = ctx.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, "#0a1120"); bg.addColorStop(1, "#050810");
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
   ctx.strokeStyle = "rgba(120,150,190,.12)"; ctx.lineWidth = 1;
   for (let i = 1; i < 6; i++) { ctx.beginPath(); ctx.moveTo(0, i * H / 6); ctx.lineTo(W, i * H / 6); ctx.stroke(); }
+  for (let i = 1; i < 8; i++) { ctx.beginPath(); ctx.moveTo(i * W / 8, 0); ctx.lineTo(i * W / 8, H); ctx.stroke(); }
   const series = team === -1 ? [market.hist[BULL], market.hist[BEAR]] : [market.hist[team]];
   const colors = team === -1 ? ["#2ee06f", "#ff4640"] : [team === BULL ? "#2ee06f" : "#ff4640"];
   let lo = -1, hi = 1;
   for (const s of series) for (const v of s) { if (v < lo) lo = v; if (v > hi) hi = v; }
   const pad = (hi - lo) * 0.12 + 0.2; lo -= pad; hi += pad;
-  const Y = v => H - 34 - (v - lo) / (hi - lo) * (H - 78);
-  // zero line
-  ctx.strokeStyle = "rgba(255,181,46,.45)"; ctx.setLineDash([5, 5]);
+  const Y = v => H - 40 - (v - lo) / (hi - lo) * (H - 92);
+  ctx.strokeStyle = "rgba(255,181,46,.5)"; ctx.setLineDash([6, 6]);
   ctx.beginPath(); ctx.moveTo(0, Y(0)); ctx.lineTo(W, Y(0)); ctx.stroke(); ctx.setLineDash([]);
   series.forEach((s, i) => {
-    ctx.strokeStyle = colors[i]; ctx.lineWidth = 3; ctx.beginPath();
+    // area fill
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, colors[i] + "55"); grad.addColorStop(1, colors[i] + "00");
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    s.forEach((v, j) => { const x = j / 159 * W; j ? ctx.lineTo(x, Y(v)) : ctx.moveTo(x, Y(v)); });
+    ctx.lineTo((s.length - 1) / 159 * W, H); ctx.lineTo(0, H); ctx.closePath(); ctx.fill();
+    // glow line
+    ctx.shadowColor = colors[i]; ctx.shadowBlur = 12;
+    ctx.strokeStyle = colors[i]; ctx.lineWidth = 3.5; ctx.lineJoin = "round";
+    ctx.beginPath();
     s.forEach((v, j) => { const x = j / 159 * W; j ? ctx.lineTo(x, Y(v)) : ctx.moveTo(x, Y(v)); });
     ctx.stroke();
-    // endpoint dot
+    ctx.shadowBlur = 0;
     const last = s[s.length - 1];
-    ctx.fillStyle = colors[i];
+    ctx.fillStyle = "#ffffff";
     ctx.beginPath(); ctx.arc((s.length - 1) / 159 * W, Y(last), 5, 0, 7); ctx.fill();
   });
-  // header
-  ctx.fillStyle = "#e9eef6"; ctx.font = "800 26px 'Segoe UI', system-ui, sans-serif"; ctx.textAlign = "left";
+  ctx.fillStyle = "#e9eef6"; ctx.font = "900 30px 'Segoe UI', system-ui, sans-serif"; ctx.textAlign = "left";
   if (team === -1) {
-    ctx.fillStyle = "#2ee06f"; ctx.fillText("OKONKWO " + fmtPnl(market.pnl[BULL]), 16, 34);
-    ctx.fillStyle = "#ff4640"; ctx.textAlign = "right"; ctx.fillText("VOLKOV " + fmtPnl(market.pnl[BEAR]), W - 16, 34);
-    ctx.fillStyle = "#ffb52e"; ctx.textAlign = "center"; ctx.font = "700 20px 'Segoe UI', system-ui, sans-serif";
-    ctx.fillText("ROUND " + market.round + " · " + Math.ceil(market.timeLeft) + "s", W / 2, H - 10);
+    ctx.fillStyle = "#2ee06f"; ctx.fillText("OKONKWO " + fmtPnl(market.pnl[BULL]), 18, 40);
+    ctx.fillStyle = "#ff4640"; ctx.textAlign = "right"; ctx.fillText("VOLKOV " + fmtPnl(market.pnl[BEAR]), W - 18, 40);
+    ctx.fillStyle = "#ffb52e"; ctx.textAlign = "center"; ctx.font = "800 22px 'Segoe UI', system-ui, sans-serif";
+    ctx.fillText("ROUND " + market.round + " · " + Math.max(0, Math.ceil(market.timeLeft)) + "s · LIVE", W / 2, H - 12);
   } else {
     ctx.fillStyle = colors[0];
-    ctx.fillText(TRADER_NAME[team] + "  " + fmtPnl(market.pnl[team]), 16, 34);
-    ctx.font = "600 17px 'Segoe UI', system-ui, sans-serif";
-    ctx.fillStyle = "rgba(233,238,246,.65)";
-    ctx.fillText("HYPE " + Math.round(market.hype[team] * 100) + "%", 16, H - 12);
+    ctx.fillText(TRADER_NAME[team] + "  " + fmtPnl(market.pnl[team]), 18, 40);
+    ctx.font = "700 19px 'Segoe UI', system-ui, sans-serif";
+    ctx.fillStyle = "rgba(233,238,246,.7)";
+    ctx.fillText("CROWD HYPE " + Math.round(market.hype[team] * 100) + "%", 18, H - 14);
+    // LIVE dot
+    ctx.fillStyle = "#ff4640"; ctx.beginPath(); ctx.arc(W - 60, 30, 7, 0, 7); ctx.fill();
+    ctx.fillStyle = "#e9eef6"; ctx.textAlign = "right"; ctx.fillText("LIVE", W - 18, 38);
   }
   tex.needsUpdate = true;
 }
-const fmtPnl = v => (v >= 0 ? "+" : "") + v.toFixed(2) + "%";
 
-/* ============================== STANDS CROWD (instanced) ============================== */
-const STAND_N = 2600;
+/* ============================== STANDS CROWD ============================== */
+const STAND_N = 3200;
 const standCrowd = new THREE.InstancedMesh(
-  new THREE.BoxGeometry(0.55, 1.0, 0.4),
+  Capsule ? new THREE.CapsuleGeometry(0.24, 0.55, 3, 8) : new THREE.BoxGeometry(0.5, 1.0, 0.38),
   new THREE.MeshLambertMaterial(),
   STAND_N
 );
@@ -467,9 +638,10 @@ const standData = [];
     const r = tier.inner + 0.6 + Math.random() * 1.4;
     const x = Math.cos(ang) * r, z = Math.sin(ang) * r;
     const team = x < 0 ? BULL : BEAR;
-    col.setHex(TEAM_COLOR[team]).offsetHSL((Math.random() - 0.5) * 0.06, -0.15 - Math.random() * 0.3, -0.1 - Math.random() * 0.25);
+    col.setHex(TEAM_COLOR[team]).offsetHSL((Math.random() - 0.5) * 0.06, -0.15 - Math.random() * 0.35, -0.12 - Math.random() * 0.3);
+    if (Math.random() < 0.15) col.setHSL(Math.random(), 0.1, 0.16 + Math.random() * 0.2); // neutral clothes sprinkled in
     standCrowd.setColorAt(i, col);
-    const base = tier.y + 0.5;
+    const base = tier.y + 0.62;
     standData.push({ x, z, base, team, phase: Math.random() * Math.PI * 2, speed: 2 + Math.random() * 2 });
     dummy.position.set(x, base, z);
     dummy.lookAt(0, base, 0);
@@ -481,19 +653,18 @@ const standData = [];
 }
 const standDummy = new THREE.Object3D();
 function animateStands(time) {
-  // amplitude driven by team hype — winning side bounces harder
   for (let i = 0; i < STAND_N; i++) {
     const d = standData[i];
-    const amp = 0.06 + market.hype[d.team] * 0.34;
+    const amp = 0.06 + market.hype[d.team] * 0.36;
     standDummy.position.set(d.x, d.base + Math.max(0, Math.sin(time * d.speed + d.phase)) * amp, d.z);
-    standDummy.lookAt(0, standDummy.position.y, 0);
+    standDummy.rotation.set(0, Math.atan2(-d.x, -d.z), 0);
     standDummy.updateMatrix();
     standCrowd.setMatrixAt(i, standDummy.matrix);
   }
   standCrowd.instanceMatrix.needsUpdate = true;
 }
 
-/* ============================== PIT FANS (interactive NPCs) ============================== */
+/* ============================== PIT FANS ============================== */
 const FANS = 46;
 const fans = [];
 const FAN_SKINS = [0x8a5a3b, 0xe8c39c, 0xc98d5f, 0x5f3d28, 0xf0d0ae];
@@ -501,7 +672,6 @@ for (let i = 0; i < FANS; i++) {
   const team = i % 2;
   const shade = new THREE.Color(TEAM_COLOR[team]).offsetHSL((Math.random() - 0.5) * 0.05, -Math.random() * 0.35, -Math.random() * 0.3).getHex();
   const h = buildHuman(shade, FAN_SKINS[i % FAN_SKINS.length], 0.95 + Math.random() * 0.12);
-  // spawn on own half
   const side = team === BULL ? -1 : 1;
   const x = side * (4 + Math.random() * (PIT_RADIUS - 7));
   const z = (Math.random() - 0.5) * 2 * Math.sqrt(Math.max(4, PIT_RADIUS * PIT_RADIUS - x * x)) * 0.85;
@@ -514,27 +684,78 @@ for (let i = 0; i < FANS; i++) {
   });
 }
 
-/* ============================== PROJECTILE CUPS ============================== */
-const cupGeo = new THREE.CylinderGeometry(0.09, 0.07, 0.22, 10);
-const cupMats = [mat(0xdedede), mat(0xffb52e), mat(0x57d7ff)];
+/* ============================== CONFETTI ============================== */
+const CONFETTI_N = 500;
+const confetti = new THREE.InstancedMesh(
+  new THREE.PlaneGeometry(0.14, 0.2),
+  new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }),
+  CONFETTI_N
+);
+confetti.visible = false;
+scene.add(confetti);
+const confData = [];
+const confDummy = new THREE.Object3D();
+function burstConfetti(team) {
+  confetti.visible = true;
+  confData.length = 0;
+  const col = new THREE.Color();
+  const palette = [TEAM_COLOR[team], 0xffb52e, 0xffffff, TEAM_COLOR[team]];
+  for (let i = 0; i < CONFETTI_N; i++) {
+    const a = Math.random() * Math.PI * 2, r = Math.random() * 30;
+    confData.push({
+      x: Math.cos(a) * r, y: 24 + Math.random() * 8, z: Math.sin(a) * r,
+      vy: -(1.2 + Math.random() * 1.8), vx: (Math.random() - .5) * 1.2, vz: (Math.random() - .5) * 1.2,
+      rx: Math.random() * 7, rz: Math.random() * 7, sx: 2 + Math.random() * 4, sz: 2 + Math.random() * 4,
+    });
+    col.setHex(palette[i % palette.length]);
+    confetti.setColorAt(i, col);
+  }
+  confetti.instanceColor.needsUpdate = true;
+  confettiT = 12;
+}
+let confettiT = 0;
+function updateConfetti(dt, time) {
+  if (confettiT <= 0) { confetti.visible = false; return; }
+  confettiT -= dt;
+  for (let i = 0; i < CONFETTI_N; i++) {
+    const c = confData[i];
+    c.y += c.vy * dt;
+    if (c.y < 0.05) c.y = 0.05, c.vy = 0;
+    confDummy.position.set(c.x + Math.sin(time * c.sx) * 0.4, c.y, c.z + Math.cos(time * c.sz) * 0.4);
+    confDummy.rotation.set(time * c.rx, 0, time * c.rz);
+    confDummy.updateMatrix();
+    confetti.setMatrixAt(i, confDummy.matrix);
+  }
+  confetti.instanceMatrix.needsUpdate = true;
+}
+
+/* ============================== CUPS ============================== */
+const cupGeo = new THREE.CylinderGeometry(0.09, 0.07, 0.22, 12);
+const cupMats = [std(0xe8e8ee, { roughness: 0.4 }), std(0xffb52e, { roughness: 0.4 }), std(0x57d7ff, { roughness: 0.4 })];
 const cups = [];
 function throwCup(from, dir, speed, byPlayer, team) {
   const m = new THREE.Mesh(cupGeo, cupMats[(Math.random() * 3) | 0]);
+  m.castShadow = true;
   m.position.copy(from);
   scene.add(m);
   cups.push({ m, vx: dir.x * speed, vy: dir.y * speed + 2.4, vz: dir.z * speed, t: 0, byPlayer, team, spin: Math.random() * 10 });
 }
 
-/* ============================== PLAYER ============================== */
+/* ============================== PLAYER + INPUT (Mac-friendly) ============================== */
 const player = {
   team: BULL, x: -18, z: 6, vy: 0, y: 0,
   yaw: Math.PI / 2, pitch: 0,
   hp: 100, stamina: 1, cups: 6,
-  cheerCd: 0, punchCd: 0, ko: false,
-  shake: 0,
+  cheerCd: 0, punchCd: 0, ko: false, shake: 0,
 };
 const keys = {};
-addEventListener("keydown", e => { keys[e.code] = true; if (e.code === "KeyG") tryThrow(); if (e.code === "KeyC") tryCheer(); });
+addEventListener("keydown", e => {
+  keys[e.code] = true;
+  if (!started || player.ko) return;
+  if (e.code === "KeyF") tryPunch();
+  if (e.code === "KeyE" || e.code === "KeyG") tryThrow();
+  if (e.code === "KeyC") tryCheer();
+});
 addEventListener("keyup", e => keys[e.code] = false);
 
 let locked = false;
@@ -551,13 +772,11 @@ addEventListener("mousedown", e => {
 });
 addEventListener("contextmenu", e => e.preventDefault());
 
-/* ------- player actions ------- */
-const raycaster = new THREE.Raycaster();
+/* ------- actions ------- */
 function tryPunch() {
   if (player.punchCd > 0) return;
   player.punchCd = 0.45;
   punchAnim = 0.2;
-  // find nearest fan within reach cone
   const fwd = new THREE.Vector3(-Math.sin(player.yaw), 0, -Math.cos(player.yaw));
   let best = null, bestD = 2.3;
   for (const f of fans) {
@@ -575,13 +794,11 @@ function hitFan(f, dmg, byPlayer) {
     f.state = "down"; f.downT = 6 + Math.random() * 4; f.hp = 100;
     f.g.rotation.x = -Math.PI / 2 * (0.85 + Math.random() * 0.2);
     if (byPlayer) {
-      feed(`You dropped a <span class="${f.team === BULL ? "bull" : "bear"}">${TEAM_NAME[f.team].slice(0, -1)} fan</span>`, "");
-      // brawls swing hype
+      feed(`You dropped a <span class="${f.team === BULL ? "bull" : "bear"}">${TEAM_NAME[f.team].slice(0, -1)} fan</span>`);
       bumpHype(player.team, 0.05);
     }
   } else if (byPlayer) {
     f.angry = 1; f.state = "fight"; f.target = "player";
-    // nearby same-team fans join the beef
     for (const o of fans) {
       if (o.team === f.team && o !== f && o.state !== "down" &&
         o.g.position.distanceTo(f.g.position) < 6 && Math.random() < 0.5) {
@@ -605,7 +822,7 @@ function tryCheer() {
   if (player.cheerCd > 0 || player.ko || !started) return;
   player.cheerCd = 6;
   bumpHype(player.team, 0.12);
-  feed(`<span class="${player.team === BULL ? "bull" : "bear"}">YOU</span> started a chant — ${TRADER_NAME[player.team]} feels it`, "");
+  feed(`<span class="${player.team === BULL ? "bull" : "bear"}">YOU</span> started a chant — ${TRADER_NAME[player.team]} feels it`);
   banner(player.team === BULL ? "🐂 PUMP IT" : "🐻 DUMP IT", TEAM_NAME[player.team] + " HYPE +12%", 1100);
 }
 function bumpHype(team, amt) {
@@ -624,10 +841,11 @@ function updateFans(dt, time) {
     }
     f.stateT -= dt;
     if (f.state === "idle" && f.stateT <= 0) {
-      // wander / cheer / occasionally throw a cup at the enemy half
       const r = Math.random();
-      if (r < 0.45) { f.state = "walk"; f.stateT = 1.5 + Math.random() * 2.5;
-        const a = Math.random() * Math.PI * 2; f.vx = Math.cos(a) * f.speed * 0.5; f.vz = Math.sin(a) * f.speed * 0.5;
+      if (r < 0.45) {
+        f.state = "walk"; f.stateT = 1.5 + Math.random() * 2.5;
+        const a = Math.random() * Math.PI * 2;
+        f.vx = Math.cos(a) * f.speed * 0.5; f.vz = Math.sin(a) * f.speed * 0.5;
       } else if (r < 0.9) { f.state = "cheer"; f.stateT = 1.5 + Math.random() * 2; }
       else {
         f.stateT = 2;
@@ -638,17 +856,19 @@ function updateFans(dt, time) {
     if (f.state === "walk") {
       p.x += f.vx * dt; p.z += f.vz * dt;
       f.g.rotation.y = Math.atan2(f.vx, f.vz);
-      if (f.stateT <= 0) f.state = "idle", f.stateT = 1 + Math.random() * 2;
-      // keep on own half-ish and in pit
+      // leg swing
+      f.lArm.rotation.x = Math.sin(time * 7 + f.phase) * 0.5;
+      f.rArm.rotation.x = -Math.sin(time * 7 + f.phase) * 0.5;
+      if (f.stateT <= 0) { f.state = "idle"; f.stateT = 1 + Math.random() * 2; f.lArm.rotation.x = f.rArm.rotation.x = 0; }
       const rr = Math.hypot(p.x, p.z);
       if (rr > PIT_RADIUS - 1) { p.multiplyScalar((PIT_RADIUS - 1) / rr); f.state = "idle"; }
+      if (rr < 8.8) { p.multiplyScalar(8.8 / rr); f.state = "idle"; }
     } else if (f.state === "cheer") {
       const s = Math.sin(time * 9 + f.phase);
       f.lArm.rotation.z = 2.6 + s * 0.4; f.rArm.rotation.z = -2.6 - s * 0.4;
       p.y = Math.max(0, Math.sin(time * 6 + f.phase)) * (0.12 + market.hype[f.team] * 0.22);
       if (f.stateT <= 0) { f.state = "idle"; f.stateT = 1 + Math.random() * 3; f.lArm.rotation.z = f.rArm.rotation.z = 0; p.y = 0; }
     } else if (f.state === "fight") {
-      // chase player, swing when close
       const dx = player.x - p.x, dz = player.z - p.z;
       const d = Math.hypot(dx, dz);
       f.g.rotation.y = Math.atan2(dx, dz);
@@ -662,7 +882,6 @@ function updateFans(dt, time) {
       f.angry -= dt * 0.06;
       if (f.angry <= 0 || player.ko) { f.state = "idle"; f.stateT = 2; f.rArm.rotation.x = 0; }
     }
-    // idle bob + face stage
     if (f.state === "idle") {
       p.y = Math.max(0, Math.sin(time * 4 + f.phase)) * 0.05;
       f.g.rotation.y += (Math.atan2(-p.x, -p.z) - f.g.rotation.y) * dt * 2;
@@ -676,7 +895,7 @@ function hurtPlayer(dmg, from) {
   vignette(0.55);
   if (player.hp <= 0 && !player.ko) {
     player.ko = true;
-    feed(`<span class="amber">You got knocked out cold</span>`, "");
+    feed(`<span class="amber">You got knocked out cold</span>`);
     bumpHype(1 - player.team, 0.08);
     document.exitPointerLock();
     document.getElementById("ko-overlay").classList.remove("hidden");
@@ -684,7 +903,6 @@ function hurtPlayer(dmg, from) {
   updateHealthHud();
 }
 
-/* ============================== CUP PHYSICS ============================== */
 function updateCups(dt) {
   for (let i = cups.length - 1; i >= 0; i--) {
     const c = cups[i];
@@ -694,13 +912,12 @@ function updateCups(dt) {
     c.m.position.y += c.vy * dt;
     c.m.position.z += c.vz * dt;
     c.m.rotation.x += c.spin * dt;
-    // hit fans
     if (c.byPlayer) {
       for (const f of fans) {
         if (f.state === "down") continue;
         if (c.m.position.distanceTo(f.g.position.clone().setY(1.3)) < 0.8) {
           hitFan(f, 22, true);
-          feed(`Direct hit with a drink 🥤`, "");
+          feed(`Direct hit with a drink 🥤`);
           c.t = 99;
           break;
         }
@@ -708,7 +925,7 @@ function updateCups(dt) {
     } else if (!player.ko && c.team !== player.team) {
       if (c.m.position.distanceTo(new THREE.Vector3(player.x, 1.3, player.z)) < 0.7) {
         hurtPlayer(6, null);
-        feed(`A <span class="${c.team === BULL ? "bull" : "bear"}">${TEAM_NAME[c.team].slice(0, -1)} fan</span> hit you with a drink`, "");
+        feed(`A <span class="${c.team === BULL ? "bull" : "bear"}">${TEAM_NAME[c.team].slice(0, -1)} fan</span> hit you with a drink`);
         c.t = 99;
       }
     }
@@ -726,8 +943,9 @@ function endRound() {
   market.wins[winner]++;
   market.live = false;
   const wName = TRADER_NAME[winner], col = winner === BULL ? "bull" : "bear";
-  feed(`<span class="${col}">${wName}</span> takes round ${market.round} (${fmtPnl(market.pnl[winner])})`, "");
+  feed(`<span class="${col}">${wName}</span> takes round ${market.round} (${fmtPnl(market.pnl[winner])})`);
   bumpHype(winner, 0.3);
+  burstConfetti(winner);
   if (market.wins[winner] >= ROUNDS_TO_WIN) {
     market.over = true;
     banner((winner === BULL ? "🐂 " : "🐻 ") + wName + " WINS THE PIT", "FINAL " + market.wins[BULL] + " — " + market.wins[BEAR] + " · CROWD GOES FERAL", 8000);
@@ -804,13 +1022,18 @@ function updateHud() {
 let punchAnim = 0;
 const armGroup = new THREE.Group();
 {
-  const armMat = mat(0xc98d5f);
-  const rArm = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.09, 0.42), armMat);
-  rArm.position.set(0.22, -0.24, -0.45);
-  rArm.rotation.x = 0.3;
+  const armMat = std(0xc98d5f, { roughness: 0.55 });
+  const sleeve = std(0x2a3345);
+  const rArm = new THREE.Mesh(limbGeo(0.05, 0.34), armMat);
+  rArm.position.set(0.22, -0.16, -0.38);
+  rArm.rotation.x = -1.9;
   armGroup.add(rArm);
-  const fist = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.11, 0.12), armMat);
-  fist.position.set(0.22, -0.3, -0.68);
+  const cuff = new THREE.Mesh(new THREE.CylinderGeometry(0.062, 0.062, 0.1, 10), sleeve);
+  cuff.position.set(0.22, -0.18, -0.32);
+  cuff.rotation.x = -1.9;
+  armGroup.add(cuff);
+  const fist = new THREE.Mesh(new THREE.SphereGeometry(0.07, 10, 10), armMat);
+  fist.position.set(0.22, -0.26, -0.68);
   armGroup.add(fist);
   camera.add(armGroup);
   scene.add(camera);
@@ -820,12 +1043,14 @@ const armGroup = new THREE.Group();
 let started = false;
 const clock = new THREE.Clock();
 let chartAcc = 0;
+const BASE_FOV = 74;
 
 function updatePlayer(dt) {
   if (player.ko) return;
-  const sprint = keys["ShiftLeft"] && player.stamina > 0.05;
+  const sprint = (keys["ShiftLeft"] || keys["ShiftRight"]) && player.stamina > 0.05;
   const speed = sprint ? 8.5 : 4.6;
-  if (sprint && (keys["KeyW"] || keys["KeyA"] || keys["KeyS"] || keys["KeyD"])) player.stamina = Math.max(0, player.stamina - dt * 0.4);
+  const moving = keys["KeyW"] || keys["KeyA"] || keys["KeyS"] || keys["KeyD"];
+  if (sprint && moving) player.stamina = Math.max(0, player.stamina - dt * 0.4);
   else player.stamina = Math.min(1, player.stamina + dt * 0.25);
   let mx = 0, mz = 0;
   if (keys["KeyW"]) mz -= 1; if (keys["KeyS"]) mz += 1;
@@ -837,26 +1062,39 @@ function updatePlayer(dt) {
     player.x += (mx * c - mz * s) * speed * dt;
     player.z += (-mx * s - mz * c) * speed * dt;
   }
-  // jump
   if (keys["Space"] && player.y <= 0.001) player.vy = 4.6;
   player.vy -= 12.5 * dt;
   player.y = Math.max(0, player.y + player.vy * dt);
   if (player.y === 0) player.vy = 0;
-  // stay inside pit, outside stage
   const rr = Math.hypot(player.x, player.z);
   if (rr > PIT_RADIUS - 0.5) { const k = (PIT_RADIUS - 0.5) / rr; player.x *= k; player.z *= k; }
   if (rr < 8.6) { const k = 8.6 / (rr || 1); player.x *= k; player.z *= k; }
-  // cooldowns
   player.punchCd = Math.max(0, player.punchCd - dt);
   player.cheerCd = Math.max(0, player.cheerCd - dt);
   player.hp = Math.min(100, player.hp + dt * 2.2);
   updateHealthHud();
+  // sprint FOV kick
+  const targetFov = sprint && moving ? BASE_FOV + 8 : BASE_FOV;
+  if (Math.abs(camera.fov - targetFov) > 0.1) {
+    camera.fov += (targetFov - camera.fov) * dt * 8;
+    camera.updateProjectionMatrix();
+  }
 }
 
+let tickerOffset = 0;
 function animate() {
   requestAnimationFrame(animate);
   const dt = Math.min(clock.getDelta(), 0.05);
   const time = clock.elapsedTime;
+
+  // scrolling LED boards + sweeping beams always run
+  tickerOffset += dt * 0.04;
+  tickerTex.offset.x = tickerOffset % 1;
+  for (const s of sweeps) {
+    s.g.rotation.z = Math.sin(time * s.speed + s.phase) * 0.5;
+    s.g.rotation.x = Math.cos(time * s.speed * 0.8 + s.phase) * 0.4;
+  }
+  updateConfetti(dt, time);
 
   if (started) {
     updatePlayer(dt);
@@ -868,7 +1106,6 @@ function animate() {
       market.timeLeft -= dt;
       if (market.timeLeft <= 0) endRound();
     }
-    // traders animate: winner celebrates, loser holds head
     for (let t = 0; t < 2; t++) {
       const winning = market.pnl[t] >= market.pnl[1 - t];
       const tr = traders[t];
@@ -876,13 +1113,13 @@ function animate() {
         tr.lArm.rotation.z = 2.5 + Math.sin(time * 10) * 0.5;
         tr.rArm.rotation.z = -2.5 - Math.sin(time * 10 + 1) * 0.5;
         tr.g.position.y = 1.4 + Math.max(0, Math.sin(time * 8)) * 0.18;
+        tr.head.rotation.x = 0;
       } else {
-        tr.lArm.rotation.z = 2.9; tr.rArm.rotation.z = -2.9; // head in hands
+        tr.lArm.rotation.z = 2.9; tr.rArm.rotation.z = -2.9;
         tr.g.position.y = 1.4;
         tr.head.rotation.x = 0.4 + Math.sin(time * 3) * 0.1;
       }
     }
-    // charts at ~8fps
     chartAcc += dt;
     if (chartAcc > 0.12) {
       chartAcc = 0;
@@ -891,15 +1128,13 @@ function animate() {
       drawChart(chartVs, -1);
       updateHud();
     }
-    // lights pulse with hype
-    bullWash.intensity = 0.6 + market.hype[BULL] * 1.2;
-    bearWash.intensity = 0.6 + market.hype[BEAR] * 1.2;
-    // punch anim
+    bullWash.intensity = (0.6 + market.hype[BULL] * 1.3) * LI;
+    bearWash.intensity = (0.6 + market.hype[BEAR] * 1.3) * LI;
     punchAnim = Math.max(0, punchAnim - dt);
     armGroup.position.z = -(punchAnim > 0.1 ? (0.2 - punchAnim) * 4 : punchAnim * 2.2) * 0.35;
-    // head bob + shake
     player.shake = Math.max(0, player.shake - dt);
-    const bob = Math.sin(time * 11) * 0.03 * ((keys["KeyW"] || keys["KeyA"] || keys["KeyS"] || keys["KeyD"]) ? 1 : 0.15);
+    const moving = keys["KeyW"] || keys["KeyA"] || keys["KeyS"] || keys["KeyD"];
+    const bob = Math.sin(time * 11) * 0.03 * (moving ? 1 : 0.15);
     camera.position.set(
       player.x + (Math.random() - 0.5) * player.shake * 0.3,
       EYE + player.y + bob + (Math.random() - 0.5) * player.shake * 0.3,
@@ -908,11 +1143,10 @@ function animate() {
     camera.rotation.order = "YXZ";
     camera.rotation.y = player.yaw;
     camera.rotation.x = player.pitch;
-    camera.rotation.z = 0;
+    camera.rotation.z = Math.sin(time * 11) * 0.004 * (moving ? 1 : 0);
   } else {
-    // menu camera: slow orbit above the bowl
-    const a = time * 0.08;
-    camera.position.set(Math.cos(a) * 42, 20, Math.sin(a) * 42);
+    const a = time * 0.07;
+    camera.position.set(Math.cos(a) * 44, 21, Math.sin(a) * 44);
     camera.lookAt(0, 6, 0);
     stepMarket(dt);
     animateStands(time);
@@ -928,7 +1162,7 @@ function start(team) {
   player.team = team;
   const side = team === BULL ? -1 : 1;
   player.x = side * 18; player.z = 5;
-  player.yaw = Math.atan2(player.x, player.z); // face the stage
+  player.yaw = Math.atan2(player.x, player.z);
   const tag = $("team-tag");
   tag.textContent = "TEAM " + (team === BULL ? "BULL · OKONKWO" : "BEAR · VOLKOV");
   tag.style.color = team === BULL ? "#2ee06f" : "#ff4640";
@@ -954,12 +1188,10 @@ $("respawn-btn").addEventListener("click", () => {
   renderer.domElement.requestPointerLock();
 });
 
-// reacquire pointer lock on click while playing
 renderer.domElement.addEventListener("click", () => {
   if (started && !player.ko && !locked) renderer.domElement.requestPointerLock();
 });
 
-// ambient feed chatter
 const CHATTER = [
   ['bull', 'Bull section: "LEVERAGE! LEVERAGE! LEVERAGE!"'],
   ['bear', 'Bear section: "SELL YOUR HOUSE! SELL YOUR HOUSE!"'],
