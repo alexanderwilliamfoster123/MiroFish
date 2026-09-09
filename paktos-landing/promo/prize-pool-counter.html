@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paktos Prize Odometer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap">
+<style>
+  :root {
+    --ink: #1d1d1f;
+    --muted: #86868b;
+    --hairline: #e8e8ed;
+    --ground: #ffffff;
+    --serif: "Playfair Display", "New York", ui-serif, Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    overflow: hidden;
+  }
+  .stage {
+    position: relative;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px 24px 36px;
+    box-sizing: border-box;
+  }
+  .live {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-indent: 0.35em; /* balances the tracking */
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ink);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.25; transform: scale(0.72); }
+  }
+
+  .centerpiece {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(22px, 4vh, 40px);
+  }
+
+  /* ——— The odometer ——— */
+  .drum {
+    position: relative;
+    font-family: var(--serif);
+    font-weight: 500;
+    font-variant-numeric: lining-nums;
+    font-size: clamp(52px, 12.5vw, 148px);
+    line-height: 1;
+    display: flex;
+    align-items: baseline;
+    white-space: nowrap;
+  }
+  .dollar { font-size: 0.78em; margin-right: 0.06em; }
+  .comma { color: var(--ink); }
+  .reel {
+    display: inline-block;
+    height: 1em;
+    width: 0.62em;
+    overflow: hidden;
+    vertical-align: baseline;
+  }
+  .tape {
+    display: flex;
+    flex-direction: column;
+    transition: transform 900ms cubic-bezier(0.24, 0.9, 0.28, 1);
+    will-change: transform;
+  }
+  .tape > b {
+    font-weight: 500;
+    display: block;
+    height: 1em;
+    line-height: 1;
+    text-align: center;
+  }
+  /* the seventh figure rolls in when the pool crosses a million */
+  .mgroup {
+    display: inline-flex;
+    align-items: baseline;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-width 1100ms cubic-bezier(0.24, 0.9, 0.28, 1), opacity 700ms ease 250ms;
+  }
+  .mgroup.on { max-width: 1.2em; opacity: 1; }
+  /* cylinder shading: the page fades over the top and bottom of the drums */
+  .drum::before, .drum::after {
+    content: "";
+    position: absolute;
+    left: -2%; right: -2%;
+    height: 30%;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .drum::before { top: -2%; background: linear-gradient(to bottom, var(--ground) 8%, rgba(255,255,255,0)); }
+  .drum::after { bottom: -2%; background: linear-gradient(to top, var(--ground) 8%, rgba(255,255,255,0)); }
+
+  .caption {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-indent: 0.35em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .caption::before, .caption::after {
+    content: "";
+    width: 44px;
+    height: 1px;
+    background: var(--hairline);
+  }
+
+  /* milestone chip, in the tournaments-page style */
+  .chipzone { height: 30px; display: flex; align-items: center; }
+  .chip {
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    background: var(--ink);
+    border-radius: 999px;
+    padding: 7px 16px;
+    letter-spacing: 0.02em;
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+    transition: opacity 450ms ease, transform 450ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  }
+  .chip.show { opacity: 1; transform: translateY(0) scale(1); }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .brand img { width: 26px; height: 26px; display: block; }
+  .brand-name {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.55em;
+    text-indent: 0.55em;
+    color: var(--ink);
+  }
+
+  canvas#confetti {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tape, .mgroup { transition: none; }
+    .live-dot { animation: none; }
+  }
+</style>
+
+</head>
+<body>
+<div class="stage">
+  <p class="live"><span class="live-dot"></span>Live</p>
+
+  <div class="centerpiece">
+    <div class="drum" id="drum" aria-hidden="true">
+      <span class="dollar">$</span><span class="mgroup" id="mgroup"><span class="reel" data-i="0"></span><span class="comma">,</span></span><span class="reel" data-i="1"></span><span class="reel" data-i="2"></span><span class="reel" data-i="3"></span><span class="comma">,</span><span class="reel" data-i="4"></span><span class="reel" data-i="5"></span><span class="reel" data-i="6"></span>
+    </div>
+    <p class="caption">Prize pool</p>
+    <div class="chipzone"><span class="chip" id="chip"></span></div>
+  </div>
+
+  <div class="brand">
+    <img src="data:image/png;base64,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" alt="" width="26" height="26" draggable="false">
+    <p class="brand-name">PAKTOS</p>
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+<p class="sr-only" id="announcer" role="status" aria-live="polite"></p>
+
+<script>
+  "use strict";
+
+  // ——— Simulated ticket sales ———
+  // Wire to the real sales stream when it exists: each event adds its
+  // ticket value to the pool.
+  var START = 992600;
+  var TICKET = 25;
+  var reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ——— The reels: alarm-clock drums that only roll forward ———
+  var reels = [];
+  document.querySelectorAll(".reel").forEach(function (reel) {
+    var tape = document.createElement("span");
+    tape.className = "tape";
+    // two full revolutions of digits, so 9 -> 0 rolls forward through the wrap
+    for (var r = 0; r < 2; r++) {
+      for (var d = 0; d <= 9; d++) {
+        var cell = document.createElement("b");
+        cell.textContent = d;
+        tape.appendChild(cell);
+      }
+    }
+    reel.appendChild(tape);
+    reels[+reel.dataset.i] = { tape: tape, pos: 0 };
+  });
+
+  function moveReel(reel, digit) {
+    // settle a completed wrap back into the first revolution, invisibly
+    if (reel.pos >= 10) {
+      reel.tape.style.transition = "none";
+      reel.pos -= 10;
+      reel.tape.style.transform = "translateY(-" + reel.pos + "em)";
+      void reel.tape.offsetHeight;
+      reel.tape.style.transition = "";
+    }
+    if (digit === reel.pos) return;
+    reel.pos = digit >= reel.pos ? digit : digit + 10;
+    reel.tape.style.transform = "translateY(-" + reel.pos + "em)";
+  }
+
+  var mgroup = document.getElementById("mgroup");
+  function render(value) {
+    var s = String(Math.min(value, 9999999)).padStart(7, "0");
+    for (var i = 0; i < 7; i++) moveReel(reels[i], +s[i]);
+    if (value >= 1000000) mgroup.classList.add("on");
+  }
+
+  // ——— Confetti, in the six coin colours ———
+  var COLORS = ["#5ad0f5", "#3f6df4", "#f7cf45", "#f79a4d", "#f78ec1", "#232a56"];
+  var canvas = document.getElementById("confetti");
+  var ctx = canvas.getContext("2d");
+  var pieces = [];
+  var raf = 0;
+
+  function fit() {
+    var dpr = Math.min(devicePixelRatio || 1, 2);
+    canvas.width = Math.round(innerWidth * dpr);
+    canvas.height = Math.round(innerHeight * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  fit();
+  addEventListener("resize", fit);
+
+  function spawn(n, x, y, angle, spread) {
+    for (var i = 0; i < n; i++) {
+      var a = angle + (Math.random() - 0.5) * spread;
+      var speed = 520 + Math.random() * 620;
+      pieces.push({
+        x: x, y: y,
+        vx: Math.cos(a) * speed,
+        vy: Math.sin(a) * speed,
+        w: 5 + Math.random() * 6,
+        h: 8 + Math.random() * 8,
+        rot: Math.random() * Math.PI,
+        vr: (Math.random() - 0.5) * 14,
+        color: COLORS[(Math.random() * COLORS.length) | 0],
+        round: Math.random() < 0.25,
+        life: 0,
+        ttl: 2.2 + Math.random() * 1.4
+      });
+    }
+    if (!raf) { last = performance.now(); raf = requestAnimationFrame(step); }
+  }
+
+  var last = 0;
+  function step(now) {
+    var dt = Math.min((now - last) / 1000, 0.032);
+    last = now;
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    for (var i = pieces.length - 1; i >= 0; i--) {
+      var p = pieces[i];
+      p.life += dt;
+      if (p.life > p.ttl || p.y > innerHeight + 40) { pieces.splice(i, 1); continue; }
+      p.vy += 1350 * dt;
+      p.vx *= 0.992;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.rot += p.vr * dt;
+      var fade = p.ttl - p.life < 0.5 ? (p.ttl - p.life) / 0.5 : 1;
+      ctx.save();
+      ctx.globalAlpha = fade;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      if (p.round) {
+        ctx.beginPath();
+        ctx.arc(0, 0, p.w / 2, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        // a slight fold down the middle so pieces flutter like paper
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h * (0.55 + 0.45 * Math.abs(Math.sin(p.rot * 2))));
+      }
+      ctx.restore();
+    }
+    if (pieces.length) raf = requestAnimationFrame(step);
+    else { raf = 0; ctx.clearRect(0, 0, innerWidth, innerHeight); }
+  }
+
+  function cannons(scale) {
+    if (reduceMotion) return;
+    var n = Math.round(70 * scale);
+    spawn(n, -10, innerHeight * 0.78, -Math.PI / 3.4, 0.65);
+    spawn(n, innerWidth + 10, innerHeight * 0.78, Math.PI / 3.4 - Math.PI, 0.65);
+  }
+
+  // ——— Milestone chip + announcements ———
+  var chip = document.getElementById("chip");
+  var announcer = document.getElementById("announcer");
+  var chipTimer = 0;
+  function milestone(text, hold) {
+    chip.textContent = text;
+    chip.classList.add("show");
+    clearTimeout(chipTimer);
+    chipTimer = setTimeout(function () { chip.classList.remove("show"); }, hold);
+    announcer.textContent = "Prize pool " + text;
+  }
+
+  var fmt = new Intl.NumberFormat("en-US");
+
+  // ——— The pool ———
+  var pool = START;
+  render(pool);
+
+  function tick() {
+    var before = pool;
+    pool += TICKET * (3 + ((Math.random() * 15) | 0)); // $75–$450 per beat
+    render(pool);
+
+    var crossedM = before < 1000000 && pool >= 1000000;
+    var crossedK = Math.floor(pool / 1000) > Math.floor(before / 1000);
+    if (crossedM) {
+      milestone("$1,000,000", 6000);
+      cannons(2.6);
+      setTimeout(function () { cannons(2.2); }, 450);
+      setTimeout(function () { cannons(1.8); }, 950);
+    } else if (crossedK) {
+      milestone("$" + fmt.format(Math.floor(pool / 1000) * 1000), 2400);
+      cannons(1);
+    }
+    setTimeout(tick, 950 + Math.random() * 1250);
+  }
+  setTimeout(tick, 1100);
+</script>
+</body>
+</html>
