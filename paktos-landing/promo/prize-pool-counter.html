@@ -13,6 +13,8 @@
     --ground: #ffffff;
     --serif: "Playfair Display", "New York", ui-serif, Georgia, serif;
     --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    /* drum geometry: 10 faces of 1em -> radius = 0.5em / tan(18deg) */
+    --radius: 1.5388em;
   }
   html, body { height: 100%; }
   body {
@@ -39,7 +41,7 @@
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.35em;
-    text-indent: 0.35em; /* balances the tracking */
+    text-indent: 0.35em;
     color: var(--muted);
     text-transform: uppercase;
   }
@@ -59,64 +61,173 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: clamp(22px, 4vh, 40px);
+    gap: clamp(34px, 5vh, 52px);
   }
 
-  /* ——— The odometer ——— */
+  /* ——— The glass odometer ——— */
   .drum {
     position: relative;
+    z-index: 0;
     font-family: var(--serif);
     font-weight: 500;
     font-variant-numeric: lining-nums;
-    font-size: clamp(52px, 12.5vw, 148px);
+    font-size: clamp(40px, 9.2vw, 112px);
     line-height: 1;
     display: flex;
-    align-items: baseline;
+    align-items: center;
+    gap: 0.09em;
     white-space: nowrap;
   }
-  .dollar { font-size: 0.78em; margin-right: 0.06em; }
-  .comma { color: var(--ink); }
-  .reel {
-    display: inline-block;
-    height: 1em;
-    width: 0.62em;
-    overflow: hidden;
-    vertical-align: baseline;
+  .dollar {
+    font-size: 0.72em;
+    margin-right: 0.1em;
+    background: linear-gradient(to bottom, #4a4a4f, #131315);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
-  .tape {
+  .comma {
+    position: relative;
+    z-index: 7;
+    font-size: 0.9em;
+    margin: 0 0.02em;
+    transform: translateY(0.26em);
+    background: linear-gradient(to bottom, #4a4a4f, #131315);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* one frosted-glass capsule per digit drum */
+  .reel {
+    position: relative;
+    width: 0.82em;
+    height: 1.38em;
+    border-radius: 0.17em;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.92), rgba(243, 243, 247, 0.55));
+    border: 1px solid rgba(29, 29, 31, 0.1);
+    box-shadow:
+      0 0.32em 0.6em -0.28em rgba(29, 29, 31, 0.35),
+      0 0.05em 0.12em rgba(29, 29, 31, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 1),
+      inset 0 -0.09em 0.18em rgba(29, 29, 31, 0.06);
+    overflow: hidden;
+  }
+  /* curvature shading inside the glass: the drum recedes top and bottom */
+  .reel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(29, 29, 31, 0.07) 9%,
+      rgba(255, 255, 255, 0) 32%,
+      rgba(255, 255, 255, 0) 68%,
+      rgba(29, 29, 31, 0.09) 92%,
+      rgba(255, 255, 255, 0.9) 100%
+    );
+  }
+  /* standing specular streak on the glass face */
+  .reel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background:
+      linear-gradient(105deg, rgba(255, 255, 255, 0) 18%, rgba(255, 255, 255, 0.55) 26%, rgba(255, 255, 255, 0) 34%),
+      linear-gradient(105deg, rgba(255, 255, 255, 0) 68%, rgba(255, 255, 255, 0.35) 76%, rgba(255, 255, 255, 0) 84%);
+  }
+  .window {
+    position: absolute;
+    inset: 0;
     display: flex;
-    flex-direction: column;
-    transition: transform 900ms cubic-bezier(0.24, 0.9, 0.28, 1);
+    align-items: center;
+    justify-content: center;
+    perspective: 6em;
+    overflow: hidden;
+    transform: translateZ(0); /* flattening boundary so the 3D drum clips here */
+    border-radius: 0.17em;
+  }
+  .cyl {
+    position: relative;
+    margin-top: -0.05em;
+    width: 0.82em;
+    height: 1em;
+    transform-style: preserve-3d;
+    transition: transform 1600ms cubic-bezier(0.24, 0.74, 0.18, 1);
     will-change: transform;
   }
-  .tape > b {
-    font-weight: 500;
-    display: block;
+  .cyl > b {
+    position: absolute;
+    inset: 0;
     height: 1em;
     line-height: 1;
+    font-weight: 500;
     text-align: center;
+    backface-visibility: hidden;
+    background: linear-gradient(to bottom, #4a4a4f, #131315);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
-  /* the seventh figure rolls in when the pool crosses a million */
+
+  /* white cover plates catch the drum faces that spill past the glass */
+  .drum .cover {
+    position: absolute;
+    left: -4%;
+    right: -4%;
+    height: 0.55em;
+    z-index: 6;
+    pointer-events: none;
+  }
+  .drum .cover.top { bottom: calc(100% - 0.01em); height: 1.1em; background: linear-gradient(to top, #fff 72%, rgba(255,255,255,0)); }
+  .drum .cover.bot { top: calc(100% - 0.01em); height: 0.6em; background: linear-gradient(to bottom, #fff 70%, rgba(255,255,255,0)); }
+  /* soft ground shadow painted over the cover so the drums still sit on a floor */
+  .drum .floor {
+    position: absolute;
+    top: calc(100% + 0.08em);
+    left: 1%;
+    right: 1%;
+    height: 0.22em;
+    z-index: 8;
+    pointer-events: none;
+    background: radial-gradient(closest-side, rgba(29, 29, 31, 0.16), rgba(29, 29, 31, 0) 78%);
+    filter: blur(2px);
+  }
+
+  .cyl > b { transition: opacity 300ms ease; }
+  .cyl > b.off { opacity: 0; }
+
+  /* slow polish sweep travelling across all the drums */
+  .sheen {
+    position: absolute;
+    inset: -4% -8%;
+    z-index: 4;
+    pointer-events: none;
+    background: linear-gradient(100deg, rgba(255, 255, 255, 0) 42%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0) 58%);
+    transform: translateX(-120%);
+    animation: sweep 7.5s ease-in-out infinite;
+  }
+  @keyframes sweep {
+    0%, 55% { transform: translateX(-120%); }
+    85%, 100% { transform: translateX(120%); }
+  }
+
+  /* the seventh drum rolls in when the pool crosses a million */
   .mgroup {
     display: inline-flex;
-    align-items: baseline;
+    align-items: center;
+    gap: 0.09em;
     max-width: 0;
     opacity: 0;
     overflow: hidden;
-    transition: max-width 1100ms cubic-bezier(0.24, 0.9, 0.28, 1), opacity 700ms ease 250ms;
+    transition: max-width 1400ms cubic-bezier(0.24, 0.74, 0.18, 1), opacity 900ms ease 350ms;
   }
-  .mgroup.on { max-width: 1.2em; opacity: 1; }
-  /* cylinder shading: the page fades over the top and bottom of the drums */
-  .drum::before, .drum::after {
-    content: "";
-    position: absolute;
-    left: -2%; right: -2%;
-    height: 30%;
-    pointer-events: none;
-    z-index: 2;
-  }
-  .drum::before { top: -2%; background: linear-gradient(to bottom, var(--ground) 8%, rgba(255,255,255,0)); }
-  .drum::after { bottom: -2%; background: linear-gradient(to top, var(--ground) 8%, rgba(255,255,255,0)); }
+  .mgroup.on { max-width: 1.4em; opacity: 1; }
 
   .caption {
     display: flex;
@@ -136,7 +247,6 @@
     background: var(--hairline);
   }
 
-  /* milestone chip, in the tournaments-page style */
   .chipzone { height: 30px; display: flex; align-items: center; }
   .chip {
     font-size: 12px;
@@ -186,8 +296,9 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .tape, .mgroup { transition: none; }
+    .cyl, .mgroup { transition: none; }
     .live-dot { animation: none; }
+    .sheen { animation: none; }
   }
 </style>
 
@@ -198,7 +309,11 @@
 
   <div class="centerpiece">
     <div class="drum" id="drum" aria-hidden="true">
-      <span class="dollar">$</span><span class="mgroup" id="mgroup"><span class="reel" data-i="0"></span><span class="comma">,</span></span><span class="reel" data-i="1"></span><span class="reel" data-i="2"></span><span class="reel" data-i="3"></span><span class="comma">,</span><span class="reel" data-i="4"></span><span class="reel" data-i="5"></span><span class="reel" data-i="6"></span>
+      <span class="dollar">$</span><span class="mgroup" id="mgroup"><span class="reel" data-i="0"><span class="window"><span class="cyl"></span></span></span><span class="comma">,</span></span><span class="reel" data-i="1"><span class="window"><span class="cyl"></span></span></span><span class="reel" data-i="2"><span class="window"><span class="cyl"></span></span></span><span class="reel" data-i="3"><span class="window"><span class="cyl"></span></span></span><span class="comma">,</span><span class="reel" data-i="4"><span class="window"><span class="cyl"></span></span></span><span class="reel" data-i="5"><span class="window"><span class="cyl"></span></span></span><span class="reel" data-i="6"><span class="window"><span class="cyl"></span></span></span>
+      <span class="sheen"></span>
+      <span class="cover top"></span>
+      <span class="cover bot"></span>
+      <span class="floor"></span>
     </div>
     <p class="caption">Prize pool</p>
     <div class="chipzone"><span class="chip" id="chip"></span></div>
@@ -223,35 +338,43 @@
   var TICKET = 25;
   var reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // ——— The reels: alarm-clock drums that only roll forward ———
+  // ——— The reels: ten-sided glass drums that only roll forward ———
+  // Each digit face sits on a cylinder; the cylinder's rotation only ever
+  // increases, so 9 -> 0 rolls onward through the wrap like a real odometer.
   var reels = [];
   document.querySelectorAll(".reel").forEach(function (reel) {
-    var tape = document.createElement("span");
-    tape.className = "tape";
-    // two full revolutions of digits, so 9 -> 0 rolls forward through the wrap
-    for (var r = 0; r < 2; r++) {
-      for (var d = 0; d <= 9; d++) {
-        var cell = document.createElement("b");
-        cell.textContent = d;
-        tape.appendChild(cell);
-      }
+    var cyl = reel.querySelector(".cyl");
+    for (var d = 0; d <= 9; d++) {
+      var face = document.createElement("b");
+      face.textContent = d;
+      face.style.transform = "rotateX(" + (-d * 36) + "deg) translateZ(var(--radius))";
+      cyl.appendChild(face);
     }
-    reel.appendChild(tape);
-    reels[+reel.dataset.i] = { tape: tape, pos: 0 };
+    cyl.style.transform = "scale(0.7435) rotateX(0deg)";
+    reels[+reel.dataset.i] = { cyl: cyl, faces: [].slice.call(cyl.children), digit: 0, turns: 0, vt: 0 };
   });
 
-  function moveReel(reel, digit) {
-    // settle a completed wrap back into the first revolution, invisibly
-    if (reel.pos >= 10) {
-      reel.tape.style.transition = "none";
-      reel.pos -= 10;
-      reel.tape.style.transform = "translateY(-" + reel.pos + "em)";
-      void reel.tape.offsetHeight;
-      reel.tape.style.transition = "";
+  // While resting, only the front face and its two neighbours render, so
+  // nothing paints far outside the glass. During a roll, every face on the
+  // path stays visible until the drum settles.
+  function settleVis(reel) {
+    for (var f = 0; f < 10; f++) {
+      var off = (f - reel.digit + 10) % 10;
+      reel.faces[f].classList.toggle("off", !(off === 0 || off === 1 || off === 9));
     }
-    if (digit === reel.pos) return;
-    reel.pos = digit >= reel.pos ? digit : digit + 10;
-    reel.tape.style.transform = "translateY(-" + reel.pos + "em)";
+  }
+
+  function moveReel(reel, digit) {
+    var steps = (digit - reel.digit + 10) % 10;
+    if (!steps) return;
+    for (var i = -1; i <= steps + 1; i++) {
+      reel.faces[(reel.digit + i + 20) % 10].classList.remove("off");
+    }
+    reel.turns += steps;
+    reel.digit = digit;
+    reel.cyl.style.transform = "scale(0.7435) rotateX(" + reel.turns * 36 + "deg)";
+    clearTimeout(reel.vt);
+    reel.vt = setTimeout(function () { settleVis(reel); }, 1750);
   }
 
   var mgroup = document.getElementById("mgroup");
@@ -356,6 +479,7 @@
   // ——— The pool ———
   var pool = START;
   render(pool);
+  reels.forEach(settleVis);
 
   function tick() {
     var before = pool;
@@ -373,9 +497,9 @@
       milestone("$" + fmt.format(Math.floor(pool / 1000) * 1000), 2400);
       cannons(1);
     }
-    setTimeout(tick, 950 + Math.random() * 1250);
+    setTimeout(tick, 1250 + Math.random() * 1450);
   }
-  setTimeout(tick, 1100);
+  setTimeout(tick, 1300);
 </script>
 </body>
 </html>
